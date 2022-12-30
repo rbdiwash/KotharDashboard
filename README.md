@@ -1,4 +1,6 @@
 # KotharDashboard
 To run frontend 
-cd frontend_app
-npm start
+
+`cd frontend_app`
+
+`npm start`
