@@ -35,13 +35,13 @@ export default function Login() {
   return (
     <>
       <div className="container mx-auto px-4 h-full">
-        <div className="flex content-center items-center justify-center h-[500px]">
+        <div className="flex content-center items-center justify-center h-[60vh]">
           <div className="w-full lg:w-4/12 px-4">
-            <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-slate-200 border-0">
+            <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-white border-0">
               <div className="rounded-t mb-0 px-6 py-6">
                 <div className="text-center mb-3">
                   <h3 className="text-slate-500 text-xl font-bold uppercase">
-                    Sign in as Admin
+                    Sign in
                   </h3>
                 </div>
 
@@ -75,21 +75,9 @@ export default function Login() {
                       onChange={handleInputChange}
                     />
                   </div>
-                  {/* <div>
-                    <label className="inline-flex items-center cursor-pointer">
-                      <Checkbox id="customCheckLogin" type="checkbox" />
-                      <span className="ml-2 text-sm font-semibold text-slate-600">
-                        Remember me
-                      </span>
-                    </label>
-                  </div> */}
 
                   <div className="text-center mt-6">
-                    <Button
-                      variant="contained"
-                      className="w-full"
-                      type="submit"
-                    >
+                    <Button variant="contained" fullWidth type="submit">
                       Sign In
                     </Button>
                   </div>
@@ -100,11 +88,11 @@ export default function Login() {
                   </div>
                 </form>
               </div>
-            </div>
+            </div>{" "}
             <div className="flex flex-wrap mt-6 relative">
               <div className="w-full text-center">
                 <Link to="/forgot" className="text-slate-200">
-                  <small>Forgot password?</small>
+                  <small>Forgot Password?</small>
                 </Link>
               </div>
             </div>

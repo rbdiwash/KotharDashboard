@@ -21,17 +21,25 @@ const AdminRoutes = {
       element: <Dashboard />,
     },
     {
-      path: "maps",
-      element: <Maps />,
+      path: "student",
+      element: <Tables />,
+    },
+    {
+      path: "university",
+      element: <Tables />,
+    },
+    {
+      path: "consultancy",
+      element: <Tables />,
     },
 
     {
-      path: "settings",
+      path: "setting",
       element: <Settings />,
     },
     {
-      path: "tables",
-      element: <Tables />,
+      path: "map",
+      element: <Maps />,
     },
   ],
 };
