@@ -10,7 +10,7 @@ import {
 } from "react-router-dom";
 
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import "assets/styles/tailwind.css";
+// import "assets/styles/tailwind.css";
 
 // layouts
 import { StrictMode } from "react";
@@ -27,6 +27,9 @@ import { ToastContainer, toast } from "react-toastify";
 import { createRoot } from "react-dom/client";
 import Dashboard from "views/admin/Dashboard";
 import App from "./App";
+import "./input.css";
+// import "./assets/styles/index.css";
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(

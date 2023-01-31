@@ -5,7 +5,7 @@ import InputField from "components/Input/InputField";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-export default function Login() {
+export default function Forgot() {
   const navigate = useNavigate();
   const [data, setData] = useState({});
   const handleInputChange = (e) => {
@@ -35,17 +35,17 @@ export default function Login() {
   return (
     <>
       <div className="container mx-auto px-4 h-full">
-        <div className="flex content-center items-center justify-center h-[500px]">
+        <div className="flex content-center items-center justify-center h-full">
           <div className="w-full lg:w-4/12 px-4">
-            <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-slate-200 border-0">
+            <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-200 border-0">
               <div className="rounded-t mb-0 px-6 py-6">
                 <div className="text-center mb-3">
-                  <h3 className="text-slate-500 text-xl font-bold uppercase">
-                    Sign in as Admin
+                  <h3 className="text-blueGray-500 text-xl font-bold uppercase">
+                    Forgot Password?
                   </h3>
                 </div>
 
-                <hr className="mt-6 border-b-1 border-slate-300" />
+                <hr className="mt-6 border-b-1 border-blueGray-300" />
               </div>
               <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
                 <form
@@ -55,7 +55,7 @@ export default function Login() {
                   <div className="relative w-full mb-3">
                     <InputField
                       label="Email"
-                      placeholder="Email"
+                      placeholder="Type your registered Email"
                       name="email"
                       required
                       type="email"
@@ -64,38 +64,13 @@ export default function Login() {
                     />
                   </div>
 
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      type="password"
-                      placeholder="Password"
-                      name="password"
-                      label="Password"
-                      required
-                      value={data?.password}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  {/* <div>
-                    <label className="inline-flex items-center cursor-pointer">
-                      <Checkbox id="customCheckLogin" type="checkbox" />
-                      <span className="ml-2 text-sm font-semibold text-slate-600">
-                        Remember me
-                      </span>
-                    </label>
-                  </div> */}
-
                   <div className="text-center mt-6">
                     <Button
                       variant="contained"
                       className="w-full"
                       type="submit"
                     >
-                      Sign In
-                    </Button>
-                  </div>
-                  <div className="text-center mt-6">
-                    <Button variant="outlined" component={Link} to="/register">
-                      Sign up
+                      Reset Password
                     </Button>
                   </div>
                 </form>
@@ -103,8 +78,8 @@ export default function Login() {
             </div>
             <div className="flex flex-wrap mt-6 relative">
               <div className="w-full text-center">
-                <Link to="/forgot" className="text-slate-200">
-                  <small>Forgot password?</small>
+                <Link to="/" className="text-blueGray-200">
+                  <small>Go back to login page?</small>
                 </Link>
               </div>
             </div>

@@ -1,6 +1,45 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { Button, IconButton, InputAdornment, TextField } from "@mui/material";
+import InputField from "components/Input/InputField";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 export default function Register() {
+  const navigate = useNavigate();
+  const [data, setData] = useState({});
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setData((prevState) => ({ ...prevState, [name]: value }));
+  };
+  const [message, setMessage] = useState({});
+  const [showPassword, setShowPassword] = React.useState(false);
+  console.log("🚀  showPassword", showPassword);
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axios
+      .post("admin/login", data)
+      .then((res) => {
+        setMessage({ success: res?.data?.message });
+        setData({
+          username: "",
+          password: "",
+        });
+        localStorage.setItem("token", res?.data?.accessToken);
+        navigate("/admin/dashboard");
+      })
+      .catch((err) => {
+        // console.log(err?.data?.message);
+        // setMessage({ error: err?.data?.message || "Error" });
+        navigate("/admin/dashboard");
+      });
+  };
   return (
     <>
       <div className="container mx-auto px-4 h-full">
@@ -45,47 +84,104 @@ export default function Register() {
                 </div>
                 <form>
                   <div className="relative w-full mb-3">
-                    <label
-                      className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlFor="grid-password"
-                    >
-                      Name
-                    </label>
-                    <input
+                    <InputField
+                      label="Full Name"
+                      placeholder="Full Name"
+                      name="email"
+                      required
                       type="email"
-                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Name"
+                      value={data?.name}
+                      onChange={handleInputChange}
                     />
                   </div>
-
                   <div className="relative w-full mb-3">
-                    <label
-                      className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlFor="grid-password"
-                    >
-                      Email
-                    </label>
-                    <input
+                    <InputField
+                      label="Email"
+                      placeholder="Enter Valid Email"
+                      name="email"
+                      required
                       type="email"
-                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Email"
+                      value={data?.email}
+                      onChange={handleInputChange}
                     />
                   </div>
-
                   <div className="relative w-full mb-3">
-                    <label
-                      className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlFor="grid-password"
-                    >
-                      Password
-                    </label>
-                    <input
+                    <InputField
+                      label="Contact No."
+                      placeholder="Enter Phone Number"
+                      name="contact"
+                      required
+                      type="number"
+                      value={data?.contact}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 mb-3">
+                    <InputField
                       type="password"
-                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Password"
+                      name="password"
+                      label="Password"
+                      required
+                      value={data?.password}
+                      onChange={handleInputChange}
+                    />
+                    <TextField
+                      type="password"
+                      placeholder="Password"
+                      name="password"
+                      required
+                      size="small"
+                      value={data?.password}
+                      className="bg-white h-[90vh]"
+                      onChange={handleInputChange}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                    />{" "}
+                    <TextField
+                      type="password"
+                      placeholder="Re-type Password"
+                      name="cpassword"
+                      required
+                      size="small"
+                      value={data?.cpassword}
+                      className="bg-white h-[90vh]"
+                      onChange={handleInputChange}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                    />
+                  </div>{" "}
+                  <div className="relative md:w-1/2 mb-3">
+                    <InputField
+                      type="password"
+                      placeholder="Password"
+                      name="password"
+                      label="Password"
+                      required
+                      value={data?.password}
+                      onChange={handleInputChange}
                     />
                   </div>
-
                   <div>
                     <label className="inline-flex items-center cursor-pointer">
                       <input
@@ -105,7 +201,6 @@ export default function Register() {
                       </span>
                     </label>
                   </div>
-
                   <div className="text-center mt-6">
                     <button
                       className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"

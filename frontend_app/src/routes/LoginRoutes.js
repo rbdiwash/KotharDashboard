@@ -6,6 +6,7 @@ import { Outlet } from "react-router";
 import Login from "views/auth/Login.js";
 import Register from "views/auth/Register.js";
 import Auth from "layouts/Auth";
+import Forgot from "views/auth/Forgot";
 
 // render - login
 
@@ -23,7 +24,12 @@ const LoginRoutes = {
       path: "register",
       element: <Register />,
     },
+    {
+      path: "forgot",
+      element: <Forgot />,
+    },
   ],
 };
 
 export default LoginRoutes;
+    // "tailwindcss": "2.0.4"

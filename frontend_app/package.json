@@ -7,6 +7,7 @@
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@fortawesome/fontawesome-free": "5.15.3",
+    "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.4",
     "@popperjs/core": "2.9.1",
     "@tailwindcss/forms": "0.2.1",
@@ -23,16 +24,14 @@
     "react-router-dom": "^6.4.2",
     "react-scripts": "^5.0.1",
     "react-toastify": "^9.1.1",
-    "yarn": "^1.22.19",
-    "tailwindcss": "2.0.4"
+    "yarn": "^1.22.19"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build && gulp licenses",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm run build:tailwind && npm start",
-    "build:tailwind": "tailwind build src/assets/styles/index.css -o src/assets/styles/tailwind.css"
+    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm run build:tailwind && npm start"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -51,8 +50,5 @@
   },
   "optionalDependencies": {
     "typescript": "4.2.3"
-  },
-  "devDependencies": {
-    "tailwindcss": "^3.2.4"
   }
 }
