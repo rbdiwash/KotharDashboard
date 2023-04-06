@@ -1,0 +1,56 @@
+{
+  "name": "Kothar_Dashboard",
+  "version": "1.1.0",
+  "description": "Kothar Dashboard",
+  "license": "MIT",
+  "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@fortawesome/fontawesome-free": "5.15.3",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/material": "^5.11.4",
+    "@popperjs/core": "2.9.1",
+    "@tailwindcss/forms": "0.2.1",
+    "@tanstack/react-query": "^4.28.0",
+    "autoprefixer": "10.2.5",
+    "axios": "^1.2.3",
+    "chart.js": "2.9.4",
+    "date-fns": "^2.29.3",
+    "gulp": "4.0.2",
+    "gulp-append-prepend": "1.0.8",
+    "postcss": "8.2.8",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.6.0",
+    "react-query": "^3.39.3",
+    "react-router-dom": "^6.4.2",
+    "react-scripts": "^5.0.1",
+    "react-toastify": "^9.1.1",
+    "yarn": "^1.22.19"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build && gulp licenses",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm run build:tailwind && npm start"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "optionalDependencies": {
+    "typescript": "4.2.3"
+  }
+}
