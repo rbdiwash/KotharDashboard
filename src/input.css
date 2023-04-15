@@ -22,4 +22,17 @@
   .table-data {
     @apply border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4;
   }
+  .select {
+    @apply px-3 py-3 placeholder-slate-300 text-slate-600 bg-white rounded border text-sm focus:outline-none focus:ring w-full ease-linear transition-all duration-150;
+  }
+}
+
+.select * {
+  padding: 0.75rem !important;
+  color: rgb(71 85 105) !important;
+  margin: 0.75rem;
+}
+
+.css-jedpe8-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
+  padding: 0.7rem !important;
 }

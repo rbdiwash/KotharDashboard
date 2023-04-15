@@ -20,7 +20,7 @@ const InputField = ({
       <input
         type={type || "text"}
         className={
-          "border-0 px-3 py-3 placeholder-slate-300 text-slate-600 bg-white rounded border border-1 text-sm focus:outline-none focus:ring w-full ease-linear transition-all duration-150 " +
+          "p-3 placeholder-slate-300 text-slate-600 bg-white rounded border border-1 text-sm focus:outline-none focus:ring w-full ease-linear transition-all duration-150 " +
           className
         }
         placeholder={placeholder}

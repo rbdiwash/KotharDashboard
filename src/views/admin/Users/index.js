@@ -33,7 +33,7 @@ const Users = ({ color = "dark" }) => {
                   startIcon={<FaPlusCircle />}
                   component={Link}
                   sx={{ color: "white" }}
-                  to="/admin/university/add"
+                  to="/admin/users/add"
                 >
                   Add User
                 </Button>

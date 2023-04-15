@@ -1,4 +1,5 @@
 import { Button, IconButton, Tooltip } from "@mui/material";
+import DeleteModal from "components/Modals/DeleteModal";
 import { useState } from "react";
 import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
 import { FaPlusCircle } from "react-icons/fa";
@@ -7,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 const University = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
   const navigate = useNavigate();
+  const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
 
   return (
     <div className="flex flex-wrap mt-4">
@@ -57,7 +59,7 @@ const University = ({ color = "light" }) => {
               <tbody>
                 {[0, 1, 2, 3, 4].map((item, index) => (
                   <tr key={item?.id || index}>
-                    <th className="table-data text-left flex items-center">
+                    <td className="table-data text-left flex items-center">
                       <img
                         src={require("assets/img/bootstrap.jpg")}
                         className="h-12 w-12 bg-white rounded-full border"
@@ -71,7 +73,7 @@ const University = ({ color = "light" }) => {
                       >
                         University of Southern Queensland
                       </span>
-                    </th>
+                    </td>
                     <td className="table-data">12345678790</td>
                     <td className="table-data">uosq@college.au</td>
                     <td className="table-data">
@@ -106,7 +108,14 @@ const University = ({ color = "light" }) => {
                           </IconButton>
                         </Tooltip>
                         <Tooltip title="Delete University" arrow>
-                          <IconButton>
+                          <IconButton
+                            onClick={() =>
+                              setOpenConfirmationModal({
+                                state: true,
+                                id: item?.id,
+                              })
+                            }
+                          >
                             <AiFillDelete className="text-red-600 cursor-pointer" />
                           </IconButton>
                         </Tooltip>
@@ -119,6 +128,16 @@ const University = ({ color = "light" }) => {
           </div>
         </div>
       </div>
+      {openConfirmationModal.state && (
+        <DeleteModal
+          open={openConfirmationModal.state}
+          item="University"
+          handleCancel={() =>
+            setOpenConfirmationModal({ state: false, id: null })
+          }
+          handleDelete={() => {}}
+        />
+      )}
     </div>
   );
 };

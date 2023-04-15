@@ -7,6 +7,8 @@ import AddUni from "views/admin/University/AddUni";
 import Users from "views/admin/Users";
 import Students from "views/admin/Students";
 import AddStudent from "views/admin/Students/AddStudent";
+import AddUsers from "views/admin/Users/AddUsers";
+import Consultancy from "views/admin/Consultancy";
 
 // render - dashboard
 const Admin = Loadable(lazy(() => import("layouts/Admin")));
@@ -39,11 +41,15 @@ const AdminRoutes = {
 
     {
       path: "consultancy",
-      element: <Tables />,
+      element: <Consultancy />,
     },
     {
       path: "users",
       element: <Users />,
+    },
+    {
+      path: "users/add",
+      element: <AddUsers />,
     },
 
     {
