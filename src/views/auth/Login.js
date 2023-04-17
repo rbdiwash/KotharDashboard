@@ -28,9 +28,9 @@ export default function Login() {
         // navigate("/admin/dashboard");
       })
       .catch((err) => {
-        // console.log(err?.data?.message);
+        console.log(err?.data?.message);
         // setMessage({ error: err?.data?.message || "Error" });
-        navigate("/admin/dashboard");
+        // navigate("/admin/dashboard");
       });
   };
   return (
@@ -55,12 +55,12 @@ export default function Login() {
                 >
                   <div className="relative w-full mb-3">
                     <InputField
-                      label="Email"
-                      placeholder="Email"
-                      name="email"
+                      label="Username"
+                      placeholder="Username"
+                      name="username"
                       required
                       type="text"
-                      value={data?.email}
+                      value={data?.username}
                       onChange={handleInputChange}
                     />
                   </div>
