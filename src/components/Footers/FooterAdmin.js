@@ -11,10 +11,10 @@ export default function FooterAdmin() {
               <div className="text-sm text-slate-500 font-semibold py-1 text-center md:text-left">
                 Copyright © {new Date().getFullYear()}{" "}
                 <a
-                  href="https://www.creative-tim.com?ref=nr-footer-admin"
-                  className="text-slate-500 hover:text-slate-700 text-sm font-semibold py-1"
+                  href="https://www.kotharedu.com"
+                  className="text-white hover:text-slate-300 text-sm font-semibold py-1"
                 >
-                  Creative Tim
+                  Kothar Education Service
                 </a>
               </div>
             </div>
@@ -25,7 +25,7 @@ export default function FooterAdmin() {
                     href="https://www.creative-tim.com?ref=nr-footer-admin"
                     className="text-slate-600 hover:text-slate-800 text-sm font-semibold block py-1 px-3"
                   >
-                    Creative Tim
+                    Kothar
                   </a>
                 </li>
                 <li>

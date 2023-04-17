@@ -1,27 +1,49 @@
 import { Button } from "@mui/material";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 import InputField from "components/Input/InputField";
+import { API_URL } from "const/constants";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
-const AddUni = ({ color = "light" }) => {
+const AddConsultancy = ({ color = "light" }) => {
   const [data, setData] = useState({
     name: null,
-    abn: null,
-    contactPerson: null,
+    address: null,
     email: null,
-    country: null,
-    state: null,
-    zipCode: null,
+    website: null,
+    owner: null,
+    abn: null,
+    panNumber: null,
+    primaryContactNumber: null,
+    secondaryContactNumber: null,
+    logo: null,
     image: null,
   });
-
+  const navigate = useNavigate();
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setData((prevState) => ({ ...prevState, [name]: value }));
   };
-  const navigate = useNavigate();
 
-  const handleSubmit = () => {};
+  const { isLoading, isError, error, mutate } = useMutation(postData, {
+    onSuccess() {
+      toast.success("Successfully added");
+    },
+    onError() {
+      toast.error("Error Submitting Data");
+    },
+  });
+
+  async function postData(payload) {
+    await axios.post(`${API_URL}/organization/register`, payload);
+  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    mutate(data);
+  };
+
   return (
     <div className="flex flex-wrap mt-4">
       <div className="w-full mb-12 px-4">
@@ -40,7 +62,7 @@ const AddUni = ({ color = "light" }) => {
                     (color === "light" ? "text-slate-700" : "text-white")
                   }
                 >
-                  Add University
+                  Add Consultancy
                 </h3>
               </div>
             </div>
@@ -62,15 +84,15 @@ const AddUni = ({ color = "light" }) => {
                   </div>
                   <div className="relative w-full mb-3">
                     <InputField
-                      type="number"
-                      placeholder="ABN Number"
-                      name="abn"
-                      label="ABN Number"
+                      label="Address"
+                      placeholder="Address"
+                      name="address"
                       required
-                      value={data?.abn}
+                      type="text"
+                      value={data?.address}
                       onChange={handleInputChange}
                     />
-                  </div>
+                  </div>{" "}
                   <div className="relative w-full mb-3">
                     <InputField
                       type="email"
@@ -84,45 +106,77 @@ const AddUni = ({ color = "light" }) => {
                   </div>
                   <div className="relative w-full mb-3">
                     <InputField
-                      type="text"
-                      placeholder="Contact Person"
-                      name="contactPerson"
-                      label="Contact Person"
+                      label="Website Link"
+                      placeholder="Website Link"
+                      name="website"
                       required
-                      value={data?.contactPerson}
+                      type="text"
+                      value={data?.website}
                       onChange={handleInputChange}
                     />
                   </div>
                   <div className="relative w-full mb-3">
                     <InputField
-                      label="Country"
-                      placeholder="Country"
-                      name="country"
+                      label="Owner Name"
+                      placeholder="Owner Name"
+                      name="owner"
                       required
                       type="text"
-                      value={data?.country}
+                      value={data?.owner}
                       onChange={handleInputChange}
                     />
                   </div>
                   <div className="relative w-full mb-3">
                     <InputField
-                      label="State"
-                      placeholder="State"
-                      name="state"
+                      type="number"
+                      placeholder="ABN Number"
+                      name="abn"
+                      label="ABN Number"
                       required
-                      type="text"
-                      value={data?.state}
+                      value={data?.abn}
                       onChange={handleInputChange}
                     />
                   </div>
                   <div className="relative w-full mb-3">
                     <InputField
-                      label="ZIP Code"
-                      placeholder="ZIP Code"
-                      name="zipCode"
+                      type="number"
+                      placeholder="PAN Number"
+                      name="panNumber"
+                      label="PAN Number"
                       required
-                      type="text"
-                      value={data?.zipCode}
+                      value={data?.panNumber}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="relative w-full mb-3">
+                    <InputField
+                      type="number"
+                      placeholder="Primary Contact Number"
+                      name="primaryContactNumber"
+                      label="Primary Contact Number"
+                      required
+                      value={data?.primaryContactNumber}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="relative w-full mb-3">
+                    <InputField
+                      type="number"
+                      placeholder="Secondary Contact Number"
+                      name="secondaryContactNumber"
+                      label="Secondary Contact Number"
+                      required
+                      value={data?.secondaryContactNumber}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="relative w-full mb-3">
+                    <InputField
+                      label="Logo of University"
+                      name="logo"
+                      // required
+                      type="file"
+                      value={data?.logo}
                       onChange={handleInputChange}
                     />
                   </div>
@@ -130,7 +184,7 @@ const AddUni = ({ color = "light" }) => {
                     <InputField
                       label="Image of University"
                       name="image"
-                      required
+                      // required
                       type="file"
                       value={data?.image}
                       onChange={handleInputChange}
@@ -155,4 +209,4 @@ const AddUni = ({ color = "light" }) => {
   );
 };
 
-export default AddUni;
+export default AddConsultancy;

@@ -24,10 +24,10 @@ const AddUsers = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const response = axios.post(`${API_URL}/register/user`, {
+    const response = axios.post(`${API_URL}/register/dashboard-user`, {
       ...data,
       organizationId: 1,
-      mfa: "true",
+      mfa: true,
     });
     console.log("🚀  response:", response);
   };

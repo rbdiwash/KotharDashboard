@@ -4,6 +4,7 @@ import { Button } from "@mui/material";
 import InputField from "components/Input/InputField";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "const/constants";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ export default function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("admin/login", data)
+      .post(`${API_URL}/signin`, data)
       .then((res) => {
         setMessage({ success: res?.data?.message });
         setData({
@@ -24,7 +25,7 @@ export default function Login() {
           password: "",
         });
         localStorage.setItem("token", res?.data?.accessToken);
-        navigate("/admin/dashboard");
+        // navigate("/admin/dashboard");
       })
       .catch((err) => {
         // console.log(err?.data?.message);
@@ -58,7 +59,7 @@ export default function Login() {
                       placeholder="Email"
                       name="email"
                       required
-                      type="email"
+                      type="text"
                       value={data?.email}
                       onChange={handleInputChange}
                     />

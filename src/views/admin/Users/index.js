@@ -1,4 +1,7 @@
 import { Button, IconButton, Tooltip } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { API_URL } from "const/constants";
 import { useState } from "react";
 import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
 import { FaPlusCircle } from "react-icons/fa";
@@ -8,6 +11,11 @@ const Users = ({ color = "dark" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
   const navigate = useNavigate();
 
+  const getData = async () => {
+    const res = await axios.get(`${API_URL}/users/all`);
+    return res?.data;
+  };
+  const { data, error, isError, isLoading } = useQuery(["users"], getData);
   return (
     <div className="flex flex-wrap mt-4">
       <div className="w-full mb-12 px-4">

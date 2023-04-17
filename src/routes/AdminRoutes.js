@@ -9,6 +9,8 @@ import Students from "views/admin/Students";
 import AddStudent from "views/admin/Students/AddStudent";
 import AddUsers from "views/admin/Users/AddUsers";
 import Consultancy from "views/admin/Consultancy";
+import ViewConsultancy from "views/admin/Consultancy/ViewConsultancy";
+import AddConsultancy from "views/admin/Consultancy/AddConsultancy";
 
 // render - dashboard
 const Admin = Loadable(lazy(() => import("layouts/Admin")));
@@ -44,6 +46,14 @@ const AdminRoutes = {
       element: <Consultancy />,
     },
     {
+      path: "consultancy/add",
+      element: <AddConsultancy />,
+    },
+    {
+      path: "consultancy/view/:id",
+      element: <ViewConsultancy />,
+    },
+    {
       path: "users",
       element: <Users />,
     },
@@ -64,3 +74,14 @@ const AdminRoutes = {
 };
 
 export default AdminRoutes;
+//  name: null,
+//     address: null,
+//     email: null,
+//     website: null,
+//     owner: null,
+//     abn: null,
+//     panNumber: null,
+//     primaryContactNumber: null,
+//     secondaryContactNumber: null,
+//     logo: null,
+//     iamge: null,
