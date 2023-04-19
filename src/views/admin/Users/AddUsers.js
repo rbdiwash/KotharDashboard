@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import InputField from "components/Input/InputField";
 import { API_URL } from "const/constants";
+import useKothar from "context/useKothar";
 import { useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
@@ -17,7 +18,7 @@ const AddUsers = () => {
     username: null,
     type: "ADMIN",
   });
-
+  const [{ consultancyList }, {}] = useKothar();
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setData((prevState) => ({ ...prevState, [name]: value }));
@@ -43,7 +44,7 @@ const AddUsers = () => {
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    mutate({ ...data, orgId: 1, mfa: false });
+    mutate({ ...data, mfa: data?.type === "ADMIN" ? true : false });
   };
   return (
     <div className="flex flex-wrap mt-4 dashBody">
@@ -125,6 +126,30 @@ const AddUsers = () => {
                       value={data?.password}
                       onChange={handleInputChange}
                     />
+                  </div>
+                  <div className="relative w-full mb-3">
+                    <label
+                      className="block uppercase text-slate-600 text-xs font-bold mb-2"
+                      htmlFor="grid-password"
+                    >
+                      Choose Consultancy
+                    </label>
+                    <FormControl fullWidth size="small">
+                      <Select
+                        value={data?.orgId}
+                        name="type"
+                        onChange={handleInputChange}
+                        required
+                        placeholder="Select Consultancy"
+                      >
+                        <MenuItem value={null} selected disabled>
+                          Select Consultancy
+                        </MenuItem>
+                        {consultancyList?.map((item) => (
+                          <MenuItem value={item?.id}>{item?.name}</MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   </div>
                   <div className="relative w-full mb-3">
                     <label

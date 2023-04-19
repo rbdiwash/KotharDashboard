@@ -87,7 +87,7 @@ const Consultancy = ({ color = "light" }) => {
                 </tr>
               </thead>
               <tbody>
-                {consultancyList?.data?.map((item, index) => (
+                {consultancyList?.map((item, index) => (
                   <tr key={item?.id || index}>
                     <td className="table-data text-left flex items-center">
                       {item?.name && (

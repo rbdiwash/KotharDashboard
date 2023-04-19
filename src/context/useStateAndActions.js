@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 const useStateAndActions = () => {
   const getData = async () => {
     const res = await axios.get(`${API_URL}/organization/list`);
-    return res?.data;
+    return res?.data?.data;
   };
   const { data: consultancyList, refetch: refetchConsultancy } = useQuery(
     ["organization"],
