@@ -5,6 +5,7 @@ import InputField from "components/Input/InputField";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "const/constants";
+import { toast } from "react-toastify";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -24,13 +25,15 @@ export default function Login() {
           username: "",
           password: "",
         });
+        console.log(res);
         localStorage.setItem("token", res?.data?.accessToken);
-        // navigate("/admin/dashboard");
+        navigate("/admin/dashboard");
+        toast.success(res?.message || "Loggeed in successfully");
       })
       .catch((err) => {
-        console.log(err?.data?.message);
         // setMessage({ error: err?.data?.message || "Error" });
         // navigate("/admin/dashboard");
+        toast.error(err?.message);
       });
   };
   return (

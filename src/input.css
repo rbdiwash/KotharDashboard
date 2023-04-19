@@ -36,3 +36,6 @@
 .css-jedpe8-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
   padding: 0.7rem !important;
 }
+.dashBody {
+  min-height: calc(100vh - 370px);
+}

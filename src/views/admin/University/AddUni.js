@@ -1,7 +1,13 @@
 import { Button } from "@mui/material";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 import InputField from "components/Input/InputField";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { API_URL } from "const/constants";
+import useKothar from "context/useKothar";
+import { useEffect, useState } from "react";
+import { IoArrowBack } from "react-icons/io5";
+import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const AddUni = ({ color = "light" }) => {
   const [data, setData] = useState({
@@ -20,8 +26,40 @@ const AddUni = ({ color = "light" }) => {
     setData((prevState) => ({ ...prevState, [name]: value }));
   };
   const navigate = useNavigate();
+  const [{}, { refetchUniData }] = useKothar();
 
-  const handleSubmit = () => {};
+  const { state } = useLocation();
+
+  useEffect(() => {
+    if (state) {
+      setData({ ...state?.item });
+    }
+  }, [state]);
+
+  const { mutate } = useMutation(postData, {
+    onSuccess() {
+      toast.success(
+        data?.id ? "Data updated Successfully" : "Data added Successfully"
+      );
+      navigate("/admin/university");
+      refetchUniData();
+    },
+    onError() {
+      toast.error(data?.id ? "Error Updating Data" : "Error Submitting Data");
+    },
+  });
+
+  async function postData(payload) {
+    if (data?.id) {
+      await axios.put(`${API_URL}/university/update/${payload?.id}`, payload);
+    } else {
+      await axios.post(`${API_URL}/university/register`, payload);
+    }
+  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    mutate({ ...data, image: "asdf", logo: "asdf" });
+  };
   return (
     <div className="flex flex-wrap mt-4">
       <div className="w-full mb-12 px-4">
@@ -33,7 +71,11 @@ const AddUni = ({ color = "light" }) => {
         >
           <div className="rounded-t mb-0 px-10 py-3 border-0">
             <div className="flex flex-wrap items-center">
-              <div className="relative w-full  max-w-full flex justify-between">
+              <div className="relative w-full  max-w-full flex justify-start gap-4 items-center">
+                <IoArrowBack
+                  className="text-xl cursor-pointer"
+                  onClick={() => navigate(-1)}
+                />
                 <h3
                   className={
                     "font-semibold text-xl " +
@@ -130,15 +172,13 @@ const AddUni = ({ color = "light" }) => {
                     <InputField
                       label="Image of University"
                       name="image"
-                      required
+                      // required
                       type="file"
-                      value={data?.image}
                       onChange={handleInputChange}
                     />
                   </div>
                 </div>
                 <div className="w-full flex justify-end mt-6 gap-4">
-                  {/* <Button variant="outlined" component={Link} to=""> */}
                   <Button variant="outlined" onClick={() => navigate(-1)} to="">
                     Go Back
                   </Button>{" "}

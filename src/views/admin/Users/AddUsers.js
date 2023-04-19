@@ -1,9 +1,12 @@
 import { Button, FormControl, MenuItem, Select } from "@mui/material";
+import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import InputField from "components/Input/InputField";
 import { API_URL } from "const/constants";
 import { useState } from "react";
+import { IoArrowBack } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const AddUsers = () => {
   const [data, setData] = useState({
@@ -21,18 +24,29 @@ const AddUsers = () => {
   };
 
   const navigate = useNavigate();
-
+  const { isLoading, isError, error, mutate } = useMutation(postData, {
+    onSuccess() {
+      toast.success(
+        data?.id ? "Data updated Successfully" : "Data added Successfully"
+      );
+    },
+    onError() {
+      toast.error(data?.id ? "Error Updating Data" : "Error Submitting Data");
+    },
+  });
+  async function postData(payload) {
+    if (data?.id) {
+      await axios.put(`${API_URL}/organization/update`, payload);
+    } else {
+      await axios.post(`${API_URL}/register/dashboard-user`, payload);
+    }
+  }
   const handleSubmit = (e) => {
     e.preventDefault();
-    const response = axios.post(`${API_URL}/register/dashboard-user`, {
-      ...data,
-      organizationId: 1,
-      mfa: true,
-    });
-    console.log("🚀  response:", response);
+    mutate({ ...data, orgId: 1, mfa: false });
   };
   return (
-    <div className="flex flex-wrap mt-4">
+    <div className="flex flex-wrap mt-4 dashBody">
       <div className="w-full mb-12 px-4">
         <div
           className={
@@ -41,7 +55,11 @@ const AddUsers = () => {
         >
           <div className="rounded-t mb-0 px-10 py-3 border-0">
             <div className="flex flex-wrap items-center">
-              <div className="relative w-full  max-w-full flex justify-between">
+              <div className="relative w-full  max-w-full flex justify-start gap-4 items-center">
+                <IoArrowBack
+                  className="text-xl cursor-pointer"
+                  onClick={() => navigate(-1)}
+                />
                 <h3 className={"font-semibold text-xl text-slate-700"}>
                   Add Admins/Users
                 </h3>
@@ -90,7 +108,7 @@ const AddUsers = () => {
                     <InputField
                       type="number"
                       placeholder="Mobile Number"
-                      name="abn"
+                      name="mobileNumber"
                       label="Mobile Number"
                       required
                       value={data?.mobileNumber}

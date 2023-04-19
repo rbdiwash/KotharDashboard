@@ -50,6 +50,10 @@ const AdminRoutes = {
       element: <AddConsultancy />,
     },
     {
+      path: "consultancy/edit/:id",
+      element: <AddConsultancy />,
+    },
+    {
       path: "consultancy/view/:id",
       element: <ViewConsultancy />,
     },

@@ -3,9 +3,11 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import InputField from "components/Input/InputField";
 import { API_URL } from "const/constants";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { IoArrowBack } from "react-icons/io5";
+import useKothar from "context/useKothar";
 
 const AddConsultancy = ({ color = "light" }) => {
   const [data, setData] = useState({
@@ -14,38 +16,55 @@ const AddConsultancy = ({ color = "light" }) => {
     email: null,
     website: null,
     owner: null,
-    abn: null,
     panNumber: null,
     primaryContactNumber: null,
     secondaryContactNumber: null,
     logo: null,
     image: null,
   });
+  const [{}, { refetchConsultancy }] = useKothar();
+
   const navigate = useNavigate();
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setData((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  const { isLoading, isError, error, mutate } = useMutation(postData, {
+  const { state } = useLocation();
+
+  useEffect(() => {
+    if (state) {
+      setData({ ...state?.item });
+    }
+  }, [state]);
+
+  const { mutate } = useMutation(postData, {
     onSuccess() {
-      toast.success("Successfully added");
+      toast.success(
+        data?.id ? "Data updated Successfully" : "Data added Successfully"
+      );
+      navigate("/admin/consultancy");
+      refetchConsultancy();
     },
     onError() {
-      toast.error("Error Submitting Data");
+      toast.error(data?.id ? "Error Updating Data" : "Error Submitting Data");
     },
   });
 
   async function postData(payload) {
-    await axios.post(`${API_URL}/organization/register`, payload);
+    if (data?.id) {
+      await axios.put(`${API_URL}/organization/update/${payload?.id}`, payload);
+    } else {
+      await axios.post(`${API_URL}/organization/register`, payload);
+    }
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    mutate(data);
+    mutate({ ...data, image: "asdf", logo: "asdf" });
   };
 
   return (
-    <div className="flex flex-wrap mt-4">
+    <div className="flex flex-wrap mt-4 dashBody">
       <div className="w-full mb-12 px-4">
         <div
           className={
@@ -55,7 +74,11 @@ const AddConsultancy = ({ color = "light" }) => {
         >
           <div className="rounded-t mb-0 px-10 py-3 border-0">
             <div className="flex flex-wrap items-center">
-              <div className="relative w-full  max-w-full flex justify-between">
+              <div className="relative w-full  max-w-full flex justify-start gap-4 items-center">
+                <IoArrowBack
+                  className="text-xl cursor-pointer"
+                  onClick={() => navigate(-1)}
+                />
                 <h3
                   className={
                     "font-semibold text-xl " +
@@ -129,20 +152,9 @@ const AddConsultancy = ({ color = "light" }) => {
                   <div className="relative w-full mb-3">
                     <InputField
                       type="number"
-                      placeholder="ABN Number"
-                      name="abn"
-                      label="ABN Number"
-                      required
-                      value={data?.abn}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      type="number"
-                      placeholder="PAN Number"
+                      placeholder="PAN Number/ABN Number"
                       name="panNumber"
-                      label="PAN Number"
+                      label="PAN Number/ABN Number"
                       required
                       value={data?.panNumber}
                       onChange={handleInputChange}
@@ -165,7 +177,6 @@ const AddConsultancy = ({ color = "light" }) => {
                       placeholder="Secondary Contact Number"
                       name="secondaryContactNumber"
                       label="Secondary Contact Number"
-                      required
                       value={data?.secondaryContactNumber}
                       onChange={handleInputChange}
                     />

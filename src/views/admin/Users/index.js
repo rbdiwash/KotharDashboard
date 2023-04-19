@@ -2,6 +2,7 @@ import { Button, IconButton, Tooltip } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { API_URL } from "const/constants";
+import { tr } from "date-fns/locale";
 import { useState } from "react";
 import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
 import { FaPlusCircle } from "react-icons/fa";
@@ -12,12 +13,14 @@ const Users = ({ color = "dark" }) => {
   const navigate = useNavigate();
 
   const getData = async () => {
-    const res = await axios.get(`${API_URL}/users/all`);
+    const res = await axios.get(`${API_URL}/users/all`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
     return res?.data;
   };
   const { data, error, isError, isLoading } = useQuery(["users"], getData);
   return (
-    <div className="flex flex-wrap mt-4">
+    <div className="flex flex-wrap mt-4  dashBody">
       <div className="w-full mb-12 px-4">
         <div
           className={
@@ -61,45 +64,57 @@ const Users = ({ color = "dark" }) => {
                 </tr>
               </thead>
               <tbody>
-                {[0, 1, 2, 3, 4].map((item, index) => (
-                  <tr key={item?.id || index}>
-                    <th className="table-data text-left flex items-center">
-                      <img
-                        src={require("assets/img/bootstrap.jpg")}
-                        className="h-12 w-12 bg-white rounded-full border"
-                        alt="..."
-                      ></img>
-                      <span
-                        className={
-                          "ml-3 font-bold " +
-                          +(color === "light" ? "text-slate-600" : "text-white")
-                        }
-                      >
-                        Anand Pandey{" "}
-                      </span>
-                    </th>
-                    <td className="table-data">uosq@college.au</td>
-                    <td className="table-data">
-                      <div className="flex">98123456789</div>
-                    </td>
-                    <td className="table-data">
-                      <div className="flex items-center gap-2">Australia</div>
-                    </td>
-                    <td className="table-data">
-                      <div className="flex items-center">Sydney</div>
-                    </td>
+                {data?.data?.length > 0 ? (
+                  data?.data?.map((item, index) => (
+                    <tr key={item?.id || index}>
+                      <th className="table-data text-left flex items-center">
+                        <img
+                          src={require("assets/img/bootstrap.jpg")}
+                          className="h-12 w-12 bg-white rounded-full border"
+                          alt="..."
+                        ></img>
+                        <span
+                          className={
+                            "ml-3 font-bold " +
+                            +(color === "light"
+                              ? "text-slate-600"
+                              : "text-white")
+                          }
+                        >
+                          Anand Pandey{" "}
+                        </span>
+                      </th>
+                      <td className="table-data">uosq@college.au</td>
+                      <td className="table-data">
+                        <div className="flex">98123456789</div>
+                      </td>
+                      <td className="table-data">
+                        <div className="flex items-center gap-2">Australia</div>
+                      </td>
+                      <td className="table-data">
+                        <div className="flex items-center">Sydney</div>
+                      </td>
 
-                    <td className="table-data text-right">
-                      <div className="flex items-center">
-                        <Tooltip title="Delete University" arrow>
-                          <IconButton>
-                            <AiFillDelete className="text-white cursor-pointer" />
-                          </IconButton>
-                        </Tooltip>
+                      <td className="table-data text-right">
+                        <div className="flex items-center">
+                          <Tooltip title="Delete University" arrow>
+                            <IconButton>
+                              <AiFillDelete className="text-white cursor-pointer" />
+                            </IconButton>
+                          </Tooltip>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr key={1}>
+                    <td colSpan={6}>
+                      <div className="text-lg text-center my-10">
+                        No Results Found
                       </div>
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>

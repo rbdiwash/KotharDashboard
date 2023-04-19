@@ -8,24 +8,38 @@ import { Link, useNavigate } from "react-router-dom";
 import { API_URL } from "const/constants";
 import axios from "axios";
 import { toast } from "react-toastify";
+import useKothar from "context/useKothar";
 
 const Consultancy = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
   const navigate = useNavigate();
-  const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
+  const [openConfirmationModal, setOpenConfirmationModal] = useState({});
 
-  const getData = async () => {
-    console.log("asdf");
-    const res = await axios.get(`${API_URL}/organization/register`);
-    return res?.data;
+  const [{ consultancyList }, { refetchConsultancy }] = useKothar();
+
+  const deleteData = () => {
+    axios
+      .delete(`${API_URL}/organization/delete/${openConfirmationModal?.id}`)
+      .then((res) => {
+        toast.success("Data Deleted Successfully");
+        setOpenConfirmationModal({ state: false, id: null });
+        refetchConsultancy();
+      })
+      .error((err) => {
+        toast.error("Error Deleting Data");
+      });
   };
-  const { data, error, isError, isLoading } = useQuery([""], getData);
 
-  // if (isError) {
-  //   toast.error("🦄 Error Fetching Data");
-  // }
+  const imageName = (text) => {
+    const splittedText = text?.split(" ");
+    return splittedText
+      ?.map((word) => word.charAt(0))
+      .join("")
+      .slice(0, 3);
+  };
+
   return (
-    <div className="flex flex-wrap mt-4">
+    <div className="flex flex-wrap mt-4 dashBody">
       <div className="w-full mb-12 px-4">
         <div
           className={
@@ -60,55 +74,54 @@ const Consultancy = ({ color = "light" }) => {
               <thead>
                 <tr>
                   <th className={"table-head " + tableHeadClass}>Name</th>
-                  <th className={"table-head " + tableHeadClass}>ABN Number</th>
                   <th className={"table-head " + tableHeadClass}>Email</th>
                   <th className={"table-head " + tableHeadClass}>Owner</th>
                   <th className={"table-head " + tableHeadClass}>
-                    Contact Person
+                    Contact Number
                   </th>
                   <th className={"table-head " + tableHeadClass}>Website</th>
-                  <th className={"table-head " + tableHeadClass}>PAN</th>
+                  <th className={"table-head " + tableHeadClass}>
+                    PAN/ABN Number
+                  </th>{" "}
                   <th className={"table-head " + tableHeadClass}>Action</th>
                 </tr>
               </thead>
               <tbody>
-                {[0, 1, 2, 3, 4].map((item, index) => (
+                {consultancyList?.data?.map((item, index) => (
                   <tr key={item?.id || index}>
                     <td className="table-data text-left flex items-center">
-                      <img
-                        src={require("assets/img/bootstrap.jpg")}
-                        className="h-12 w-12 bg-white rounded-full border"
-                        alt="..."
-                      ></img>{" "}
+                      {item?.name && (
+                        <span className="font-bold uppercase text-xl rounded-full bg-gray-300 p-2 py-3">
+                          {item?.name && imageName(item?.name)}
+                        </span>
+                      )}
                       <span
                         className={
                           "ml-3 font-bold " +
                           +(color === "light" ? "text-slate-600" : "text-white")
                         }
                       >
-                        University of Southern Queensland
+                        {item?.name || "-"}
                       </span>
                     </td>
-                    <td className="table-data">12345678790</td>
-                    <td className="table-data">uosq@college.au</td>
+                    <td className="table-data">{item?.email || "-"}</td>
                     <td className="table-data">
-                      <div className="flex">Anand Pandey</div>
+                      <div className="flex">{item?.owner || "-"}</div>
                     </td>
                     <td className="table-data">
                       <div className="flex items-center gap-2">
-                        <img
-                          src={require("assets/img/country/aus.png")}
-                          alt="..."
-                          className="w-10 h-10 rounded-full border-2 border-slate-50 shadow"
-                        ></img>
-                        Australia
+                        {item?.primaryContactNumber || "-"}
                       </div>
                     </td>
                     <td className="table-data">
-                      <div className="flex items-center">Sydney</div>
+                      <div className="flex items-center">
+                        {item?.website || "-"}
+                      </div>
                     </td>
                     <td className="table-data">
-                      <div className="flex items-center">Sydney</div>
+                      <div className="flex items-center">
+                        {item?.panNumber || "-"}
+                      </div>
                     </td>
 
                     <td className="table-data text-right">
@@ -120,7 +133,11 @@ const Consultancy = ({ color = "light" }) => {
                         </Tooltip>
                         <Tooltip title="Edit University" arrow>
                           <IconButton
-                            onClick={() => navigate("/admin/university/add")}
+                            onClick={() =>
+                              navigate("/admin/consultancy/add", {
+                                state: { item },
+                              })
+                            }
                           >
                             <AiFillEdit className="text-sky-600 cursor-pointer" />
                           </IconButton>
@@ -153,7 +170,7 @@ const Consultancy = ({ color = "light" }) => {
           handleCancel={() =>
             setOpenConfirmationModal({ state: false, id: null })
           }
-          handleDelete={() => {}}
+          handleDelete={() => deleteData()}
         />
       )}
     </div>

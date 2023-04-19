@@ -3,6 +3,7 @@ import ScrollTop from "components/ScrollTop";
 import { ToastContainer } from "react-toastify";
 import Routes from "routes";
 import "react-toastify/dist/ReactToastify.css";
+import KotharProvider from "context/provider";
 
 const App = () => {
   const queryClient = new QueryClient({
@@ -14,10 +15,12 @@ const App = () => {
   });
   return (
     <QueryClientProvider client={queryClient}>
-      <ToastContainer />
-      <ScrollTop>
-        <Routes />
-      </ScrollTop>
+      <KotharProvider>
+        <ToastContainer />
+        <ScrollTop>
+          <Routes />
+        </ScrollTop>
+      </KotharProvider>
     </QueryClientProvider>
   );
 };

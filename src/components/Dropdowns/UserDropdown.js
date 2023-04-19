@@ -1,12 +1,19 @@
 import React from "react";
-import { createPopper } from "@popperjs/core";
 import { Popover } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const UserDropdown = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
+  };
+
+  const navigate = useNavigate();
+
+  const logOut = () => {
+    localStorage.clear();
+    navigate("/");
   };
 
   const handleClose = () => {
@@ -78,14 +85,14 @@ const UserDropdown = () => {
             Something else here
           </a>
           <div className="h-0 my-2 border border-solid border-slate-100" />
-          <a
-            href="#pablo"
+          <p
+            onClick={logOut}
             className={
-              "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-slate-700"
+              "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-slate-700 cursor-pointer"
             }
           >
-            Seprated link
-          </a>
+            Log out
+          </p>
         </div>
       </Popover>
     </>

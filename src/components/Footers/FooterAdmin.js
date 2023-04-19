@@ -12,7 +12,7 @@ export default function FooterAdmin() {
                 Copyright © {new Date().getFullYear()}{" "}
                 <a
                   href="https://www.kotharedu.com"
-                  className="text-white hover:text-slate-300 text-sm font-semibold py-1"
+                  className="text-slate-600 hover:text-slate-300 text-sm font-semibold py-1"
                 >
                   Kothar Education Service
                 </a>

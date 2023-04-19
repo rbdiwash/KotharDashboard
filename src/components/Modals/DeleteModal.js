@@ -25,16 +25,18 @@ export default function DeleteModal({
         keepMounted
         onClose={handleCancel}
       >
-        <DialogTitle>Delete {item || "item"} ?</DialogTitle>
+        <DialogTitle className="font-bold uppercase">
+          Delete {item || "item"} ?
+        </DialogTitle>
         <hr />
         <DialogContent>
-          <DialogContentText>
+          <DialogContentText className="text-lg py-3">
             Are you sure want to delete the selected {item || "item"}. Once you
             delete, it can't be retrieved back.
           </DialogContentText>
-        </DialogContent>{" "}
+        </DialogContent>
         <hr />
-        <DialogActions>
+        <DialogActions className="py-2">
           <Button onClick={handleCancel} variant="outlined" color="error">
             Cancel
           </Button>
