@@ -12,9 +12,9 @@ const useStateAndActions = () => {
     ["organization"],
     getData,
     {
-      onError: () => {
-        toast.error("Error Fetching Data");
-      },
+      // onError: () => {
+      //   toast.error("Error Fetching Data");
+      // },
     }
   );
   const getUniData = async () => {
@@ -25,9 +25,9 @@ const useStateAndActions = () => {
     ["university"],
     getUniData,
     {
-      onError: () => {
-        toast.error("Error Fetching Data");
-      },
+      // onError: () => {
+      //   toast.error("Error Fetching Data");
+      // },
     }
   );
 

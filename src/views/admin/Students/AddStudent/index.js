@@ -7,6 +7,9 @@ import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepButton from "@mui/material/StepButton";
 import Typography from "@mui/material/Typography";
+import GeneralInfo from "./GeneralInfo";
+import AcademicInfo from "./AcademicInfo";
+import OtherInfo from "./OtherInfo";
 const AddStudent = () => {
   const [data, setData] = useState({
     name: null,
@@ -24,9 +27,9 @@ const AddStudent = () => {
     setData((prevState) => ({ ...prevState, [name]: value }));
   };
   const steps = [
-    "Select campaign settings",
-    "Create an ad group",
-    "Create an ad",
+    "General Information",
+    "Documents and Adress",
+    "Academic Information",
   ];
 
   const navigate = useNavigate();
@@ -80,7 +83,7 @@ const AddStudent = () => {
   };
   const handleSubmit = () => {};
   return (
-    <div className="flex flex-wrap mt-4">
+    <div className="flex flex-wrap mt-4 dashBody">
       <div className="w-full mb-12 px-4">
         <div
           className={
@@ -125,7 +128,13 @@ const AddStudent = () => {
                     ) : (
                       <>
                         <Typography sx={{ mt: 2, mb: 1, py: 1 }}>
-                          Step {activeStep + 1}
+                          {activeStep === 0 ? (
+                            <GeneralInfo />
+                          ) : activeStep === 1 ? (
+                            <AcademicInfo />
+                          ) : (
+                            <OtherInfo />
+                          )}
                         </Typography>
                         <Box
                           sx={{ display: "flex", flexDirection: "row", pt: 2 }}
@@ -135,11 +144,16 @@ const AddStudent = () => {
                             disabled={activeStep === 0}
                             onClick={handleBack}
                             sx={{ mr: 1 }}
+                            variant="contained"
                           >
                             Back
                           </Button>
                           <Box sx={{ flex: "1 1 auto" }} />
-                          <Button onClick={handleNext} sx={{ mr: 1 }}>
+                          <Button
+                            onClick={handleNext}
+                            sx={{ mr: 1 }}
+                            variant="contained"
+                          >
                             Next
                           </Button>
                           {activeStep !== steps.length &&
@@ -151,7 +165,10 @@ const AddStudent = () => {
                                 Step {activeStep + 1} already completed
                               </Typography>
                             ) : (
-                              <Button onClick={handleComplete}>
+                              <Button
+                                onClick={handleComplete}
+                                variant="contained"
+                              >
                                 {completedSteps() === totalSteps() - 1
                                   ? "Finish"
                                   : "Complete Step"}
@@ -163,15 +180,14 @@ const AddStudent = () => {
                   </div>
                 </Box>
 
-                <div className="w-full flex justify-end mt-6 gap-4">
-                  {/* <Button variant="outlined" component={Link} to=""> */}
+                {/* <div className="w-full flex justify-end mt-6 gap-4">
                   <Button variant="outlined" onClick={() => navigate(-1)} to="">
                     Go Back
                   </Button>{" "}
                   <Button variant="contained" type="submit">
                     Submit
                   </Button>
-                </div>
+                </div> */}
               </form>
             </div>
           </div>

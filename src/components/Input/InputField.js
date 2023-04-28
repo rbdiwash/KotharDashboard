@@ -13,9 +13,9 @@ const InputField = ({
     <>
       <label
         className="block uppercase text-slate-600 text-xs font-bold mb-2"
-        htmlFor="grid-password"
+        htmlFor={label}
       >
-        {label || "label"}
+        {label || "label"} {required && <sup className="text-red-500">*</sup>}
       </label>
       <input
         type={type || "text"}

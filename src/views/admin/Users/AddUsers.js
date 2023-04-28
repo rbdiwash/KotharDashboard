@@ -2,6 +2,7 @@ import { Button, FormControl, MenuItem, Select } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import InputField from "components/Input/InputField";
+import SelectField from "components/Input/SelectField";
 import { API_URL } from "const/constants";
 import useKothar from "context/useKothar";
 import { useState } from "react";
@@ -18,6 +19,7 @@ const AddUsers = () => {
     username: null,
     type: "ADMIN",
   });
+  console.log("🚀  data:", data);
   const [{ consultancyList }, {}] = useKothar();
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -128,28 +130,15 @@ const AddUsers = () => {
                     />
                   </div>
                   <div className="relative w-full mb-3">
-                    <label
-                      className="block uppercase text-slate-600 text-xs font-bold mb-2"
-                      htmlFor="grid-password"
-                    >
-                      Choose Consultancy
-                    </label>
-                    <FormControl fullWidth size="small">
-                      <Select
-                        value={data?.orgId}
-                        name="type"
-                        onChange={handleInputChange}
-                        required
-                        placeholder="Select Consultancy"
-                      >
-                        <MenuItem value={null} selected disabled>
-                          Select Consultancy
-                        </MenuItem>
-                        {consultancyList?.map((item) => (
-                          <MenuItem value={item?.id}>{item?.name}</MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
+                    <SelectField
+                      onChange={handleInputChange}
+                      required
+                      value={data?.orgId}
+                      name="orgId"
+                      placeholder="Select Consultancy"
+                      label="Select Consultancy"
+                      options={consultancyList}
+                    />
                   </div>
                   <div className="relative w-full mb-3">
                     <label
