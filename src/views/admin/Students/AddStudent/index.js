@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import GeneralInfo from "./GeneralInfo";
 import AcademicInfo from "./AcademicInfo";
 import OtherInfo from "./OtherInfo";
+import DocumentsAndAddress from "./DocumentsAndAddress";
 const AddStudent = () => {
   const [data, setData] = useState({
     name: null,
@@ -131,7 +132,7 @@ const AddStudent = () => {
                           {activeStep === 0 ? (
                             <GeneralInfo />
                           ) : activeStep === 1 ? (
-                            <AcademicInfo />
+                            <DocumentsAndAddress />
                           ) : (
                             <OtherInfo />
                           )}
