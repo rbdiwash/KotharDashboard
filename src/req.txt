@@ -1,0 +1,91 @@
+General Info
+Name 
+Email
+Contact
+Age
+Gender
+Marital status
+Dob
+Emergency contact (manxe ko naam)
+Emergency email, contact
+Relation with applicant
+
+Documents and address
+
+Address
+Permanent address : - 
+Address
+Country
+State/Province
+Zip Code
+
+Checkbox for same as permanent for mailing address
+
+
+Passport information
+Number
+Issue date, country, expiry date
+Birth city, country 
+
+Nationality
+Country - dropdown
+Citizenship - (country dropdown)
+Is the applicant citizen of more than 1 country
+If yes - input field for that country
+Is the applicant living or studying in any other country
+If yes - input field for that country
+
+Background Information
+Does the student have any refusal from any other country?
+yes/no
+If yes mention country name
+
+Does the student have any serious medical condition?
+yes/no
+If yes mention cause
+
+Has the applicant ever been convicted of a criminal offense?
+If yes mention the cause
+
+Has the applicant applied into immigration into any other country
+If yes mention the names of the country
+
+
+
+Academic Qualification
+
+Board
+NAME OF THE INSTITUTION *
+Primary medium of instruction
+Country of study
+State of study
+GRADING SYSTEM
+SCORE *
+Out of 
+Passout year
+Degree
+Degree title
+
+Work Experience/Gap explanation letters
+
+Can add multiple
+Name of org
+From
+To
+Upload documents
+
+test
+
+Type - ielts/pte/toefl/oet/duo lingo/ielts waiver
+Score - 
+Individual in case of ielts, pte and overall
+Unique id - 
+Date of examination
+
+Type - gre/gte/gmat
+Score - 
+Individual in case of ielts, pte and overall
+Unique id - 
+Date of examination
+
+

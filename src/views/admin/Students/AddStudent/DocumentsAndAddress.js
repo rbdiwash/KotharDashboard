@@ -1,5 +1,4 @@
 import {
-  Autocomplete,
   Checkbox,
   FormControl,
   FormControlLabel,
@@ -8,9 +7,7 @@ import {
   RadioGroup,
   TextField,
 } from "@mui/material";
-import InputField from "components/Input/InputField";
-import SelectField from "components/Input/SelectField";
-import React, { useState } from "react";
+import { useState } from "react";
 
 const DocumentsAndAddress = () => {
   const [data, setData] = useState({
@@ -86,8 +83,8 @@ const DocumentsAndAddress = () => {
             value={data?.number}
             onChange={handleInputChange}
           />
-        </div>{" "}
-      </div>{" "}
+        </div>
+      </div>
       <div className="sub-heading">Temporary Address:</div>
       <hr />
       <FormControlLabel
@@ -143,8 +140,8 @@ const DocumentsAndAddress = () => {
             value={data?.number}
             onChange={handleInputChange}
           />
-        </div>{" "}
-      </div>{" "}
+        </div>
+      </div>
       <div className="sub-heading">Passport Information:</div>
       <hr />
       <div className="grid grid-cols-3 gap-8 mt-6 items-end">
@@ -164,14 +161,14 @@ const DocumentsAndAddress = () => {
           <TextField
             fullWidth
             type="text"
-            placeholder="Issue Date"
+            placeholder="Date of Issue"
             name="passport.issueDate"
-            label="Issue Date"
+            label="Date of Issue"
             required
             value={data?.passport?.issueDate}
             onChange={handleInputChange}
           />
-        </div>{" "}
+        </div>
         <div className="relative w-full mb-3">
           <TextField
             fullWidth
@@ -188,26 +185,188 @@ const DocumentsAndAddress = () => {
           <TextField
             fullWidth
             type="text"
-            placeholder="City"
-            name="permanent.city"
-            label="City"
+            placeholder="Country"
+            name="passport.country"
+            label="Country"
             required
-            value={data?.permanent?.city}
+            value={data?.passport?.country}
             onChange={handleInputChange}
           />
         </div>
         <div className="relative w-full mb-3">
           <TextField
             fullWidth
-            label="ZIP Code"
-            placeholder="ZIP Code"
-            name="permanent.zip"
+            label="Place of Birth"
+            placeholder="Place of Birth"
+            name="passport.placeOfBirth"
             required
-            type="number"
-            value={data?.number}
+            type="text"
+            value={data?.passport?.placeOfBirth}
             onChange={handleInputChange}
           />
+        </div>
+      </div>
+      <div className="sub-heading">Nationality:</div>
+      <hr />
+      <div className="grid grid-cols-2 gap-8 mt-6 items-start">
+        <div>
+          <FormControl>
+            <FormLabel id="demo-row-radio-buttons-group-label">
+              Is the applicant citizen of more than one country ?
+            </FormLabel>
+            <RadioGroup
+              row
+              name="moreThanOneCitizen"
+              onChange={handleInputChange}
+            >
+              <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+              <FormControlLabel value="no" control={<Radio />} label="No" />
+            </RadioGroup>
+          </FormControl>
+          {data?.moreThanOneCitizen === "yes" && (
+            <TextField
+              fullWidth
+              label="Name of the Country"
+              placeholder="Name of the Country"
+              name="secondCountryName"
+              required
+              type="text"
+              value={data?.secondCountryName}
+              onChange={handleInputChange}
+            />
+          )}
         </div>{" "}
+        <div>
+          <FormControl>
+            <FormLabel id="demo-row-radio-buttons-group-label">
+              Is the applicant living or studying in any other country ?
+            </FormLabel>
+            <RadioGroup
+              row
+              name="livingInAnotherCountry"
+              onChange={handleInputChange}
+            >
+              <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+              <FormControlLabel value="no" control={<Radio />} label="No" />
+            </RadioGroup>
+          </FormControl>
+          {data?.livingInAnotherCountry === "yes" && (
+            <TextField
+              fullWidth
+              label="Name of the Country"
+              placeholder="Name of the Country"
+              name="secondLivingCountryName"
+              required
+              type="text"
+              value={data?.secondLivingCountryName}
+              onChange={handleInputChange}
+            />
+          )}
+        </div>
+        <div>
+          <FormControl>
+            <FormLabel id="demo-row-radio-buttons-group-label">
+              Does the student have any refusal from any other country ?
+            </FormLabel>
+            <RadioGroup
+              row
+              name="refusedFromAnyCountry"
+              onChange={handleInputChange}
+            >
+              <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+              <FormControlLabel value="no" control={<Radio />} label="No" />
+            </RadioGroup>
+          </FormControl>
+          {data?.refusedFromAnyCountry === "yes" && (
+            <TextField
+              fullWidth
+              label="Name of the Country"
+              placeholder="Mention the name of the Country"
+              name="refusedCountryName"
+              required
+              type="text"
+              value={data?.refusedCountryName}
+              onChange={handleInputChange}
+            />
+          )}
+        </div>
+        <div>
+          <FormControl>
+            <FormLabel id="demo-row-radio-buttons-group-label">
+              Does the student have any serious medical condition ?
+            </FormLabel>
+            <RadioGroup
+              row
+              name="seriousMedicalCondition"
+              onChange={handleInputChange}
+            >
+              <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+              <FormControlLabel value="no" control={<Radio />} label="No" />
+            </RadioGroup>
+          </FormControl>
+          {data?.seriousMedicalCondition === "yes" && (
+            <TextField
+              fullWidth
+              label="Name of the Medical Condition"
+              placeholder="Mention the name of the Condition"
+              name="medicalCause"
+              required
+              type="text"
+              value={data?.medicalCause}
+              onChange={handleInputChange}
+            />
+          )}
+        </div>
+        <div>
+          <FormControl>
+            <FormLabel id="demo-row-radio-buttons-group-label">
+              Has the applicant ever been convicted of a criminal offense ?
+            </FormLabel>
+            <RadioGroup row name="criminalOffence" onChange={handleInputChange}>
+              <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+              <FormControlLabel value="no" control={<Radio />} label="No" />
+            </RadioGroup>
+          </FormControl>
+          {data?.criminalOffence === "yes" && (
+            <TextField
+              fullWidth
+              label="Cause of Criminal Offense"
+              placeholder="Mention the Cause of Criminal Offense"
+              name="criminalOffence"
+              required
+              type="text"
+              value={data?.criminalOffence}
+              onChange={handleInputChange}
+            />
+          )}
+        </div>
+        <div>
+          <FormControl>
+            <FormLabel id="demo-row-radio-buttons-group-label">
+              Has the applicant applied into immigration into any other country?
+            </FormLabel>
+            <RadioGroup
+              row
+              name="immigrationToOtherCountry"
+              onChange={handleInputChange}
+            >
+              <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+              <FormControlLabel value="no" control={<Radio />} label="No" />
+            </RadioGroup>
+          </FormControl>
+          {data?.immigrationToOtherCountry === "yes" && (
+            <TextField
+              fullWidth
+              label="Name of the Country"
+              placeholder="Mention the Name of the Country"
+              name="immigratedCountry"
+              required
+              type="text"
+              value={data?.immigratedCountry}
+              onChange={handleInputChange}
+            />
+          )}
+        </div>
       </div>
     </>
   );

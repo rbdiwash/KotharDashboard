@@ -11,6 +11,7 @@ import GeneralInfo from "./GeneralInfo";
 import AcademicInfo from "./AcademicInfo";
 import OtherInfo from "./OtherInfo";
 import DocumentsAndAddress from "./DocumentsAndAddress";
+import WorkExperience from "./WorkExperience";
 const AddStudent = () => {
   const [data, setData] = useState({
     name: null,
@@ -29,8 +30,10 @@ const AddStudent = () => {
   };
   const steps = [
     "General Information",
-    "Documents and Adress",
-    "Academic Information",
+    "Documents and Address",
+    "Academic Qualification",
+    "Work Experience",
+    "Test",
   ];
 
   const navigate = useNavigate();
@@ -133,6 +136,10 @@ const AddStudent = () => {
                             <GeneralInfo />
                           ) : activeStep === 1 ? (
                             <DocumentsAndAddress />
+                          ) : activeStep === 2 ? (
+                            <AcademicInfo />
+                          ) : activeStep === 3 ? (
+                            <WorkExperience />
                           ) : (
                             <OtherInfo />
                           )}
