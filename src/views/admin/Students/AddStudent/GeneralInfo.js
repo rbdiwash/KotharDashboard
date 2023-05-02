@@ -8,43 +8,19 @@ import {
   TextField,
 } from "@mui/material";
 import InputField from "components/Input/InputField";
-import SelectField from "components/Input/SelectField";
-import React, { useState } from "react";
 
-const GeneralInfo = () => {
-  const [data, setData] = useState({
-    name: null,
-    address: null,
-    email: null,
-    website: null,
-    owner: null,
-    panNumber: null,
-    primaryContactNumber: null,
-    secondaryContactNumber: null,
-    logo: null,
-    image: null,
-    emergency: {
-      name: "",
-      contact: null,
-      email: "",
-      relation: "",
-    },
-  });
-  console.log("🚀  data:", data);
+const GeneralInfo = ({ generalInfo, setGeneralInfo }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    console.log(name?.split("."));
     if (name?.split(".")?.length > 1) {
       let key = name?.split(".")[0];
       let nestedKey = name?.split(".")[1];
-      setData((prevState) => ({
+      setGeneralInfo((prevState) => ({
         ...prevState,
         [key]: { ...prevState?.[key], [nestedKey]: value },
       }));
     } else {
-      console.log("🚀  name:", name);
-
-      setData((prevState) => ({ ...prevState, [name]: value }));
+      setGeneralInfo((prevState) => ({ ...prevState, [name]: value }));
     }
   };
 
@@ -58,7 +34,7 @@ const GeneralInfo = () => {
           name="name"
           required
           type="text"
-          value={data?.name}
+          value={generalInfo?.name}
           onChange={handleInputChange}
         />
       </div>
@@ -70,7 +46,7 @@ const GeneralInfo = () => {
           name="email"
           label="Email Address"
           required
-          value={data?.email}
+          value={generalInfo?.email}
           onChange={handleInputChange}
         />
       </div>
@@ -81,8 +57,8 @@ const GeneralInfo = () => {
           placeholder="Mobile Number"
           name="number"
           required
-          type="text"
-          value={data?.number}
+          type="number"
+          value={generalInfo?.number}
           onChange={handleInputChange}
         />
       </div>{" "}
@@ -116,7 +92,7 @@ const GeneralInfo = () => {
           name="dob"
           label="Date of Birth"
           required
-          value={data?.dob}
+          value={generalInfo?.dob}
           onChange={handleInputChange}
         />
       </div>
@@ -134,6 +110,12 @@ const GeneralInfo = () => {
           renderInput={(params) => (
             <TextField {...params} label="Marital Status" />
           )}
+          onChange={(e, value) => {
+            setGeneralInfo((prevState) => ({
+              ...prevState,
+              maritalStatus: value,
+            }));
+          }}
         />
       </div>
       <div className="relative w-full mb-3">
@@ -144,7 +126,7 @@ const GeneralInfo = () => {
           placeholder="Emergency Contact Name"
           name="emergency.name"
           label="Emergency Contact Name"
-          value={data?.emergency?.name}
+          value={generalInfo?.emergency?.name}
           onChange={handleInputChange}
         />
       </div>
@@ -156,7 +138,7 @@ const GeneralInfo = () => {
           placeholder="Emergency Email"
           name="emergency.email"
           label="Emergency Email"
-          value={data?.emergency?.email}
+          value={generalInfo?.emergency?.email}
           onChange={handleInputChange}
         />
       </div>
@@ -168,7 +150,7 @@ const GeneralInfo = () => {
           placeholder="Emergency Contact Number"
           name="emergency.contact"
           label="Emergency Contact Number"
-          value={data?.emergency.contact}
+          value={generalInfo?.emergency?.contact}
           onChange={handleInputChange}
         />
       </div>
@@ -180,7 +162,7 @@ const GeneralInfo = () => {
           placeholder="Relation With Applicant"
           name="emergency.relation"
           label="Relation With Applicant"
-          value={data?.emergency?.relation}
+          value={generalInfo?.emergency?.relation}
           onChange={handleInputChange}
         />
       </div>

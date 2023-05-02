@@ -9,25 +9,10 @@ import StepButton from "@mui/material/StepButton";
 import Typography from "@mui/material/Typography";
 import GeneralInfo from "./GeneralInfo";
 import AcademicInfo from "./AcademicInfo";
-import OtherInfo from "./OtherInfo";
+import TestInfo from "./TestInfo";
 import DocumentsAndAddress from "./DocumentsAndAddress";
 import WorkExperience from "./WorkExperience";
 const AddStudent = () => {
-  const [data, setData] = useState({
-    name: null,
-    abn: null,
-    contactPerson: null,
-    email: null,
-    country: null,
-    state: null,
-    zipCode: null,
-    image: null,
-  });
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setData((prevState) => ({ ...prevState, [name]: value }));
-  };
   const steps = [
     "General Information",
     "Documents and Address",
@@ -35,6 +20,13 @@ const AddStudent = () => {
     "Work Experience",
     "Test",
   ];
+
+  const [generalInfo, setGeneralInfo] = useState({});
+  const [addressInfo, setAddressInfo] = useState({});
+  const [academicInfo, setAcademicInfo] = useState({});
+  console.log("🚀  academicInfo:", academicInfo);
+  const [workInfo, setWorkInfo] = useState([]);
+  const [testInfo, setTestInfo] = useState({});
 
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
@@ -79,6 +71,14 @@ const AddStudent = () => {
     newCompleted[activeStep] = true;
     setCompleted(newCompleted);
     handleNext();
+
+    const data = {
+      ...generalInfo,
+      ...addressInfo,
+      academicInfo,
+      workInfo,
+      testInfo,
+    };
   };
 
   const handleReset = () => {
@@ -133,15 +133,19 @@ const AddStudent = () => {
                       <>
                         <Typography sx={{ mt: 2, mb: 1, py: 1 }}>
                           {activeStep === 0 ? (
-                            <GeneralInfo />
+                            <GeneralInfo {...{ generalInfo, setGeneralInfo }} />
                           ) : activeStep === 1 ? (
-                            <DocumentsAndAddress />
+                            <DocumentsAndAddress
+                              {...{ addressInfo, setAddressInfo }}
+                            />
                           ) : activeStep === 2 ? (
-                            <AcademicInfo />
+                            <AcademicInfo
+                              {...{ academicInfo, setAcademicInfo }}
+                            />
                           ) : activeStep === 3 ? (
-                            <WorkExperience />
+                            <WorkExperience {...{ workInfo, setWorkInfo }} />
                           ) : (
-                            <OtherInfo />
+                            <TestInfo {...{ testInfo, setTestInfo }} />
                           )}
                         </Typography>
                         <Box

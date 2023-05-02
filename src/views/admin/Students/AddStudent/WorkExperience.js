@@ -1,25 +1,21 @@
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Button, IconButton, TextField, Tooltip } from "@mui/material";
+import { Button, TextField, Tooltip } from "@mui/material";
 import InputField from "components/Input/InputField";
-import { useState } from "react";
 
-const WorkExperience = () => {
-  const [expData, setExpData] = useState([
-    {
-      nameofOrg: null,
-      from: null,
-      to: null,
-      docs: null,
-      uid: crypto.randomUUID(),
-    },
-  ]);
-  const handleInputChange = (e) => {
+const WorkExperience = ({ workInfo, setWorkInfo }) => {
+  console.log("🚀  workInfo:", workInfo);
+  const handleInputChange = (e, index) => {
     const { name, value } = e.target;
-    setExpData((prevState) => ({ ...prevState, [name]: value }));
+    const row = workInfo.find((item, i) => i === index);
+    setWorkInfo((prevState) => [
+      ...prevState.slice(0, index),
+      { ...row, [name]: value },
+      ...prevState.slice(index + 1, workInfo.length),
+    ]);
   };
   const handleAddMore = () => {
-    setExpData([
-      ...expData,
+    setWorkInfo([
+      ...workInfo,
       {
         nameofOrg: null,
         from: null,
@@ -30,13 +26,13 @@ const WorkExperience = () => {
     ]);
   };
   const handleDeleteExp = (id) => {
-    setExpData([...expData.filter((item) => item?.uid !== id)]);
+    setWorkInfo([...workInfo.filter((item) => item?.uid !== id)]);
   };
   return (
     <div>
       <div className="sub-heading">Work Experience:</div>
       <hr />
-      {expData?.map((item, index) => (
+      {workInfo?.map((item, index) => (
         <div className="flex items-end gap-8 mt-6" key={index}>
           <div className="relative w-full">
             <TextField
@@ -48,32 +44,33 @@ const WorkExperience = () => {
               type="text"
               sx={{ minWidth: 300 }}
               value={item?.nameofOrg}
-              onChange={handleInputChange}
+              onChange={(e) => handleInputChange(e, index)}
             />
           </div>
-
-          <TextField
-            type="text"
-            placeholder="From"
-            name="from"
-            label="From"
-            required
-            sx={{ minWidth: 100 }}
-            value={item?.from}
-            onChange={handleInputChange}
-          />
-
-          <TextField
-            type="text"
-            placeholder="To"
-            name="to"
-            label="To"
-            required
-            sx={{ minWidth: 100 }}
-            value={item?.to}
-            onChange={handleInputChange}
-          />
-
+          <div className="relative w-full">
+            <InputField
+              type="date"
+              placeholder="From"
+              name="from"
+              label="From"
+              required
+              sx={{ minWidth: 100 }}
+              value={item?.from}
+              onChange={(e) => handleInputChange(e, index)}
+            />
+          </div>
+          <div className="relative w-full">
+            <InputField
+              type="date"
+              placeholder="To"
+              name="to"
+              label="To"
+              required
+              sx={{ minWidth: 100 }}
+              value={item?.to}
+              onChange={(e) => handleInputChange(e, index)}
+            />
+          </div>
           <div className="relative w-full">
             <InputField
               fullWidth
@@ -82,7 +79,7 @@ const WorkExperience = () => {
               required
               type="file"
               value={item?.docs}
-              onChange={handleInputChange}
+              onChange={(e) => handleInputChange(e, index)}
             />
           </div>
           <Tooltip title="Delete experience">

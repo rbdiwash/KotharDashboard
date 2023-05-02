@@ -1,32 +1,18 @@
-import {
-  Autocomplete,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Radio,
-  RadioGroup,
-  TextField,
-} from "@mui/material";
-import InputField from "components/Input/InputField";
-import SelectField from "components/Input/SelectField";
-import React, { useState } from "react";
+import { Autocomplete, TextField } from "@mui/material";
 
-const AcademicInfo = () => {
-  const [data, setData] = useState({
-    name: null,
-    address: null,
-    email: null,
-    website: null,
-    owner: null,
-    panNumber: null,
-    primaryContactNumber: null,
-    secondaryContactNumber: null,
-    logo: null,
-    image: null,
-  });
+const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setData((prevState) => ({ ...prevState, [name]: value }));
+    if (name?.split(".")?.length > 1) {
+      let key = name?.split(".")[0];
+      let nestedKey = name?.split(".")[1];
+      setAcademicInfo((prevState) => ({
+        ...prevState,
+        [key]: { ...prevState?.[key], [nestedKey]: value },
+      }));
+    } else {
+      setAcademicInfo((prevState) => ({ ...prevState, [name]: value }));
+    }
   };
 
   return (
@@ -36,10 +22,15 @@ const AcademicInfo = () => {
       <div className="grid grid-cols-3 gap-8 mt-6">
         <div className="relative w-full mb-3">
           <Autocomplete
-            onChange={handleInputChange}
+            onChange={(e, value) => {
+              setAcademicInfo((prevState) => ({
+                ...prevState,
+                tenth: { ...prevState.tenth, board: value },
+              }));
+            }}
             required
-            value={data?.tenth?.board}
-            name="10th.board"
+            value={academicInfo?.tenth?.board}
+            name="tenth.board"
             placeholder="Name of Board"
             label="Name of Board"
             defaultValue="Name of Board"
@@ -57,10 +48,10 @@ const AcademicInfo = () => {
             fullWidth
             label="Name of the Institution"
             placeholder="Name of the Institution"
-            name="10th.number"
+            name="tenth.nameOfSchool"
             required
             type="text"
-            value={data?.tenth?.number}
+            value={academicInfo?.tenth?.nameOfSchool}
             onChange={handleInputChange}
           />
         </div>
@@ -69,10 +60,10 @@ const AcademicInfo = () => {
             fullWidth
             label="Primary medium of Instruction"
             placeholder="Primary medium of Instruction"
-            name="10th.primaryMediumOfInstruction"
+            name="tenth.primaryMediumOfInstruction"
             required
             type="text"
-            value={data?.tenth?.primaryMediumOfInstruction}
+            value={academicInfo?.tenth?.primaryMediumOfInstruction}
             onChange={handleInputChange}
           />
         </div>
@@ -81,10 +72,10 @@ const AcademicInfo = () => {
             fullWidth
             label="Country of Study"
             placeholder="Country of Study"
-            name="10th.countryOfStudy"
+            name="tenth.countryOfStudy"
             required
             type="text"
-            value={data?.tenth?.countryOfStudy}
+            value={academicInfo?.tenth?.countryOfStudy}
             onChange={handleInputChange}
           />
         </div>
@@ -93,16 +84,21 @@ const AcademicInfo = () => {
             fullWidth
             label="State of study"
             placeholder="State of study"
-            name="10th.stateOfStudy"
+            name="tenth.stateOfStudy"
             required
             type="text"
-            value={data?.tenth?.stateOfStudy}
+            value={academicInfo?.tenth?.stateOfStudy}
             onChange={handleInputChange}
           />
         </div>
         <div className="relative w-full mb-3">
           <Autocomplete
-            // onChange={handleInputChange}
+            onChange={(e, value) => {
+              setAcademicInfo((prevState) => ({
+                ...prevState,
+                tenth: { ...prevState.tenth, gradingSystem: value },
+              }));
+            }}
             required
             disablePortal
             size="medium"
@@ -121,10 +117,10 @@ const AcademicInfo = () => {
             fullWidth
             label="Score"
             placeholder="Score"
-            name="10th.score"
+            name="tenth.score"
             required
             type="text"
-            value={data?.tenth?.score}
+            value={academicInfo?.tenth?.score}
             onChange={handleInputChange}
           />
         </div>
@@ -133,10 +129,10 @@ const AcademicInfo = () => {
             fullWidth
             type="text"
             placeholder="Your Score Out Of"
-            name="10th.scoreOutOf"
+            name="tenth.scoreOutOf"
             label="Out Of"
             required
-            value={data?.tenth?.scoreOutOf}
+            value={academicInfo?.tenth?.scoreOutOf}
             onChange={handleInputChange}
           />
         </div>
@@ -145,10 +141,10 @@ const AcademicInfo = () => {
             fullWidth
             label="Passout year"
             placeholder="Passout year"
-            name="10th.passsOutYear"
+            name="tenth.passsOutYear"
             required
             type="number"
-            value={data?.tenth?.passsOutYear}
+            value={academicInfo?.tenth?.passsOutYear}
             onChange={handleInputChange}
           />
         </div>
@@ -157,10 +153,10 @@ const AcademicInfo = () => {
             fullWidth
             type="text"
             placeholder="Degree"
-            name="10th.degree"
+            name="tenth.degree"
             label="Degree"
             required
-            value={data?.tenth?.degree}
+            value={academicInfo?.tenth?.degree}
             onChange={handleInputChange}
           />
         </div>
@@ -169,10 +165,10 @@ const AcademicInfo = () => {
             fullWidth
             type="text"
             placeholder="Degree title"
-            name="10th.degreeTitle"
+            name="tenth.degreeTitle"
             label="Degree title"
             required
-            value={data?.tenth?.degreeTitle}
+            value={academicInfo?.tenth?.degreeTitle}
             onChange={handleInputChange}
           />
         </div>
@@ -182,9 +178,14 @@ const AcademicInfo = () => {
       <div className="grid grid-cols-3 gap-8 mt-6">
         <div className="relative w-full mb-3">
           <Autocomplete
-            onChange={handleInputChange}
+            onChange={(e, value) => {
+              setAcademicInfo((prevState) => ({
+                ...prevState,
+                higher: { ...prevState.higher, board: value },
+              }));
+            }}
             required
-            value={data?.higher?.board}
+            value={academicInfo?.higher?.board}
             name="higher.board"
             placeholder="Name of Board"
             label="Name of Board"
@@ -206,7 +207,7 @@ const AcademicInfo = () => {
             name="higher.number"
             required
             type="text"
-            value={data?.higher?.number}
+            value={academicInfo?.higher?.number}
             onChange={handleInputChange}
           />
         </div>
@@ -218,7 +219,7 @@ const AcademicInfo = () => {
             name="higher.primaryMediumOfInstruction"
             required
             type="text"
-            value={data?.higher?.primaryMediumOfInstruction}
+            value={academicInfo?.higher?.primaryMediumOfInstruction}
             onChange={handleInputChange}
           />
         </div>
@@ -230,7 +231,7 @@ const AcademicInfo = () => {
             name="higher.countryOfStudy"
             required
             type="text"
-            value={data?.higher?.countryOfStudy}
+            value={academicInfo?.higher?.countryOfStudy}
             onChange={handleInputChange}
           />
         </div>
@@ -242,13 +243,18 @@ const AcademicInfo = () => {
             name="higher.stateOfStudy"
             required
             type="text"
-            value={data?.higher?.stateOfStudy}
+            value={academicInfo?.higher?.stateOfStudy}
             onChange={handleInputChange}
           />
         </div>
         <div className="relative w-full mb-3">
           <Autocomplete
-            // onChange={handleInputChange}
+            onChange={(e, value) => {
+              setAcademicInfo((prevState) => ({
+                ...prevState,
+                higher: { ...prevState.higher, gradingSystem: value },
+              }));
+            }}
             required
             disablePortal
             size="medium"
@@ -270,7 +276,7 @@ const AcademicInfo = () => {
             name="higher.tenthScore"
             required
             type="text"
-            value={data?.higher?.tenthScore}
+            value={academicInfo?.higher?.tenthScore}
             onChange={handleInputChange}
           />
         </div>
@@ -282,7 +288,7 @@ const AcademicInfo = () => {
             name="higher.email"
             label="Out Of"
             required
-            value={data?.higher?.email}
+            value={academicInfo?.higher?.email}
             onChange={handleInputChange}
           />
         </div>
@@ -294,7 +300,7 @@ const AcademicInfo = () => {
             name="higher.passsOutYear"
             required
             type="number"
-            value={data?.higher?.passsOutYear}
+            value={academicInfo?.higher?.passsOutYear}
             onChange={handleInputChange}
           />
         </div>
@@ -306,7 +312,7 @@ const AcademicInfo = () => {
             name="higher.degree"
             label="Degree"
             required
-            value={data?.higher?.degree}
+            value={academicInfo?.higher?.degree}
             onChange={handleInputChange}
           />
         </div>
@@ -318,7 +324,7 @@ const AcademicInfo = () => {
             name="higher.degreeTitle"
             label="Degree title"
             required
-            value={data?.higher?.degreeTitle}
+            value={academicInfo?.higher?.degreeTitle}
             onChange={handleInputChange}
           />
         </div>
@@ -328,8 +334,13 @@ const AcademicInfo = () => {
       <div className="grid grid-cols-3 gap-8 mt-6">
         <div className="relative w-full mb-3">
           <Autocomplete
-            onChange={handleInputChange}
-            value={data?.bachelor?.board}
+            onChange={(e, value) => {
+              setAcademicInfo((prevState) => ({
+                ...prevState,
+                higher: { ...prevState.bachelor, board: value },
+              }));
+            }}
+            value={academicInfo?.bachelor?.board}
             name="bachelor.board"
             placeholder="Name of Board"
             label="Name of Board"
@@ -350,7 +361,7 @@ const AcademicInfo = () => {
             placeholder="Name of the Institution"
             name="bachelor.number"
             type="text"
-            value={data?.bachelor?.number}
+            value={academicInfo?.bachelor?.number}
             onChange={handleInputChange}
           />
         </div>
@@ -361,7 +372,7 @@ const AcademicInfo = () => {
             placeholder="Primary medium of Instruction"
             name="bachelor.primaryMediumOfInstruction"
             type="text"
-            value={data?.bachelor?.primaryMediumOfInstruction}
+            value={academicInfo?.bachelor?.primaryMediumOfInstruction}
             onChange={handleInputChange}
           />
         </div>
@@ -372,7 +383,7 @@ const AcademicInfo = () => {
             placeholder="Country of Study"
             name="bachelor.countryOfStudy"
             type="text"
-            value={data?.bachelor?.countryOfStudy}
+            value={academicInfo?.bachelor?.countryOfStudy}
             onChange={handleInputChange}
           />
         </div>
@@ -383,14 +394,18 @@ const AcademicInfo = () => {
             placeholder="State of study"
             name="bachelor.stateOfStudy"
             type="text"
-            value={data?.bachelor?.stateOfStudy}
+            value={academicInfo?.bachelor?.stateOfStudy}
             onChange={handleInputChange}
           />
         </div>
         <div className="relative w-full mb-3">
           <Autocomplete
-            // onChange={handleInputChange}
-
+            onChange={(e, value) => {
+              setAcademicInfo((prevState) => ({
+                ...prevState,
+                bachelor: { ...prevState.bachelor, gradingSystem: value },
+              }));
+            }}
             disablePortal
             size="medium"
             id="combo-box-demo"
@@ -410,7 +425,7 @@ const AcademicInfo = () => {
             placeholder="Score"
             name="bachelor.tenthScore"
             type="text"
-            value={data?.bachelor?.tenthScore}
+            value={academicInfo?.bachelor?.tenthScore}
             onChange={handleInputChange}
           />
         </div>
@@ -421,7 +436,7 @@ const AcademicInfo = () => {
             placeholder="Your Score Out Of"
             name="bachelor.email"
             label="Out Of"
-            value={data?.bachelor?.email}
+            value={academicInfo?.bachelor?.email}
             onChange={handleInputChange}
           />
         </div>
@@ -432,7 +447,7 @@ const AcademicInfo = () => {
             placeholder="Passout year"
             name="bachelor.passsOutYear"
             type="number"
-            value={data?.bachelor?.passsOutYear}
+            value={academicInfo?.bachelor?.passsOutYear}
             onChange={handleInputChange}
           />
         </div>
@@ -443,7 +458,7 @@ const AcademicInfo = () => {
             placeholder="Degree"
             name="bachelor.degree"
             label="Degree"
-            value={data?.bachelor?.degree}
+            value={academicInfo?.bachelor?.degree}
             onChange={handleInputChange}
           />
         </div>
@@ -454,7 +469,7 @@ const AcademicInfo = () => {
             placeholder="Degree title"
             name="bachelor.degreeTitle"
             label="Degree title"
-            value={data?.bachelor?.degreeTitle}
+            value={academicInfo?.bachelor?.degreeTitle}
             onChange={handleInputChange}
           />
         </div>
@@ -466,32 +481,32 @@ const AcademicInfo = () => {
 export default AcademicInfo;
 
 {
-  /* {data?.identificationType && (
+  /* {academicInfo?.identificationType && (
           <>
             <div className="relative w-full mb-3">
               <InputField
                 label={
-                  data?.identificationType === "citizenship"
+                  academicInfo?.identificationType === "citizenship"
                     ? "Citizenship Number"
-                    : data?.identificationType === "passport"
+                    : academicInfo?.identificationType === "passport"
                     ? "Passport Number"
                     : "Licence Number"
                 }
                 placeholder={
-                  data?.identificationType === "citizenship"
+                  academicInfo?.identificationType === "citizenship"
                     ? "Citizenship Number"
-                    : data?.identificationType === "passport"
+                    : academicInfo?.identificationType === "passport"
                     ? "Passport Number"
                     : "Licence Number"
                 }
                 name={
-                  data?.identificationType === "passport"
+                  academicInfo?.identificationType === "passport"
                     ? "passportNumber"
                     : "identificationNumber"
                 }
                 required
                 type="text"
-                value={data?.identificationNumber}
+                value={academicInfo?.identificationNumber}
                 onChange={handleInputChange}
               />
             </div>
@@ -502,7 +517,7 @@ export default AcademicInfo;
                 name="nationality"
                 required
                 type="text"
-                value={data?.nationality}
+                value={academicInfo?.nationality}
                 onChange={handleInputChange}
               />
             </div>
@@ -514,7 +529,7 @@ export default AcademicInfo;
 //      <SelectField
 //        onChange={handleInputChange}
 //        required
-//        value={data?.identificationType}
+//        value={academicInfo?.identificationType}
 //        name="identificationType"
 //        placeholder="Select Document"
 //        label="Select Document"
@@ -526,32 +541,32 @@ export default AcademicInfo;
 //        ]}
 //      />
 //    </div>
-//    {data?.identificationType && (
+//    {academicInfo?.identificationType && (
 //      <>
 //        <div className="relative w-full mb-3">
 //          <InputField
 //            label={
-//              data?.identificationType === "citizenship"
+//              academicInfo?.identificationType === "citizenship"
 //                ? "Citizenship Number"
-//                : data?.identificationType === "passport"
+//                : academicInfo?.identificationType === "passport"
 //                ? "Passport Number"
 //                : "Licence Number"
 //            }
 //            placeholder={
-//              data?.identificationType === "citizenship"
+//              academicInfo?.identificationType === "citizenship"
 //                ? "Citizenship Number"
-//                : data?.identificationType === "passport"
+//                : academicInfo?.identificationType === "passport"
 //                ? "Passport Number"
 //                : "Licence Number"
 //            }
 //            name={
-//              data?.identificationType === "passport"
+//              academicInfo?.identificationType === "passport"
 //                ? "passportNumber"
 //                : "identificationNumber"
 //            }
 //            required
 //            type="text"
-//            value={data?.identificationNumber}
+//            value={academicInfo?.identificationNumber}
 //            onChange={handleInputChange}
 //          />
 //        </div>
@@ -562,7 +577,7 @@ export default AcademicInfo;
 //            name="nationality"
 //            required
 //            type="text"
-//            value={data?.nationality}
+//            value={academicInfo?.nationality}
 //            onChange={handleInputChange}
 //          />
 //        </div>
@@ -575,7 +590,7 @@ export default AcademicInfo;
 //        name="number"
 //        required
 //        type="text"
-//        value={data?.number}
+//        value={academicInfo?.number}
 //        onChange={handleInputChange}
 //      />
 //    </div>
@@ -586,7 +601,7 @@ export default AcademicInfo;
 //        name="email"
 //        label="Email Address"
 //        required
-//        value={data?.email}
+//        value={academicInfo?.email}
 //        onChange={handleInputChange}
 //      />
 //    </div>
@@ -597,7 +612,7 @@ export default AcademicInfo;
 //        name="age"
 //        required
 //        type="number"
-//        value={data?.age}
+//        value={academicInfo?.age}
 //        onChange={handleInputChange}
 //      />
 //    </div>
@@ -626,7 +641,7 @@ export default AcademicInfo;
 //        name="panNumber"
 //        label="PAN Number/ABN Number"
 //        required
-//        value={data?.panNumber}
+//        value={academicInfo?.panNumber}
 //        onChange={handleInputChange}
 //      />
 //    </div>
@@ -637,7 +652,7 @@ export default AcademicInfo;
 //        name="primaryContactNumber"
 //        label="Primary Contact Number"
 //        required
-//        value={data?.primaryContactNumber}
+//        value={academicInfo?.primaryContactNumber}
 //        onChange={handleInputChange}
 //      />
 //    </div>
@@ -647,7 +662,7 @@ export default AcademicInfo;
 //        placeholder="Secondary Contact Number"
 //        name="secondaryContactNumber"
 //        label="Secondary Contact Number"
-//        value={data?.secondaryContactNumber}
+//        value={academicInfo?.secondaryContactNumber}
 //        onChange={handleInputChange}
 //      />
 //    </div>
@@ -657,7 +672,7 @@ export default AcademicInfo;
 //        name="logo"
 //        // required
 //        type="file"
-//        value={data?.image}
+//        value={academicInfo?.image}
 //        onChange={handleInputChange}
 //      />
 //    </div>

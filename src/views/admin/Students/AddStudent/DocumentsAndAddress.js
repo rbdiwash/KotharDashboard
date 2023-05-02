@@ -7,30 +7,48 @@ import {
   RadioGroup,
   TextField,
 } from "@mui/material";
+import InputField from "components/Input/InputField";
 import { useState } from "react";
 
-const DocumentsAndAddress = () => {
-  const [data, setData] = useState({
-    name: null,
-    address: null,
-    email: null,
-    website: null,
-    owner: null,
-    panNumber: null,
-    primaryContactNumber: null,
-    secondaryContactNumber: null,
-    logo: null,
-    image: null,
-  });
+const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setData((prevState) => ({ ...prevState, [name]: value }));
+    if (name?.split(".")?.length > 1) {
+      let key = name?.split(".")[0];
+      let nestedKey = name?.split(".")[1];
+      setAddressInfo((prevState) => ({
+        ...prevState,
+        [key]: { ...prevState?.[key], [nestedKey]: value },
+      }));
+    } else {
+      setAddressInfo((prevState) => ({ ...prevState, [name]: value }));
+    }
   };
 
-  const handleCheckBox = (e) => {
-    const { name, checked } = e.target;
-    setData((prevState) => ({ ...prevState, [name]: checked }));
+  const handleSameAsTemp = (e) => {
+    if (e.target.checked) {
+      setAddressInfo((prevState) => ({
+        ...prevState,
+        temp: {
+          country: prevState?.permanent?.country,
+          state: prevState?.permanent?.state,
+          city: prevState?.permanent?.city,
+          zip: prevState?.permanent?.zip,
+        },
+      }));
+    } else {
+      setAddressInfo((prevState) => ({
+        ...prevState,
+        temp: {
+          country: null,
+          state: null,
+          city: null,
+          zip: null,
+        },
+      }));
+    }
   };
+
   return (
     <>
       <div className="sub-heading">Permanent Address:</div>
@@ -44,7 +62,7 @@ const DocumentsAndAddress = () => {
             name="permanent.country"
             required
             type="text"
-            value={data?.permanent?.country}
+            value={addressInfo?.permanent?.country}
             onChange={handleInputChange}
           />
         </div>
@@ -56,7 +74,7 @@ const DocumentsAndAddress = () => {
             name="permanent.state"
             label="State/Province"
             required
-            value={data?.permanent?.state}
+            value={addressInfo?.permanent?.state}
             onChange={handleInputChange}
           />
         </div>
@@ -68,7 +86,7 @@ const DocumentsAndAddress = () => {
             name="permanent.city"
             label="City"
             required
-            value={data?.permanent?.city}
+            value={addressInfo?.permanent?.city}
             onChange={handleInputChange}
           />
         </div>
@@ -80,7 +98,7 @@ const DocumentsAndAddress = () => {
             name="permanent.zip"
             required
             type="number"
-            value={data?.number}
+            value={addressInfo?.number}
             onChange={handleInputChange}
           />
         </div>
@@ -90,7 +108,7 @@ const DocumentsAndAddress = () => {
       <FormControlLabel
         control={<Checkbox name="sameAsPermanent" />}
         label="Same as Permanent Address"
-        onChange={handleCheckBox}
+        onChange={handleSameAsTemp}
       />
       <div className="grid grid-cols-3 gap-8 mt-2 items-end">
         <div className="relative w-full mb-3">
@@ -98,10 +116,10 @@ const DocumentsAndAddress = () => {
             fullWidth
             label="Country"
             placeholder="Country"
-            name="permanent.country"
+            name="temp.country"
             required
             type="text"
-            value={data?.permanent?.country}
+            value={addressInfo?.temp?.country}
             onChange={handleInputChange}
           />
         </div>
@@ -110,10 +128,10 @@ const DocumentsAndAddress = () => {
             fullWidth
             type="text"
             placeholder="State/Province"
-            name="permanent.state"
+            name="temp.state"
             label="State/Province"
             required
-            value={data?.permanent?.state}
+            value={addressInfo?.temp?.state}
             onChange={handleInputChange}
           />
         </div>
@@ -122,10 +140,10 @@ const DocumentsAndAddress = () => {
             fullWidth
             type="text"
             placeholder="City"
-            name="permanent.city"
+            name="temp.city"
             label="City"
             required
-            value={data?.permanent?.city}
+            value={addressInfo?.temp?.city}
             onChange={handleInputChange}
           />
         </div>
@@ -134,10 +152,10 @@ const DocumentsAndAddress = () => {
             fullWidth
             label="ZIP Code"
             placeholder="ZIP Code"
-            name="permanent.zip"
+            name="temp.zip"
             required
             type="number"
-            value={data?.number}
+            value={addressInfo?.temp?.zip}
             onChange={handleInputChange}
           />
         </div>
@@ -153,34 +171,10 @@ const DocumentsAndAddress = () => {
             name="passport.number"
             required
             type="text"
-            value={data?.passport?.number}
+            value={addressInfo?.passport?.number}
             onChange={handleInputChange}
           />
-        </div>
-        <div className="relative w-full mb-3">
-          <TextField
-            fullWidth
-            type="text"
-            placeholder="Date of Issue"
-            name="passport.issueDate"
-            label="Date of Issue"
-            required
-            value={data?.passport?.issueDate}
-            onChange={handleInputChange}
-          />
-        </div>
-        <div className="relative w-full mb-3">
-          <TextField
-            fullWidth
-            type="text"
-            placeholder="Expiry Date"
-            name="passport.expiryDate"
-            label="Expiry Date"
-            required
-            value={data?.passport?.expiryDate}
-            onChange={handleInputChange}
-          />
-        </div>
+        </div>{" "}
         <div className="relative w-full mb-3">
           <TextField
             fullWidth
@@ -189,7 +183,7 @@ const DocumentsAndAddress = () => {
             name="passport.country"
             label="Country"
             required
-            value={data?.passport?.country}
+            value={addressInfo?.passport?.country}
             onChange={handleInputChange}
           />
         </div>
@@ -201,7 +195,31 @@ const DocumentsAndAddress = () => {
             name="passport.placeOfBirth"
             required
             type="text"
-            value={data?.passport?.placeOfBirth}
+            value={addressInfo?.passport?.placeOfBirth}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="relative w-full mb-3">
+          <InputField
+            fullWidth
+            type="date"
+            placeholder="Date of Issue"
+            name="passport.issueDate"
+            label="Date of Issue"
+            required
+            value={addressInfo?.passport?.issueDate}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="relative w-full mb-3">
+          <InputField
+            fullWidth
+            type="date"
+            placeholder="Expiry Date"
+            name="passport.expiryDate"
+            label="Expiry Date"
+            required
+            value={addressInfo?.passport?.expiryDate}
             onChange={handleInputChange}
           />
         </div>
@@ -218,12 +236,13 @@ const DocumentsAndAddress = () => {
               row
               name="moreThanOneCitizen"
               onChange={handleInputChange}
+              value={addressInfo?.moreThanOneCitizen}
             >
               <FormControlLabel value="yes" control={<Radio />} label="Yes" />
               <FormControlLabel value="no" control={<Radio />} label="No" />
             </RadioGroup>
           </FormControl>
-          {data?.moreThanOneCitizen === "yes" && (
+          {addressInfo?.moreThanOneCitizen === "yes" && (
             <TextField
               fullWidth
               label="Name of the Country"
@@ -231,7 +250,7 @@ const DocumentsAndAddress = () => {
               name="secondCountryName"
               required
               type="text"
-              value={data?.secondCountryName}
+              value={addressInfo?.secondCountryName}
               onChange={handleInputChange}
             />
           )}
@@ -245,12 +264,13 @@ const DocumentsAndAddress = () => {
               row
               name="livingInAnotherCountry"
               onChange={handleInputChange}
+              value={addressInfo?.livingInAnotherCountry}
             >
               <FormControlLabel value="yes" control={<Radio />} label="Yes" />
               <FormControlLabel value="no" control={<Radio />} label="No" />
             </RadioGroup>
           </FormControl>
-          {data?.livingInAnotherCountry === "yes" && (
+          {addressInfo?.livingInAnotherCountry === "yes" && (
             <TextField
               fullWidth
               label="Name of the Country"
@@ -258,7 +278,7 @@ const DocumentsAndAddress = () => {
               name="secondLivingCountryName"
               required
               type="text"
-              value={data?.secondLivingCountryName}
+              value={addressInfo?.secondLivingCountryName}
               onChange={handleInputChange}
             />
           )}
@@ -272,12 +292,13 @@ const DocumentsAndAddress = () => {
               row
               name="refusedFromAnyCountry"
               onChange={handleInputChange}
+              value={addressInfo?.refusedFromAnyCountry}
             >
               <FormControlLabel value="yes" control={<Radio />} label="Yes" />
               <FormControlLabel value="no" control={<Radio />} label="No" />
             </RadioGroup>
           </FormControl>
-          {data?.refusedFromAnyCountry === "yes" && (
+          {addressInfo?.refusedFromAnyCountry === "yes" && (
             <TextField
               fullWidth
               label="Name of the Country"
@@ -285,7 +306,7 @@ const DocumentsAndAddress = () => {
               name="refusedCountryName"
               required
               type="text"
-              value={data?.refusedCountryName}
+              value={addressInfo?.refusedCountryName}
               onChange={handleInputChange}
             />
           )}
@@ -299,12 +320,13 @@ const DocumentsAndAddress = () => {
               row
               name="seriousMedicalCondition"
               onChange={handleInputChange}
+              value={addressInfo?.seriousMedicalCondition}
             >
               <FormControlLabel value="yes" control={<Radio />} label="Yes" />
               <FormControlLabel value="no" control={<Radio />} label="No" />
             </RadioGroup>
           </FormControl>
-          {data?.seriousMedicalCondition === "yes" && (
+          {addressInfo?.seriousMedicalCondition === "yes" && (
             <TextField
               fullWidth
               label="Name of the Medical Condition"
@@ -312,7 +334,7 @@ const DocumentsAndAddress = () => {
               name="medicalCause"
               required
               type="text"
-              value={data?.medicalCause}
+              value={addressInfo?.medicalCause}
               onChange={handleInputChange}
             />
           )}
@@ -322,20 +344,25 @@ const DocumentsAndAddress = () => {
             <FormLabel id="demo-row-radio-buttons-group-label">
               Has the applicant ever been convicted of a criminal offense ?
             </FormLabel>
-            <RadioGroup row name="criminalOffence" onChange={handleInputChange}>
+            <RadioGroup
+              row
+              name="criminalOffence"
+              onChange={handleInputChange}
+              value={addressInfo?.criminalOffence}
+            >
               <FormControlLabel value="yes" control={<Radio />} label="Yes" />
               <FormControlLabel value="no" control={<Radio />} label="No" />
             </RadioGroup>
           </FormControl>
-          {data?.criminalOffence === "yes" && (
+          {addressInfo?.criminalOffence === "yes" && (
             <TextField
               fullWidth
               label="Cause of Criminal Offense"
               placeholder="Mention the Cause of Criminal Offense"
-              name="criminalOffence"
+              name="causeOfCriminalOffence"
               required
               type="text"
-              value={data?.criminalOffence}
+              value={addressInfo?.causeOfCriminalOffence}
               onChange={handleInputChange}
             />
           )}
@@ -349,12 +376,13 @@ const DocumentsAndAddress = () => {
               row
               name="immigrationToOtherCountry"
               onChange={handleInputChange}
+              value={addressInfo?.immigrationToOtherCountry}
             >
               <FormControlLabel value="yes" control={<Radio />} label="Yes" />
               <FormControlLabel value="no" control={<Radio />} label="No" />
             </RadioGroup>
           </FormControl>
-          {data?.immigrationToOtherCountry === "yes" && (
+          {addressInfo?.immigrationToOtherCountry === "yes" && (
             <TextField
               fullWidth
               label="Name of the Country"
@@ -362,7 +390,7 @@ const DocumentsAndAddress = () => {
               name="immigratedCountry"
               required
               type="text"
-              value={data?.immigratedCountry}
+              value={addressInfo?.immigratedCountry}
               onChange={handleInputChange}
             />
           )}
