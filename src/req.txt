@@ -87,4 +87,14 @@ Individual in case of ielts, pte and overall
 Unique id - 
 Date of examination
 
-
+courses form 
+    private String name;
+    private String level;
+private String duration;
+    private String university;
+    private Long universityId;
+    private String intake;
+    private String country;
+    private String tuition;
+    private String fee;
+course

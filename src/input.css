@@ -28,6 +28,12 @@
   .sub-heading {
     @apply uppercase font-semibold text-lg pb-2 mt-6;
   }
+  .input-label {
+    @apply block uppercase text-slate-600 text-xs font-bold mb-2;
+  }
+  .view-label {
+    @apply block uppercase text-slate-500 text-xl underline font-semibold mb-4;
+  }
 }
 
 .select * {
@@ -40,5 +46,26 @@
   padding: 0.7rem !important;
 }
 .dashBody {
-  min-height: calc(100vh - 370px);
+  min-height: calc(100vh - 180px);
+}
+.student-profile .table th,
+.student-profile .table td {
+  font-size: 14px;
+  padding: 5px 10px;
+  color: #000;
+}
+
+.student-profile .heading {
+  font-weight: bold;
+  font-size: 16px;
+}
+.student-profile .detail {
+  font-weight: 400;
+  font-size: 13px;
+}
+.css-1qqsdnr-MuiAutocomplete-root .MuiOutlinedInput-root {
+  padding: 4px !important;
+}
+.studentForm .css-1qqsdnr-MuiAutocomplete-root .MuiOutlinedInput-root {
+  padding: 9px !important;
 }

@@ -1,0 +1,275 @@
+import { Autocomplete, Button, TextField, makeStyles } from "@mui/material";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import InputField from "components/Input/InputField";
+import { API_URL } from "const/constants";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { IoArrowBack } from "react-icons/io5";
+import useKothar from "context/useKothar";
+
+const AddCourse = ({ color = "light" }) => {
+  const [data, setData] = useState({
+    country: null,
+    duration: null,
+    fee: null,
+    intake: null,
+    level: null,
+    name: null,
+    tuition: 100,
+    university: null,
+    universityId: null,
+  });
+  const [{ uniData }, { refetchCourseList }] = useKothar();
+
+  const navigate = useNavigate();
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setData((prevState) => ({ ...prevState, [name]: value }));
+  };
+
+  const { state } = useLocation();
+
+  useEffect(() => {
+    if (state) {
+      setData({ ...state?.item });
+    }
+  }, [state]);
+
+  const { mutate } = useMutation(postData, {
+    onSuccess() {
+      toast.success(
+        data?.id ? "Data updated Successfully" : "Data added Successfully"
+      );
+      navigate("/admin/courses");
+      refetchCourseList();
+    },
+    onError() {
+      toast.error(data?.id ? "Error Updating Data" : "Error Submitting Data");
+    },
+  });
+
+  async function postData(payload) {
+    if (data?.id) {
+      await axios.put(`${API_URL}/course/update/${payload?.id}`, payload);
+    } else {
+      await axios.post(`${API_URL}/course/register`, payload);
+    }
+  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    mutate({
+      ...data,
+      intake: data?.intake?.value,
+      university: data?.university?.name,
+      universityId: data?.university?.id,
+    });
+  };
+
+  return (
+    <div className="flex flex-wrap mt-4 dashBody">
+      <div className="w-full mb-12 px-4">
+        <div
+          className={
+            "relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded " +
+            (color === "light" ? "bg-white" : "bg-sky-900 text-white")
+          }
+        >
+          <div className="rounded-t mb-0 px-10 py-3 border-0">
+            <div className="flex flex-wrap items-center">
+              <div className="relative w-full  max-w-full flex justify-start gap-4 items-center">
+                <IoArrowBack
+                  className="text-xl cursor-pointer"
+                  onClick={() => navigate(-1)}
+                />
+                <h3
+                  className={
+                    "font-semibold text-xl " +
+                    (color === "light" ? "text-slate-700" : "text-white")
+                  }
+                >
+                  Add Course
+                </h3>
+              </div>
+            </div>
+          </div>
+          <div className="block w-full overflow-x-auto mt-8">
+            <div className="flex-auto lg:px-10 py-10 pt-0">
+              <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+                <div className="grid grid-cols-2 gap-8 justify-end items-end">
+                  <div className="relative w-full mb-3">
+                    <InputField
+                      label="Name"
+                      placeholder="Name"
+                      name="name"
+                      required
+                      type="text"
+                      value={data?.name}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="relative w-full mb-3">
+                    <InputField
+                      label="Level"
+                      placeholder="Level"
+                      name="level"
+                      required
+                      type="text"
+                      value={data?.level}
+                      onChange={handleInputChange}
+                    />
+                  </div>{" "}
+                  <div className="relative w-full mb-3">
+                    <InputField
+                      type="text"
+                      placeholder="Duration of Course in Year"
+                      name="duration"
+                      label="Duration of Course in Year"
+                      required
+                      value={data?.duration}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="relative w-full mb-3">
+                    <InputField
+                      label="Country"
+                      placeholder="Country"
+                      name="country"
+                      required
+                      type="text"
+                      value={data?.country}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="relative w-full mb-3">
+                    <label className="input-label">Select University *</label>
+                    <Autocomplete
+                      onChange={(e, value) => {
+                        setData((prevState) => ({
+                          ...prevState,
+                          university: value,
+                        }));
+                      }}
+                      required
+                      value={data?.university}
+                      options={uniData || []}
+                      getOptionLabel={(option) => option?.name || ""}
+                      getOptionValue={(option) => option?.id}
+                      disablePortal
+                      renderInput={(params) => (
+                        <TextField {...params} label="Select University" />
+                      )}
+                      ListboxProps={{
+                        style: {
+                          maxHeight: "180px",
+                        },
+                      }}
+                    />
+                  </div>
+                  <div className="relative w-full mb-3">
+                    <label className="input-label">Select Intake *</label>
+                    <Autocomplete
+                      onChange={(e, value) => {
+                        setData((prevState) => ({
+                          ...prevState,
+                          intake: value,
+                        }));
+                      }}
+                      required
+                      value={data?.intake}
+                      placeholder="Select Intake"
+                      options={months}
+                      disablePortal
+                      renderInput={(params) => (
+                        <TextField {...params} label="Select Intake" />
+                      )}
+                      ListboxProps={{
+                        style: {
+                          maxHeight: "180px",
+                        },
+                      }}
+                    />
+                  </div>
+                  <div className="relative w-full mb-3">
+                    <InputField
+                      type="text"
+                      placeholder="Fees (Annual) in AUD"
+                      name="fee"
+                      label="Fees (Annual)"
+                      required
+                      value={data?.fee}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                </div>
+                <div className="w-full flex justify-end mt-6 gap-4">
+                  {/* <Button variant="outlined" component={Link} to=""> */}
+                  <Button variant="outlined" onClick={() => navigate(-1)} to="">
+                    Go Back
+                  </Button>{" "}
+                  <Button variant="contained" type="submit">
+                    Submit
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AddCourse;
+
+const months = [
+  {
+    label: "Jan",
+    value: "January",
+  },
+  {
+    label: "Feb",
+    value: "February",
+  },
+  {
+    label: "March",
+    value: "March",
+  },
+  {
+    label: "Apr",
+    value: "April",
+  },
+  {
+    label: "May",
+    value: "May",
+  },
+  {
+    label: "Jun",
+    value: "June",
+  },
+  {
+    label: "July",
+    value: "July",
+  },
+  {
+    label: "Aug",
+    value: "August",
+  },
+  {
+    label: "Sep",
+    value: "September",
+  },
+  {
+    label: "Oct",
+    value: "October",
+  },
+  {
+    label: "Nov",
+    value: "November",
+  },
+  {
+    label: "Dec",
+    value: "December",
+  },
+];

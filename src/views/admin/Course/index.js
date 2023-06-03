@@ -1,32 +1,36 @@
 import { Button, IconButton, Tooltip } from "@mui/material";
-import axios from "axios";
 import DeleteModal from "components/Modals/DeleteModal";
-import { API_URL } from "const/constants";
-import useKothar from "context/useKothar";
 import { useState } from "react";
 import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
 import { FaPlusCircle } from "react-icons/fa";
+import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
+import { API_URL } from "const/constants";
+import axios from "axios";
 import { toast } from "react-toastify";
+import useKothar from "context/useKothar";
 
-const University = ({ color = "light" }) => {
+const Course = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
   const navigate = useNavigate();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
-  const [{ uniData }, { refetchUniData }] = useKothar();
+
+  const [{ coursesList }, { refetchCourses }] = useKothar();
+  console.log("🚀  coursesList:", coursesList);
 
   const deleteData = () => {
     axios
-      .delete(`${API_URL}/university/delete/${openConfirmationModal?.id}`)
+      .delete(`${API_URL}/organization/delete/${openConfirmationModal?.id}`)
       .then((res) => {
         toast.success("Data Deleted Successfully");
         setOpenConfirmationModal({ state: false, id: null });
-        refetchUniData();
+        refetchCourses();
       })
       .error((err) => {
         toast.error("Error Deleting Data");
       });
   };
+
   const imageName = (text) => {
     const splittedText = text?.split(" ");
     return splittedText
@@ -34,6 +38,7 @@ const University = ({ color = "light" }) => {
       .join("")
       .slice(0, 3);
   };
+
   return (
     <div className="flex flex-wrap mt-4 dashBody">
       <div className="w-full mb-12 px-4">
@@ -52,15 +57,15 @@ const University = ({ color = "light" }) => {
                     (color === "light" ? "text-slate-700" : "text-white")
                   }
                 >
-                  Universities
+                  Courses
                 </h3>
                 <Button
                   variant="contained"
                   startIcon={<FaPlusCircle />}
                   component={Link}
-                  to="/admin/university/add"
+                  to="/admin/course/add"
                 >
-                  Add University
+                  Add Course
                 </Button>
               </div>
             </div>
@@ -70,27 +75,26 @@ const University = ({ color = "light" }) => {
               <thead>
                 <tr>
                   <th className={"table-head " + tableHeadClass}>Name</th>
-                  <th className={"table-head " + tableHeadClass}>Email</th>
-                  <th className={"table-head " + tableHeadClass}>ABN Number</th>
-                  <th className={"table-head " + tableHeadClass}>
-                    Contact Person
-                  </th>
+                  <th className={"table-head " + tableHeadClass}>Level</th>
+                  <th className={"table-head " + tableHeadClass}>Duration</th>
                   <th className={"table-head " + tableHeadClass}>Country</th>
-                  <th className={"table-head " + tableHeadClass}>State</th>
-                  <th className={"table-head " + tableHeadClass}>ZIP Code</th>
-                  <th className={"table-head " + tableHeadClass}>Action</th>
+                  <th className={"table-head " + tableHeadClass}>University</th>
+                  <th className={"table-head " + tableHeadClass}>Intakes</th>
+                  <th className={"table-head " + tableHeadClass}>
+                    Fee(Annual)
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                {uniData?.length > 0 ? (
-                  uniData?.map((item, index) => (
+                {coursesList?.length > 0 ? (
+                  coursesList?.map((item, index) => (
                     <tr key={item?.id || index}>
                       <td className="table-data text-left flex items-center">
-                        <img
-                          src={require("assets/img/bootstrap.jpg")}
-                          className="h-12 w-12 bg-white rounded-full border"
-                          alt="..."
-                        ></img>{" "}
+                        {item?.name && (
+                          <span className="font-bold uppercase text-xl rounded-full bg-gray-300 p-2 py-3">
+                            {item?.name && imageName(item?.name)}
+                          </span>
+                        )}
                         <span
                           className={
                             "ml-3 font-bold " +
@@ -99,29 +103,27 @@ const University = ({ color = "light" }) => {
                               : "text-white")
                           }
                         >
-                          {item?.name}
+                          {item?.name || "-"}
                         </span>
                       </td>
-                      <td className="table-data">{item?.email}</td>
-                      <td className="table-data">{item?.abn}</td>
+                      <td className="table-data">{item?.email || "-"}</td>
                       <td className="table-data">
-                        <div className="flex">{item?.contactPerson}</div>
+                        <div className="flex">{item?.owner || "-"}</div>
                       </td>
                       <td className="table-data">
                         <div className="flex items-center gap-2">
-                          <img
-                            src={require("assets/img/country/aus.png")}
-                            alt="..."
-                            className="w-10 h-10 rounded-full border-2 border-slate-50 shadow"
-                          ></img>
-                          {item?.country}
+                          {item?.primaryContactNumber || "-"}
                         </div>
                       </td>
                       <td className="table-data">
-                        <div className="flex items-center">{item?.state}</div>
+                        <div className="flex items-center">
+                          {item?.website || "-"}
+                        </div>
                       </td>
                       <td className="table-data">
-                        <div className="flex items-center">{item?.zipCode}</div>
+                        <div className="flex items-center">
+                          {item?.panNumber || "-"}
+                        </div>
                       </td>
 
                       <td className="table-data text-right">
@@ -131,10 +133,10 @@ const University = ({ color = "light" }) => {
                               <AiFillEye className="text-sky-600 cursor-pointer" />
                             </IconButton>
                           </Tooltip>
-                          <Tooltip title="Edit University" arrow>
+                          <Tooltip title="Edit Course" arrow>
                             <IconButton
                               onClick={() =>
-                                navigate("/admin/university/add", {
+                                navigate("/admin/course/add", {
                                   state: { item },
                                 })
                               }
@@ -142,7 +144,7 @@ const University = ({ color = "light" }) => {
                               <AiFillEdit className="text-sky-600 cursor-pointer" />
                             </IconButton>
                           </Tooltip>
-                          <Tooltip title="Delete University" arrow>
+                          <Tooltip title="Delete Course" arrow>
                             <IconButton
                               onClick={() =>
                                 setOpenConfirmationModal({
@@ -175,7 +177,7 @@ const University = ({ color = "light" }) => {
       {openConfirmationModal.state && (
         <DeleteModal
           open={openConfirmationModal.state}
-          item="University"
+          item="Course"
           handleCancel={() =>
             setOpenConfirmationModal({ state: false, id: null })
           }
@@ -186,4 +188,4 @@ const University = ({ color = "light" }) => {
   );
 };
 
-export default University;
+export default Course;

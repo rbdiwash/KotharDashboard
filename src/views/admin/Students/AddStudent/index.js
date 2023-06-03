@@ -103,7 +103,7 @@ const AddStudent = () => {
               </div>
             </div>
           </div>
-          <div className="block w-full overflow-x-auto mt-8">
+          <div className="block w-full overflow-x-auto mt-8 studentForm">
             <div className="flex-auto lg:px-10 py-10 pt-0">
               <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
                 <Box sx={{ width: "100%" }}>

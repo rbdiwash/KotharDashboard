@@ -21,6 +21,7 @@ const useStateAndActions = () => {
     const res = await axios.get(`${API_URL}/university/list`);
     return res?.data?.data;
   };
+
   const { data: uniData, refetch: refetchUniData } = useQuery(
     ["university"],
     getUniData,
@@ -31,8 +32,22 @@ const useStateAndActions = () => {
     }
   );
 
-  const state = { consultancyList, uniData };
-  const actions = { refetchConsultancy, refetchUniData };
+  const getCourseData = async () => {
+    const res = await axios.get(`${API_URL}/course/list`);
+    return res?.data?.data;
+  };
+  const { data: courseList, refetch: refetchCourseList } = useQuery(
+    ["course"],
+    getCourseData,
+    {
+      // onError: () => {
+      //   toast.error("Error Fetching Data");
+      // },
+    }
+  );
+
+  const state = { consultancyList, uniData, courseList };
+  const actions = { refetchConsultancy, refetchUniData, refetchCourseList };
 
   return [state, actions];
 };

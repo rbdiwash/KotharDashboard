@@ -9,7 +9,7 @@ const Students = ({ color = "light" }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-wrap mt-4">
+    <div className="flex flex-wrap mt-4 dashBody">
       <div className="w-full mb-12 px-4">
         <div
           className={
@@ -94,9 +94,11 @@ const Students = ({ color = "light" }) => {
                     <td className="table-data text-right">
                       <div className="flex items-center">
                         <Tooltip title="View" arrow>
-                          <IconButton>
-                            <AiFillEye className="text-sky-600 cursor-pointer" />
-                          </IconButton>
+                          <Link to="/admin/student/view">
+                            <IconButton>
+                              <AiFillEye className="text-sky-600 cursor-pointer" />
+                            </IconButton>
+                          </Link>
                         </Tooltip>
                         <Tooltip title="Edit University" arrow>
                           <IconButton

@@ -12,6 +12,7 @@ export default function Sidebar() {
     { label: "Dashboard", value: "dashboard", icon: "fas fa-tv" },
     { label: "University", value: "university", icon: "fas fa-school" },
     { label: "Student", value: "student", icon: "fas fa-graduation-cap" },
+    { label: "courses", value: "courses", icon: "fas fa-briefcase" },
     { label: "consultancy", value: "consultancy", icon: "fas fa-briefcase" },
     { label: "Users", value: "users", icon: "fas fa-user" },
     { label: "Settings", value: "setting", icon: "fas fa-tools" },
