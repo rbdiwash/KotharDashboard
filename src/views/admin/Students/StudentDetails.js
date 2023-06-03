@@ -3,11 +3,13 @@ import { useState } from "react";
 import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
 import { FaPlusCircle } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import OnShoreDetailsModal from "./OnShoreDetailModal";
 
 const StudentDetails = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
   const navigate = useNavigate();
   const student = {};
+  const [open, setOpen] = useState([]);
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">
@@ -32,10 +34,9 @@ const StudentDetails = ({ color = "light" }) => {
                 <Button
                   variant="contained"
                   startIcon={<FaPlusCircle />}
-                  component={Link}
-                  to="/admin/student/add"
+                  onClick={() => setOpen(!open)}
                 >
-                  Add Student
+                  Add Onshore Details
                 </Button>
               </div>
             </div>
@@ -559,6 +560,7 @@ const StudentDetails = ({ color = "light" }) => {
           </div>
         </div>
       </div>
+      {open && <OnShoreDetailsModal />}
     </div>
   );
 };
