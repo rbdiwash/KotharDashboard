@@ -48,29 +48,28 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-export default function OnShoreDetailsModal() {
-  const [open, setOpen] = React.useState(false);
-
+export default function OnShoreDetailsModal({ openOnshore, setOpenOnshore }) {
   const handleClickOpen = () => {
-    setOpen(true);
+    setOpenOnshore(true);
   };
   const handleClose = () => {
-    setOpen(false);
+    setOpenOnshore(false);
   };
+
+  const handleSubmit = () => {};
 
   return (
     <div>
-    
       <BootstrapDialog
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
-        open={open}
+        open={openOnshore}
       >
         <BootstrapDialogTitle
           id="customized-dialog-title"
           onClose={handleClose}
         >
-          Modal title
+          Onshore Details
         </BootstrapDialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
@@ -90,8 +89,11 @@ export default function OnShoreDetailsModal() {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleClose}>
-            Save changes
+          <Button variant="outlined" autoFocus onClick={handleClose}>
+            Cancel
+          </Button>
+          <Button variant="contained" autoFocus onClick={handleSubmit}>
+            Save
           </Button>
         </DialogActions>
       </BootstrapDialog>

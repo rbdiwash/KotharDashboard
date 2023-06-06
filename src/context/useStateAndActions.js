@@ -40,9 +40,9 @@ const useStateAndActions = () => {
     ["course"],
     getCourseData,
     {
-      // onError: () => {
-      //   toast.error("Error Fetching Data");
-      // },
+      onError: () => {
+        toast.error("Error Fetching Data");
+      },
     }
   );
 

@@ -60,6 +60,8 @@ const AddUni = ({ color = "light" }) => {
     e.preventDefault();
     mutate({ ...data, image: "asdf", logo: "asdf" });
   };
+
+  const handleFileChange = () => {};
   return (
     <div className="flex flex-wrap mt-4">
       <div className="w-full mb-12 px-4">
@@ -174,7 +176,7 @@ const AddUni = ({ color = "light" }) => {
                       name="image"
                       // required
                       type="file"
-                      onChange={handleInputChange}
+                      onChange={handleFileChange}
                     />
                   </div>
                 </div>

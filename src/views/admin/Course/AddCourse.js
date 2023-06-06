@@ -33,19 +33,27 @@ const AddCourse = ({ color = "light" }) => {
 
   useEffect(() => {
     if (state) {
-      setData({ ...state?.item });
+      setData({
+        ...state?.item,
+        university: {
+          name: state?.item?.university,
+          id: state?.item?.universityId,
+        },
+        intake: months.find((item) => item?.value === state?.item?.intake),
+      });
     }
   }, [state]);
+  console.log(data);
 
   const { mutate } = useMutation(postData, {
-    onSuccess() {
+    onSuccess(suc) {
       toast.success(
         data?.id ? "Data updated Successfully" : "Data added Successfully"
       );
       navigate("/admin/courses");
       refetchCourseList();
     },
-    onError() {
+    onError(err) {
       toast.error(data?.id ? "Error Updating Data" : "Error Submitting Data");
     },
   });
