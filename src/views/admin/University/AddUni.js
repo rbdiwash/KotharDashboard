@@ -61,7 +61,12 @@ const AddUni = ({ color = "light" }) => {
     mutate({ ...data, image: "asdf", logo: "asdf" });
   };
 
-  const handleFileChange = () => {};
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+    axios.post(`${API_URL}/file/upload`, formData);
+  };
   return (
     <div className="flex flex-wrap mt-4">
       <div className="w-full mb-12 px-4">

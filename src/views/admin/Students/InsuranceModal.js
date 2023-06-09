@@ -9,8 +9,12 @@ import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
-import { TextField } from "@mui/material";
+import { Autocomplete, TextField } from "@mui/material";
 import InputField from "components/Input/InputField";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { API_URL } from "const/constants";
+import axios from "axios";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -53,22 +57,50 @@ BootstrapDialogTitle.propTypes = {
 export default function InsuranceModal({
   openInsuranceForm,
   setOpenInsuranceForm,
+  studentDetails,
 }) {
   const handleClose = () => {
     setOpenInsuranceForm(false);
   };
   const [data, setData] = React.useState({
-    country: null,
-    duration: null,
-    fee: null,
-    intake: null,
-    level: null,
-    name: null,
-    tuition: 100,
-    university: null,
-    universityId: null,
+    caseOfficer: null,
+    cost: null,
+    date: new Date().toISOString(),
+    endDate: new Date().toISOString(),
+    firstName: null,
+    id: studentDetails?.id || 1,
+    insuranceCompany: null,
+    lastName: null,
+    paymentType: null,
+    startingDate: new Date().toISOString(),
+    type: null,
+    visa: null,
   });
-  const handleSubmit = () => {};
+  const { mutate } = useMutation(postData, {
+    onSuccess(suc) {
+      toast.success(
+        data?.id ? "Data updated Successfully" : "Data added Successfully"
+      );
+      setOpenInsuranceForm(false);
+    },
+    onError(err) {
+      toast.error(data?.id ? "Error Updating Data" : "Error Submitting Data");
+    },
+  });
+  async function postData(payload) {
+    if (data?.id) {
+      await axios.put(`${API_URL}/course/update/${payload?.id}`, payload);
+    } else {
+      await axios.post(`${API_URL}/course/register`, payload);
+    }
+  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    mutate({
+      ...data,
+      firstName: data?.name,
+    });
+  };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setData((prevState) => ({ ...prevState, [name]: value }));
@@ -86,7 +118,7 @@ export default function InsuranceModal({
             Insurance Details
           </BootstrapDialogTitle>
           <DialogContent dividers>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-end items-end min-w-[700px]">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-end items-end min-w-[700px] px-4">
               <div className="relative w-full mb-3">
                 <InputField
                   label="Student Full Name"
@@ -111,12 +143,12 @@ export default function InsuranceModal({
               </div>{" "}
               <div className="relative w-full mb-3">
                 <InputField
-                  type="text"
+                  type="date"
                   placeholder="Start Date"
-                  name="startDate"
+                  name="startingDate"
                   label="Start Date"
                   required
-                  value={data?.startDate}
+                  value={data?.startingDate}
                   onChange={handleInputChange}
                 />
               </div>
@@ -126,7 +158,7 @@ export default function InsuranceModal({
                   placeholder="End Date"
                   name="endDate"
                   required
-                  type="text"
+                  type="date"
                   value={data?.endDate}
                   onChange={handleInputChange}
                 />
@@ -134,11 +166,22 @@ export default function InsuranceModal({
               <div className="relative w-full mb-3">
                 <InputField
                   type="text"
-                  placeholder="Insurance Company"
-                  name="insuranceCompany"
-                  label="Insurance Company"
+                  placeholder="Payment Type"
+                  name="paymentType"
+                  label="Payment Type"
                   required
-                  value={data?.insuranceCompany}
+                  value={data?.paymentType}
+                  onChange={handleInputChange}
+                />
+              </div>{" "}
+              <div className="relative w-full mb-3">
+                <InputField
+                  type="text"
+                  placeholder="Cost"
+                  name="cost"
+                  label="Cost"
+                  required
+                  value={data?.cost}
                   onChange={handleInputChange}
                 />
               </div>
@@ -154,14 +197,29 @@ export default function InsuranceModal({
                 />
               </div>
               <div className="relative w-full mb-3">
-                <InputField
-                  type="text"
-                  placeholder="Visa Status"
-                  name="visa"
-                  label="Visa Status"
+                <label className="input-label">Select Visa Status *</label>
+                <Autocomplete
+                  onChange={(e, value) => {
+                    setData((prevState) => ({
+                      ...prevState,
+                      visa: value,
+                    }));
+                  }}
                   required
                   value={data?.visa}
-                  onChange={handleInputChange}
+                  options={[
+                    { label: "Pending", value: "pending" },
+                    { label: "Approved", value: "approved" },
+                  ]}
+                  disablePortal
+                  renderInput={(params) => (
+                    <TextField {...params} label="Select Visa Status" />
+                  )}
+                  ListboxProps={{
+                    style: {
+                      maxHeight: "180px",
+                    },
+                  }}
                 />
               </div>
               <div className="relative w-full mb-3">
@@ -172,17 +230,6 @@ export default function InsuranceModal({
                   label="Case Officer"
                   required
                   value={data?.caseOfficer}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="relative w-full mb-3">
-                <InputField
-                  type="text"
-                  placeholder="Cost"
-                  name="cost"
-                  label="Cost"
-                  required
-                  value={data?.cost}
                   onChange={handleInputChange}
                 />
               </div>

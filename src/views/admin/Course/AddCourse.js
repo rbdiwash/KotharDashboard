@@ -43,7 +43,6 @@ const AddCourse = ({ color = "light" }) => {
       });
     }
   }, [state]);
-  console.log(data);
 
   const { mutate } = useMutation(postData, {
     onSuccess(suc) {

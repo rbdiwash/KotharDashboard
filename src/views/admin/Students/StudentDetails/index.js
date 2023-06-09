@@ -1,14 +1,12 @@
-import { Button, IconButton, Tooltip } from "@mui/material";
+import { Button } from "@mui/material";
 import { useState } from "react";
-import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
 import { FaPlusCircle } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
-import OnShoreDetailsModal from "./OnShoreDetailModal";
-import InsuranceModal from "./InsuranceModal";
+import InsuranceModal from "../InsuranceModal";
+import OnShoreDetailsModal from "../OnShoreDetailModal";
+import RPLModal from "../RPLModal";
+import Comments from "./Comments";
 
 const StudentDetails = ({ color = "light" }) => {
-  const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
-  const navigate = useNavigate();
   const student = {};
   const [openOnshore, setOpenOnshore] = useState(false);
   const [openInsuranceForm, setOpenInsuranceForm] = useState(false);
@@ -248,7 +246,6 @@ const StudentDetails = ({ color = "light" }) => {
                       </div>
                       <div className="w-full">
                         <p className="heading">
-                          {" "}
                           Does the student have any refusal from any other
                           country ?
                         </p>
@@ -307,7 +304,7 @@ const StudentDetails = ({ color = "light" }) => {
                       </div>
                       <div className="w-full">
                         <p className="heading">
-                          Primary Medium of Instruction:{" "}
+                          Primary Medium of Instruction:
                         </p>
                         <p className="detail">
                           {student?.name || "Student Name"}
@@ -328,9 +325,9 @@ const StudentDetails = ({ color = "light" }) => {
                       <div className="w-full">
                         <p className="heading">Score : </p>
                         <p className="detail">
-                          {student?.tenth?.score || "-"}{" "}
+                          {student?.tenth?.score || "-"}
                           {student?.tenth?.gradingSystem}
-                          out of {student?.tenth?.outOf}{" "}
+                          out of {student?.tenth?.outOf}
                           {student?.tenth?.gradingSystem}
                         </p>
                       </div>
@@ -369,7 +366,7 @@ const StudentDetails = ({ color = "light" }) => {
                       </div>
                       <div className="w-full">
                         <p className="heading">
-                          Primary Medium of Instruction:{" "}
+                          Primary Medium of Instruction:
                         </p>
                         <p className="detail">
                           {student?.name || "Student Name"}
@@ -390,9 +387,9 @@ const StudentDetails = ({ color = "light" }) => {
                       <div className="w-full">
                         <p className="heading">Score : </p>
                         <p className="detail">
-                          {student?.tenth?.score || "-"}{" "}
+                          {student?.tenth?.score || "-"}
                           {student?.tenth?.gradingSystem}
-                          out of {student?.tenth?.outOf}{" "}
+                          out of {student?.tenth?.outOf}
                           {student?.tenth?.gradingSystem}
                         </p>
                       </div>
@@ -433,7 +430,7 @@ const StudentDetails = ({ color = "light" }) => {
                       </div>
                       <div className="w-full">
                         <p className="heading">
-                          Primary Medium of Instruction:{" "}
+                          Primary Medium of Instruction:
                         </p>
                         <p className="detail">
                           {student?.name || "Student Name"}
@@ -454,9 +451,9 @@ const StudentDetails = ({ color = "light" }) => {
                       <div className="w-full">
                         <p className="heading">Score : </p>
                         <p className="detail">
-                          {student?.tenth?.score || "-"}{" "}
+                          {student?.tenth?.score || "-"}
                           {student?.tenth?.gradingSystem}
-                          out of {student?.tenth?.outOf}{" "}
+                          out of {student?.tenth?.outOf}
                           {student?.tenth?.gradingSystem}
                         </p>
                       </div>
@@ -532,7 +529,7 @@ const StudentDetails = ({ color = "light" }) => {
                       </table>
                     </div>
                   </div>
-                </div>{" "}
+                </div>
                 <hr />
                 <div className="my-4 grid grid-cols-12 gap-4">
                   <div className="col-span-3 sub-heading mt-0">Test</div>
@@ -586,6 +583,8 @@ const StudentDetails = ({ color = "light" }) => {
                     </div>
                   </div>
                 </div>
+                <hr />
+                <Comments {...{ student }} />
               </div>
             </div>
           </div>
@@ -597,6 +596,7 @@ const StudentDetails = ({ color = "light" }) => {
       {openInsuranceForm && (
         <InsuranceModal {...{ openInsuranceForm, setOpenInsuranceForm }} />
       )}
+      {openRPLform && <RPLModal {...{ openRPLform, setOpenRPLform }} />}
     </>
   );
 };
