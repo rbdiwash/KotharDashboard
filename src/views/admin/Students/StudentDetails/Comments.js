@@ -10,10 +10,10 @@ const Comments = () => {
 
   const { mutate } = useMutation(postData, {
     onSuccess() {
-      toast.success("Data added Successfully");
+      toast.success("Comment added Successfully");
     },
     onError() {
-      toast.error("Error Submitting Data");
+      toast.error("Error Submitting Comment");
     },
   });
 

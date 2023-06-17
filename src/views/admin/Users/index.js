@@ -1,5 +1,5 @@
-import { Button, IconButton, Tooltip } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
+import { Button, CircularProgress, IconButton, Tooltip } from "@mui/material";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { API_URL } from "const/constants";
 import { tr } from "date-fns/locale";
@@ -7,6 +7,7 @@ import { useState } from "react";
 import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
 import { FaPlusCircle } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Users = ({ color = "dark" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
@@ -27,6 +28,24 @@ const Users = ({ color = "dark" }) => {
       .join("")
       .slice(0, 3);
   };
+
+  const { isLoading: loadingVerify, mutate } = useMutation(postData, {
+    onSuccess() {
+      toast.success("Email sent successfully, check your email.");
+    },
+    onError() {
+      toast.error("Error");
+    },
+  });
+  async function postData(payload) {
+    await axios.post(`${API_URL}/email/send-varification-code`, payload);
+  }
+
+  const handleVerifyEmail = (e, id) => {
+    e.preventDefault();
+    mutate({ userId: id });
+  };
+
   return (
     <div className="flex flex-wrap mt-4  dashBody">
       <div className="w-full mb-12 px-4">
@@ -107,7 +126,16 @@ const Users = ({ color = "dark" }) => {
                       </td>
 
                       <td className="table-data text-right">
-                        <div className="flex items-center">
+                        <div className="flex items-center gap-4">
+                          <Button
+                            variant="contained"
+                            onClick={(e) => handleVerifyEmail(e, item?.id)}
+                            endIcon={
+                              loadingVerify && <CircularProgress size={10} />
+                            }
+                          >
+                            Verify Email
+                          </Button>
                           <Tooltip title="Delete University" arrow>
                             <IconButton>
                               <AiFillDelete className="text-white cursor-pointer" />

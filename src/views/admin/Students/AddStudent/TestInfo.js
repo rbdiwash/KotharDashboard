@@ -2,18 +2,14 @@ import { Autocomplete, TextField } from "@mui/material";
 import InputField from "components/Input/InputField";
 import { useState } from "react";
 
-const TestInfo = () => {
-  const [data, setData] = useState({});
-  console.log("🚀  data:", data);
+const TestInfo = (testInfo, setTestInfo) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setData((prevState) => ({ ...prevState, [name]: value }));
+    setTestInfo((prevState) => ({ ...prevState, [name]: value }));
   };
   const handleSelectChange = (e, value) => {
-    console.log(e);
     const { id } = e.target;
-    console.log("🚀  name:", id, e.target);
-    setData((prevState) => ({ ...prevState, [id]: value }));
+    setTestInfo((prevState) => ({ ...prevState, [id]: value }));
   };
 
   return (
@@ -24,7 +20,7 @@ const TestInfo = () => {
         <div className="relative w-full mb-3">
           <Autocomplete
             onChange={(e, value) => {
-              setData((prevState) => ({
+              setTestInfo((prevState) => ({
                 ...prevState,
                 testName: value,
               }));
@@ -32,7 +28,7 @@ const TestInfo = () => {
             required
             freeSolo
             disablePortal
-            value={data?.testName}
+            value={testInfo?.testName}
             id="testName"
             placeholder="Test Type"
             label="Test Type"
@@ -57,7 +53,7 @@ const TestInfo = () => {
             name="score"
             required
             type="text"
-            value={data?.score}
+            value={testInfo?.score}
             onChange={handleInputChange}
           />
         </div>
@@ -70,7 +66,7 @@ const TestInfo = () => {
             name="uniqueId"
             required
             type="text"
-            value={data?.uniqueId}
+            value={testInfo?.uniqueId}
             onChange={handleInputChange}
           />
         </div>
@@ -82,14 +78,14 @@ const TestInfo = () => {
             name="doe"
             required
             type="date"
-            value={data?.doe}
+            value={testInfo?.doe}
             onChange={handleInputChange}
           />
         </div>
       </div>
-      {(data?.testName?.value === "ielts" ||
-        data?.testName?.value === "pte" ||
-        data?.testName?.value === "waiver") && (
+      {(testInfo?.testName?.value === "ielts" ||
+        testInfo?.testName?.value === "pte" ||
+        testInfo?.testName?.value === "waiver") && (
         <>
           <div className="grid grid-cols-4 gap-8 mt-6">
             <div className="relative w-full mb-3">
@@ -100,7 +96,7 @@ const TestInfo = () => {
                 name="speaking"
                 required
                 type="text"
-                value={data?.speaking}
+                value={testInfo?.speaking}
                 onChange={handleInputChange}
               />
             </div>
@@ -112,7 +108,7 @@ const TestInfo = () => {
                 name="listening"
                 required
                 type="text"
-                value={data?.listening}
+                value={testInfo?.listening}
                 onChange={handleInputChange}
               />
             </div>
@@ -124,7 +120,7 @@ const TestInfo = () => {
                 name="reading"
                 required
                 type="text"
-                value={data?.reading}
+                value={testInfo?.reading}
                 onChange={handleInputChange}
               />
             </div>
@@ -136,7 +132,7 @@ const TestInfo = () => {
                 name="writing"
                 required
                 type="text"
-                value={data?.writing}
+                value={testInfo?.writing}
                 onChange={handleInputChange}
               />
             </div>
@@ -149,7 +145,7 @@ const TestInfo = () => {
         <div className="relative w-full mb-3">
           <Autocomplete
             onChange={(e, value) => {
-              setData((prevState) => ({
+              setTestInfo((prevState) => ({
                 ...prevState,
                 testName2: value,
               }));
@@ -157,7 +153,7 @@ const TestInfo = () => {
             required
             freeSolo
             disablePortal
-            value={data?.testName2}
+            value={testInfo?.testName2}
             id="testName2"
             placeholder="Test Type"
             label="Test Type"
@@ -179,7 +175,7 @@ const TestInfo = () => {
             name="score2"
             required
             type="text"
-            value={data?.score2}
+            value={testInfo?.score2}
             onChange={handleInputChange}
           />
         </div>
@@ -192,7 +188,7 @@ const TestInfo = () => {
             name="uniqueId2"
             required
             type="text"
-            value={data?.uniqueId2}
+            value={testInfo?.uniqueId2}
             onChange={handleInputChange}
           />
         </div>
@@ -204,7 +200,7 @@ const TestInfo = () => {
             name="doe2"
             required
             type="date"
-            value={data?.doe2}
+            value={testInfo?.doe2}
             onChange={handleInputChange}
           />
         </div>

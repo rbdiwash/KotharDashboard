@@ -12,6 +12,10 @@ import AcademicInfo from "./AcademicInfo";
 import TestInfo from "./TestInfo";
 import DocumentsAndAddress from "./DocumentsAndAddress";
 import WorkExperience from "./WorkExperience";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { API_URL } from "const/constants";
+import axios from "axios";
 const AddStudent = () => {
   const steps = [
     "General Information",
@@ -24,7 +28,6 @@ const AddStudent = () => {
   const [generalInfo, setGeneralInfo] = useState({});
   const [addressInfo, setAddressInfo] = useState({});
   const [academicInfo, setAcademicInfo] = useState({});
-  console.log("🚀  academicInfo:", academicInfo);
   const [workInfo, setWorkInfo] = useState([]);
   const [testInfo, setTestInfo] = useState({});
 
@@ -71,21 +74,42 @@ const AddStudent = () => {
     newCompleted[activeStep] = true;
     setCompleted(newCompleted);
     handleNext();
-
-    const data = {
-      ...generalInfo,
-      ...addressInfo,
-      academicInfo,
-      workInfo,
-      testInfo,
-    };
+  };
+  const data = {
+    ...generalInfo,
+    ...addressInfo,
+    academicInfo,
+    workInfo,
+    testInfo,
+  };
+  const { isLoading, isError, error, mutate } = useMutation(postData, {
+    onSuccess() {
+      toast.success(
+        data?.id ? "Data updated Successfully" : "Data added Successfully"
+      );
+    },
+    onError() {
+      toast.error(data?.id ? "Error Updating Data" : "Error Submitting Data");
+    },
+  });
+  async function postData(payload) {
+    if (data?.id) {
+      await axios.put(`${API_URL}/organization/update`, payload);
+    } else {
+      await axios.post(`${API_URL}/student/offshore/payloads`, payload);
+    }
+  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    mutate({
+      ...data,
+    });
   };
 
   const handleReset = () => {
     setActiveStep(0);
     setCompleted({});
   };
-  const handleSubmit = () => {};
   return (
     <div className="flex flex-wrap mt-4 dashBody">
       <div className="w-full mb-12 px-4">
@@ -179,7 +203,8 @@ const AddStudent = () => {
                             ) : (
                               <Button
                                 onClick={handleComplete}
-                                variant="contained"
+                                  variant="contained"
+                                  type="submit"
                               >
                                 {completedSteps() === totalSteps() - 1
                                   ? "Finish"
@@ -191,15 +216,6 @@ const AddStudent = () => {
                     )}
                   </div>
                 </Box>
-
-                {/* <div className="w-full flex justify-end mt-6 gap-4">
-                  <Button variant="outlined" onClick={() => navigate(-1)} to="">
-                    Go Back
-                  </Button>{" "}
-                  <Button variant="contained" type="submit">
-                    Submit
-                  </Button>
-                </div> */}
               </form>
             </div>
           </div>

@@ -27,13 +27,18 @@ export default function Login() {
         });
         console.log(res);
         localStorage.setItem("token", res?.data?.accessToken);
-        navigate("/admin/dashboard");
-        toast.success(res?.message || "Loggeed in successfully");
+        res?.data?.data?.mfa
+          ? navigate("/email/verify")
+          : navigate("/admin/dashboard");
+        res?.data?.data?.mfa
+          ? toast.success("Your email is not verified, verify to login.")
+          : toast.success(res?.message || "Loggeed in successfully");
       })
       .catch((err) => {
+        console.log("🚀  err:", err);
         // setMessage({ error: err?.data?.message || "Error" });
         // navigate("/admin/dashboard");
-        toast.error(err?.message);
+        toast.error(err?.response?.data?.message ?? "Error");
       });
   };
   return (
@@ -85,11 +90,11 @@ export default function Login() {
                       Sign In
                     </Button>
                   </div>
-                  <div className="text-center mt-6">
+                  {/* <div className="text-center mt-6">
                     <Button variant="outlined" component={Link} to="/register">
                       Sign up
                     </Button>
-                  </div>
+                  </div> */}
                 </form>
               </div>
             </div>{" "}

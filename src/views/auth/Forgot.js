@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "@mui/material";
+import { Alert, Button } from "@mui/material";
 import InputField from "components/Input/InputField";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "const/constants";
+import { toast } from "react-toastify";
 
 export default function Forgot() {
   const navigate = useNavigate();
@@ -13,19 +14,17 @@ export default function Forgot() {
     const { name, value } = e.target;
     setData((prevState) => ({ ...prevState, [name]: value }));
   };
-  const [message, setMessage] = useState({});
+  const [message, setMessage] = useState();
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
       .post(`${API_URL}/api/forgot-password`, data)
       .then((res) => {
-        setMessage({ success: res?.data?.message });
+        setMessage(res?.data?.message);
         setData({
-          username: "",
-          password: "",
+          email: "",
         });
-        localStorage.setItem("token", res?.data?.accessToken);
-        // navigate("/admin/dashboard");
+        toast.success(res?.data?.message);
       })
       .catch((err) => {
         // console.log(err?.data?.message);
@@ -64,6 +63,7 @@ export default function Forgot() {
                       onChange={handleInputChange}
                     />
                   </div>
+                  {message && <Alert severity="success">{message}</Alert>}
 
                   <div className="text-center mt-6">
                     <Button
