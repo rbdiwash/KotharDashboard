@@ -98,3 +98,12 @@ private String duration;
     private String tuition;
     private String fee;
 course
+
+
+
+Auth
+
+Login --> mfa true for super admin, --> auth controller vitra email/verify 
+Forgot password
+Reset password
+email verification  - email/verify

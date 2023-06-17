@@ -34,7 +34,7 @@ export default function Register() {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("admin/login", data)
+      .post("register/user", data)
       .then((res) => {
         setData({
           username: "",
@@ -44,8 +44,8 @@ export default function Register() {
         navigate("/admin/dashboard");
       })
       .catch((err) => {
-        // console.log(err?.data?.message);
-        navigate("/admin/dashboard");
+        console.log(err?.data?.message);
+        // navigate("/admin/dashboard");
       });
   };
 

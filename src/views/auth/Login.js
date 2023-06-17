@@ -18,7 +18,7 @@ export default function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post(`${API_URL}/signin`, data)
+      .post(`${API_URL}/signin`, { ...data })
       .then((res) => {
         setMessage({ success: res?.data?.message });
         setData({

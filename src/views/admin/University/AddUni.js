@@ -65,7 +65,9 @@ const AddUni = ({ color = "light" }) => {
     const file = e.target.files[0];
     const formData = new FormData();
     formData.append("file", file);
-    axios.post(`${API_URL}/file/upload`, formData);
+    axios.post(`${API_URL}/api/upload`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
   };
   return (
     <div className="flex flex-wrap mt-4">

@@ -19,6 +19,14 @@ const Users = ({ color = "dark" }) => {
     return res?.data;
   };
   const { data, error, isError, isLoading } = useQuery(["users"], getData);
+
+  const imageName = (text) => {
+    const splittedText = text?.split(" ");
+    return splittedText
+      ?.map((word) => word.charAt(0))
+      .join("")
+      .slice(0, 3);
+  };
   return (
     <div className="flex flex-wrap mt-4  dashBody">
       <div className="w-full mb-12 px-4">
@@ -56,10 +64,12 @@ const Users = ({ color = "dark" }) => {
               <thead>
                 <tr>
                   <th className={"table-head " + tableHeadClass}>Name</th>
+                  <th className={"table-head " + tableHeadClass}>Username</th>
                   <th className={"table-head " + tableHeadClass}>Email</th>
                   <th className={"table-head " + tableHeadClass}>Contact</th>
-                  <th className={"table-head " + tableHeadClass}>Country</th>
-                  <th className={"table-head " + tableHeadClass}>Location</th>
+                  <th className={"table-head " + tableHeadClass}>
+                    Email Verified
+                  </th>
                   <th className={"table-head " + tableHeadClass}>Action</th>
                 </tr>
               </thead>
@@ -68,11 +78,7 @@ const Users = ({ color = "dark" }) => {
                   data?.data?.map((item, index) => (
                     <tr key={item?.id || index}>
                       <th className="table-data text-left flex items-center">
-                        <img
-                          src={require("assets/img/bootstrap.jpg")}
-                          className="h-12 w-12 bg-white rounded-full border"
-                          alt="..."
-                        ></img>
+                        {item?.name && imageName(item?.name || "Anand Pandey")}
                         <span
                           className={
                             "ml-3 font-bold " +
@@ -81,18 +87,23 @@ const Users = ({ color = "dark" }) => {
                               : "text-white")
                           }
                         >
-                          Anand Pandey{" "}
+                          {item?.name || "-"}
                         </span>
                       </th>
-                      <td className="table-data">uosq@college.au</td>
                       <td className="table-data">
-                        <div className="flex">98123456789</div>
+                        <div className="flex items-center gap-2">
+                          {item?.username}
+                        </div>
                       </td>
+                      <td className="table-data">{item?.email}</td>
                       <td className="table-data">
-                        <div className="flex items-center gap-2">Australia</div>
+                        <div className="flex">{item?.mobileNumber}</div>
                       </td>
+
                       <td className="table-data">
-                        <div className="flex items-center">Sydney</div>
+                        <div className="flex items-center">
+                          {item?.emailVerified || "No"}
+                        </div>
                       </td>
 
                       <td className="table-data text-right">

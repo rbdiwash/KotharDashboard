@@ -93,21 +93,21 @@ const Students = ({ color = "light" }) => {
 
                     <td className="table-data text-right">
                       <div className="flex items-center">
-                        <Tooltip title="View" arrow>
+                        <Tooltip title="View Student Details" arrow>
                           <Link to="/admin/student/view">
                             <IconButton>
                               <AiFillEye className="text-sky-600 cursor-pointer" />
                             </IconButton>
                           </Link>
                         </Tooltip>
-                        <Tooltip title="Edit University" arrow>
+                        <Tooltip title="Edit Student Details" arrow>
                           <IconButton
                             onClick={() => navigate("/admin/university/add")}
                           >
                             <AiFillEdit className="text-sky-600 cursor-pointer" />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title="Delete University" arrow>
+                        <Tooltip title="Delete Student Info" arrow>
                           <IconButton>
                             <AiFillDelete className="text-red-600 cursor-pointer" />
                           </IconButton>

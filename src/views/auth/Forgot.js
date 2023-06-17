@@ -4,6 +4,7 @@ import { Button } from "@mui/material";
 import InputField from "components/Input/InputField";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "const/constants";
 
 export default function Forgot() {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ export default function Forgot() {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("admin/login", data)
+      .post(`${API_URL}/api/forgot-password`, data)
       .then((res) => {
         setMessage({ success: res?.data?.message });
         setData({
@@ -24,12 +25,12 @@ export default function Forgot() {
           password: "",
         });
         localStorage.setItem("token", res?.data?.accessToken);
-        navigate("/admin/dashboard");
+        // navigate("/admin/dashboard");
       })
       .catch((err) => {
         // console.log(err?.data?.message);
         // setMessage({ error: err?.data?.message || "Error" });
-        navigate("/admin/dashboard");
+        // navigate("/admin/dashboard");
       });
   };
   return (
