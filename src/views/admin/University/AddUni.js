@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import InputField from "components/Input/InputField";
@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const AddUni = ({ color = "light" }) => {
   const [data, setData] = useState({
@@ -58,7 +59,7 @@ const AddUni = ({ color = "light" }) => {
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    mutate({ ...data, image: "asdf", logo: "asdf" });
+    mutate({ ...data });
   };
 
   const handleFileChange = (e) => {
@@ -70,10 +71,9 @@ const AddUni = ({ color = "light" }) => {
         headers: { "Content-Type": "multipart/form-data" },
       })
       .then((res) => {
-        console.log(res);
+        setData({ ...data, image: res?.data?.data?.url });
       })
       .catch((err) => {
-        console.log(err);
         toast.error("Error Uploading file");
       });
   };
@@ -99,7 +99,7 @@ const AddUni = ({ color = "light" }) => {
                     (color === "light" ? "text-slate-700" : "text-white")
                   }
                 >
-                  Add University
+                  {data?.id ? "Edit" : "Add"} University
                 </h3>
               </div>
             </div>
@@ -193,12 +193,29 @@ const AddUni = ({ color = "light" }) => {
                       type="file"
                       onChange={handleFileChange}
                     />
+                    {data?.image && (
+                      <div class="show-image">
+                        <img
+                          src={data?.image}
+                          alt="Image"
+                          className="mr-auto mt-4 h-80 w-80 border p-3 object-cover"
+                        />
+                        <div className="delete">
+                          <IconButton>
+                            <ClearIcon
+                              sx={{ fontSize: 40 }}
+                              onClick={() => setData({ ...data, image: null })}
+                            />
+                          </IconButton>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="w-full flex justify-end mt-6 gap-4">
                   <Button variant="outlined" onClick={() => navigate(-1)} to="">
                     Go Back
-                  </Button>{" "}
+                  </Button>
                   <Button variant="contained" type="submit">
                     Submit
                   </Button>

@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import InputField from "components/Input/InputField";
@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { IoArrowBack } from "react-icons/io5";
 import useKothar from "context/useKothar";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const AddConsultancy = ({ color = "light" }) => {
   const [data, setData] = useState({
@@ -22,6 +23,7 @@ const AddConsultancy = ({ color = "light" }) => {
     logo: null,
     image: null,
   });
+  console.log("🚀  data:", data);
   const [{}, { refetchConsultancy }] = useKothar();
 
   const navigate = useNavigate();
@@ -60,7 +62,23 @@ const AddConsultancy = ({ color = "light" }) => {
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    mutate({ ...data, image: "asdf", logo: "asdf" });
+    mutate({ ...data });
+  };
+
+  const handleFileChange = (e, type) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+    axios
+      .post(`${API_URL}/api/upload`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+      .then((res) => {
+        setData({ ...data, [type]: res?.data?.data?.url });
+      })
+      .catch((err) => {
+        toast.error("Error Uploading file");
+      });
   };
 
   return (
@@ -183,23 +201,55 @@ const AddConsultancy = ({ color = "light" }) => {
                   </div>
                   <div className="relative w-full mb-3">
                     <InputField
-                      label="Logo of University"
+                      label="Logo of Consultancy"
                       name="logo"
                       // required
                       type="file"
-                      value={data?.logo}
-                      onChange={handleInputChange}
-                    />
+                      onChange={(e) => handleFileChange(e, "logo")}
+                    />{" "}
+                    {data?.logo && (
+                      <div class="show-image">
+                        <img
+                          src={data?.logo}
+                          alt="Image"
+                          className="mr-auto mt-4 h-80 w-80 border p-3 object-cover"
+                        />
+                        <div className="delete">
+                          <IconButton>
+                            <ClearIcon
+                              sx={{ fontSize: 40 }}
+                              onClick={() => setData({ ...data, logo: null })}
+                            />
+                          </IconButton>
+                        </div>
+                      </div>
+                    )}
                   </div>
                   <div className="relative w-full mb-3">
                     <InputField
-                      label="Image of University"
+                      label="Image of Consultancy"
                       name="image"
                       // required
                       type="file"
-                      value={data?.image}
-                      onChange={handleInputChange}
-                    />
+                      onChange={(e) => handleFileChange(e, "image")}
+                    />{" "}
+                    {data?.image && (
+                      <div class="show-image">
+                        <img
+                          src={data?.image}
+                          alt="Image"
+                          className="mr-auto mt-4 h-80 w-80 border p-3 object-cover"
+                        />
+                        <div className="delete">
+                          <IconButton>
+                            <ClearIcon
+                              sx={{ fontSize: 40 }}
+                              onClick={() => setData({ ...data, image: null })}
+                            />
+                          </IconButton>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="w-full flex justify-end mt-6 gap-4">
