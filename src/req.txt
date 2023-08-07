@@ -107,3 +107,33 @@ Login --> mfa true for super admin, --> auth controller vitra email/verify
 Forgot password
 Reset password
 email verification  - email/verify
+
+
+{
+  "sNo": 1,
+  "date": "2023-06-01",
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "johndoe@example.com",
+  "mobile": "1234567890",
+  "address": "123 Main Street",
+  "dob": "1990-01-01",
+  
+  "caseOfficer": "Jane Smith",
+  "usiNumber": "ABCD1234",
+  
+  "qualification": "Bachelor's Degree",
+  "placement": "Internship","visaStatus": "Student Visa",
+  "visaExpiry": "2025-12-31",
+  
+  "reference": "REF123",
+  "status": "Active",
+ 
+  "hardCopy": "Yes",
+  "postalDate": "2023-06-02",
+  "passport":{
+      "number":1
+  }
+}
+
+onshore details

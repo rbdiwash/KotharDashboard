@@ -15,6 +15,7 @@ export default function Sidebar() {
     { label: "courses", value: "courses", icon: "fas fa-briefcase" },
     { label: "consultancy", value: "consultancy", icon: "fas fa-briefcase" },
     { label: "Users", value: "users", icon: "fas fa-user" },
+    { label: "Invoice", value: "invoice", icon: "fas fa-file-invoice-dollar" },
     { label: "Settings", value: "setting", icon: "fas fa-tools" },
     { label: "Map", value: "map", icon: "fas fa-map-marked" },
   ];
@@ -91,7 +92,7 @@ export default function Sidebar() {
             </form>
             <hr className="my-4 md:min-w-full" />
             <h6 className="md:min-w-full text-slate-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
-              Admin Layout Pages
+              Admin Panel
             </h6>
             <ul className="md:flex-col md:min-w-full flex flex-col list-none">
               {options.map((item) => (
@@ -121,7 +122,7 @@ export default function Sidebar() {
               ))}
             </ul>
             <hr className="my-4 md:min-w-full" />
-            <h6 className="md:min-w-full text-slate-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
+            {/* <h6 className="md:min-w-full text-slate-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
               Auth Layout Pages
             </h6>
             <ul className="md:flex-col md:min-w-full flex flex-col list-none md:mb-4">
@@ -138,8 +139,8 @@ export default function Sidebar() {
                   </a>
                 </li>
               ))}
-            </ul>
-            <hr className="my-4 md:min-w-full" />
+            </ul> */}
+            {/* <hr className="my-4 md:min-w-full" />
             <h6 className="md:min-w-full text-slate-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
               No Layout Pages
             </h6>
@@ -163,7 +164,7 @@ export default function Sidebar() {
                   Profile Page
                 </Link>
               </li>
-            </ul>
+            </ul> */}
           </div>
         </div>
       </nav>

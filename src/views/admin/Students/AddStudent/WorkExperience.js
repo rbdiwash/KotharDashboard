@@ -3,7 +3,6 @@ import { Button, TextField, Tooltip } from "@mui/material";
 import InputField from "components/Input/InputField";
 
 const WorkExperience = ({ workInfo, setWorkInfo }) => {
-  console.log("🚀  workInfo:", workInfo);
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
     const row = workInfo.find((item, i) => i === index);

@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import InputField from "components/Input/InputField";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "const/constants";
 import { toast } from "react-toastify";
+import { useMutation } from "@tanstack/react-query";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -17,30 +18,34 @@ export default function Login() {
   const [message, setMessage] = useState({});
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios
-      .post(`${API_URL}/signin`, { ...data })
-      .then((res) => {
-        setMessage({ success: res?.data?.message });
-        setData({
-          username: "",
-          password: "",
-        });
-        console.log(res);
-        localStorage.setItem("token", res?.data?.accessToken);
-        res?.data?.data?.mfa
-          ? navigate("/email/verify")
-          : navigate("/admin/dashboard");
-        res?.data?.data?.mfa
-          ? toast.success("Your email is not verified, verify to login.")
-          : toast.success(res?.message || "Loggeed in successfully");
-      })
-      .catch((err) => {
-        console.log("🚀  err:", err);
-        // setMessage({ error: err?.data?.message || "Error" });
-        // navigate("/admin/dashboard");
-        toast.error(err?.response?.data?.message ?? "Error");
-      });
+    mutate({ ...data });
   };
+
+  async function postData(payload) {
+    await axios.post(`${API_URL}/signin`, payload);
+  }
+
+  const { mutate, isLoading } = useMutation(postData, {
+    onSuccess(res) {
+      setMessage({ success: res?.data?.message });
+      setData({
+        username: "",
+        password: "",
+      });
+      localStorage.setItem("token", res?.data?.accessToken);
+      res?.data?.data?.mfa
+        ? navigate("/email/verify")
+        : navigate("/admin/dashboard");
+      res?.data?.data?.mfa
+        ? toast.success("Your email is not verified, verify to login.")
+        : toast.success(res?.message || "Loggeed in successfully");
+    },
+    onError(err) {
+      console.log("🚀  err:", err);
+      toast.error(err?.response?.data?.message ?? "Error");
+    },
+  });
+
   return (
     <>
       <div className="container mx-auto px-4 h-full">
@@ -86,7 +91,13 @@ export default function Login() {
                   </div>
 
                   <div className="text-center mt-6">
-                    <Button variant="contained" fullWidth type="submit">
+                    <Button
+                      variant="contained"
+                      fullWidth
+                      type="submit"
+                      startIcon={isLoading && <CircularProgress size={15} />}
+                      disabled={isLoading}
+                    >
                       Sign In
                     </Button>
                   </div>

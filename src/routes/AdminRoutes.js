@@ -14,6 +14,8 @@ import AddConsultancy from "views/admin/Consultancy/AddConsultancy";
 import StudentDetails from "views/admin/Students/StudentDetails";
 import Course from "views/admin/Course";
 import AddCourse from "views/admin/Course/AddCourse";
+import AddInvoice from "views/admin/Invoice/AddInvoice";
+import Invoice from "views/admin/Invoice";
 
 // render - dashboard
 const Admin = Loadable(lazy(() => import("layouts/Admin")));
@@ -77,6 +79,14 @@ const AdminRoutes = {
     {
       path: "users",
       element: <Users />,
+    },
+    {
+      path: "invoice",
+      element: <Invoice />,
+    },
+    {
+      path: "invoice/add",
+      element: <AddInvoice />,
     },
     {
       path: "users/add",

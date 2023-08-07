@@ -45,9 +45,27 @@ const useStateAndActions = () => {
       },
     }
   );
+  const getStudent = async () => {
+    const res = await axios.get(`${API_URL}/student/list`);
+    return res?.data?.data;
+  };
+  const { data: studentList, refetch: refetchStudent } = useQuery(
+    ["student"],
+    getStudent,
+    {
+      onError: () => {
+        toast.error("Error Fetching Data");
+      },
+    }
+  );
 
-  const state = { consultancyList, uniData, courseList };
-  const actions = { refetchConsultancy, refetchUniData, refetchCourseList };
+  const state = { consultancyList, uniData, courseList, studentList };
+  const actions = {
+    refetchConsultancy,
+    refetchUniData,
+    refetchCourseList,
+    refetchStudent,
+  };
 
   return [state, actions];
 };
