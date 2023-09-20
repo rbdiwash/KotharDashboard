@@ -80,73 +80,85 @@ const Consultancy = ({ color = "light" }) => {
                 </tr>
               </thead>
               <tbody>
-                {consultancyList?.map((item, index) => (
-                  <tr key={item?.id || index}>
-                    <td className="table-data text-left flex items-center">
-                      {ImageName(item?.name)}
-                      <span
-                        className={
-                          "ml-3 font-bold " +
-                          +(color === "light" ? "text-slate-600" : "text-white")
-                        }
-                      >
-                        {item?.name || "-"}
-                      </span>
-                    </td>
-                    <td className="table-data">{item?.email || "-"}</td>
-                    <td className="table-data">
-                      <div className="flex">{item?.owner || "-"}</div>
-                    </td>
-                    <td className="table-data">
-                      <div className="flex items-center gap-2">
-                        {item?.primaryContactNumber || "-"}
-                      </div>
-                    </td>
-                    <td className="table-data">
-                      <div className="flex items-center">
-                        {item?.website || "-"}
-                      </div>
-                    </td>
-                    <td className="table-data">
-                      <div className="flex items-center">
-                        {item?.panNumber || "-"}
-                      </div>
-                    </td>
+                {consultancyList?.length > 0 ? (
+                  consultancyList?.map((item, index) => (
+                    <tr key={item?.id || index}>
+                      <td className="table-data text-left flex items-center">
+                        {ImageName(item?.name)}
+                        <span
+                          className={
+                            "ml-3 font-bold " +
+                            +(color === "light"
+                              ? "text-slate-600"
+                              : "text-white")
+                          }
+                        >
+                          {item?.name || "-"}
+                        </span>
+                      </td>
+                      <td className="table-data">{item?.email || "-"}</td>
+                      <td className="table-data">
+                        <div className="flex">{item?.owner || "-"}</div>
+                      </td>
+                      <td className="table-data">
+                        <div className="flex items-center gap-2">
+                          {item?.primaryContactNumber || "-"}
+                        </div>
+                      </td>
+                      <td className="table-data">
+                        <div className="flex items-center">
+                          {item?.website || "-"}
+                        </div>
+                      </td>
+                      <td className="table-data">
+                        <div className="flex items-center">
+                          {item?.panNumber || "-"}
+                        </div>
+                      </td>
 
-                    <td className="table-data text-right">
-                      <div className="flex items-center">
-                        <Tooltip title="View" arrow>
-                          <IconButton>
-                            <AiFillEye className="text-sky-600 cursor-pointer" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Edit University" arrow>
-                          <IconButton
-                            onClick={() =>
-                              navigate("/admin/consultancy/add", {
-                                state: { item },
-                              })
-                            }
-                          >
-                            <AiFillEdit className="text-sky-600 cursor-pointer" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Delete University" arrow>
-                          <IconButton
-                            onClick={() =>
-                              setOpenConfirmationModal({
-                                state: true,
-                                id: item?.id,
-                              })
-                            }
-                          >
-                            <AiFillDelete className="text-red-600 cursor-pointer" />
-                          </IconButton>
-                        </Tooltip>
+                      <td className="table-data text-right">
+                        <div className="flex items-center">
+                          <Tooltip title="View" arrow>
+                            <IconButton>
+                              <AiFillEye className="text-sky-600 cursor-pointer" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Edit University" arrow>
+                            <IconButton
+                              onClick={() =>
+                                navigate("/admin/consultancy/add", {
+                                  state: { item },
+                                })
+                              }
+                            >
+                              <AiFillEdit className="text-sky-600 cursor-pointer" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Delete University" arrow>
+                            <IconButton
+                              onClick={() =>
+                                setOpenConfirmationModal({
+                                  state: true,
+                                  id: item?.id,
+                                })
+                              }
+                            >
+                              <AiFillDelete className="text-red-600 cursor-pointer" />
+                            </IconButton>
+                          </Tooltip>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr key={1}>
+                    <td colSpan={6}>
+                      <div className="text-lg text-center my-10">
+                        No Results Found
                       </div>
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
