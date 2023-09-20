@@ -23,7 +23,6 @@ const AddConsultancy = ({ color = "light" }) => {
     logo: null,
     image: null,
   });
-  console.log("🚀  data:", data);
   const [{}, { refetchConsultancy }] = useKothar();
 
   const navigate = useNavigate();

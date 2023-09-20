@@ -1,6 +1,7 @@
 import { Button, IconButton, Tooltip } from "@mui/material";
 import axios from "axios";
 import DeleteModal from "components/Modals/DeleteModal";
+import { ImageName } from "components/helper";
 import { API_URL } from "const/constants";
 import useKothar from "context/useKothar";
 import { useState } from "react";
@@ -27,13 +28,7 @@ const University = ({ color = "light" }) => {
         toast.error("Error Deleting Data");
       });
   };
-  const imageName = (text) => {
-    const splittedText = text?.split(" ");
-    return splittedText
-      ?.map((word) => word.charAt(0))
-      .join("")
-      .slice(0, 3);
-  };
+
   return (
     <div className="flex flex-wrap mt-4 dashBody">
       <div className="w-full mb-12 px-4">
@@ -86,11 +81,7 @@ const University = ({ color = "light" }) => {
                   uniData?.map((item, index) => (
                     <tr key={item?.id || index}>
                       <td className="table-data text-left flex items-center">
-                        <img
-                          src={require("assets/img/bootstrap.jpg")}
-                          className="h-12 w-12 bg-white rounded-full border"
-                          alt="..."
-                        ></img>{" "}
+                        {ImageName(item?.name)}
                         <span
                           className={
                             "ml-3 font-bold " +
@@ -109,11 +100,15 @@ const University = ({ color = "light" }) => {
                       </td>
                       <td className="table-data">
                         <div className="flex items-center gap-2">
-                          <img
-                            src={require("assets/img/country/aus.png")}
-                            alt="..."
-                            className="w-10 h-10 rounded-full border-2 border-slate-50 shadow"
-                          ></img>
+                          {(item?.country === "Australia" ||
+                            item?.country === "australia") && (
+                            <img
+                              src={require("assets/img/country/aus.png")}
+                              alt="..."
+                              className="w-10 h-10 rounded-full border-2 border-slate-50 shadow"
+                            ></img>
+                          )}
+
                           {item?.country}
                         </div>
                       </td>

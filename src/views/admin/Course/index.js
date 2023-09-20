@@ -9,6 +9,7 @@ import { API_URL } from "const/constants";
 import axios from "axios";
 import { toast } from "react-toastify";
 import useKothar from "context/useKothar";
+import { ImageName } from "components/helper";
 
 const Course = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
@@ -83,6 +84,7 @@ const Course = ({ color = "light" }) => {
                   courseList?.map((item, index) => (
                     <tr key={item?.id || index}>
                       <td className="table-data">
+                        {ImageName(item?.name)}
                         <span className={"ml-3 font-bold text-slate-600"}>
                           {item?.name || "-"}
                         </span>

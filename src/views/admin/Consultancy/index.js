@@ -9,6 +9,7 @@ import { API_URL } from "const/constants";
 import axios from "axios";
 import { toast } from "react-toastify";
 import useKothar from "context/useKothar";
+import { ImageName } from "components/helper";
 
 const Consultancy = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
@@ -28,14 +29,6 @@ const Consultancy = ({ color = "light" }) => {
       .error((err) => {
         toast.error("Error Deleting Data");
       });
-  };
-
-  const imageName = (text) => {
-    const splittedText = text?.split(" ");
-    return splittedText
-      ?.map((word) => word.charAt(0))
-      .join("")
-      .slice(0, 3);
   };
 
   return (
@@ -90,11 +83,7 @@ const Consultancy = ({ color = "light" }) => {
                 {consultancyList?.map((item, index) => (
                   <tr key={item?.id || index}>
                     <td className="table-data text-left flex items-center">
-                      {item?.name && (
-                        <span className="font-bold uppercase text-xl rounded-full bg-gray-300 p-2 py-3">
-                          {item?.name && imageName(item?.name)}
-                        </span>
-                      )}
+                      {ImageName(item?.name)}
                       <span
                         className={
                           "ml-3 font-bold " +

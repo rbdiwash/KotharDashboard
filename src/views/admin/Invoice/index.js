@@ -1,20 +1,33 @@
-import { Button, CircularProgress, IconButton, Tooltip } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  Dialog,
+  IconButton,
+  Tooltip,
+} from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { API_URL } from "const/constants";
-import { tr } from "date-fns/locale";
-import { useState } from "react";
-import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
 import { FaPlusCircle } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import SaveAltIcon from "@mui/icons-material/SaveAlt";
+import {
+  AiFillDelete,
+  AiFillEdit,
+  AiFillEye,
+  AiFillPrinter,
+} from "react-icons/ai";
+import { useState } from "react";
 
 const Invoice = ({ color = "dark" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
   const navigate = useNavigate();
+  const [openConfirmationModal, setOpenConfirmationModal] = useState({});
+  const [openInvoice, setOpenInvoice] = useState(false);
 
   const getData = async () => {
-    const res = await axios.get(`${API_URL}/invoice/all`, {
+    const res = await axios.get(`${API_URL}/api/invoice/list`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return res?.data;
@@ -44,6 +57,19 @@ const Invoice = ({ color = "dark" }) => {
   const handleVerifyEmail = (e, id) => {
     e.preventDefault();
     mutate({ userId: id });
+  };
+
+  const handleDownloadInvoice = (item) => {
+    const payload = item;
+
+    axios
+      .post(`${API_URL}/api/invoice/invoice/download`, payload)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   return (
@@ -93,14 +119,14 @@ const Invoice = ({ color = "dark" }) => {
                   <th className={"table-head " + tableHeadClass}>
                     Bank Details
                   </th>
-                  <th className={"table-head " + tableHeadClass}>Action</th>
+                  <th className={"table-head  " + tableHeadClass}>Action</th>
                 </tr>
               </thead>
               <tbody>
                 {data?.data?.length > 0 ? (
                   data?.data?.map((item, index) => (
                     <tr key={item?.id || index}>
-                      <th className="table-data text-left flex items-center">
+                      <th className="table-data text-left flex h-full">
                         {item?.name && imageName(item?.name || "Anand Pandey")}
                         <span
                           className={
@@ -115,33 +141,62 @@ const Invoice = ({ color = "dark" }) => {
                       </th>
                       <td className="table-data">
                         <div className="flex items-center gap-2">
-                          {item?.username}
+                          {item?.invoiceTo}
                         </div>
                       </td>
-                      <td className="table-data">{item?.email}</td>
                       <td className="table-data">
-                        <div className="flex">{item?.mobileNumber}</div>
+                        {item?.paymentInfo?.accountNumber}
+                      </td>
+                      <td className="table-data">
+                        <div className="flex">
+                          {item?.paymentInfo?.accountName}
+                        </div>
                       </td>
 
                       <td className="table-data">
                         <div className="flex items-center">
-                          {item?.emailVerified || "No"}
+                          {item?.paymentInfo?.bankDetails || "-"}
                         </div>
                       </td>
-
-                      <td className="table-data text-right">
+                      <td className="table-data">
                         <div className="flex items-center gap-4">
-                          <Button
-                            variant="contained"
-                            onClick={(e) => handleVerifyEmail(e, item?.id)}
-                            endIcon={
-                              loadingVerify && <CircularProgress size={10} />
-                            }
-                          >
-                            Verify Email
-                          </Button>
-                          <Tooltip title="Delete University" arrow>
-                            <IconButton>
+                          <Tooltip title="View Invoice" arrow>
+                            <IconButton onClick={() => setOpenInvoice(true)}>
+                              <AiFillEye className="text-white cursor-pointer" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Print Invoice" arrow>
+                            <IconButton onClick={() => window.print()}>
+                              <AiFillPrinter className="text-white" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Download Invoice" arrow>
+                            <IconButton
+                              onClick={() => handleDownloadInvoice(item)}
+                            >
+                              <SaveAltIcon className="text-white" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Edit Invoice" arrow>
+                            <IconButton
+                              onClick={() =>
+                                navigate("/admin/invoice/add", {
+                                  state: { item },
+                                })
+                              }
+                            >
+                              <AiFillEdit className="text-white cursor-pointer" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Delete Invoice" arrow>
+                            <IconButton
+                              onClick={() =>
+                                setOpenConfirmationModal({
+                                  state: true,
+                                  id: item?.id,
+                                })
+                              }
+                            >
                               <AiFillDelete className="text-white cursor-pointer" />
                             </IconButton>
                           </Tooltip>
@@ -163,6 +218,78 @@ const Invoice = ({ color = "dark" }) => {
           </div>
         </div>
       </div>
+      {openInvoice && (
+        <Dialog
+          open={openInvoice}
+          keepMounted
+          fullWidth
+          maxWidt="xl"
+          onClose={() => setOpenInvoice(false)}
+        >
+          <div class="bg-white border rounded-lg shadow-lg px-6 pb-8 w-full">
+            <h1 class="font-bold text-2xl my-4 text-center text-blue-600">
+              Kothar Educational Service
+            </h1>
+            <hr class="mb-2" />
+            <div class="flex justify-between mb-6">
+              <h1 class="text-lg font-bold">Invoice</h1>
+              <div class="text-gray-700">
+                <div>Date: 01/05/2023</div>
+                <div>Invoice #: INV12345</div>
+              </div>
+            </div>
+            <div class="mb-8">
+              <h2 class="text-lg font-bold mb-4">Bill To:</h2>
+              <div class="text-gray-700 mb-2">John Doe</div>
+              <div class="text-gray-700 mb-2">123 Main St.</div>
+              <div class="text-gray-700 mb-2">Anytown, USA 12345</div>
+              <div class="text-gray-700">johndoe@example.com</div>
+            </div>
+            <table class="w-full mb-8">
+              <thead>
+                <tr>
+                  <th class="text-left font-bold text-gray-700">Description</th>
+                  <th class="text-right font-bold text-gray-700">Price</th>
+                  <th class="text-right font-bold text-gray-700">Quantity</th>
+                  <th class="text-right font-bold text-gray-700">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="text-left text-gray-700">Product 1</td>
+                  <td class="text-right text-gray-700">$100.00</td>
+                  <td class="text-right text-gray-700">$100.00</td>
+                  <td class="text-right text-gray-700">$100.00</td>
+                </tr>
+                <tr>
+                  <td class="text-left text-gray-700">Product 2</td>
+                  <td class="text-right text-gray-700">$50.00</td>
+                  <td class="text-right text-gray-700">$50.00</td>
+                  <td class="text-right text-gray-700">$50.00</td>
+                </tr>
+                <tr>
+                  <td class="text-left text-gray-700">Product 3</td>
+                  <td class="text-right text-gray-700">$75.00</td>
+                  <td class="text-right text-gray-700">$75.00</td>
+                  <td class="text-right text-gray-700">$75.00</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td class="text-left font-bold text-gray-700">Total</td>
+                  <td class="text-right font-bold text-gray-700">$225.00</td>
+                  <td class="text-right font-bold text-gray-700">$225.00</td>
+                  <td class="text-right font-bold text-gray-700">$225.00</td>
+                </tr>
+              </tfoot>
+            </table>
+            <div class="text-gray-700 mb-2">Thank you for your business!</div>
+            <div class="text-gray-700 text-sm">
+              Please remit payment within 30 days.
+            </div>
+          </div>
+        </Dialog>
+      )}
     </div>
   );
 };

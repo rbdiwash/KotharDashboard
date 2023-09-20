@@ -5,9 +5,9 @@ import axios from "axios";
 import InputField from "components/Input/InputField";
 import { API_URL } from "const/constants";
 import useKothar from "context/useKothar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 const AddInvoice = () => {
   const [data, setData] = useState({
@@ -20,6 +20,12 @@ const AddInvoice = () => {
     },
     invoices: [],
   });
+  const { state } = useLocation();
+  useEffect(() => {
+    if (state) {
+      setData({ ...state?.item });
+    }
+  }, [state]);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name?.split(".")?.length > 1) {
@@ -46,10 +52,11 @@ const AddInvoice = () => {
     },
   });
   async function postData(payload) {
+    console.log("🚀  data:", data);
     if (data?.id) {
-      await axios.put(`${API_URL}/organization/update`, payload);
+      await axios.put(`${API_URL}/api/invoice/update/${payload?.id}`, payload);
     } else {
-      await axios.post(`${API_URL}/register/dashboard-user`, payload);
+      await axios.post(`${API_URL}/api/invoice`, payload);
     }
   }
   const handleSubmit = (e) => {
@@ -143,7 +150,7 @@ const AddInvoice = () => {
                     <InputField
                       type="text"
                       placeholder="Account Number"
-                      name="paymentInfo?.accountNumber"
+                      name="paymentInfo.accountNumber"
                       label="Account Number"
                       required
                       value={data?.paymentInfo?.accountNumber}
@@ -154,7 +161,7 @@ const AddInvoice = () => {
                     <InputField
                       type="text"
                       placeholder="Account Name"
-                      name="paymentInfo?.accountName"
+                      name="paymentInfo.accountName"
                       label="Account Name"
                       required
                       value={data?.paymentInfo?.accountName}
@@ -165,7 +172,7 @@ const AddInvoice = () => {
                     <InputField
                       type="text"
                       placeholder="Bank Details"
-                      name="paymentInfo?.bankDetails"
+                      name="paymentInfo.bankDetails"
                       label="Bank Details"
                       required
                       value={data?.paymentInfo?.bankDetails}
