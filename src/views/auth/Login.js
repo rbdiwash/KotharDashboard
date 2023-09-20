@@ -16,17 +16,36 @@ export default function Login() {
     setData((prevState) => ({ ...prevState, [name]: value }));
   };
   const [message, setMessage] = useState({});
+
+  const validateEmail = (email) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    mutate({ ...data });
+
+    const payload = validateEmail(data?.username)
+      ? { password: data?.password, email: data?.username }
+      : { ...data, username: data?.username };
+
+    mutate(payload);
   };
 
   async function postData(payload) {
-    await axios.post(`${API_URL}/signin`, payload);
+    const resp = await axios.post(`${API_URL}/signin`, payload);
+    return resp;
   }
 
-  const { mutate, isLoading } = useMutation(postData, {
-    onSuccess(res) {
+  const {
+    data: loggedData,
+    mutate,
+    isLoading,
+  } = useMutation(postData, {
+    onSuccess: async (res) => {
       setMessage({ success: res?.data?.message });
       setData({
         username: "",
@@ -38,7 +57,7 @@ export default function Login() {
         : navigate("/admin/dashboard");
       res?.data?.data?.mfa
         ? toast.success("Your email is not verified, verify to login.")
-        : toast.success(res?.message || "Loggeed in successfully");
+        : toast.success(res?.data?.message || "Loggeed in successfully");
     },
     onError(err) {
       console.log("🚀  err:", err);
@@ -68,8 +87,8 @@ export default function Login() {
                 >
                   <div className="relative w-full mb-3">
                     <InputField
-                      label="Username"
-                      placeholder="Username"
+                      label="Username/Email"
+                      placeholder="Enter Username or E-mail"
                       name="username"
                       required
                       type="text"

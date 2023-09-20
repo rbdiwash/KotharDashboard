@@ -1,0 +1,6 @@
+Course ko fomr ma Country nor req, 
+fee in Semster basis 
+University multiple states 
+Invoice should hane Payment Due Date 
+Need to add university details page 
+Rpl page

@@ -70,7 +70,6 @@ const Course = ({ color = "light" }) => {
                   <th className={"table-head " + tableHeadClass}>Name</th>
                   <th className={"table-head " + tableHeadClass}>Level</th>
                   <th className={"table-head " + tableHeadClass}>Duration</th>
-                  <th className={"table-head " + tableHeadClass}>Country</th>
                   <th className={"table-head " + tableHeadClass}>University</th>
                   <th className={"table-head " + tableHeadClass}>Intake</th>
                   <th className={"table-head " + tableHeadClass}>
@@ -92,11 +91,6 @@ const Course = ({ color = "light" }) => {
                       <td className="table-data">{item?.level || "-"}</td>
                       <td className="table-data">
                         <div className="flex">{item?.duration || "-"} year</div>
-                      </td>
-                      <td className="table-data">
-                        <div className="flex items-center gap-2">
-                          {item?.country || "-"}
-                        </div>
                       </td>
                       <td className="table-data">
                         <div className="flex items-center">

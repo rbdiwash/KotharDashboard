@@ -1,4 +1,3 @@
-
 // project import
 import Auth from "layouts/Auth";
 import EmailVerify from "views/auth/EmailVerify";
@@ -32,7 +31,7 @@ const LoginRoutes = {
       element: <ResetPassword />,
     },
     {
-      path: "email/verify/:code",
+      path: "email/verify/",
       element: <EmailVerify />,
     },
   ],

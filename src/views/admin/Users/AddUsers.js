@@ -19,7 +19,6 @@ const AddUsers = () => {
     username: null,
     type: "ADMIN",
   });
-  console.log("🚀  data:", data);
   const [{ consultancyList }, {}] = useKothar();
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -41,12 +40,12 @@ const AddUsers = () => {
     if (data?.id) {
       await axios.put(`${API_URL}/organization/update`, payload);
     } else {
-      await axios.post(`${API_URL}/register/dashboard-user`, payload);
+      await axios.post(`${API_URL}/register/user`, payload);
     }
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    mutate({ ...data, mfa: data?.type === "ADMIN" ? true : false });
+    mutate({ ...data, mfa: true });
   };
   return (
     <div className="flex flex-wrap mt-4 dashBody">

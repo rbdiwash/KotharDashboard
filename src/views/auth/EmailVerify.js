@@ -1,19 +1,17 @@
-import {
-    Alert,
-    Button
-} from "@mui/material";
+import { Alert, Button } from "@mui/material";
 import axios from "axios";
 import InputField from "components/Input/InputField";
 import { API_URL } from "const/constants";
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function EmailVerify() {
   const navigate = useNavigate();
-  const [data, setData] = useState({});
+  const [data, setCode] = useState();
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setData((prevState) => ({ ...prevState, [name]: value }));
+    const { value } = e.target;
+    setCode(value);
   };
   const [message, setMessage] = useState();
 
@@ -21,17 +19,17 @@ export default function EmailVerify() {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post(`${API_URL}/api/reset-password`, {
-        password: data?.password,
-        code,
+      .post(`${API_URL}/email/otp/verify`, {
+        code: "string",
+        email: "string",
+        username: "string",
       })
       .then((res) => {
-        navigate("/");
-        // setErrorMessage(false);
+        navigate("/login");
+        toast.success("Your email has been verified, Please login to continue");
       })
       .catch((err) => {
         console.log(err?.data?.message);
-        // navigate("/admin/dashboard");
       });
   };
 
@@ -57,35 +55,28 @@ export default function EmailVerify() {
                 >
                   <div className="relative w-full mb-3">
                     <InputField
-                      label="Email"
-                      placeholder="Type your registered Email"
-                      name="email"
+                      label="Enter the code you received on your email"
+                      placeholder="Enter the code"
+                      name="code"
                       required
-                      type="email"
-                      value={data?.email}
+                      value={code}
                       onChange={handleInputChange}
                     />
                   </div>
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Username"
-                      placeholder="Type your username"
-                      name="email"
-                      required
-                      type="email"
-                      value={data?.email}
-                      onChange={handleInputChange}
-                    />
-                  </div>
+                  If you haven't received the code or the code is expired,
+                  request a new code.{" "}
+                  <a className="underline text-blue-500 cursor-pointer">
+                    Send Again
+                  </a>
                   {message && <Alert severity="success">{message}</Alert>}
-
                   <div className="text-center mt-6">
                     <Button
                       variant="contained"
                       className="w-full"
                       type="submit"
+                      disabled={!data}
                     >
-                      Reset Password
+                      Verify Email
                     </Button>
                   </div>
                 </form>

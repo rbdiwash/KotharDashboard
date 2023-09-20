@@ -1,7 +1,9 @@
 import { Button, CircularProgress, IconButton, Tooltip } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import DeleteModal from "components/Modals/DeleteModal";
 import { API_URL } from "const/constants";
+import useKothar from "context/useKothar";
 import { tr } from "date-fns/locale";
 import { useState } from "react";
 import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
@@ -11,14 +13,8 @@ import { toast } from "react-toastify";
 
 const Users = ({ color = "dark" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
-
-  const getData = async () => {
-    const res = await axios.get(`${API_URL}/users/all`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
-    return res?.data;
-  };
-  const { data, error, isError, isLoading } = useQuery(["users"], getData);
+  const [{ usersList }, { refetchUsers }] = useKothar();
+  const [openConfirmationModal, setOpenConfirmationModal] = useState({});
 
   const imageName = (text) => {
     const splittedText = text?.split(" ");
@@ -43,6 +39,19 @@ const Users = ({ color = "dark" }) => {
   const handleVerifyEmail = (e, id) => {
     e.preventDefault();
     mutate({ userId: id });
+  };
+
+  const deleteUser = () => {
+    axios
+      .delete(`${API_URL}/users/delete/${openConfirmationModal?.id}`)
+      .then((res) => {
+        toast.success("Data Deleted Successfully");
+        setOpenConfirmationModal({ state: false, id: null });
+        refetchUsers();
+      })
+      .error((err) => {
+        toast.error("Error Deleting Data");
+      });
   };
 
   return (
@@ -92,8 +101,8 @@ const Users = ({ color = "dark" }) => {
                 </tr>
               </thead>
               <tbody>
-                {data?.data?.length > 0 ? (
-                  data?.data?.map((item, index) => (
+                {usersList?.length > 0 ? (
+                  usersList?.map((item, index) => (
                     <tr key={item?.id || index}>
                       <th className="table-data text-left flex items-center">
                         {item?.name && imageName(item?.name || "Anand Pandey")}
@@ -135,8 +144,15 @@ const Users = ({ color = "dark" }) => {
                           >
                             Verify Email
                           </Button>
-                          <Tooltip title="Delete University" arrow>
-                            <IconButton>
+                          <Tooltip title="Delete User" arrow>
+                            <IconButton
+                              onClick={() =>
+                                setOpenConfirmationModal({
+                                  state: true,
+                                  id: item?.id,
+                                })
+                              }
+                            >
                               <AiFillDelete className="text-white cursor-pointer" />
                             </IconButton>
                           </Tooltip>
@@ -158,6 +174,16 @@ const Users = ({ color = "dark" }) => {
           </div>
         </div>
       </div>
+      {openConfirmationModal.state && (
+        <DeleteModal
+          open={openConfirmationModal.state}
+          item="User"
+          handleCancel={() =>
+            setOpenConfirmationModal({ state: false, id: null })
+          }
+          handleDelete={deleteUser}
+        />
+      )}
     </div>
   );
 };

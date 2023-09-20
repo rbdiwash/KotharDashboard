@@ -14,7 +14,7 @@ export default function FooterAdmin() {
                   href="https://www.kotharedu.com"
                   className="text-slate-600 hover:text-slate-300 text-sm font-semibold py-1"
                 >
-                  Kothar Education Service
+                  Kothar Educational Service
                 </a>
               </div>
             </div>

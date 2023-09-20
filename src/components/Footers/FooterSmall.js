@@ -20,7 +20,7 @@ export default function FooterSmall(props) {
                   href="https://www.kotharedu.com"
                   className="text-white hover:text-slate-300 text-sm font-semibold py-1"
                 >
-                  Kothar Education Service
+                  Kothar Educational Service
                 </a>
               </div>
             </div>

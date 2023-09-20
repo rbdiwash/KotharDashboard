@@ -68,15 +68,38 @@ const useStateAndActions = () => {
       //   },
     }
   );
+  const getUsers = async () => {
+    const res = await axios.get(`${API_URL}/users/all`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    return res?.data?.data;
+  };
+  const { data: usersList, refetch: refetchUsers } = useQuery(
+    ["users"],
+    getUsers,
+    {
+      refetchOnWindowFocus: false,
+      retry: false,
 
-  console.log("🚀  studentList:", studentList);
+      //   onError: () => {
+      //     toast.error("Error Fetching Data");
+      //   },
+    }
+  );
 
-  const state = { consultancyList, uniData, courseList, studentList };
+  const state = {
+    consultancyList,
+    uniData,
+    courseList,
+    studentList,
+    usersList,
+  };
   const actions = {
     refetchConsultancy,
     refetchUniData,
     refetchCourseList,
     refetchStudent,
+    refetchUsers,
   };
 
   return [state, actions];

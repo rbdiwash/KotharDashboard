@@ -17,6 +17,7 @@ export default function Forgot() {
   const [message, setMessage] = useState();
   const handleSubmit = (e) => {
     e.preventDefault();
+    setMessage();
     axios
       .post(`${API_URL}/api/forgot-password`, data)
       .then((res) => {

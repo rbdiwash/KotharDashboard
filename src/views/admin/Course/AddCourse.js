@@ -11,16 +11,16 @@ import useKothar from "context/useKothar";
 
 const AddCourse = ({ color = "light" }) => {
   const [data, setData] = useState({
-    country: null,
     duration: null,
     fee: null,
-    intake: null,
+    intake: [],
     level: null,
     name: null,
     tuition: 100,
     university: null,
     universityId: null,
   });
+  console.log("🚀  data:", data);
   const [{ uniData }, { refetchCourseList }] = useKothar();
 
   const navigate = useNavigate();
@@ -33,13 +33,23 @@ const AddCourse = ({ color = "light" }) => {
 
   useEffect(() => {
     if (state) {
+      console.log(
+        months.filter((id1) =>
+          state?.item?.intake?.split("/").some((id2) => id2 === id1?.value)
+        )
+      );
+      debugger;
       setData({
         ...state?.item,
         university: {
           name: state?.item?.university,
           id: state?.item?.universityId,
         },
-        intake: months.find((item) => item?.value === state?.item?.intake),
+        intake: months.filter(({ value: id1 }) =>
+          state?.item?.intake?.split("/").some((id2) => id2 === id1)
+        ),
+
+        // months.find((item) => item?.value === state?.item?.intake),
       });
     }
   }, [state]);
@@ -64,11 +74,12 @@ const AddCourse = ({ color = "light" }) => {
       await axios.post(`${API_URL}/course/register`, payload);
     }
   }
+  console.log(data?.intake?.map((item) => item?.value).join("/"));
   const handleSubmit = (e) => {
     e.preventDefault();
     mutate({
       ...data,
-      intake: data?.intake?.value,
+      intake: data?.intake?.map((item) => item?.value).join("/"),
       university: data?.university?.name,
       universityId: data?.university?.id,
     });
@@ -139,17 +150,6 @@ const AddCourse = ({ color = "light" }) => {
                     />
                   </div>
                   <div className="relative w-full mb-3">
-                    <InputField
-                      label="Country"
-                      placeholder="Country"
-                      name="country"
-                      required
-                      type="text"
-                      value={data?.country}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  <div className="relative w-full mb-3">
                     <label className="input-label">Select University *</label>
                     <Autocomplete
                       onChange={(e, value) => {
@@ -184,6 +184,7 @@ const AddCourse = ({ color = "light" }) => {
                         }));
                       }}
                       required
+                      multiple
                       value={data?.intake}
                       placeholder="Select Intake"
                       options={months}
@@ -201,9 +202,9 @@ const AddCourse = ({ color = "light" }) => {
                   <div className="relative w-full mb-3">
                     <InputField
                       type="text"
-                      placeholder="Fees (Annual) in AUD"
+                      placeholder="Fees (per semester) in AUD"
                       name="fee"
-                      label="Fees (Annual)"
+                      label="Fees (per semester)"
                       required
                       value={data?.fee}
                       onChange={handleInputChange}

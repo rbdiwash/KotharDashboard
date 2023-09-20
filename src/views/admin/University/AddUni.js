@@ -38,7 +38,7 @@ const AddUni = ({ color = "light" }) => {
   }, [state]);
 
   const { mutate } = useMutation(postData, {
-    onSuccess() {
+    onSuccess(res) {
       toast.success(
         data?.id ? "Data updated Successfully" : "Data added Successfully"
       );
