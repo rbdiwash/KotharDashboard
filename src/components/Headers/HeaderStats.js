@@ -1,8 +1,12 @@
 import React from "react";
 
 import CardStats from "components/Cards/CardStats.js";
+import useKothar from "context/useKothar";
 
 export default function HeaderStats() {
+  const [{ consultancyList, uniData, courseList, studentList }, {}] =
+    useKothar();
+
   return (
     <>
       {/* Header */}
@@ -14,7 +18,7 @@ export default function HeaderStats() {
               <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
                 <CardStats
                   statSubtitle="Students"
-                  statTitle="350,897"
+                  statTitle={studentList?.length || 0}
                   statArrow="up"
                   statPercent="3.48"
                   statPercentColor="text-emerald-500"
@@ -26,7 +30,7 @@ export default function HeaderStats() {
               <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
                 <CardStats
                   statSubtitle="Universities"
-                  statTitle="2,356"
+                  statTitle={uniData?.length || 0}
                   statArrow="down"
                   statPercent="3.48"
                   statPercentColor="text-red-500"
@@ -38,7 +42,7 @@ export default function HeaderStats() {
               <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
                 <CardStats
                   statSubtitle="Consultancies"
-                  statTitle="924"
+                  statTitle={consultancyList?.length || 0}
                   statArrow="down"
                   statPercent="1.10"
                   statPercentColor="text-orange-500"
@@ -49,8 +53,8 @@ export default function HeaderStats() {
               </div>
               <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
                 <CardStats
-                  statSubtitle="USERS"
-                  statTitle="123"
+                  statSubtitle="Courses"
+                  statTitle={courseList?.length || 0}
                   statArrow="up"
                   statPercent="12"
                   statPercentColor="text-emerald-500"

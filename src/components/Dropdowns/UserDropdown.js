@@ -66,7 +66,7 @@ const UserDropdown = () => {
               "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-slate-700"
             }
           >
-            Action
+            Divash Ranabhat
           </a>
           <a
             href="#pablo"
@@ -74,7 +74,7 @@ const UserDropdown = () => {
               "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-slate-700"
             }
           >
-            Another action
+            Profile
           </a>
           <a
             href="#pablo"
@@ -82,7 +82,7 @@ const UserDropdown = () => {
               "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-slate-700"
             }
           >
-            Something else here
+            Settings
           </a>
           <div className="h-0 my-2 border border-solid border-slate-100" />
           <p

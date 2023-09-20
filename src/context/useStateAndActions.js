@@ -12,6 +12,7 @@ const useStateAndActions = () => {
     ["organization"],
     getData,
     {
+      refetchOnWindowFocus: false,
       // onError: () => {
       //   toast.error("Error Fetching Data");
       // },
@@ -26,6 +27,9 @@ const useStateAndActions = () => {
     ["university"],
     getUniData,
     {
+      refetchOnWindowFocus: false,
+      retry: false,
+
       // onError: () => {
       //   toast.error("Error Fetching Data");
       // },
@@ -40,9 +44,12 @@ const useStateAndActions = () => {
     ["course"],
     getCourseData,
     {
-      onError: () => {
-        toast.error("Error Fetching Data");
-      },
+      refetchOnWindowFocus: false,
+      retry: false,
+
+      //   onError: () => {
+      //     toast.error("Error Fetching Data");
+      //   },
     }
   );
   const getStudent = async () => {
@@ -53,11 +60,16 @@ const useStateAndActions = () => {
     ["student"],
     getStudent,
     {
-      onError: () => {
-        toast.error("Error Fetching Data");
-      },
+      refetchOnWindowFocus: false,
+      retry: false,
+
+      //   onError: () => {
+      //     toast.error("Error Fetching Data");
+      //   },
     }
   );
+
+  console.log("🚀  studentList:", studentList);
 
   const state = { consultancyList, uniData, courseList, studentList };
   const actions = {

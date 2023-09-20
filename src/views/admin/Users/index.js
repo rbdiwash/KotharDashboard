@@ -11,7 +11,6 @@ import { toast } from "react-toastify";
 
 const Users = ({ color = "dark" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
-  const navigate = useNavigate();
 
   const getData = async () => {
     const res = await axios.get(`${API_URL}/users/all`, {
