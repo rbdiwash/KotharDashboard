@@ -1,4 +1,4 @@
-import { Button, IconButton } from "@mui/material";
+import { Autocomplete, Button, IconButton, TextField } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import InputField from "components/Input/InputField";
@@ -17,10 +17,18 @@ const AddUni = ({ color = "light" }) => {
     contactPerson: null,
     email: null,
     country: null,
-    state: null,
+    state: [],
     zipCode: null,
     image: null,
   });
+  const states = [
+    { label: "New South Wales", value: "New South Wales" },
+    { label: "Victoria", value: "Victoria" },
+    { label: "Queensland", value: "Queensland" },
+    { label: "Western Australia", value: "Western Australia" },
+    { label: "South Australia", value: "South Australia" },
+    { label: "Tasmania", value: "Tasmania" },
+  ];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -33,7 +41,12 @@ const AddUni = ({ color = "light" }) => {
 
   useEffect(() => {
     if (state) {
-      setData({ ...state?.item });
+      setData({
+        ...state?.item,
+        state: states.filter(({ value: id1 }) =>
+          state?.item?.state?.split("/").some((id2) => id2 === id1)
+        ),
+      });
     }
   }, [state]);
 
@@ -59,7 +72,10 @@ const AddUni = ({ color = "light" }) => {
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    mutate({ ...data });
+    mutate({
+      ...data,
+      state: data?.state?.map((item) => item?.value).join("/"),
+    });
   };
 
   const handleFileChange = (e) => {
@@ -163,15 +179,35 @@ const AddUni = ({ color = "light" }) => {
                       onChange={handleInputChange}
                     />
                   </div>
+
                   <div className="relative w-full mb-3">
-                    <InputField
-                      label="State"
-                      placeholder="State"
-                      name="state"
+                    <label className="input-label">Select State *</label>
+                    <Autocomplete
+                      onChange={(e, value) => {
+                        setData((prevState) => ({
+                          ...prevState,
+                          state: value,
+                        }));
+                      }}
                       required
-                      type="text"
+                      multiple
                       value={data?.state}
-                      onChange={handleInputChange}
+                      placeholder="Select State"
+                      autoComplete="new-off"
+                      options={states || []}
+                      // disablePortal
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Select State"
+                          autoComplete="off"
+                        />
+                      )}
+                      ListboxProps={{
+                        style: {
+                          maxHeight: "180px",
+                        },
+                      }}
                     />
                   </div>
                   <div className="relative w-full mb-3">

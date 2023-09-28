@@ -4,3 +4,6 @@ University multiple states
 Invoice should hane Payment Due Date 
 Need to add university details page 
 Rpl page
+
+
+Courses list ma University ko details aako xaina

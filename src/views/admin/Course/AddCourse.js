@@ -20,7 +20,6 @@ const AddCourse = ({ color = "light" }) => {
     university: null,
     universityId: null,
   });
-  console.log("🚀  data:", data);
   const [{ uniData }, { refetchCourseList }] = useKothar();
 
   const navigate = useNavigate();
@@ -33,12 +32,6 @@ const AddCourse = ({ color = "light" }) => {
 
   useEffect(() => {
     if (state) {
-      console.log(
-        months.filter((id1) =>
-          state?.item?.intake?.split("/").some((id2) => id2 === id1?.value)
-        )
-      );
-      debugger;
       setData({
         ...state?.item,
         university: {
@@ -74,7 +67,6 @@ const AddCourse = ({ color = "light" }) => {
       await axios.post(`${API_URL}/course/register`, payload);
     }
   }
-  console.log(data?.intake?.map((item) => item?.value).join("/"));
   const handleSubmit = (e) => {
     e.preventDefault();
     mutate({
