@@ -14,6 +14,11 @@ export default function Sidebar() {
     { label: "Student", value: "student", icon: "fas fa-graduation-cap" },
     { label: "courses", value: "courses", icon: "fas fa-briefcase" },
     { label: "consultancy", value: "consultancy", icon: "fas fa-briefcase" },
+    {
+      label: "RPL Certificate",
+      value: "RPL-Certificate",
+      icon: "fas fa-briefcase",
+    },
     { label: "Users", value: "users", icon: "fas fa-user" },
     { label: "Invoice", value: "invoice", icon: "fas fa-file-invoice-dollar" },
     { label: "Settings", value: "setting", icon: "fas fa-tools" },

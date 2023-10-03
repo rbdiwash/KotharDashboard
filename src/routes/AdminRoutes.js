@@ -16,6 +16,8 @@ import Course from "views/admin/Course";
 import AddCourse from "views/admin/Course/AddCourse";
 import AddInvoice from "views/admin/Invoice/AddInvoice";
 import Invoice from "views/admin/Invoice";
+import RPLCertificate from "views/admin/RPL_Certificate";
+import AddRPLCertificate from "views/admin/RPL_Certificate/AddRPL";
 
 // render - dashboard
 const Admin = Loadable(lazy(() => import("layouts/Admin")));
@@ -63,6 +65,18 @@ const AdminRoutes = {
     {
       path: "consultancy/view/:id",
       element: <ViewConsultancy />,
+    },
+    {
+      path: "rpl-certificate",
+      element: <RPLCertificate />,
+    },
+    {
+      path: "rpl-certificate/add",
+      element: <AddRPLCertificate />,
+    },
+    {
+      path: "rpl-certificate/edit/:id",
+      element: <AddRPLCertificate />,
     },
     {
       path: "courses",
