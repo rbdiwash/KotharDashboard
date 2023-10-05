@@ -180,7 +180,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
           <div className="block w-full overflow-x-auto mt-8">
             <div className="flex-auto lg:px-10 py-10 pt-0">
               <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
-                <p className="text-xl font-semibold tracking-wider bg-orange-500 p-4 text-white">
+                <p className="text-xl font-semibold tracking-wider bg-orange-500 p-2 text-white">
                   Personal Details
                 </p>
                 <div className="grid grid-cols-2 gap-8">
@@ -282,7 +282,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                     />
                   </div>
                 </div>
-                <p className="text-xl font-semibold tracking-wider bg-orange-500 p-4 text-white">
+                <p className="text-xl font-semibold tracking-wider bg-orange-500 p-2 text-white">
                   VISA Details
                 </p>
                 <div className="grid grid-cols-2 gap-8">
@@ -297,62 +297,18 @@ const AddRPLCertificate = ({ color = "light" }) => {
                       onChange={handleInputChange}
                     />
                   </div>
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Visa Status"
-                      placeholder="Visa Status"
-                      name="visa_status"
-                      required
-                      type="text"
-                      value={data?.visa_status}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Visa Status"
-                      placeholder="Visa Status"
-                      name="visa_status"
-                      required
-                      type="text"
-                      value={data?.visa_status}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  <div className="relative w-full mb-3">
-                    <div className="relative w-full mb-3">
-                      <FormControl>
-                        <FormLabel className="text-slate-600 uppercase text-xs font-bold mb-2">
-                          Gender
-                        </FormLabel>
-                        <RadioGroup
-                          row
-                          required
-                          defaultValue="female"
-                          name="radio-buttons-group"
-                        >
-                          <FormControlLabel
-                            value="male"
-                            control={<Radio />}
-                            label="Male"
-                          />
 
-                          <FormControlLabel
-                            value="female"
-                            control={<Radio />}
-                            label="Female"
-                          />
-                          <FormControlLabel
-                            value="other"
-                            control={<Radio />}
-                            label="Other"
-                          />
-                        </RadioGroup>
-                      </FormControl>
-                    </div>
+                  <div className="relative w-full mb-3">
+                    <InputField
+                      label="Visa Expiry"
+                      name="visa_expiry"
+                      required
+                      type="date"
+                      value={data?.visa_expiry}
+                    />
                   </div>
                 </div>
-                <p className="text-xl font-semibold tracking-wider bg-orange-500 p-4 text-white">
+                <p className="text-xl font-semibold tracking-wider bg-orange-500 p-2 text-white">
                   Course & Other Details
                 </p>
                 <div className="grid grid-cols-2 gap-8">
@@ -430,72 +386,9 @@ const AddRPLCertificate = ({ color = "light" }) => {
                       </RadioGroup>
                     </FormControl>
                   </div>
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Logo of Consultancy"
-                      name="logo"
-                      s
-                      type="file"
-                      onChange={(e) => handleFileChange(e, "logo")}
-                    />
-                    {data?.logo && (
-                      <div class="show-image">
-                        <img
-                          src={data?.logo}
-                          alt="Image"
-                          className="mr-auto mt-4 h-80 w-80 border p-3 object-cover"
-                        />
-                        <div className="delete">
-                          <IconButton>
-                            <ClearIcon
-                              sx={{ fontSize: 40 }}
-                              onClick={() => setData({ ...data, logo: null })}
-                            />
-                          </IconButton>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                </div>
 
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Image of Consultancy"
-                      name="image"
-                      // required
-                      type="file"
-                      onChange={(e) => handleFileChange(e, "image")}
-                    />
-                    {data?.image && (
-                      <div class="show-image">
-                        <img
-                          src={data?.image}
-                          alt="Image"
-                          className="mr-auto mt-4 h-80 w-80 border p-3 object-cover"
-                        />
-                        <div className="delete">
-                          <IconButton>
-                            <ClearIcon
-                              sx={{ fontSize: 40 }}
-                              onClick={() => setData({ ...data, image: null })}
-                            />
-                          </IconButton>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <p className="text-xl font-semibold tracking-wider bg-orange-500 p-4 text-white">
-                  Our Services
-                </p>
-                <div className="grid grid-cols-3 gap-8">
-                  {services?.map((item) => (
-                    <div className="flex items-center gap-2 w-full mb-3 font-semibold">
-                      <i className="fas fa-check-circle text-orange-500 text-xl"></i>
-                      {item}
-                    </div>
-                  ))}
-                </div>
-                <p className="text-xl font-semibold tracking-wider bg-orange-500 p-4 text-white">
+                <p className="text-xl font-semibold tracking-wider bg-orange-500 p-2 text-white">
                   Upload Documents
                 </p>
                 <div className="grid grid-cols-2 gap-8">
@@ -546,8 +439,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                     />
                   </div>
                 </div>
-
-                <div className="grid grid-cols-2 gap-8">
+                <div className="grid grid-cols-2 gap-8 border-t">
                   <FormControl
                     required
                     error={error}
@@ -556,7 +448,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                   >
                     <FormLabel
                       component="legend"
-                      className="text-orange-500 font-semibold"
+                      className="text-orange-500 font-semibold pt-4 text-xl"
                     >
                       100 Points ID (Any 3 Form of ID)
                     </FormLabel>
@@ -683,49 +575,36 @@ const AddRPLCertificate = ({ color = "light" }) => {
                       )}
                     </FormGroup>
                     {error && (
-                      <FormHelperText className="text-base bg-red-500 text-white p-3 rounded">
+                      <FormHelperText className="text-base bg-red-500 text-white p-1 px-3 rounded">
                         Pick at least 3 form of ID
                       </FormHelperText>
                     )}
                   </FormControl>
                 </div>
-                <div className="grid grid-cols-2 gap-8">
+                <div className="grid grid-cols-2 gap-8 border-t">
                   <FormControl required component="fieldset" variant="standard">
                     <FormLabel
                       component="legend"
-                      className="text-orange-500 font-semibold"
+                      className="text-orange-500 font-semibold pt-4 text-xl"
                     >
                       Documents Checklist For Placement.
                     </FormLabel>
                     <FormGroup>
                       {documents_for_placement?.map((item) => (
-                        <>
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={data?.[item?.value]}
-                                onChange={handleChangeCheckbox}
-                                name={item?.value}
-                              />
+                        <div className="pt-6">
+                          <InputField
+                            label={`Upload ${item?.label}`}
+                            name={`${item?.value}_file`}
+                            type="file"
+                            onChange={(e) =>
+                              handleFileChange(e, `${item?.value}_file`)
                             }
-                            label={item?.label}
                           />
-                          {data?.[item?.value] && (
-                            <InputField
-                              label={`Upload ${item?.label}`}
-                              name={`${item?.value}_file`}
-                              type="file"
-                              onChange={(e) =>
-                                handleFileChange(e, `${item?.value}_file`)
-                              }
-                            />
-                          )}
-                        </>
+                        </div>
                       ))}
                     </FormGroup>
                   </FormControl>
                 </div>
-
                 <div className="w-full flex justify-end mt-6 gap-4">
                   {/* <Button variant="outlined" component={Link} to=""> */}
                   <Button variant="outlined" onClick={() => navigate(-1)} to="">

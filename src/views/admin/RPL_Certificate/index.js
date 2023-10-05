@@ -1,4 +1,4 @@
-import { Button, IconButton, Tooltip } from "@mui/material";
+import { Button, IconButton, Tooltip, Typography } from "@mui/material";
 import DeleteModal from "components/Modals/DeleteModal";
 import { useState } from "react";
 import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
@@ -52,6 +52,26 @@ const RPLCertificate = ({ color = "light" }) => {
     " Hardcopy ssent",
   ];
 
+  function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`vertical-tabpanel-${index}`}
+        aria-labelledby={`vertical-tab-${index}`}
+        {...other}
+      >
+        {value === index && (
+          <Box sx={{ p: 3 }}>
+            <Typography>{children}</Typography>
+          </Box>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-wrap mt-4 dashBody">
       <div className="w-full mb-12 px-4">
@@ -70,7 +90,7 @@ const RPLCertificate = ({ color = "light" }) => {
                     (color === "light" ? "text-slate-700" : "text-white")
                   }
                 >
-                  RPL Certificates{" "}
+                  RPL Certificates
                 </h3>
                 <Button
                   variant="contained"
@@ -99,7 +119,8 @@ const RPLCertificate = ({ color = "light" }) => {
               />
             ))}
           </Tabs>
-          <div className="block w-full overflow-x-auto mt-4">
+          <TabPanel value={value} index={0}></TabPanel>
+          <div className="block w-full overflow-x-auto mt-0">
             <table className="items-center w-full bg-transparent border-collapse">
               <thead>
                 <tr>
@@ -108,9 +129,7 @@ const RPLCertificate = ({ color = "light" }) => {
                   <th className={"table-head " + tableHeadClass}>Mobile</th>
                   <th className={"table-head " + tableHeadClass}>Address</th>
                   <th className={"table-head " + tableHeadClass}>DOB</th>
-                  <th className={"table-head " + tableHeadClass}>
-                    USI Number
-                  </th>{" "}
+                  <th className={"table-head " + tableHeadClass}>USI Number</th>
                   <th className={"table-head " + tableHeadClass}>
                     Visa Status
                   </th>
