@@ -35,6 +35,12 @@ const AddRPLCertificate = ({ color = "light" }) => {
     secondaryContactNumber: null,
     logo: null,
     image: null,
+    license: false,
+    photocard: false,
+    bank_card: false,
+    rsa: false,
+    transcript: false,
+    bills: false,
   });
   const [{}, { refetchConsultancy }] = useKothar();
 
@@ -105,21 +111,44 @@ const AddRPLCertificate = ({ color = "light" }) => {
     "Student Accommodation",
   ];
 
-  const [states, setState] = useState({
-    gilad: true,
-    jason: false,
-    antoine: false,
-  });
+  const documents_for_placement = [
+    {
+      label: "Covid Vaccination Certificate (Australian Converted)",
+      value: "covid",
+    },
+    { label: "Flu Vaccination", value: "flu" },
+    { label: "Police Check", value: "police_check" },
+    { label: "NDIS Worker Check(if Asked)", value: "ndis" },
+    { label: "WWVP( For Canberra Client only)", value: "wwvp" },
+    {
+      label:
+        "NHHI Certificate (from the link available on Handbook Provided By Us)",
+      value: "nhhi",
+    },
+    {
+      label:
+        "NDIS Worker orientation (from the link available on Handbook Provided By Us)",
+      value: "ndis",
+    },
+  ];
 
   const handleChange = (event) => {
-    setState({
-      ...states,
+    setData({
+      ...data,
+      [event.target.name]: event.target.checked,
+    });
+  };
+  const handleChangeCheckbox = (event) => {
+    setData({
+      ...data,
       [event.target.name]: event.target.checked,
     });
   };
 
-  const { gilad, jason, antoine } = states;
-  const error = [gilad, jason, antoine].filter((v) => v).length !== 2;
+  const { license, photocard, bank_card, rsa, transcript, bills } = data;
+  const error =
+    [license, photocard, bank_card, rsa, transcript, bills].filter((v) => v)
+      .length < 3;
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">
@@ -405,7 +434,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                     <InputField
                       label="Logo of Consultancy"
                       name="logo"
-                      // required
+                      s
                       type="file"
                       onChange={(e) => handleFileChange(e, "logo")}
                     />
@@ -474,7 +503,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                     <InputField
                       label="Valid Passport"
                       name="passport"
-                      // required
+                      s
                       type="file"
                       onChange={(e) => handleFileChange(e, "passport")}
                     />
@@ -483,7 +512,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                     <InputField
                       label="Current Visa"
                       name="visa"
-                      // required
+                      s
                       type="file"
                       onChange={(e) => handleFileChange(e, "visa")}
                     />
@@ -493,7 +522,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                     <InputField
                       label="All COE's"
                       name="coe"
-                      // required
+                      s
                       type="file"
                       onChange={(e) => handleFileChange(e, "coe")}
                     />
@@ -502,7 +531,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                     <InputField
                       label="USI Number"
                       name="usi_number"
-                      // required
+                      s
                       type="file"
                       onChange={(e) => handleFileChange(e, "usi_number")}
                     />
@@ -511,7 +540,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                     <InputField
                       label="Reference Letter from currently working company."
                       name="usi_number"
-                      // required
+                      s
                       type="file"
                       onChange={(e) => handleFileChange(e, "usi_number")}
                     />
@@ -525,42 +554,175 @@ const AddRPLCertificate = ({ color = "light" }) => {
                     component="fieldset"
                     variant="standard"
                   >
-                    <FormLabel component="legend">
+                    <FormLabel
+                      component="legend"
+                      className="text-orange-500 font-semibold"
+                    >
                       100 Points ID (Any 3 Form of ID)
                     </FormLabel>
                     <FormGroup>
                       <FormControlLabel
                         control={
                           <Checkbox
-                            checked={gilad}
+                            checked={data?.license}
                             onChange={handleChange}
-                            name="gilad"
+                            name="license"
                           />
                         }
-                        label="Gilad Gray"
+                        label="License (Australian only valid)"
                       />
+                      {data?.license && (
+                        <InputField
+                          label="Upload any Australian Licence"
+                          name="license_file"
+                          required={data?.license}
+                          type="file"
+                          onChange={(e) => handleFileChange(e, "license_file")}
+                        />
+                      )}
                       <FormControlLabel
                         control={
                           <Checkbox
-                            checked={jason}
+                            checked={data?.photocard}
                             onChange={handleChange}
-                            name="jason"
+                            name="photocard"
                           />
                         }
-                        label="Jason Killian"
+                        label="Photo Card"
                       />
+                      {data?.photocard && (
+                        <InputField
+                          label="Upload Photo Card"
+                          name="photocard_file"
+                          required={data?.photocard}
+                          type="file"
+                          onChange={(e) =>
+                            handleFileChange(e, "photocard_file")
+                          }
+                        />
+                      )}
                       <FormControlLabel
                         control={
                           <Checkbox
-                            checked={antoine}
+                            checked={data?.bank_card}
                             onChange={handleChange}
-                            name="antoine"
+                            name="bank_card"
                           />
                         }
-                        label="Antoine Llorca"
+                        label="Bank Card"
                       />
+                      {data?.bank_card && (
+                        <InputField
+                          label="Upload Bank Card Document"
+                          name="bank_card_file"
+                          checked={data?.bank_card_file}
+                          type="file"
+                          onChange={(e) =>
+                            handleFileChange(e, "bank_card_file")
+                          }
+                        />
+                      )}
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={data?.rsa}
+                            onChange={handleChange}
+                            name="rsa"
+                          />
+                        }
+                        label="RSA/ Whitecard"
+                      />
+                      {data?.rsa && (
+                        <InputField
+                          label="Upload RSA/ Whitecard document"
+                          name="rsa_file"
+                          required={data?.rsa}
+                          type="file"
+                          onChange={(e) => handleFileChange(e, "rsa_file")}
+                        />
+                      )}
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={data?.transcript}
+                            onChange={handleChange}
+                            name="transcript"
+                          />
+                        }
+                        label="Transcript of Currently Graduate Course"
+                      />
+                      {data?.transcript && (
+                        <InputField
+                          label="Upload Transcript"
+                          name="transcript_file"
+                          required={data?.transcript}
+                          type="file"
+                          onChange={(e) =>
+                            handleFileChange(e, "transcript_file")
+                          }
+                        />
+                      )}
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={data?.bills}
+                            onChange={handleChange}
+                            name="bills"
+                          />
+                        }
+                        label="Bills any with full name and address details"
+                      />
+                      {data?.bills && (
+                        <InputField
+                          label="Upload Bills"
+                          name="bills_file"
+                          required={data?.bills}
+                          type="file"
+                          onChange={(e) => handleFileChange(e, "bills_file")}
+                        />
+                      )}
                     </FormGroup>
-                    <FormHelperText>Pick at least 3 form of ID</FormHelperText>
+                    {error && (
+                      <FormHelperText className="text-base bg-red-500 text-white p-3 rounded">
+                        Pick at least 3 form of ID
+                      </FormHelperText>
+                    )}
+                  </FormControl>
+                </div>
+                <div className="grid grid-cols-2 gap-8">
+                  <FormControl required component="fieldset" variant="standard">
+                    <FormLabel
+                      component="legend"
+                      className="text-orange-500 font-semibold"
+                    >
+                      Documents Checklist For Placement.
+                    </FormLabel>
+                    <FormGroup>
+                      {documents_for_placement?.map((item) => (
+                        <>
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={data?.[item?.value]}
+                                onChange={handleChangeCheckbox}
+                                name={item?.value}
+                              />
+                            }
+                            label={item?.label}
+                          />
+                          {data?.[item?.value] && (
+                            <InputField
+                              label={`Upload ${item?.label}`}
+                              name={`${item?.value}_file`}
+                              type="file"
+                              onChange={(e) =>
+                                handleFileChange(e, `${item?.value}_file`)
+                              }
+                            />
+                          )}
+                        </>
+                      ))}
+                    </FormGroup>
                   </FormControl>
                 </div>
 
