@@ -27,20 +27,34 @@ const AddRPLCertificate = ({ color = "light" }) => {
   const [data, setData] = useState({
     name: null,
     address: null,
+    dob: null,
+    gender: null,
     email: null,
-    website: null,
-    owner: null,
-    panNumber: null,
-    primaryContactNumber: null,
-    secondaryContactNumber: null,
-    logo: null,
-    image: null,
-    license: false,
-    photocard: false,
-    bank_card: false,
-    rsa: false,
-    transcript: false,
-    bills: false,
+    number: null,
+    usiNumber: null,
+    visa_status: null,
+    visa_expiry: "",
+    certificate: "",
+    currently_enrolled_course: "",
+    currently_enrolled_university: "",
+    course_end_data: "",
+    placement_required: null,
+    passport: "",
+    visa: "",
+    coe: "",
+    license_file: "",
+    photocard_file: "",
+    bank_card_file: "",
+    rsa_file: "",
+    transcript_file: "",
+    bills_file: "",
+    covid_file: "",
+    flu_file: "",
+    police_check_file: "",
+    ndis_file: "",
+    wwvp_file: "",
+    nhhi_file: "",
+    ndis_file: "",
   });
   const [{}, { refetchConsultancy }] = useKothar();
 
@@ -408,7 +422,6 @@ const AddRPLCertificate = ({ color = "light" }) => {
                     <InputField
                       label="Upload Valid Passport"
                       name="passport"
-                      s
                       type="file"
                       onChange={(e) => handleFileChange(e, "passport")}
                     />
@@ -417,7 +430,6 @@ const AddRPLCertificate = ({ color = "light" }) => {
                     <InputField
                       label="Upload Current Visa"
                       name="visa"
-                      s
                       type="file"
                       onChange={(e) => handleFileChange(e, "visa")}
                     />
@@ -427,19 +439,8 @@ const AddRPLCertificate = ({ color = "light" }) => {
                     <InputField
                       label="Upload All COE's"
                       name="coe"
-                      s
                       type="file"
                       onChange={(e) => handleFileChange(e, "coe")}
-                    />
-                  </div>
-
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Upload Reference Letter from currently working company."
-                      name="usi_number"
-                      s
-                      type="file"
-                      onChange={(e) => handleFileChange(e, "usi_number")}
                     />
                   </div>
                 </div>
