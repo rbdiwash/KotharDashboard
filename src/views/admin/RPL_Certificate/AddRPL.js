@@ -362,6 +362,18 @@ const AddRPLCertificate = ({ color = "light" }) => {
                     />
                   </div>
                   <div className="relative w-full mb-3">
+                    <InputField
+                      fullWidth
+                      label="Expected Course End Date"
+                      placeholder="Expected Course End Date"
+                      name="course_end_data"
+                      required
+                      type="date"
+                      value={data?.course_end_data}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="relative w-full mb-3">
                     <FormControl>
                       <FormLabel className="text-slate-600 uppercase text-xs font-bold mb-2">
                         Placement Required
@@ -394,7 +406,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                 <div className="grid grid-cols-2 gap-8">
                   <div className="relative w-full mb-3">
                     <InputField
-                      label="Valid Passport"
+                      label="Upload Valid Passport"
                       name="passport"
                       s
                       type="file"
@@ -403,7 +415,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                   </div>
                   <div className="relative w-full mb-3">
                     <InputField
-                      label="Current Visa"
+                      label="Upload Current Visa"
                       name="visa"
                       s
                       type="file"
@@ -413,25 +425,17 @@ const AddRPLCertificate = ({ color = "light" }) => {
 
                   <div className="relative w-full mb-3">
                     <InputField
-                      label="All COE's"
+                      label="Upload All COE's"
                       name="coe"
                       s
                       type="file"
                       onChange={(e) => handleFileChange(e, "coe")}
                     />
                   </div>
+
                   <div className="relative w-full mb-3">
                     <InputField
-                      label="USI Number"
-                      name="usi_number"
-                      s
-                      type="file"
-                      onChange={(e) => handleFileChange(e, "usi_number")}
-                    />
-                  </div>
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Reference Letter from currently working company."
+                      label="Upload Reference Letter from currently working company."
                       name="usi_number"
                       s
                       type="file"

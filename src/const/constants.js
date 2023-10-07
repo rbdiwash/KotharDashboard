@@ -3,3 +3,11 @@
 // export const API_URL =
 //   "https://cors-anywhere.herokuapp.com/" + "http://13.50.26.213:8080";
 export const API_URL = "http://13.50.26.213:8080";
+
+export const insurance_companies = [
+  "Medibank",
+  "Allianz Care",
+  "BUPA",
+  "nib Health Insurance",
+  "ahm Health Insurance",
+];

@@ -1,9 +1,5 @@
-Course ko fomr ma Country nor req, 
-fee in Semster basis 
-University multiple states 
-Invoice should hane Payment Due Date 
-Need to add university details page 
-Rpl page
+Insurance
 
-
-Courses list ma University ko details aako xaina
+address, phone number
+Type - OSHC, OVHC - dropdown
+cover type  - single, couple, family, single parent

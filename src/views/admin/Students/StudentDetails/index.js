@@ -1,7 +1,7 @@
 import { Button, IconButton, Tooltip } from "@mui/material";
 import React, { useState } from "react";
 import { FaPlusCircle } from "react-icons/fa";
-import InsuranceModal from "../InsuranceModal";
+import InsuranceModal from "../../Insurance/InsuranceModal";
 import OnShoreDetailsModal from "../OnShoreDetailModal";
 import RPLModal from "../RPLModal";
 import Comments from "./Comments";
@@ -97,20 +97,13 @@ const StudentDetails = ({ color = "light" }) => {
                     </Tooltip>
                   </div>
                   <div className="flex gap-4">
-                    <Button
-                      variant="contained"
-                      startIcon={<FaPlusCircle />}
-                      onClick={() => setOpenRPLform(!openRPLform)}
-                    >
-                      Add RPL Details
-                    </Button>
-                    <Button
+                    {/* <Button
                       variant="contained"
                       startIcon={<FaPlusCircle />}
                       onClick={() => setOpenInsuranceForm(!openInsuranceForm)}
                     >
                       Add Insurance Details
-                    </Button>
+                    </Button> */}
                     <Button
                       variant="contained"
                       startIcon={<FaPlusCircle />}

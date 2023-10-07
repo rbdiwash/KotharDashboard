@@ -1,4 +1,4 @@
-import { Button, IconButton, Tooltip, Typography } from "@mui/material";
+import { Button, IconButton, Tooltip } from "@mui/material";
 import DeleteModal from "components/Modals/DeleteModal";
 import { useState } from "react";
 import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
@@ -10,67 +10,29 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import useKothar from "context/useKothar";
 import { ImageName } from "components/helper";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Box from "@mui/material/Box";
+import InsuranceModal from "./InsuranceModal";
 
-const RPLCertificate = ({ color = "light" }) => {
+const Insurance = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
   const navigate = useNavigate();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
+  const [openInsuranceForm, setOpenInsuranceForm] = useState(false);
 
-  const [{ consultancyList }, { refetchConsultancy }] = useKothar();
+  const [{ courseList }, { refetchCourseList }] = useKothar();
 
   const deleteData = () => {
     axios
       .delete(`${API_URL}/organization/delete/${openConfirmationModal?.id}`)
       .then((res) => {
-        toast.success("Data Deleted Successfully");
+        console.log(res);
+        toast.success(res?.data?.message || "Data Deleted Successfully");
         setOpenConfirmationModal({ state: false, id: null });
-        refetchConsultancy();
+        refetchCourseList();
       })
-      .error((err) => {
+      .catch((err) => {
         toast.error("Error Deleting Data");
       });
   };
-  const [value, setValue] = useState(0);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  const tabs = [
-    " Incomplete Application",
-    " Application Ready",
-    " Placement Waiting",
-    " Placement Processing",
-    " Ready to Apply",
-    " Certificate Processing",
-    " Certificate Ready",
-    " Payment Completed",
-    " Softcopy Sent",
-    " Hardcopy ssent",
-  ];
-
-  function TabPanel(props) {
-    const { children, value, index, ...other } = props;
-
-    return (
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`vertical-tabpanel-${index}`}
-        aria-labelledby={`vertical-tab-${index}`}
-        {...other}
-      >
-        {value === index && (
-          <Box sx={{ p: 3 }}>
-            <Typography>{children}</Typography>
-          </Box>
-        )}
-      </div>
-    );
-  }
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">
@@ -90,111 +52,88 @@ const RPLCertificate = ({ color = "light" }) => {
                     (color === "light" ? "text-slate-700" : "text-white")
                   }
                 >
-                  RPL Certificates
+                  Insurance
                 </h3>
                 <Button
                   variant="contained"
                   startIcon={<FaPlusCircle />}
-                  component={Link}
-                  to="/admin/rpl-certificate/add"
+                  onClick={() => setOpenInsuranceForm(!openInsuranceForm)}
                 >
-                  Add Client Details
+                  Add Insurance
                 </Button>
               </div>
             </div>
           </div>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            variant="scrollable"
-            scrollButtons
-            allowScrollButtonsMobile
-            aria-label="visible arrows tabs example"
-          >
-            {tabs?.map((arg) => (
-              <Tab
-                label={arg}
-                key={arg}
-                sx={{ fontWeight: "bold", fontSize: 16 }}
-              />
-            ))}
-          </Tabs>
-          <TabPanel value={value} index={0}></TabPanel>
-          <div className="block w-full overflow-x-auto mt-0">
+          <div className="block w-full overflow-x-auto">
             <table className="items-center w-full bg-transparent border-collapse">
               <thead>
                 <tr>
-                  <th className={"table-head " + tableHeadClass}>Name</th>
-                  <th className={"table-head " + tableHeadClass}>Email</th>
-                  <th className={"table-head " + tableHeadClass}>Mobile</th>
+                  <th className={"table-head " + tableHeadClass}>Full Name</th>
                   <th className={"table-head " + tableHeadClass}>Address</th>
-                  <th className={"table-head " + tableHeadClass}>DOB</th>
-                  <th className={"table-head " + tableHeadClass}>USI Number</th>
                   <th className={"table-head " + tableHeadClass}>
-                    Visa Status
+                    Phone Number
                   </th>
                   <th className={"table-head " + tableHeadClass}>
-                    Visa Expiry
+                    Insurance Company
+                  </th>
+                  <th className={"table-head " + tableHeadClass}>Start Date</th>
+                  <th className={"table-head " + tableHeadClass}>End Date</th>
+                  <th className={"table-head " + tableHeadClass}>
+                    Payment Type
+                  </th>
+                  <th className={"table-head " + tableHeadClass}>Cost</th>
+                  <th className={"table-head " + tableHeadClass}>
+                    Insurance Type
                   </th>
                   <th className={"table-head " + tableHeadClass}>
-                    Qualification
+                    Insurance Cover Type
                   </th>
                   <th className={"table-head " + tableHeadClass}>
                     Case Officer
                   </th>
-                  <th className={"table-head " + tableHeadClass}>Reference </th>
-                  <th className={"table-head " + tableHeadClass}>Status </th>
-                  <th className={"table-head " + tableHeadClass}>Invoice </th>
+                  <th className={"table-head " + tableHeadClass}>Action</th>
                 </tr>
               </thead>
               <tbody>
-                {consultancyList?.length > 0 ? (
-                  consultancyList?.map((item, index) => (
+                {courseList?.length > 0 ? (
+                  courseList?.map((item, index) => (
                     <tr key={item?.id || index}>
-                      <td className="table-data text-left flex items-center">
+                      <td className="table-data">
                         {ImageName(item?.name)}
-                        <span
-                          className={
-                            "ml-3 font-bold " +
-                            +(color === "light"
-                              ? "text-slate-600"
-                              : "text-white")
-                          }
-                        >
+                        <span className={"ml-3 font-bold text-slate-600"}>
                           {item?.name || "-"}
                         </span>
                       </td>
-                      <td className="table-data">{item?.email || "-"}</td>
+                      <td className="table-data">{item?.level || "-"}</td>
                       <td className="table-data">
-                        <div className="flex">{item?.owner || "-"}</div>
+                        <div className="flex">{item?.duration || "-"} year</div>
                       </td>
                       <td className="table-data">
-                        <div className="flex items-center gap-2">
-                          {item?.primaryContactNumber || "-"}
+                        <div className="flex items-center">
+                          {item?.university || "-"}
                         </div>
                       </td>
                       <td className="table-data">
                         <div className="flex items-center">
-                          {item?.website || "-"}
+                          {item?.intake || "-"}
                         </div>
-                      </td>
+                      </td>{" "}
                       <td className="table-data">
                         <div className="flex items-center">
-                          {item?.panNumber || "-"}
+                          {item?.fee || "-"}
                         </div>
                       </td>
-
                       <td className="table-data text-right">
                         <div className="flex items-center">
-                          <Tooltip title="View" arrow>
+                          {/* <Tooltip title="View" arrow>
                             <IconButton>
                               <AiFillEye className="text-sky-600 cursor-pointer" />
                             </IconButton>
-                          </Tooltip>
-                          <Tooltip title="Edit University" arrow>
+                          </Tooltip> */}
+                          <Tooltip title="Edit Course" arrow>
                             <IconButton
                               onClick={() =>
-                                navigate("/admin/consultancy/add", {
+                                navigate("/admin/course/add", {
                                   state: { item },
                                 })
                               }
@@ -202,7 +141,7 @@ const RPLCertificate = ({ color = "light" }) => {
                               <AiFillEdit className="text-sky-600 cursor-pointer" />
                             </IconButton>
                           </Tooltip>
-                          <Tooltip title="Delete University" arrow>
+                          <Tooltip title="Delete Course" arrow>
                             <IconButton
                               onClick={() =>
                                 setOpenConfirmationModal({
@@ -220,7 +159,7 @@ const RPLCertificate = ({ color = "light" }) => {
                   ))
                 ) : (
                   <tr key={1}>
-                    <td colSpan={14}>
+                    <td colSpan={15}>
                       <div className="text-lg text-center my-10">
                         No Results Found
                       </div>
@@ -235,15 +174,18 @@ const RPLCertificate = ({ color = "light" }) => {
       {openConfirmationModal.state && (
         <DeleteModal
           open={openConfirmationModal.state}
-          item="University"
+          item="Course"
           handleCancel={() =>
             setOpenConfirmationModal({ state: false, id: null })
           }
           handleDelete={() => deleteData()}
         />
       )}
+      {openInsuranceForm && (
+        <InsuranceModal {...{ openInsuranceForm, setOpenInsuranceForm }} />
+      )}
     </div>
   );
 };
 
-export default RPLCertificate;
+export default Insurance;

@@ -1,6 +1,7 @@
 /*eslint-disable*/
 import React, { useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
+import logo from "../../assets/img/logo.png";
 
 import NotificationDropdown from "components/Dropdowns/NotificationDropdown.js";
 import UserDropdown from "components/Dropdowns/UserDropdown.js";
@@ -11,18 +12,33 @@ export default function Sidebar() {
   const options = [
     { label: "Dashboard", value: "dashboard", icon: "fas fa-tv" },
     { label: "University", value: "university", icon: "fas fa-school" },
-    { label: "Student", value: "student", icon: "fas fa-graduation-cap" },
     { label: "courses", value: "courses", icon: "fas fa-briefcase" },
-    { label: "consultancy", value: "consultancy", icon: "fas fa-briefcase" },
     {
       label: "RPL Certificate",
       value: "RPL-Certificate",
       icon: "fas fa-briefcase",
     },
-    { label: "Users", value: "users", icon: "fas fa-user" },
+    { label: "Student", value: "student", icon: "fas fa-graduation-cap" },
+    {
+      label: "Visa",
+      value: "visa",
+      icon: "fas fa-x-ray",
+    },
+    {
+      label: "Insurance",
+      value: "insurance",
+      icon: "fas fa-x-ray",
+    },
+    {
+      label: "Skill Assessment",
+      value: "skill-assessment",
+      icon: "fas fa-x-ray",
+    },
+    { label: "consultancy", value: "consultancy", icon: "fas fa-briefcase" },
     { label: "Invoice", value: "invoice", icon: "fas fa-file-invoice-dollar" },
-    { label: "Settings", value: "setting", icon: "fas fa-tools" },
-    { label: "Map", value: "map", icon: "fas fa-map-marked" },
+    { label: "Users", value: "users", icon: "fas fa-user" },
+    // { label: "Settings", value: "setting", icon: "fas fa-tools" },
+    // { label: "Map", value: "map", icon: "fas fa-map-marked" },
   ];
 
   const authOptions = [
@@ -49,7 +65,7 @@ export default function Sidebar() {
             className="md:block text-left md:pb-2 text-slate-600 mr-0 inline-block whitespace-nowrap text-sm uppercase font-bold p-4 px-0"
             to="/"
           >
-            Kothar Dashboard
+            <img src={logo} className="h-16" />
           </Link>
           <ul className="md:hidden items-center flex flex-wrap list-none">
             <li className="inline-block relative">
@@ -61,7 +77,7 @@ export default function Sidebar() {
           </ul>
           <div
             className={
-              "md:flex md:flex-col md:items-stretch md:opacity-100 md:relative md:mt-4 md:shadow-none shadow absolute top-0 left-0 right-0 z-40 overflow-y-auto overflow-x-hidden h-auto items-center flex-1 rounded " +
+              "md:flex md:flex-col md:items-stretch md:opacity-100 md:relative md:mt-0 md:shadow-none shadow absolute top-0 left-0 right-0 z-40 overflow-y-auto overflow-x-hidden h-auto items-center flex-1 rounded " +
               collapseShow
             }
           >
@@ -95,7 +111,7 @@ export default function Sidebar() {
                 />
               </div>
             </form>
-            <hr className="my-4 md:min-w-full" />
+            <hr className="mb-4 md:min-w-full" />
             <h6 className="md:min-w-full text-slate-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
               Admin Panel
             </h6>

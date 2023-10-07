@@ -52,7 +52,6 @@ const AddInvoice = () => {
     },
   });
   async function postData(payload) {
-    console.log("🚀  data:", data);
     if (data?.id) {
       await axios.put(`${API_URL}/api/invoice/update/${payload?.id}`, payload);
     } else {
