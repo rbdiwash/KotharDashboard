@@ -19,6 +19,9 @@ import Invoice from "views/admin/Invoice";
 import RPLCertificate from "views/admin/RPL_Certificate";
 import AddRPLCertificate from "views/admin/RPL_Certificate/AddRPL";
 import Insurance from "views/admin/Insurance";
+import Visa from "views/admin/Visa";
+import SkillAssessment from "views/admin/SkillAssessment";
+import AddVisaDetails from "views/admin/Visa/AddVisa";
 
 // render - dashboard
 const Admin = Loadable(lazy(() => import("layouts/Admin")));
@@ -71,6 +74,18 @@ const AdminRoutes = {
     {
       path: "insurance",
       element: <Insurance />,
+    },
+    {
+      path: "visa",
+      element: <Visa />,
+    },
+    {
+      path: "visa/add",
+      element: <AddVisaDetails />,
+    },
+    {
+      path: "skill-assessment",
+      element: <SkillAssessment />,
     },
 
     {
