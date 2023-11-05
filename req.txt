@@ -5,7 +5,7 @@ Type - OSHC, OVHC - dropdown
 cover type  - single, couple, family, single parent
 
 
-Student visa ko form 
+Skill Assessment
 Tesma required documents 
 1. Academic ( multi add garna milne 
 2. PY Certificate ( 3 ta add garna milne) 
@@ -20,3 +20,9 @@ TR
 Visitor 
 Dependent 
 Student visa Extension
+
+Visa 
+TR visa esma m
+Student Visa
+Dependent visa
+Tourist/Visitor Visa

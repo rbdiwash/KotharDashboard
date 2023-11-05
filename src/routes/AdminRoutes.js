@@ -22,6 +22,7 @@ import Insurance from "views/admin/Insurance";
 import Visa from "views/admin/Visa";
 import SkillAssessment from "views/admin/SkillAssessment";
 import AddVisaDetails from "views/admin/Visa/AddVisa";
+import AddSkillAssessment from "views/admin/SkillAssessment/AddSkillAssessment";
 
 // render - dashboard
 const Admin = Loadable(lazy(() => import("layouts/Admin")));
@@ -86,6 +87,10 @@ const AdminRoutes = {
     {
       path: "skill-assessment",
       element: <SkillAssessment />,
+    },
+    {
+      path: "skill-assessment/add",
+      element: <AddSkillAssessment />,
     },
 
     {

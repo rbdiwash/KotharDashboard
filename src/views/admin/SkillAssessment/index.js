@@ -10,7 +10,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import useKothar from "context/useKothar";
 import { ImageName } from "components/helper";
-import SkillAssessmentModal from "./SkillAssessmentModal";
+import SkillAssessmentModal from "./AddSkillAssessment";
 
 const SkillAssessment = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
@@ -57,7 +57,7 @@ const SkillAssessment = ({ color = "light" }) => {
                 <Button
                   variant="contained"
                   startIcon={<FaPlusCircle />}
-                  onClick={() => setOpenInsuranceForm(!openInsuranceForm)}
+                  onClick={() => navigate("add")}
                 >
                   Add Skill Assessment
                 </Button>
@@ -168,11 +168,6 @@ const SkillAssessment = ({ color = "light" }) => {
             setOpenConfirmationModal({ state: false, id: null })
           }
           handleDelete={() => deleteData()}
-        />
-      )}
-      {openInsuranceForm && (
-        <SkillAssessmentModal
-          {...{ openInsuranceForm, setOpenInsuranceForm }}
         />
       )}
     </div>
