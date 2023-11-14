@@ -186,7 +186,7 @@ const AddVisaDetails = ({ color = "light" }) => {
                     (color === "light" ? "text-slate-700" : "text-white")
                   }
                 >
-                  Add Visa
+                  Add Visa Details
                 </h3>
               </div>
             </div>

@@ -1,27 +1,21 @@
+import { PictureAsPdfOutlined } from "@mui/icons-material";
 import {
-  Autocomplete,
   Button,
-  Checkbox,
   FormControl,
   FormControlLabel,
-  FormGroup,
-  FormHelperText,
   FormLabel,
-  IconButton,
   Radio,
   RadioGroup,
-  TextField,
 } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import InputField from "components/Input/InputField";
 import { API_URL } from "const/constants";
+import useKothar from "context/useKothar";
 import { useEffect, useState } from "react";
+import { IoArrowBack } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { IoArrowBack } from "react-icons/io5";
-import useKothar from "context/useKothar";
-import ClearIcon from "@mui/icons-material/Clear";
 
 const AddSkillAssessment = ({ color = "light" }) => {
   const [data, setData] = useState({
@@ -31,9 +25,17 @@ const AddSkillAssessment = ({ color = "light" }) => {
     gender: null,
     email: null,
     number: null,
-    usiNumber: null,
     visa_status: null,
+    course_provider: null,
+    course_completed: null,
+
+    passport_number: "",
+    date_of_issue: "",
+    date_of_expiry: "",
+    visa_status: "",
     visa_expiry: "",
+
+    resume: "",
     certificate: "",
     currently_enrolled_course: "",
     currently_enrolled_university: "",
@@ -56,6 +58,7 @@ const AddSkillAssessment = ({ color = "light" }) => {
     nhhi_file: "",
     ndis_file: "",
   });
+  console.log("🚀  data:", data);
   const [{}, { refetchConsultancy }] = useKothar();
 
   const navigate = useNavigate();
@@ -97,7 +100,7 @@ const AddSkillAssessment = ({ color = "light" }) => {
     mutate({ ...data });
   };
 
-  const handleFileChange = (e, type) => {
+  const handleFileChange = (e, name, type) => {
     const file = e.target.files[0];
     const formData = new FormData();
     formData.append("file", file);
@@ -106,7 +109,11 @@ const AddSkillAssessment = ({ color = "light" }) => {
         headers: { "Content-Type": "multipart/form-data" },
       })
       .then((res) => {
-        setData({ ...data, [type]: res?.data?.data?.url });
+        if (type === "multiple") {
+          setData({ ...data, [name]: [...data?.[name], res?.data?.data?.url] });
+        } else {
+          setData({ ...data, [name]: res?.data?.data?.url });
+        }
       })
       .catch((err) => {
         toast.error("Error Uploading file");
@@ -288,10 +295,10 @@ const AddSkillAssessment = ({ color = "light" }) => {
                     <InputField
                       label="Course Provider"
                       placeholder="Course Provider"
-                      name="courseProvider"
+                      name="course_provider"
                       required
                       type="text"
-                      value={data?.courseProvider}
+                      value={data?.course_provider}
                       onChange={handleInputChange}
                     />
                   </div>
@@ -299,10 +306,10 @@ const AddSkillAssessment = ({ color = "light" }) => {
                     <InputField
                       label="Course Completed"
                       placeholder="Course Completed"
-                      name="courseCompleted"
+                      name="course_completed"
                       required
                       type="text"
-                      value={data?.courseCompleted}
+                      value={data?.course_completed}
                       onChange={handleInputChange}
                     />
                   </div>
@@ -315,10 +322,10 @@ const AddSkillAssessment = ({ color = "light" }) => {
                     <InputField
                       label="Passport Number"
                       placeholder="Passport Number"
-                      name="passportNumber"
+                      name="passport_number"
                       required
                       type="number"
-                      value={data?.passportNumber}
+                      value={data?.passport_number}
                       onChange={handleInputChange}
                     />
                   </div>
@@ -326,20 +333,20 @@ const AddSkillAssessment = ({ color = "light" }) => {
                   <div className="relative w-full mb-3">
                     <InputField
                       label="Date of Issue"
-                      name="dataOfIssue"
+                      name="data_of_issue"
                       required
                       type="date"
-                      value={data?.dataOfIssue}
+                      value={data?.data_of_issue}
                     />
                   </div>
 
                   <div className="relative w-full mb-3">
                     <InputField
                       label="Expiry Date"
-                      name="dateOfExpiry"
+                      name="date_of_expiry"
                       required
                       type="date"
-                      value={data?.dateOfExpiry}
+                      value={data?.date_of_expiry}
                     />
                   </div>
                   <div className="relative w-full mb-3">
@@ -391,7 +398,9 @@ const AddSkillAssessment = ({ color = "light" }) => {
                       name="coe"
                       type="file"
                       multiple
-                      onChange={(e) => handleFileChange(e, "coe")}
+                      onChange={(e) =>
+                        handleFileChange(e, "academic", "multiple")
+                      }
                     />
                   </div>
                   <div className="relative w-full mb-3">
@@ -400,151 +409,16 @@ const AddSkillAssessment = ({ color = "light" }) => {
                       name="coe"
                       type="file"
                       multiple
-                      onChange={(e) => handleFileChange(e, "coe")}
+                      onChange={(e) => handleFileChange(e, "py", "multiple")}
                     />
                   </div>
-                </div>
-                <div className="grid grid-cols-2 gap-8 border-t">
-                  <FormControl
-                    required
-                    error={error}
-                    component="fieldset"
-                    variant="standard"
-                  >
-                    <FormLabel
-                      component="legend"
-                      className="text-orange-500 font-semibold pt-4 text-xl"
-                    >
-                      100 Points ID (Any 3 Form of ID)
-                    </FormLabel>
-                    <FormGroup>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={data?.license}
-                            onChange={handleChange}
-                            name="license"
-                          />
-                        }
-                        label="License (Australian only valid)"
-                      />
-                      {data?.license && (
-                        <InputField
-                          label="Upload any Australian Licence"
-                          name="license_file"
-                          required={data?.license}
-                          type="file"
-                          onChange={(e) => handleFileChange(e, "license_file")}
-                        />
-                      )}
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={data?.photocard}
-                            onChange={handleChange}
-                            name="photocard"
-                          />
-                        }
-                        label="Photo Card"
-                      />
-                      {data?.photocard && (
-                        <InputField
-                          label="Upload Photo Card"
-                          name="photocard_file"
-                          required={data?.photocard}
-                          type="file"
-                          onChange={(e) =>
-                            handleFileChange(e, "photocard_file")
-                          }
-                        />
-                      )}
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={data?.bank_card}
-                            onChange={handleChange}
-                            name="bank_card"
-                          />
-                        }
-                        label="Bank Card"
-                      />
-                      {data?.bank_card && (
-                        <InputField
-                          label="Upload Bank Card Document"
-                          name="bank_card_file"
-                          checked={data?.bank_card_file}
-                          type="file"
-                          onChange={(e) =>
-                            handleFileChange(e, "bank_card_file")
-                          }
-                        />
-                      )}
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={data?.rsa}
-                            onChange={handleChange}
-                            name="rsa"
-                          />
-                        }
-                        label="RSA/ Whitecard"
-                      />
-                      {data?.rsa && (
-                        <InputField
-                          label="Upload RSA/ Whitecard document"
-                          name="rsa_file"
-                          required={data?.rsa}
-                          type="file"
-                          onChange={(e) => handleFileChange(e, "rsa_file")}
-                        />
-                      )}
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={data?.transcript}
-                            onChange={handleChange}
-                            name="transcript"
-                          />
-                        }
-                        label="Transcript of Currently Graduate Course"
-                      />
-                      {data?.transcript && (
-                        <InputField
-                          label="Upload Transcript"
-                          name="transcript_file"
-                          required={data?.transcript}
-                          type="file"
-                          onChange={(e) =>
-                            handleFileChange(e, "transcript_file")
-                          }
-                        />
-                      )}
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={data?.bills}
-                            onChange={handleChange}
-                            name="bills"
-                          />
-                        }
-                        label="Bills any with full name and address details"
-                      />
-                      {data?.bills && (
-                        <InputField
-                          label="Upload Bills"
-                          name="bills_file"
-                          required={data?.bills}
-                          type="file"
-                          onChange={(e) => handleFileChange(e, "bills_file")}
-                        />
-                      )}
-                    </FormGroup>
-                    {error && (
-                      <FormHelperText className="text-base bg-red-500 text-white p-1 px-3 rounded">
-                        Pick at least 3 form of ID
-                      </FormHelperText>
-                    )}
-                  </FormControl>
+                  {data?.py?.map((data) => (
+                    <>
+                      <img src="" alt="" />
+                      <PictureAsPdfOutlined />
+                      <span>{data?.name}</span>
+                    </>
+                  ))}
                 </div>
                 <div className="w-full flex justify-end mt-6 gap-4">
                   {/* <Button variant="outlined" component={Link} to=""> */}

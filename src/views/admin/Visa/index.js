@@ -1,4 +1,4 @@
-import { Button, IconButton, Tooltip } from "@mui/material";
+import { Button, IconButton, Tabs, Tooltip, Typography } from "@mui/material";
 import DeleteModal from "components/Modals/DeleteModal";
 import { useState } from "react";
 import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
@@ -11,6 +11,34 @@ import { toast } from "react-toastify";
 import useKothar from "context/useKothar";
 import { ImageName } from "components/helper";
 import VisaModel from "./VisaModel";
+import Tab from "@mui/material/Tab";
+import Box from "@mui/material/Box";
+const tabs = [
+  "TR Visa",
+  "Student Visa",
+  "Dependent Visa",
+  "Visitor/Tourist Visa",
+];
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`vertical-tabpanel-${index}`}
+      aria-labelledby={`vertical-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
 
 const Visa = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
@@ -19,7 +47,11 @@ const Visa = ({ color = "light" }) => {
   const [openVisaForm, setOpenVisaForm] = useState(false);
 
   const [{ courseList }, { refetchCourseList }] = useKothar();
+  const [value, setValue] = useState(0);
 
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
   const deleteData = () => {
     axios
       .delete(`${API_URL}/organization/delete/${openConfirmationModal?.id}`)
@@ -65,6 +97,23 @@ const Visa = ({ color = "light" }) => {
               </div>
             </div>
           </div>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            variant="scrollable"
+            scrollButtons
+            allowScrollButtonsMobile
+            aria-label="visible arrows tabs example"
+          >
+            {tabs?.map((arg) => (
+              <Tab
+                label={arg}
+                key={arg}
+                sx={{ fontWeight: "bold", fontSize: 16 }}
+              />
+            ))}
+          </Tabs>
+          <TabPanel value={value} index={0}></TabPanel>
           <div className="block w-full overflow-x-auto">
             <table className="items-center w-full bg-transparent border-collapse">
               <thead>
