@@ -15,7 +15,7 @@ export default function Sidebar() {
     { label: "courses", value: "courses", icon: "fas fa-briefcase" },
     {
       label: "RPL Certificate",
-      value: "RPL-Certificate",
+      value: "rpl-certificate",
       icon: "fas fa-briefcase",
     },
     { label: "Student", value: "student", icon: "fas fa-graduation-cap" },

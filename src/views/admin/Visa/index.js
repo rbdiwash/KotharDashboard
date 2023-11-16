@@ -13,6 +13,8 @@ import { ImageName } from "components/helper";
 import VisaModel from "./VisaModel";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
+import SearchField from "components/SearchField";
+import { useEffect } from "react";
 const tabs = [
   "TR Visa",
   "Student Visa",
@@ -45,6 +47,7 @@ const Visa = ({ color = "light" }) => {
   const navigate = useNavigate();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [openVisaForm, setOpenVisaForm] = useState(false);
+  const [searchText, setSearchText] = useState("");
 
   const [{ courseList }, { refetchCourseList }] = useKothar();
   const [value, setValue] = useState(0);
@@ -52,6 +55,8 @@ const Visa = ({ color = "light" }) => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+
   const deleteData = () => {
     axios
       .delete(`${API_URL}/organization/delete/${openConfirmationModal?.id}`)
@@ -76,25 +81,24 @@ const Visa = ({ color = "light" }) => {
           }
         >
           <div className="rounded-t mb-0 px-4 py-3 border-0">
-            <div className="flex flex-wrap items-center">
-              <div className="relative w-full px-4 max-w-full flex justify-between">
-                <h3
-                  className={
-                    "font-semibold text-lg " +
-                    (color === "light" ? "text-slate-700" : "text-white")
-                  }
-                >
-                  Visa Details
-                </h3>
-                <Button
-                  variant="contained"
-                  startIcon={<FaPlusCircle />}
-                  component={Link}
-                  to="/admin/visa/add"
-                >
-                  Add Visa Details
-                </Button>
-              </div>
+            <div className="flex flex-wrap items-center justify-between">
+              <h3
+                className={
+                  "font-semibold text-lg " +
+                  (color === "light" ? "text-slate-700" : "text-white")
+                }
+              >
+                Visa Details
+              </h3>
+              <SearchField {...{ type: "Visa", searchText, setSearchText }} />
+              <Button
+                variant="contained"
+                startIcon={<FaPlusCircle />}
+                component={Link}
+                to="/admin/visa/add"
+              >
+                Add Visa Details
+              </Button>
             </div>
           </div>
           <Tabs
@@ -113,101 +117,16 @@ const Visa = ({ color = "light" }) => {
               />
             ))}
           </Tabs>
-          <TabPanel value={value} index={0}></TabPanel>
-          <div className="block w-full overflow-x-auto">
-            <table className="items-center w-full bg-transparent border-collapse">
-              <thead>
-                <tr>
-                  <th className={"table-head " + tableHeadClass}>Full Name</th>
-                  <th className={"table-head " + tableHeadClass}>Address</th>
-                  <th className={"table-head " + tableHeadClass}>
-                    Phone Number
-                  </th>
-
-                  <th className={"table-head " + tableHeadClass}>
-                    Payment Type
-                  </th>
-                  <th className={"table-head " + tableHeadClass}>Cost</th>
-                  <th className={"table-head " + tableHeadClass}>Status</th>
-
-                  <th className={"table-head " + tableHeadClass}>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {courseList?.length > 0 ? (
-                  courseList?.map((item, index) => (
-                    <tr key={item?.id || index}>
-                      <td className="table-data">
-                        {ImageName(item?.name)}
-                        <span className={"ml-3 font-bold text-slate-600"}>
-                          {item?.name || "-"}
-                        </span>
-                      </td>
-                      <td className="table-data">{item?.level || "-"}</td>
-                      <td className="table-data">
-                        <div className="flex">{item?.duration || "-"} year</div>
-                      </td>
-                      <td className="table-data">
-                        <div className="flex items-center">
-                          {item?.university || "-"}
-                        </div>
-                      </td>
-                      <td className="table-data">
-                        <div className="flex items-center">
-                          {item?.intake || "-"}
-                        </div>
-                      </td>
-                      <td className="table-data">
-                        <div className="flex items-center">
-                          {item?.fee || "-"}
-                        </div>
-                      </td>
-                      <td className="table-data text-right">
-                        <div className="flex items-center">
-                          {/* <Tooltip title="View" arrow>
-                            <IconButton>
-                              <AiFillEye className="text-sky-600 cursor-pointer" />
-                            </IconButton>
-                          </Tooltip> */}
-                          <Tooltip title="Edit Course" arrow>
-                            <IconButton
-                              onClick={() =>
-                                navigate("/admin/course/add", {
-                                  state: { item },
-                                })
-                              }
-                            >
-                              <AiFillEdit className="text-sky-600 cursor-pointer" />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="Delete Course" arrow>
-                            <IconButton
-                              onClick={() =>
-                                setOpenConfirmationModal({
-                                  state: true,
-                                  id: item?.id,
-                                })
-                              }
-                            >
-                              <AiFillDelete className="text-red-600 cursor-pointer" />
-                            </IconButton>
-                          </Tooltip>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr key={1}>
-                    <td colSpan={15}>
-                      <div className="text-lg text-center my-10">
-                        No Results Found
-                      </div>
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+          <TabPanel value={value} index={value}>
+            <TabContent
+              {...{
+                tableHeadClass,
+                navigate,
+                courseList,
+                setOpenConfirmationModal,
+              }}
+            />
+          </TabPanel>
         </div>
       </div>
       {openConfirmationModal.state && (
@@ -226,3 +145,99 @@ const Visa = ({ color = "light" }) => {
 };
 
 export default Visa;
+
+const TabContent = ({
+  tableHeadClass,
+  navigate,
+  courseList,
+  setOpenConfirmationModal,
+}) => {
+  return (
+    <div className="block w-full overflow-x-auto">
+      <table className="items-center w-full bg-transparent border-collapse">
+        <thead>
+          <tr>
+            <th className={"table-head " + tableHeadClass}>Full Name</th>
+            <th className={"table-head " + tableHeadClass}>Address</th>
+            <th className={"table-head " + tableHeadClass}>Phone Number</th>
+
+            <th className={"table-head " + tableHeadClass}>Payment Type</th>
+            <th className={"table-head " + tableHeadClass}>Cost</th>
+            <th className={"table-head " + tableHeadClass}>Status</th>
+
+            <th className={"table-head " + tableHeadClass}>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {courseList?.length > 0 ? (
+            courseList?.map((item, index) => (
+              <tr key={item?.id || index}>
+                <td className="table-data">
+                  {ImageName(item?.name)}
+                  <span className={"ml-3 font-bold text-slate-600"}>
+                    {item?.name || "-"}
+                  </span>
+                </td>
+                <td className="table-data">{item?.level || "-"}</td>
+                <td className="table-data">
+                  <div className="flex">{item?.duration || "-"} year</div>
+                </td>
+                <td className="table-data">
+                  <div className="flex items-center">
+                    {item?.university || "-"}
+                  </div>
+                </td>
+                <td className="table-data">
+                  <div className="flex items-center">{item?.intake || "-"}</div>
+                </td>
+                <td className="table-data">
+                  <div className="flex items-center">{item?.fee || "-"}</div>
+                </td>
+                <td className="table-data text-right">
+                  <div className="flex items-center">
+                    {/* <Tooltip title="View" arrow>
+                            <IconButton>
+                              <AiFillEye className="text-sky-600 cursor-pointer" />
+                            </IconButton>
+                          </Tooltip> */}
+                    <Tooltip title="Edit Course" arrow>
+                      <IconButton
+                        onClick={() =>
+                          navigate("/admin/course/add", {
+                            state: { item },
+                          })
+                        }
+                      >
+                        <AiFillEdit className="text-sky-600 cursor-pointer" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Delete Course" arrow>
+                      <IconButton
+                        onClick={() =>
+                          setOpenConfirmationModal({
+                            state: true,
+                            id: item?.id,
+                          })
+                        }
+                      >
+                        <AiFillDelete className="text-red-600 cursor-pointer" />
+                      </IconButton>
+                    </Tooltip>
+                  </div>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr key={1}>
+              <td colSpan={15}>
+                <div className="text-lg text-center my-10">
+                  No Results Found
+                </div>
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+};

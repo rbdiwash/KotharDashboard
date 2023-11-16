@@ -5,9 +5,15 @@
 export const API_URL = "http://13.50.26.213:8080";
 
 export const insurance_companies = [
-  "Medibank",
-  "Allianz Care",
-  "BUPA",
-  "nib Health Insurance",
-  "ahm Health Insurance",
+  { label: "Medibank", value: "Medibank" },
+  { label: "Allianz Care", value: "Allianz Care" },
+  { label: "BUPA", value: "BUPA" },
+  { label: "nib Health Insurance", value: "nib Health Insurance" },
+  { label: "ahm Health Insurance", value: "ahm Health Insurance" },
+];
+export const insurance_cover_type = [
+  { label: "Single", value: "single" },
+  { label: "Couple", value: "couple" },
+  { label: "Family", value: "family" },
+  { label: "Single Parent", value: "single_parent" },
 ];

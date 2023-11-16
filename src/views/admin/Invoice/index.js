@@ -19,12 +19,14 @@ import {
   AiFillPrinter,
 } from "react-icons/ai";
 import { useState } from "react";
+import SearchField from "components/SearchField";
 
 const Invoice = ({ color = "dark" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
   const navigate = useNavigate();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [openInvoice, setOpenInvoice] = useState(false);
+  const [searchText, setSearchText] = useState("");
 
   const getData = async () => {
     const res = await axios.get(`${API_URL}/api/invoice/list`, {
@@ -82,26 +84,27 @@ const Invoice = ({ color = "dark" }) => {
           }
         >
           <div className="rounded-t mb-0 px-4 py-3 border-0">
-            <div className="flex flex-wrap items-center">
-              <div className="relative w-full px-4 max-w-full flex justify-between">
-                <h3
-                  className={
-                    "font-semibold text-lg " +
-                    (color === "light" ? "text-slate-700" : "text-white")
-                  }
-                >
-                  Invoices
-                </h3>
-                <Button
-                  variant="outlined"
-                  startIcon={<FaPlusCircle />}
-                  component={Link}
-                  sx={{ color: "white" }}
-                  to="/admin/invoice/add"
-                >
-                  Add Invoice
-                </Button>
-              </div>
+            <div className="flex flex-wrap items-center justify-between">
+              <h3
+                className={
+                  "font-semibold text-lg " +
+                  (color === "light" ? "text-slate-700" : "text-white")
+                }
+              >
+                Invoices
+              </h3>
+              <SearchField
+                {...{ type: "Invoice", searchText, setSearchText }}
+              />
+              <Button
+                variant="outlined"
+                startIcon={<FaPlusCircle />}
+                component={Link}
+                sx={{ color: "white" }}
+                to="/admin/invoice/add"
+              >
+                Add Invoice
+              </Button>
             </div>
           </div>
           <div className="block w-full overflow-x-auto">

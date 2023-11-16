@@ -1,12 +1,6 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import {
-  BrowserRouter,
-  Route,
-  Switch,
-  Redirect,
-  Routes,
-  useRoutes,
+  BrowserRouter
 } from "react-router-dom";
 
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -15,17 +9,9 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 // layouts
 import { StrictMode } from "react";
 
-import Admin from "layouts/Admin.js";
-import Auth from "layouts/Auth.js";
 
 // views without layouts
 
-import Landing from "views/Landing.js";
-import Profile from "views/Profile.js";
-import Index from "views/Index.js";
-import { ToastContainer, toast } from "react-toastify";
-import { createRoot } from "react-dom/client";
-import Dashboard from "views/admin/Dashboard";
 import App from "./App";
 import "./input.css";
 // import "./assets/styles/index.css";

@@ -1,6 +1,7 @@
 import { Button, IconButton, Tooltip } from "@mui/material";
 import axios from "axios";
 import DeleteModal from "components/Modals/DeleteModal";
+import SearchField from "components/SearchField";
 import { ImageName } from "components/helper";
 import { API_URL } from "const/constants";
 import useKothar from "context/useKothar";
@@ -15,7 +16,7 @@ const University = ({ color = "light" }) => {
   const navigate = useNavigate();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [{ uniData }, { refetchUniData }] = useKothar();
-
+  const [searchText, setSearchText] = useState("");
   const deleteData = () => {
     axios
       .delete(`${API_URL}/university/delete/${openConfirmationModal?.id}`)
@@ -39,25 +40,26 @@ const University = ({ color = "light" }) => {
           }
         >
           <div className="rounded-t mb-0 px-4 py-3 border-0">
-            <div className="flex flex-wrap items-center">
-              <div className="relative w-full px-4 max-w-full flex justify-between">
-                <h3
-                  className={
-                    "font-semibold text-lg " +
-                    (color === "light" ? "text-slate-700" : "text-white")
-                  }
-                >
-                  Universities
-                </h3>
-                <Button
-                  variant="contained"
-                  startIcon={<FaPlusCircle />}
-                  component={Link}
-                  to="/admin/university/add"
-                >
-                  Add University
-                </Button>
-              </div>
+            <div className="flex flex-wrap items-center justify-between">
+              <h3
+                className={
+                  "font-semibold text-lg " +
+                  (color === "light" ? "text-slate-700" : "text-white")
+                }
+              >
+                Universities
+              </h3>
+              <SearchField
+                {...{ type: "University", searchText, setSearchText }}
+              />
+              <Button
+                variant="contained"
+                startIcon={<FaPlusCircle />}
+                component={Link}
+                to="/admin/university/add"
+              >
+                Add University
+              </Button>
             </div>
           </div>
           <div className="block w-full overflow-x-auto">

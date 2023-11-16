@@ -1,60 +1,24 @@
-import * as React from "react";
-import PropTypes from "prop-types";
-import Button from "@mui/material/Button";
-import { styled } from "@mui/material/styles";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
-import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import Typography from "@mui/material/Typography";
 import { Autocomplete, TextField } from "@mui/material";
-import InputField from "components/Input/InputField";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import IconButton from "@mui/material/IconButton";
+import { styled } from "@mui/material/styles";
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "react-toastify";
-import { API_URL } from "const/constants";
 import axios from "axios";
-import { insurance_companies } from "const/constants";
-import { useState } from "react";
-
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  "& .MuiDialogContent-root": {
-    padding: theme.spacing(2),
-  },
-  "& .MuiDialogActions-root": {
-    padding: theme.spacing(1),
-  },
-}));
-
-function BootstrapDialogTitle(props) {
-  const { children, onClose, ...other } = props;
-
-  return (
-    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
-      {children}
-      {onClose ? (
-        <IconButton
-          aria-label="close"
-          onClick={onClose}
-          sx={{
-            position: "absolute",
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-      ) : null}
-    </DialogTitle>
-  );
-}
-
-BootstrapDialogTitle.propTypes = {
-  children: PropTypes.node,
-  onClose: PropTypes.func.isRequired,
-};
+import InputField from "components/Input/InputField";
+import {
+  API_URL,
+  insurance_companies,
+  insurance_cover_type,
+} from "const/constants";
+import PropTypes from "prop-types";
+import * as React from "react";
+import { useMemo, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function InsuranceModal({
   openInsuranceForm,
@@ -64,23 +28,24 @@ export default function InsuranceModal({
   const handleClose = () => {
     setOpenInsuranceForm(false);
   };
+  const [childName, setChildName] = useState([]);
+
   const [data, setData] = React.useState({
-    caseOfficer: null,
-    cost: null,
-    date: new Date().toISOString(),
-    endDate: new Date().toISOString(),
-    firstName: null,
+    caseOfficer: "",
+    cost: "",
+    date: new Date().toISOString().split("T")[0],
+    endDate: new Date().toISOString().split("T")[0],
+    firstName: "",
     id: studentDetails?.id || 1,
     insuranceCompany: null,
-    lastName: null,
-    paymentType: null,
-    startingDate: new Date().toISOString(),
-    type: null,
-    visa: null,
+    lastName: "",
+    paymentType: "",
+    startingDate: new Date().toISOString().split("T")[0],
+    type: "",
+    visa: "BUPA",
     childrens: 0,
-    child: [],
+    child: childName,
   });
-  const [childName, setChildName] = useState([]);
   const { mutate } = useMutation(postData, {
     onSuccess(suc) {
       toast.success(
@@ -112,16 +77,33 @@ export default function InsuranceModal({
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setData((prevState) => ({ ...prevState, [name]: value }));
+    if (name === "childrens") {
+      const arr = [];
+      for (let i = 0; i < data?.childrens; i++) {
+        arr.push(i + 1);
+        childName.push(i + 1);
+      }
+    }
   };
 
-  const arrayForChildrens = () => {
+  const arrayForChildrens = useMemo(() => {
     const arr = [];
     for (let i = 0; i < data?.childrens; i++) {
-      arr.push(i + 1);
+      arr.push({ index: i + 1, name: "" });
     }
     return arr;
+  }, [data?.childrens]);
+
+  const handleChildInputChange = (value, name, i) => {
+    const foundChild = childName.find((arg, index) => i === index);
+    setChildName((prevState) => [
+      ...prevState.slice(0, i),
+      value,
+      ...prevState.slice(i + 1, childName.length),
+    ]);
   };
 
+  console.log(childName);
   return (
     <div>
       <BootstrapDialog
@@ -180,11 +162,8 @@ export default function InsuranceModal({
                     }));
                   }}
                   required
-                  value={data?.visa}
-                  options={insurance_companies?.map((item) => ({
-                    label: item,
-                    value: item,
-                  }))}
+                  value={data?.insuranceCompany}
+                  options={insurance_companies}
                   disablePortal
                   renderInput={(params) => (
                     <TextField {...params} label="Select Insurance Company" />
@@ -350,7 +329,7 @@ export default function InsuranceModal({
                 <>
                   <div className="relative w-full mb-0">
                     <InputField
-                      type="number"
+                      type="text"
                       placeholder="Number of Childrens"
                       name="childrens"
                       label="Number of Childrens"
@@ -361,19 +340,22 @@ export default function InsuranceModal({
                   </div>
                 </>
               )}
-              
-              {arrayForChildrens()?.length > 0 &&
-                arrayForChildrens()?.map((item) => (
-                  <div className="relative w-full mb-0" key={item}>
+              {arrayForChildrens?.length > 0 &&
+                arrayForChildrens?.map((item, i) => (
+                  <div className="relative w-full mb-0" key={i}>
                     <InputField
                       type="text"
-                      placeholder={`Children Name ${item}`}
-                      name={`child${item}`}
-                      label={`Children Name ${item}`}
+                      placeholder={`Children Name ${item?.index}`}
+                      name={`child${item?.index}`}
+                      label={`Children Name ${item?.index}`}
                       required={data?.cover_type?.value === "couple"}
-                      value={childName?.[item] || ""}
+                      value={childName[item]}
                       onChange={(e) =>
-                        handleChildInputChange(e.target.value, item)
+                        handleChildInputChange(
+                          e.target.value,
+                          `child${item?.index}`,
+                          i
+                        )
                       }
                     />
                   </div>
@@ -394,11 +376,40 @@ export default function InsuranceModal({
   );
 }
 
-const handleChildInputChange=()=>{}
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(2),
+  },
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(1),
+  },
+}));
 
-const insurance_cover_type = [
-  { label: "Single", value: "single" },
-  { label: "Couple", value: "couple" },
-  { label: "Family", value: "family" },
-  { label: "Single Parent", value: "single_parent" },
-];
+function BootstrapDialogTitle(props) {
+  const { children, onClose, ...other } = props;
+
+  return (
+    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
+      {children}
+      {onClose ? (
+        <IconButton
+          aria-label="close"
+          onClick={onClose}
+          sx={{
+            position: "absolute",
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </DialogTitle>
+  );
+}
+
+BootstrapDialogTitle.propTypes = {
+  children: PropTypes.node,
+  onClose: PropTypes.func.isRequired,
+};

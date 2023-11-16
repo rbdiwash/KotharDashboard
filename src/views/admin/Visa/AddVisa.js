@@ -1,27 +1,25 @@
+import { Delete } from "@mui/icons-material";
 import {
-  Autocomplete,
   Button,
-  Checkbox,
   FormControl,
   FormControlLabel,
-  FormGroup,
-  FormHelperText,
   FormLabel,
-  IconButton,
   Radio,
   RadioGroup,
-  TextField,
+  Switch,
+  Tooltip,
 } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import InputField from "components/Input/InputField";
 import { API_URL } from "const/constants";
+import useKothar from "context/useKothar";
 import { useEffect, useState } from "react";
+import { IoArrowBack } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { IoArrowBack } from "react-icons/io5";
-import useKothar from "context/useKothar";
-import ClearIcon from "@mui/icons-material/Clear";
+import pdf from "../../../assets/img/pdf.png";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const AddVisaDetails = ({ color = "light" }) => {
   const [data, setData] = useState({
@@ -41,7 +39,8 @@ const AddVisaDetails = ({ color = "light" }) => {
     placement_required: null,
     passport: "",
     visa: "",
-    coe: "",
+    coe: [],
+    all_academic: [],
     license_file: "",
     photocard_file: "",
     bank_card_file: "",
@@ -55,8 +54,18 @@ const AddVisaDetails = ({ color = "light" }) => {
     wwvp_file: "",
     nhhi_file: "",
     ndis_file: "",
+    status: true,
+    ten_year_address: [],
   });
   const [{}, { refetchConsultancy }] = useKothar();
+  const [tenYearAddress, setTenYearAddress] = useState([
+    {
+      from: null,
+      to: null,
+      full_address: "",
+      uid: crypto.randomUUID(),
+    },
+  ]);
 
   const navigate = useNavigate();
   const handleInputChange = (e) => {
@@ -94,76 +103,64 @@ const AddVisaDetails = ({ color = "light" }) => {
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    mutate({ ...data });
+    mutate({ ...data, ten_year_address: tenYearAddress });
   };
 
-  const handleFileChange = (e, type) => {
+  const handleFileChange = (e, name, type) => {
     const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append("file", file);
-    axios
-      .post(`${API_URL}/api/upload`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      })
-      .then((res) => {
-        setData({ ...data, [type]: res?.data?.data?.url });
-      })
-      .catch((err) => {
-        toast.error("Error Uploading file");
-      });
+    if (type === "multiple") {
+      setData({ ...data, [name]: [...data?.[name], file] });
+    } else {
+      setData({ ...data, [name]: file });
+    }
+    // const formData = new FormData();
+    // formData.append("file", file);
+    // axios
+    //   .post(`${API_URL}/api/upload`, formData, {
+    //     headers: { "Content-Type": "multipart/form-data" },
+    //   })
+    //   .then((res) => {
+    //     if (type === "multiple") {
+    //       setData({ ...data, [name]: [...data?.[name], res?.data?.data?.url] });
+    //     } else {
+    //       setData({ ...data, [name]: res?.data?.data?.url });
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     toast.error("Error Uploading file");
+    //   });
   };
 
-  const services = [
-    "Students Admission",
-    "RPL Certificate",
-    "Student Accommodation",
-    "Visa Application",
-    "Health Insurance",
-    "Professional Year",
-    "Individual Tax Return",
-    "Skills Assessment",
-    "Student Accommodation",
-  ];
-
-  const documents_for_placement = [
-    {
-      label: "Covid Vaccination Certificate (Australian Converted)",
-      value: "covid",
-    },
-    { label: "Flu Vaccination", value: "flu" },
-    { label: "Police Check", value: "police_check" },
-    { label: "NDIS Worker Check(if Asked)", value: "ndis" },
-    { label: "WWVP( For Canberra Client only)", value: "wwvp" },
-    {
-      label:
-        "NHHI Certificate (from the link available on Handbook Provided By Us)",
-      value: "nhhi",
-    },
-    {
-      label:
-        "NDIS Worker orientation (from the link available on Handbook Provided By Us)",
-      value: "ndis",
-    },
-  ];
-
-  const handleChange = (event) => {
+  const handleDeletePdf = (name, i) => {
     setData({
       ...data,
-      [event.target.name]: event.target.checked,
-    });
-  };
-  const handleChangeCheckbox = (event) => {
-    setData({
-      ...data,
-      [event.target.name]: event.target.checked,
+      [name]: [...data?.[name].filter((item, index) => i !== index)],
     });
   };
 
-  const { license, photocard, bank_card, rsa, transcript, bills } = data;
-  const error =
-    [license, photocard, bank_card, rsa, transcript, bills].filter((v) => v)
-      .length < 3;
-
+  const handle10InputChange = (e, index) => {
+    const { name, value } = e.target;
+    const row = tenYearAddress.find((item, i) => i === index);
+    setTenYearAddress((prevState) => [
+      ...prevState.slice(0, index),
+      { ...row, [name]: value },
+      ...prevState.slice(index + 1, tenYearAddress.length),
+    ]);
+  };
+  const handleAddMore = () => {
+    setTenYearAddress([
+      ...tenYearAddress,
+      {
+        from: null,
+        to: null,
+        full_address: "",
+        uid: crypto.randomUUID(),
+      },
+    ]);
+  };
+  const handleDeleteExp = (id) => {
+    setTenYearAddress([...tenYearAddress.filter((item) => item?.uid !== id)]);
+  };
   return (
     <div className="flex flex-wrap mt-4 dashBody">
       <div className="w-full mb-12 px-4">
@@ -174,8 +171,8 @@ const AddVisaDetails = ({ color = "light" }) => {
           }
         >
           <div className="rounded-t mb-0 px-10 py-3 border-0">
-            <div className="flex flex-wrap items-center">
-              <div className="relative w-full  max-w-full flex justify-start gap-4 items-center">
+            <div className="flex flex-wrap items-center justify-between">
+              <div className="relative   max-w-full flex justify-start gap-4 items-center">
                 <IoArrowBack
                   className="text-xl cursor-pointer"
                   onClick={() => navigate(-1)}
@@ -189,9 +186,21 @@ const AddVisaDetails = ({ color = "light" }) => {
                   Add Visa Details
                 </h3>
               </div>
+              <FormControlLabel
+                control={
+                  <Switch
+                    sx={{ m: 1 }}
+                    onChange={(e) => {
+                      setData({ ...data, status: e.target.checked });
+                    }}
+                    checked={data?.status}
+                  />
+                }
+                label="Approved"
+              />
             </div>
           </div>
-          <div className="block w-full overflow-x-auto mt-8">
+          <div className="block w-full overflow-x-auto mt-0">
             <div className="flex-auto lg:px-10 py-10 pt-0">
               <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
                 <p className="text-xl font-semibold tracking-wider bg-orange-500 p-2 text-white">
@@ -367,32 +376,54 @@ const AddVisaDetails = ({ color = "light" }) => {
                 <p className="text-xl font-semibold tracking-wider bg-orange-500 p-2 text-white">
                   Last Ten Years Address
                 </p>
-                {[1, 2, 3, 4, 5].map((item) => (
+
+                {tenYearAddress?.map((item, i) => (
                   <div className="flex items-center gap-1">
                     <div className="min-w-[100px] font-semibold">
-                      Address {item}:
+                      Address {i + 1}:
                     </div>
-                    <span className="flex items-center px-2 gap-4">
+                    <span className="flex items-center  px-2 gap-4">
                       <p> From </p>
                       <InputField
                         type="date"
                         placeholder="Insert Date"
+                        name="from"
                         className="min-w-[200px]"
+                        value={item?.from}
+                        onChange={(e) => handle10InputChange(e, i)}
                       />
                       <p> Till </p>
                       <InputField
                         type="date"
                         placeholder="Insert Date"
+                        name="till"
                         className="min-w-[200px]"
+                        value={item?.till}
+                        onChange={(e) => handle10InputChange(e, i)}
                       />
                       <InputField
                         type="text"
                         placeholder="Full Address"
+                        name="full_address"
                         className="min-w-[500px]"
+                        value={item?.full_address}
+                        onChange={(e) => handle10InputChange(e, i)}
                       />
+                      <Tooltip title="Delete Address">
+                        <Button>
+                          <DeleteIcon
+                            onClick={() => handleDeleteExp(item?.uid)}
+                          />
+                        </Button>
+                      </Tooltip>
                     </span>
                   </div>
                 ))}
+                <div className="row mt-4">
+                  <Button variant="contained" onClick={handleAddMore}>
+                    Add More Adress Details
+                  </Button>
+                </div>
                 <p className="text-xl font-semibold tracking-wider bg-orange-500 p-2 text-white">
                   Additional Details
                 </p>
@@ -501,8 +532,20 @@ const AddVisaDetails = ({ color = "light" }) => {
                       name="all_academic"
                       type="file"
                       multiple
-                      onChange={(e) => handleFileChange(e, "all_academic")}
+                      onChange={(e) =>
+                        handleFileChange(e, "all_academic", "multiple")
+                      }
                     />
+                    {data?.all_academic?.map((data, i) => (
+                      <div className="flex gap-4 items-center bg-gray-200 p-1 mt-2 rounded w-fit">
+                        <img src={pdf} alt="" className="h-8" />
+                        <span>{data?.name.slice(0, 30)}</span>
+                        <Delete
+                          className="cursor-pointer"
+                          onClick={() => handleDeletePdf("all_academic", i)}
+                        />
+                      </div>
+                    ))}
                   </div>
                   <div className="relative w-full mb-3">
                     <InputField
@@ -512,6 +555,16 @@ const AddVisaDetails = ({ color = "light" }) => {
                       multiple
                       onChange={(e) => handleFileChange(e, "coe")}
                     />
+                    {data?.coe?.map((data, i) => (
+                      <div className="flex gap-4 items-center bg-gray-200 p-1 mt-2 rounded w-fit">
+                        <img src={pdf} alt="" className="h-8" />
+                        <span>{data?.name.slice(0, 30)}</span>
+                        <Delete
+                          className="cursor-pointer"
+                          onClick={() => handleDeletePdf("coe", i)}
+                        />
+                      </div>
+                    ))}
                   </div>
                   <div className="relative w-full mb-3">
                     <InputField

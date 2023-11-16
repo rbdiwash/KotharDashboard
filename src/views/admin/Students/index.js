@@ -1,4 +1,5 @@
 import { Button, IconButton, Tooltip } from "@mui/material";
+import SearchField from "components/SearchField";
 import { useState } from "react";
 import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
 import { FaPlusCircle } from "react-icons/fa";
@@ -7,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 const Students = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
   const navigate = useNavigate();
+  const [searchText, setSearchText] = useState("");
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">
@@ -18,25 +20,26 @@ const Students = ({ color = "light" }) => {
           }
         >
           <div className="rounded-t mb-0 px-4 py-3 border-0">
-            <div className="flex flex-wrap items-center">
-              <div className="relative w-full px-4 max-w-full flex justify-between">
-                <h3
-                  className={
-                    "font-semibold text-lg " +
-                    (color === "light" ? "text-slate-700" : "text-white")
-                  }
-                >
-                  Students
-                </h3>
-                <Button
-                  variant="contained"
-                  startIcon={<FaPlusCircle />}
-                  component={Link}
-                  to="/admin/student/add"
-                >
-                  Add Student
-                </Button>
-              </div>
+            <div className="flex flex-wrap items-center justify-between">
+              <h3
+                className={
+                  "font-semibold text-lg " +
+                  (color === "light" ? "text-slate-700" : "text-white")
+                }
+              >
+                Students
+              </h3>
+              <SearchField
+                {...{ type: "Student", searchText, setSearchText }}
+              />
+              <Button
+                variant="contained"
+                startIcon={<FaPlusCircle />}
+                component={Link}
+                to="/admin/student/add"
+              >
+                Add Student
+              </Button>
             </div>
           </div>
           <div className="block w-full overflow-x-auto">

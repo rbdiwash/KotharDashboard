@@ -2,6 +2,7 @@ import { Button, CircularProgress, IconButton, Tooltip } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import DeleteModal from "components/Modals/DeleteModal";
+import SearchField from "components/SearchField";
 import { API_URL } from "const/constants";
 import useKothar from "context/useKothar";
 import { tr } from "date-fns/locale";
@@ -15,6 +16,7 @@ const Users = ({ color = "dark" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
   const [{ usersList }, { refetchUsers }] = useKothar();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
+  const [searchText, setSearchText] = useState("");
 
   const imageName = (text) => {
     const splittedText = text?.split(" ");
@@ -64,8 +66,7 @@ const Users = ({ color = "dark" }) => {
           }
         >
           <div className="rounded-t mb-0 px-4 py-3 border-0">
-            <div className="flex flex-wrap items-center">
-              <div className="relative w-full px-4 max-w-full flex justify-between">
+            <div className="flex flex-wrap items-center justify-between">
                 <h3
                   className={
                     "font-semibold text-lg " +
@@ -73,7 +74,8 @@ const Users = ({ color = "dark" }) => {
                   }
                 >
                   Users
-                </h3>
+                </h3>{" "}
+                <SearchField {...{ type: "User", searchText, setSearchText }} />
                 <Button
                   variant="outlined"
                   startIcon={<FaPlusCircle />}
@@ -83,7 +85,7 @@ const Users = ({ color = "dark" }) => {
                 >
                   Add User
                 </Button>
-              </div>
+             
             </div>
           </div>
           <div className="block w-full overflow-x-auto">

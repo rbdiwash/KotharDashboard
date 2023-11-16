@@ -319,6 +319,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                       required
                       type="date"
                       value={data?.visa_expiry}
+                      onChange={handleInputChange}
                     />
                   </div>
                 </div>
@@ -586,17 +587,18 @@ const AddRPLCertificate = ({ color = "light" }) => {
                     )}
                   </FormControl>
                 </div>
-                <div className="grid grid-cols-2 gap-8 border-t">
-                  <FormControl required component="fieldset" variant="standard">
-                    <FormLabel
-                      component="legend"
-                      className="text-orange-500 font-semibold pt-4 text-xl"
-                    >
-                      Documents Checklist For Placement.
-                    </FormLabel>
-                    <FormGroup>
+
+                <FormControl required component="fieldset" variant="standard">
+                  <FormLabel
+                    component="legend"
+                    className="text-orange-500 font-semibold pt-4 mb-4 text-xl"
+                  >
+                    Documents Checklist For Placement.
+                  </FormLabel>
+                  <FormGroup>
+                    <div className="grid grid-cols-2 gap-8">
                       {documents_for_placement?.map((item) => (
-                        <div className="pt-6">
+                        <div className="">
                           <InputField
                             label={`Upload ${item?.label}`}
                             name={`${item?.value}_file`}
@@ -607,9 +609,10 @@ const AddRPLCertificate = ({ color = "light" }) => {
                           />
                         </div>
                       ))}
-                    </FormGroup>
-                  </FormControl>
-                </div>
+                    </div>
+                  </FormGroup>
+                </FormControl>
+
                 <div className="w-full flex justify-end mt-6 gap-4">
                   {/* <Button variant="outlined" component={Link} to=""> */}
                   <Button variant="outlined" onClick={() => navigate(-1)} to="">

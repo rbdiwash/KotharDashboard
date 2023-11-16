@@ -11,12 +11,14 @@ import { toast } from "react-toastify";
 import useKothar from "context/useKothar";
 import { ImageName } from "components/helper";
 import SkillAssessmentModal from "./AddSkillAssessment";
+import SearchField from "components/SearchField";
 
 const SkillAssessment = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
   const navigate = useNavigate();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [openInsuranceForm, setOpenInsuranceForm] = useState(false);
+  const [searchText, setSearchText] = useState("");
 
   const [{ courseList }, { refetchCourseList }] = useKothar();
 
@@ -44,24 +46,25 @@ const SkillAssessment = ({ color = "light" }) => {
           }
         >
           <div className="rounded-t mb-0 px-4 py-3 border-0">
-            <div className="flex flex-wrap items-center">
-              <div className="relative w-full px-4 max-w-full flex justify-between">
-                <h3
-                  className={
-                    "font-semibold text-lg " +
-                    (color === "light" ? "text-slate-700" : "text-white")
-                  }
-                >
-                  Skill Assessment
-                </h3>
-                <Button
-                  variant="contained"
-                  startIcon={<FaPlusCircle />}
-                  onClick={() => navigate("add")}
-                >
-                  Add Skill Assessment
-                </Button>
-              </div>
+            <div className="flex flex-wrap items-center justify-between">
+              <h3
+                className={
+                  "font-semibold text-lg " +
+                  (color === "light" ? "text-slate-700" : "text-white")
+                }
+              >
+                Skill Assessment
+              </h3>{" "}
+              <SearchField
+                {...{ type: "Skill Assessment", searchText, setSearchText }}
+              />
+              <Button
+                variant="contained"
+                startIcon={<FaPlusCircle />}
+                onClick={() => navigate("add")}
+              >
+                Add Skill Assessment
+              </Button>
             </div>
           </div>
           <div className="block w-full overflow-x-auto">

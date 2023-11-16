@@ -11,12 +11,14 @@ import { toast } from "react-toastify";
 import useKothar from "context/useKothar";
 import { ImageName } from "components/helper";
 import InsuranceModal from "./InsuranceModal";
+import SearchField from "components/SearchField";
 
 const Insurance = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
   const navigate = useNavigate();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [openInsuranceForm, setOpenInsuranceForm] = useState(false);
+  const [searchText, setSearchText] = useState("");
 
   const [{ courseList }, { refetchCourseList }] = useKothar();
 
@@ -44,24 +46,25 @@ const Insurance = ({ color = "light" }) => {
           }
         >
           <div className="rounded-t mb-0 px-4 py-3 border-0">
-            <div className="flex flex-wrap items-center">
-              <div className="relative w-full px-4 max-w-full flex justify-between">
-                <h3
-                  className={
-                    "font-semibold text-lg " +
-                    (color === "light" ? "text-slate-700" : "text-white")
-                  }
-                >
-                  Insurance
-                </h3>
-                <Button
-                  variant="contained"
-                  startIcon={<FaPlusCircle />}
-                  onClick={() => setOpenInsuranceForm(!openInsuranceForm)}
-                >
-                  Add Insurance
-                </Button>
-              </div>
+            <div className="flex flex-wrap items-center justify-between">
+              <h3
+                className={
+                  "font-semibold text-lg " +
+                  (color === "light" ? "text-slate-700" : "text-white")
+                }
+              >
+                Insurance
+              </h3>
+              <SearchField
+                {...{ type: "Insurance", searchText, setSearchText }}
+              />
+              <Button
+                variant="contained"
+                startIcon={<FaPlusCircle />}
+                onClick={() => setOpenInsuranceForm(!openInsuranceForm)}
+              >
+                Add Insurance
+              </Button>
             </div>
           </div>
           <div className="block w-full overflow-x-auto">
@@ -117,7 +120,7 @@ const Insurance = ({ color = "light" }) => {
                         <div className="flex items-center">
                           {item?.intake || "-"}
                         </div>
-                      </td>{" "}
+                      </td>
                       <td className="table-data">
                         <div className="flex items-center">
                           {item?.fee || "-"}

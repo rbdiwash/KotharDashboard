@@ -1,4 +1,4 @@
-import { PictureAsPdfOutlined } from "@mui/icons-material";
+import { Delete, PictureAsPdfOutlined } from "@mui/icons-material";
 import {
   Button,
   FormControl,
@@ -6,6 +6,7 @@ import {
   FormLabel,
   Radio,
   RadioGroup,
+  Switch,
 } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
@@ -16,9 +17,11 @@ import { useEffect, useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import pdf from "../../../assets/img/pdf.png";
 
 const AddSkillAssessment = ({ color = "light" }) => {
   const [data, setData] = useState({
+    status: false,
     name: null,
     address: null,
     dob: null,
@@ -36,27 +39,9 @@ const AddSkillAssessment = ({ color = "light" }) => {
     visa_expiry: "",
 
     resume: "",
-    certificate: "",
-    currently_enrolled_course: "",
-    currently_enrolled_university: "",
-    course_end_data: "",
-    placement_required: null,
     passport: "",
-    visa: "",
-    coe: "",
-    license_file: "",
-    photocard_file: "",
-    bank_card_file: "",
-    rsa_file: "",
-    transcript_file: "",
-    bills_file: "",
-    covid_file: "",
-    flu_file: "",
-    police_check_file: "",
-    ndis_file: "",
-    wwvp_file: "",
-    nhhi_file: "",
-    ndis_file: "",
+    academic: [],
+    py: [],
   });
   console.log("🚀  data:", data);
   const [{}, { refetchConsultancy }] = useKothar();
@@ -102,74 +87,36 @@ const AddSkillAssessment = ({ color = "light" }) => {
 
   const handleFileChange = (e, name, type) => {
     const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append("file", file);
-    axios
-      .post(`${API_URL}/api/upload`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      })
-      .then((res) => {
-        if (type === "multiple") {
-          setData({ ...data, [name]: [...data?.[name], res?.data?.data?.url] });
-        } else {
-          setData({ ...data, [name]: res?.data?.data?.url });
-        }
-      })
-      .catch((err) => {
-        toast.error("Error Uploading file");
-      });
+    if (type === "multiple") {
+      setData({ ...data, [name]: [...data?.[name], file] });
+    } else {
+      setData({ ...data, [name]: file });
+    }
+    // const formData = new FormData();
+    // formData.append("file", file);
+    // axios
+    //   .post(`${API_URL}/api/upload`, formData, {
+    //     headers: { "Content-Type": "multipart/form-data" },
+    //   })
+    //   .then((res) => {
+    //     if (type === "multiple") {
+    //       setData({ ...data, [name]: [...data?.[name], res?.data?.data?.url] });
+    //     } else {
+    //       setData({ ...data, [name]: res?.data?.data?.url });
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     toast.error("Error Uploading file");
+    //   });
   };
 
-  const services = [
-    "Students Admission",
-    "RPL Certificate",
-    "Student Accommodation",
-    "Visa Application",
-    "Health Insurance",
-    "Professional Year",
-    "Individual Tax Return",
-    "Skills Assessment",
-    "Student Accommodation",
-  ];
 
-  const documents_for_placement = [
-    {
-      label: "Covid Vaccination Certificate (Australian Converted)",
-      value: "covid",
-    },
-    { label: "Flu Vaccination", value: "flu" },
-    { label: "Police Check", value: "police_check" },
-    { label: "NDIS Worker Check(if Asked)", value: "ndis" },
-    { label: "WWVP( For Canberra Client only)", value: "wwvp" },
-    {
-      label:
-        "NHHI Certificate (from the link available on Handbook Provided By Us)",
-      value: "nhhi",
-    },
-    {
-      label:
-        "NDIS Worker orientation (from the link available on Handbook Provided By Us)",
-      value: "ndis",
-    },
-  ];
-
-  const handleChange = (event) => {
+  const handleDeletePdf = (name, i) => {
     setData({
       ...data,
-      [event.target.name]: event.target.checked,
+      [name]: [...data?.[name].filter((item, index) => i !== index)],
     });
   };
-  const handleChangeCheckbox = (event) => {
-    setData({
-      ...data,
-      [event.target.name]: event.target.checked,
-    });
-  };
-
-  const { license, photocard, bank_card, rsa, transcript, bills } = data;
-  const error =
-    [license, photocard, bank_card, rsa, transcript, bills].filter((v) => v)
-      .length < 3;
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">
@@ -181,8 +128,8 @@ const AddSkillAssessment = ({ color = "light" }) => {
           }
         >
           <div className="rounded-t mb-0 px-10 py-3 border-0">
-            <div className="flex flex-wrap items-center">
-              <div className="relative w-full  max-w-full flex justify-start gap-4 items-center">
+            <div className="flex flex-wrap items-center justify-between">
+              <div className="relative max-w-full flex justify-start gap-4 items-center">
                 <IoArrowBack
                   className="text-xl cursor-pointer"
                   onClick={() => navigate(-1)}
@@ -196,9 +143,21 @@ const AddSkillAssessment = ({ color = "light" }) => {
                   Add Skill Assessment Details
                 </h3>
               </div>
+              <FormControlLabel
+                control={
+                  <Switch
+                    sx={{ m: 1 }}
+                    onChange={(e) => {
+                      setData({ ...data, status: e.target.checked });
+                    }}
+                    checked={data?.status}
+                  />
+                }
+                label="Approved"
+              />
             </div>
           </div>
-          <div className="block w-full overflow-x-auto mt-8">
+          <div className="block w-full overflow-x-auto">
             <div className="flex-auto lg:px-10 py-10 pt-0">
               <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
                 <p className="text-xl font-semibold tracking-wider bg-orange-500 p-2 text-white">
@@ -313,7 +272,7 @@ const AddSkillAssessment = ({ color = "light" }) => {
                       onChange={handleInputChange}
                     />
                   </div>
-                </div>{" "}
+                </div>
                 <p className="text-xl font-semibold tracking-wider bg-orange-500 p-2 text-white">
                   Passport & VISA Details
                 </p>
@@ -397,28 +356,39 @@ const AddSkillAssessment = ({ color = "light" }) => {
                       label="Upload All Academic Documents(multiple)"
                       name="coe"
                       type="file"
-                      multiple
                       onChange={(e) =>
                         handleFileChange(e, "academic", "multiple")
                       }
                     />
+                    {data?.academic?.map((data, i) => (
+                      <div className="flex gap-4 items-center bg-gray-200 p-1 mt-2 rounded w-fit">
+                        <img src={pdf} alt="" className="h-8" />
+                        <span>{data?.name.slice(0, 30)}</span>
+                        <Delete
+                          className="cursor-pointer"
+                          onClick={() => handleDeletePdf("academic", i)}
+                        />
+                      </div>
+                    ))}
                   </div>
                   <div className="relative w-full mb-3">
                     <InputField
                       label="Upload All PY Certificate(multiple)"
                       name="coe"
                       type="file"
-                      multiple
                       onChange={(e) => handleFileChange(e, "py", "multiple")}
                     />
+                    {data?.py?.map((data, i) => (
+                      <div className="flex gap-4 items-center bg-gray-200 p-1 mt-2 rounded w-fit">
+                        <img src={pdf} alt="" className="h-8" />
+                        <span>{data?.name.slice(0, 30)}</span>
+                        <Delete
+                          className="cursor-pointer"
+                          onClick={() => handleDeletePdf("py", i)}
+                        />
+                      </div>
+                    ))}
                   </div>
-                  {data?.py?.map((data) => (
-                    <>
-                      <img src="" alt="" />
-                      <PictureAsPdfOutlined />
-                      <span>{data?.name}</span>
-                    </>
-                  ))}
                 </div>
                 <div className="w-full flex justify-end mt-6 gap-4">
                   {/* <Button variant="outlined" component={Link} to=""> */}

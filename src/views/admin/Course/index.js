@@ -10,11 +10,13 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import useKothar from "context/useKothar";
 import { ImageName } from "components/helper";
+import SearchField from "components/SearchField";
 
 const Course = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
   const navigate = useNavigate();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
+  const [searchText, setSearchText] = useState("");
 
   const [{ courseList }, { refetchCourseList }] = useKothar();
 
@@ -42,25 +44,26 @@ const Course = ({ color = "light" }) => {
           }
         >
           <div className="rounded-t mb-0 px-4 py-3 border-0">
-            <div className="flex flex-wrap items-center">
-              <div className="relative w-full px-4 max-w-full flex justify-between">
-                <h3
-                  className={
-                    "font-semibold text-lg " +
-                    (color === "light" ? "text-slate-700" : "text-white")
-                  }
-                >
-                  Courses
-                </h3>
-                <Button
-                  variant="contained"
-                  startIcon={<FaPlusCircle />}
-                  component={Link}
-                  to="/admin/course/add"
-                >
-                  Add Course
-                </Button>
-              </div>
+            <div className="flex flex-wrap items-center justify-between">
+              <h3
+                className={
+                  "font-semibold text-lg " +
+                  (color === "light" ? "text-slate-700" : "text-white")
+                }
+              >
+                Courses
+              </h3>{" "}
+              <SearchField
+                {...{ type: "Courses", searchText, setSearchText }}
+              />
+              <Button
+                variant="contained"
+                startIcon={<FaPlusCircle />}
+                component={Link}
+                to="/admin/course/add"
+              >
+                Add Course
+              </Button>
             </div>
           </div>
           <div className="block w-full overflow-x-auto">
