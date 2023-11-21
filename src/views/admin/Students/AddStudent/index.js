@@ -16,6 +16,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { API_URL } from "const/constants";
 import axios from "axios";
+import { IoArrowBack } from "react-icons/io5";
 const AddStudent = () => {
   const steps = [
     "General Information",
@@ -120,17 +121,21 @@ const AddStudent = () => {
         >
           <div className="rounded-t mb-0 px-10 py-3 border-0">
             <div className="flex flex-wrap items-center">
-              <div className="relative w-full  max-w-full flex justify-between">
+              <div className="relative   max-w-full flex justify-start gap-4 items-center">
+                <IoArrowBack
+                  className="text-xl cursor-pointer"
+                  onClick={() => navigate(-1)}
+                />
                 <h3 className={"font-semibold text-xl text-slate-700"}>
                   Add Student
                 </h3>
               </div>
             </div>
           </div>
-          <div className="block w-full overflow-x-auto mt-8 studentForm">
-            <div className="flex-auto lg:px-10 py-10 pt-0">
+          <div className="block w-full overflow-x-auto mt-4 studentForm">
+            <div className="flex-auto lg:px-10 py-3 pt-0">
               <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
-                <Box sx={{ width: "100%" }}>
+                {/* <Box sx={{ width: "100%" }}>
                   <Stepper nonLinear activeStep={activeStep}>
                     {steps.map((label, index) => (
                       <Step key={label} completed={completed[index]}>
@@ -203,8 +208,8 @@ const AddStudent = () => {
                             ) : (
                               <Button
                                 onClick={handleComplete}
-                                  variant="contained"
-                                  type="submit"
+                                variant="contained"
+                                type="submit"
                               >
                                 {completedSteps() === totalSteps() - 1
                                   ? "Finish"
@@ -215,7 +220,26 @@ const AddStudent = () => {
                       </>
                     )}
                   </div>
-                </Box>
+                </Box> */}
+                <Title title={"Personal Details"} />
+                <GeneralInfo {...{ generalInfo, setGeneralInfo }} />
+                <Title title={"Documents and Address"} />
+                <DocumentsAndAddress {...{ addressInfo, setAddressInfo }} />
+                <Title title={"Academic Qualification"} />
+                <AcademicInfo {...{ academicInfo, setAcademicInfo }} />
+                <Title title={"Work Experience"} />
+                <WorkExperience {...{ workInfo, setWorkInfo }} />
+                <Title title={"Language Test"} />
+                <TestInfo {...{ testInfo, setTestInfo }} />
+                <div className="w-full flex justify-end mt-2 gap-4">
+                  {/* <Button variant="outlined" component={Link} to=""> */}
+                  <Button variant="outlined" onClick={() => navigate(-1)} to="">
+                    Go Back
+                  </Button>
+                  <Button variant="contained" type="submit">
+                    Submit
+                  </Button>
+                </div>
               </form>
             </div>
           </div>
@@ -226,3 +250,11 @@ const AddStudent = () => {
 };
 
 export default AddStudent;
+
+const Title = ({ title }) => {
+  return (
+    <p className="text-xl font-semibold tracking-wider bg-orange-500 p-2 text-white">
+      {title}
+    </p>
+  );
+};

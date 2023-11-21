@@ -15,8 +15,7 @@ const TestInfo = (testInfo, setTestInfo) => {
   return (
     <div className="min-h-[300px]">
       <div className="sub-heading">Select Test:</div>
-      <hr />
-      <div className="grid grid-cols-4 gap-8 items-end mt-6 ">
+      <div className="grid grid-cols-4 gap-8 items-end mt-2 ">
         <div className="relative w-full mb-3">
           <Autocomplete
             onChange={(e, value) => {
@@ -87,7 +86,7 @@ const TestInfo = (testInfo, setTestInfo) => {
         testInfo?.testName?.value === "pte" ||
         testInfo?.testName?.value === "waiver") && (
         <>
-          <div className="grid grid-cols-4 gap-8 mt-6">
+          <div className="grid grid-cols-4 gap-8 mt-2">
             <div className="relative w-full mb-3">
               <TextField
                 fullWidth
@@ -140,8 +139,7 @@ const TestInfo = (testInfo, setTestInfo) => {
         </>
       )}{" "}
       <div className="sub-heading">Select Test:</div>
-      <hr />
-      <div className="grid grid-cols-4 gap-8 items-end mt-6 ">
+      <div className="grid grid-cols-4 gap-8 items-end mt-2 ">
         <div className="relative w-full mb-3">
           <Autocomplete
             onChange={(e, value) => {

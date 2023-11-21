@@ -52,8 +52,8 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
   return (
     <>
       <div className="sub-heading">Permanent Address:</div>
-      <hr />
-      <div className="grid grid-cols-3 gap-8 mt-6 items-end">
+
+      <div className="grid grid-cols-3 gap-8 mt-2 items-end">
         <div className="relative w-full mb-3">
           <TextField
             fullWidth
@@ -104,7 +104,7 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
         </div>
       </div>
       <div className="sub-heading">Temporary Address:</div>
-      <hr />
+
       <FormControlLabel
         control={<Checkbox name="sameAsPermanent" />}
         label="Same as Permanent Address"
@@ -161,7 +161,7 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
         </div>
       </div>
       <div className="sub-heading">Passport Information:</div>
-      <hr />
+
       <div className="grid grid-cols-3 gap-8 mt-6 items-end">
         <div className="relative w-full mb-3">
           <TextField
@@ -225,7 +225,7 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
         </div>
       </div>
       <div className="sub-heading">Nationality:</div>
-      <hr />
+
       <div className="grid grid-cols-2 gap-8 mt-6 items-start">
         <div>
           <FormControl>

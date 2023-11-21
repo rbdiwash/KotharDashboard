@@ -30,7 +30,7 @@ const WorkExperience = ({ workInfo, setWorkInfo }) => {
   return (
     <div>
       <div className="sub-heading">Work Experience:</div>
-      <hr />
+
       {workInfo?.map((item, index) => (
         <div className="flex items-end gap-8 mt-6" key={index}>
           <div className="relative w-full">
@@ -90,7 +90,7 @@ const WorkExperience = ({ workInfo, setWorkInfo }) => {
       ))}
       <div className="row mt-4">
         <Button variant="contained" onClick={handleAddMore}>
-          Add More Work Experience
+          Add Work Experience
         </Button>
       </div>
     </div>

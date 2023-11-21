@@ -23,6 +23,8 @@ import Visa from "views/admin/Visa";
 import SkillAssessment from "views/admin/SkillAssessment";
 import AddVisaDetails from "views/admin/Visa/AddVisa";
 import AddSkillAssessment from "views/admin/SkillAssessment/AddSkillAssessment";
+import Accounts from "views/admin/Accounts";
+import AddAccounts from "views/admin/Accounts/AddAccounts";
 
 // render - dashboard
 const Admin = Loadable(lazy(() => import("layouts/Admin")));
@@ -41,6 +43,11 @@ const AdminRoutes = {
       path: "dashboard",
       element: <Dashboard />,
     },
+    {
+      path: "accounts",
+      element: <Accounts />,
+    },
+    { path: "accounts/add", element: <AddAccounts /> },
     {
       path: "university",
       element: <University />,

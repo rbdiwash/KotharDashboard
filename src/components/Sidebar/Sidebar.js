@@ -37,6 +37,11 @@ export default function Sidebar() {
     { label: "consultancy", value: "consultancy", icon: "fas fa-briefcase" },
     { label: "Invoice", value: "invoice", icon: "fas fa-file-invoice-dollar" },
     { label: "Users", value: "users", icon: "fas fa-user" },
+    {
+      label: "Accounts",
+      value: "accounts",
+      icon: "fas fa-file-invoice-dollar",
+    },
     // { label: "Settings", value: "setting", icon: "fas fa-tools" },
     // { label: "Map", value: "map", icon: "fas fa-map-marked" },
   ];
