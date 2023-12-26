@@ -48,6 +48,33 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
       }));
     }
   };
+  const handleFileChange = (e, name, type) => {
+    const file = e.target.files[0];
+    if (type === "multiple") {
+      setAddressInfo({
+        ...addressInfo,
+        [name]: [...addressInfo?.[name], file],
+      });
+    } else {
+      setAddressInfo({ ...addressInfo, [name]: file });
+    }
+    // const formData = new FormData();
+    // formData.append("file", file);
+    // axios
+    //   .post(`${API_URL}/api/upload`, formData, {
+    //     headers: { "Content-Type": "multipart/form-data" },
+    //   })
+    //   .then((res) => {
+    //     if (type === "multiple") {
+    //       setData({ ...data, [name]: [...data?.[name], res?.data?.data?.url] });
+    //     } else {
+    //       setData({ ...data, [name]: res?.data?.data?.url });
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     toast.error("Error Uploading file");
+    //   });
+  };
 
   return (
     <>
@@ -221,6 +248,14 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
             required
             value={addressInfo?.passport?.expiryDate}
             onChange={handleInputChange}
+          />
+        </div>{" "}
+        <div className="relative w-full mb-3">
+          <InputField
+            label="Upload Full Passport"
+            name="passport"
+            type="file"
+            onChange={(e) => handleFileChange(e, "passport")}
           />
         </div>
       </div>

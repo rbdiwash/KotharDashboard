@@ -1,23 +1,63 @@
-import {
-  Autocomplete,
-  Button,
-  IconButton,
-  TextField,
-  Tooltip,
-} from "@mui/material";
-import DeleteModal from "components/Modals/DeleteModal";
-import { useState } from "react";
-import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
-import { FaPlusCircle } from "react-icons/fa";
-import { useQuery } from "@tanstack/react-query";
-import { Link, useNavigate } from "react-router-dom";
-import { API_URL } from "const/constants";
+import { Autocomplete, Button, TextField } from "@mui/material";
 import axios from "axios";
-import { toast } from "react-toastify";
+import DeleteModal from "components/Modals/DeleteModal";
+import { API_URL } from "const/constants";
 import useKothar from "context/useKothar";
-import { ImageName } from "components/helper";
-import SearchField from "components/SearchField";
-
+import {
+  MaterialReactTable,
+  useMaterialReactTable,
+} from "material-react-table";
+import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
+const data = [
+  {
+    name: {
+      firstName: "John",
+      lastName: "Doe",
+    },
+    address: "261 Erdman Ford",
+    city: "East Daphne",
+    state: "Kentucky",
+  },
+  {
+    name: {
+      firstName: "Jane",
+      lastName: "Doe",
+    },
+    address: "769 Dominic Grove",
+    city: "Columbus",
+    state: "Ohio",
+  },
+  {
+    name: {
+      firstName: "Joe",
+      lastName: "Doe",
+    },
+    address: "566 Brakus Inlet",
+    city: "South Linda",
+    state: "West Virginia",
+  },
+  {
+    name: {
+      firstName: "Kevin",
+      lastName: "Vandy",
+    },
+    address: "722 Emie Stream",
+    city: "Lincoln",
+    state: "Nebraska",
+  },
+  {
+    name: {
+      firstName: "Joshua",
+      lastName: "Rolluffs",
+    },
+    address: "32188 Larkin Turnpike",
+    city: "Charleston",
+    state: "South Carolina",
+  },
+];
 const Accounts = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
   const navigate = useNavigate();
@@ -48,6 +88,43 @@ const Accounts = ({ color = "light" }) => {
     { title: "Insurance", value: "insurance" },
   ];
 
+  //nested data is ok, see accessorKeys in ColumnDef below
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: "name.firstName", //access nested data with dot notation
+        header: "First Name",
+        size: 150,
+      },
+      {
+        accessorKey: "name.lastName",
+        header: "Last Name",
+        size: 150,
+      },
+      {
+        accessorKey: "address", //normal accessorKey
+        header: "Address",
+        size: 200,
+      },
+      {
+        accessorKey: "city",
+        header: "City",
+        size: 150,
+      },
+      {
+        accessorKey: "state",
+        header: "State",
+        size: 150,
+      },
+    ],
+    []
+  );
+
+  const table = useMaterialReactTable({
+    columns,
+    data, //data must be memoized or stable (useState, useMemo, defined outside of this component, etc.)
+  });
+
   return (
     <div className="flex flex-wrap mt-4 dashBody">
       <div className="w-full mb-12 px-4">
@@ -59,8 +136,8 @@ const Accounts = ({ color = "light" }) => {
         >
           <div className="rounded-t mb-0 px-4 py-3 border-0">
             <div className="flex flex-wrap items-center justify-between">
-              <form className="flex-row min-w-[600px] flex-wrap items-center justify-center border  rounded mr-3">
-                <div className="relative flex w-full items-center">
+              <form className="flex items-center justify-between w-full  rounded mr-3">
+                <div className="relative flex mx-auto  items-center">
                   <Autocomplete
                     disablePortal
                     options={options}
@@ -80,10 +157,19 @@ const Accounts = ({ color = "light" }) => {
                     )}
                   />
                 </div>
+                <Button
+                  variant="contained"
+                  component={Link}
+                  to="/admin/accounts/add"
+                >
+                  Add Account Details
+                </Button>
               </form>
             </div>
           </div>
-          <div className="block w-full overflow-x-auto"></div>
+          <div className="block w-full overflow-x-auto">
+            <MaterialReactTable table={table} />
+          </div>
         </div>
       </div>
       {openConfirmationModal.state && (

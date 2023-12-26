@@ -19,7 +19,12 @@ const useStateAndActions = () => {
     }
   );
   const getUniData = async () => {
-    const res = await axios.get(`${API_URL}/university/list`);
+    const res = await axios.get(`${API_URL}/university/list`, {
+      headers: {
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huLmRvZUBleGFtcGxlLmNvbSIsImlhdCI6MTcwMzU1MzY3OCwiZXhwIjoxNzAzNTU1MTE4fQ.HOlp3Yx3RjiXibp3U4NAFk2wR2-MCrqwBCaleCrOIPY`,
+      },
+    });
+
     return res?.data?.data;
   };
 
@@ -70,7 +75,9 @@ const useStateAndActions = () => {
   );
   const getUsers = async () => {
     const res = await axios.get(`${API_URL}/users/all`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      headers: {
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyYmRpd2FzaEBnbWFpbC5jb20iLCJpYXQiOjE3MDM1NTE5MDUsImV4cCI6MTcwMzU1MzM0NX0.wuoBzUaIOpyau5wqqEOYCpjWx9PH4kU2lRFixJu7-Go`,
+      },
     });
     return res?.data?.data;
   };

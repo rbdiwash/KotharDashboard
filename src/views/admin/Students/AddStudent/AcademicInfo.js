@@ -1,4 +1,7 @@
+import { Delete } from "@mui/icons-material";
 import { Autocomplete, TextField } from "@mui/material";
+import InputField from "components/Input/InputField";
+import pdf from "../../../../assets/img/pdf.png";
 
 const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
   const handleInputChange = (e) => {
@@ -13,6 +16,40 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
     } else {
       setAcademicInfo((prevState) => ({ ...prevState, [name]: value }));
     }
+  };
+  const handleFileChange = (e, name, type) => {
+    const file = e.target.files[0];
+    if (type === "multiple") {
+      setAcademicInfo({
+        ...academicInfo,
+        [name]: [...academicInfo?.[name], file],
+      });
+    } else {
+      setAcademicInfo({ ...academicInfo, [name]: file });
+    }
+    // const formData = new FormData();
+    // formData.append("file", file);
+    // axios
+    //   .post(`${API_URL}/api/upload`, formData, {
+    //     headers: { "Content-Type": "multipart/form-data" },
+    //   })
+    //   .then((res) => {
+    //     if (type === "multiple") {
+    //       setData({ ...data, [name]: [...data?.[name], res?.data?.data?.url] });
+    //     } else {
+    //       setData({ ...data, [name]: res?.data?.data?.url });
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     toast.error("Error Uploading file");
+    //   });
+  };
+
+  const handleDeletePdf = (name, i) => {
+    setAcademicInfo({
+      ...academicInfo,
+      [name]: [...academicInfo?.[name].filter((item, index) => i !== index)],
+    });
   };
 
   return (
@@ -173,6 +210,24 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           />
         </div>
       </div>
+      <div className="relative w-full mb-3">
+        <InputField
+          label="Upload All Academic Documents(multiple)"
+          name="coe"
+          type="file"
+          onChange={(e) => handleFileChange(e, "see", "multiple")}
+        />
+        {academicInfo?.see?.map((data, i) => (
+          <div className="flex gap-4 items-center bg-gray-200 p-1 mt-2 rounded w-fit">
+            <img src={pdf} alt="" className="h-8" />
+            <span>{data?.name.slice(0, 30)}</span>
+            <Delete
+              className="cursor-pointer"
+              onClick={() => handleDeletePdf("see", i)}
+            />
+          </div>
+        ))}
+      </div>
       <div className="sub-heading">+2 or Equivalent:</div>
       <hr />
       <div className="grid grid-cols-3 gap-8 mt-6">
@@ -328,6 +383,24 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             onChange={handleInputChange}
           />
         </div>
+      </div>{" "}
+      <div className="relative w-full mb-3">
+        <InputField
+          label="Upload All Academic Documents(multiple)"
+          name="coe"
+          type="file"
+          onChange={(e) => handleFileChange(e, "plusTwo", "multiple")}
+        />
+        {academicInfo?.plusTwo?.map((data, i) => (
+          <div className="flex gap-4 items-center bg-gray-200 p-1 mt-2 rounded w-fit">
+            <img src={pdf} alt="" className="h-8" />
+            <span>{data?.name.slice(0, 30)}</span>
+            <Delete
+              className="cursor-pointer"
+              onClick={() => handleDeletePdf("plusTwo", i)}
+            />
+          </div>
+        ))}
       </div>
       <div className="sub-heading">Bachelor or Equivalent:</div>
       <hr />
@@ -473,6 +546,24 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             onChange={handleInputChange}
           />
         </div>
+      </div>{" "}
+      <div className="relative w-full mb-3">
+        <InputField
+          label="Upload All Academic Documents(multiple)"
+          name="coe"
+          type="file"
+          onChange={(e) => handleFileChange(e, "bachelor", "multiple")}
+        />
+        {academicInfo?.bachelor?.map((data, i) => (
+          <div className="flex gap-4 items-center bg-gray-200 p-1 mt-2 rounded w-fit">
+            <img src={pdf} alt="" className="h-8" />
+            <span>{data?.name.slice(0, 30)}</span>
+            <Delete
+              className="cursor-pointer"
+              onClick={() => handleDeletePdf("bachelor", i)}
+            />
+          </div>
+        ))}
       </div>
     </>
   );
