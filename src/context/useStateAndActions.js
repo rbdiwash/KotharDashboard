@@ -21,7 +21,7 @@ const useStateAndActions = () => {
   const getUniData = async () => {
     const res = await axios.get(`${API_URL}/university/list`, {
       headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huLmRvZUBleGFtcGxlLmNvbSIsImlhdCI6MTcwMzU1MzY3OCwiZXhwIjoxNzAzNTU1MTE4fQ.HOlp3Yx3RjiXibp3U4NAFk2wR2-MCrqwBCaleCrOIPY`,
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyYmRpd2FzaEBnbWFpbC5jb20iLCJpYXQiOjE3MDM3MTY3ODgsImV4cCI6MTcwMzcxODIyOH0.cNS61GYBKNjFmGhQEWC2QxdrW_ViJePWVH1uKJQKTpo`,
       },
     });
 
