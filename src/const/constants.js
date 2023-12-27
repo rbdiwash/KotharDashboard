@@ -15,5 +15,5 @@ export const insurance_cover_type = [
   { label: "Single", value: "single" },
   { label: "Couple", value: "couple" },
   { label: "Family", value: "family" },
-  { label: "Single Parent", value: "single_parent" },
+  { label: "Single Parent ", value: "single_parent" },
 ];
