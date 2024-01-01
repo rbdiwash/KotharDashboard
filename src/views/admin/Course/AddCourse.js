@@ -1,6 +1,6 @@
 import { Autocomplete, Button, TextField, makeStyles } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import axios from "const/axios";
 import InputField from "components/Input/InputField";
 import { API_URL } from "const/constants";
 import { useEffect, useState } from "react";
@@ -155,6 +155,9 @@ const AddCourse = ({ color = "light" }) => {
                       options={uniData || []}
                       getOptionLabel={(option) => option?.name || ""}
                       getOptionValue={(option) => option?.id}
+                      isOptionEqualToValue={(options, value) =>
+                        options.id === value.id
+                      }
                       disablePortal
                       renderInput={(params) => (
                         <TextField {...params} label="Select University" />

@@ -1,14 +1,15 @@
 import { Autocomplete, Button, IconButton, TextField } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import InputField from "components/Input/InputField";
 import { API_URL } from "const/constants";
+import axios from "const/axios";
 import useKothar from "context/useKothar";
 import { useEffect, useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ClearIcon from "@mui/icons-material/Clear";
+import { token } from "const/axios";
 
 const AddUni = ({ color = "light" }) => {
   const [data, setData] = useState({
@@ -30,15 +31,14 @@ const AddUni = ({ color = "light" }) => {
     { label: "Tasmania", value: "Tasmania" },
   ];
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setData((prevState) => ({ ...prevState, [name]: value }));
-  };
   const navigate = useNavigate();
   const [{}, { refetchUniData }] = useKothar();
 
   const { state } = useLocation();
-
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setData((prevState) => ({ ...prevState, [name]: value }));
+  };
   useEffect(() => {
     if (state) {
       setData({
@@ -84,7 +84,10 @@ const AddUni = ({ color = "light" }) => {
     formData.append("file", file);
     axios
       .post(`${API_URL}/api/upload`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
       })
       .then((res) => {
         setData({ ...data, image: res?.data?.data?.url });
@@ -193,14 +196,19 @@ const AddUni = ({ color = "light" }) => {
                       multiple
                       value={data?.state}
                       placeholder="Select State"
-                      autoComplete="new-off"
                       options={states || []}
-                      // disablePortal
+                      isOptionEqualToValue={(options, value) =>
+                        options.value === value.value
+                      }
                       renderInput={(params) => (
                         <TextField
                           {...params}
                           label="Select State"
-                          autoComplete="off"
+                          type="search"
+                          inputProps={{
+                            ...params.inputProps,
+                            autoComplete: "new-password",
+                          }}
                         />
                       )}
                       ListboxProps={{

@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import axios from "const/axios";
+
 import { API_URL } from "const/constants";
 import { toast } from "react-toastify";
 
 const useStateAndActions = () => {
   const getData = async () => {
-    const res = await axios.get(`${API_URL}/organization/list`);
+    const res = await axios.get(`organization/list`);
     return res?.data?.data;
   };
   const { data: consultancyList, refetch: refetchConsultancy } = useQuery(
@@ -19,11 +20,7 @@ const useStateAndActions = () => {
     }
   );
   const getUniData = async () => {
-    const res = await axios.get(`${API_URL}/university/list`, {
-      headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyYmRpd2FzaEBnbWFpbC5jb20iLCJpYXQiOjE3MDM3MTY3ODgsImV4cCI6MTcwMzcxODIyOH0.cNS61GYBKNjFmGhQEWC2QxdrW_ViJePWVH1uKJQKTpo`,
-      },
-    });
+    const res = await axios.get(`university/list`);
 
     return res?.data?.data;
   };
@@ -42,7 +39,7 @@ const useStateAndActions = () => {
   );
 
   const getCourseData = async () => {
-    const res = await axios.get(`${API_URL}/course/list`);
+    const res = await axios.get(`course/list`);
     return res?.data?.data;
   };
   const { data: courseList, refetch: refetchCourseList } = useQuery(
@@ -58,7 +55,7 @@ const useStateAndActions = () => {
     }
   );
   const getStudent = async () => {
-    const res = await axios.get(`${API_URL}/student/list`);
+    const res = await axios.get(`student/list`);
     return res?.data?.data;
   };
   const { data: studentList, refetch: refetchStudent } = useQuery(
@@ -74,11 +71,7 @@ const useStateAndActions = () => {
     }
   );
   const getUsers = async () => {
-    const res = await axios.get(`${API_URL}/users/all`, {
-      headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyYmRpd2FzaEBnbWFpbC5jb20iLCJpYXQiOjE3MDM1NTE5MDUsImV4cCI6MTcwMzU1MzM0NX0.wuoBzUaIOpyau5wqqEOYCpjWx9PH4kU2lRFixJu7-Go`,
-      },
-    });
+    const res = await axios.get(`users/all`, {});
     return res?.data?.data;
   };
   const { data: usersList, refetch: refetchUsers } = useQuery(
