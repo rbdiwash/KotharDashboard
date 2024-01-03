@@ -11,6 +11,8 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { FaRocketchat } from "react-icons/fa";
+import DiscussionModal from "components/Modals/DiscussionModal";
 const data = [
   {
     name: {
@@ -124,7 +126,10 @@ const Accounts = ({ color = "light" }) => {
     columns,
     data, //data must be memoized or stable (useState, useMemo, defined outside of this component, etc.)
   });
-
+  const [openDiscussion, setOpenDiscussion] = useState(false);
+  const handleDiscussion = () => {
+    setOpenDiscussion(!openDiscussion);
+  };
   return (
     <div className="flex flex-wrap mt-4 dashBody">
       <div className="w-full mb-12 px-4">
@@ -156,14 +161,20 @@ const Accounts = ({ color = "light" }) => {
                       <TextField {...params} placeholder="Search using Name" />
                     )}
                   />
+                </div>{" "}
+                <div className="flex items-center gap-4">
+                  <FaRocketchat
+                    className="text-blue-500 text-3xl cursor-pointer"
+                    onClick={handleDiscussion}
+                  />
+                  <Button
+                    variant="contained"
+                    component={Link}
+                    to="/admin/accounts/add"
+                  >
+                    Add Account Details
+                  </Button>
                 </div>
-                <Button
-                  variant="contained"
-                  component={Link}
-                  to="/admin/accounts/add"
-                >
-                  Add Account Details
-                </Button>
               </form>
             </div>
           </div>
@@ -181,6 +192,9 @@ const Accounts = ({ color = "light" }) => {
           }
           handleDelete={() => deleteData()}
         />
+      )}{" "}
+      {openDiscussion && (
+        <DiscussionModal open={openDiscussion} setOpen={setOpenDiscussion} />
       )}
     </div>
   );

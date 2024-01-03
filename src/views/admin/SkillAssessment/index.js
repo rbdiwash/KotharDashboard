@@ -2,7 +2,7 @@ import { Button, IconButton, Tooltip } from "@mui/material";
 import DeleteModal from "components/Modals/DeleteModal";
 import { useState } from "react";
 import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
-import { FaPlusCircle } from "react-icons/fa";
+import { FaPlusCircle, FaRocketchat } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { API_URL } from "const/constants";
@@ -12,6 +12,7 @@ import useKothar from "context/useKothar";
 import { ImageName } from "components/helper";
 import SkillAssessmentModal from "./AddSkillAssessment";
 import SearchField from "components/SearchField";
+import DiscussionModal from "components/Modals/DiscussionModal";
 
 const SkillAssessment = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
@@ -35,6 +36,10 @@ const SkillAssessment = ({ color = "light" }) => {
         toast.error("Error Deleting Data");
       });
   };
+  const [openDiscussion, setOpenDiscussion] = useState(false);
+  const handleDiscussion = () => {
+    setOpenDiscussion(!openDiscussion);
+  };
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">
@@ -57,14 +62,20 @@ const SkillAssessment = ({ color = "light" }) => {
               </h3>{" "}
               <SearchField
                 {...{ type: "Skill Assessment", searchText, setSearchText }}
-              />
-              <Button
-                variant="contained"
-                startIcon={<FaPlusCircle />}
-                onClick={() => navigate("add")}
-              >
-                Add Skill Assessment
-              </Button>
+              />{" "}
+              <div className="flex items-center gap-4">
+                <FaRocketchat
+                  className="text-blue-500 text-3xl cursor-pointer"
+                  onClick={handleDiscussion}
+                />
+                <Button
+                  variant="contained"
+                  startIcon={<FaPlusCircle />}
+                  onClick={() => navigate("add")}
+                >
+                  Add Skill Assessment
+                </Button>
+              </div>
             </div>
           </div>
           <div className="block w-full overflow-x-auto">
@@ -162,7 +173,10 @@ const SkillAssessment = ({ color = "light" }) => {
             </table>
           </div>
         </div>
-      </div>
+      </div>{" "}
+      {openDiscussion && (
+        <DiscussionModal open={openDiscussion} setOpen={setOpenDiscussion} />
+      )}
       {openConfirmationModal.state && (
         <DeleteModal
           open={openConfirmationModal.state}

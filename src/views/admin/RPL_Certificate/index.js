@@ -2,7 +2,7 @@ import { Button, IconButton, Tooltip, Typography } from "@mui/material";
 import DeleteModal from "components/Modals/DeleteModal";
 import { useState } from "react";
 import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
-import { FaPlusCircle } from "react-icons/fa";
+import { FaPlusCircle, FaRocketchat } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { API_URL } from "const/constants";
@@ -14,6 +14,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import SearchField from "components/SearchField";
+import DiscussionModal from "components/Modals/DiscussionModal";
 
 const RPLCertificate = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
@@ -36,6 +37,10 @@ const RPLCertificate = ({ color = "light" }) => {
       });
   };
   const [value, setValue] = useState(0);
+  const [openDiscussion, setOpenDiscussion] = useState(false);
+  const handleDiscussion = () => {
+    setOpenDiscussion(!openDiscussion);
+  };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -96,14 +101,20 @@ const RPLCertificate = ({ color = "light" }) => {
               <SearchField
                 {...{ type: "RPL Certificate", searchText, setSearchText }}
               />
-              <Button
-                variant="contained"
-                startIcon={<FaPlusCircle />}
-                component={Link}
-                to="/admin/rpl-certificate/add"
-              >
-                Add Client Details
-              </Button>
+              <div className="flex items-center gap-4">
+                <FaRocketchat
+                  className="text-blue-500 text-3xl cursor-pointer"
+                  onClick={handleDiscussion}
+                />{" "}
+                <Button
+                  variant="contained"
+                  startIcon={<FaPlusCircle />}
+                  component={Link}
+                  to="/admin/rpl-certificate/add"
+                >
+                  Add Client Details
+                </Button>{" "}
+              </div>
             </div>
           </div>
           <Tabs
@@ -144,6 +155,9 @@ const RPLCertificate = ({ color = "light" }) => {
           }
           handleDelete={() => deleteData()}
         />
+      )}{" "}
+      {openDiscussion && (
+        <DiscussionModal open={openDiscussion} setOpen={setOpenDiscussion} />
       )}
     </div>
   );

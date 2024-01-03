@@ -435,13 +435,28 @@ const AddRPLCertificate = ({ color = "light" }) => {
                       onChange={(e) => handleFileChange(e, "visa")}
                     />
                   </div>
-
                   <div className="relative w-full mb-3">
                     <InputField
                       label="Upload All COE's"
                       name="coe"
                       type="file"
                       onChange={(e) => handleFileChange(e, "coe")}
+                    />
+                  </div>
+                  <div className="relative w-full mb-3">
+                    <InputField
+                      label="Upload USI document"
+                      name="usi_document"
+                      type="file"
+                      onChange={(e) => handleFileChange(e, "usi_document")}
+                    />
+                  </div>{" "}
+                  <div className="relative w-full mb-3">
+                    <InputField
+                      label="Upload the Latest Resume"
+                      name="resume"
+                      type="file"
+                      onChange={(e) => handleFileChange(e, "resume")}
                     />
                   </div>
                 </div>
@@ -542,21 +557,21 @@ const AddRPLCertificate = ({ color = "light" }) => {
                       <FormControlLabel
                         control={
                           <Checkbox
-                            checked={data?.transcript}
+                            checked={data?.insurance_student_card}
                             onChange={handleChange}
-                            name="transcript"
+                            name="insurance_student_card"
                           />
                         }
-                        label="Transcript of Currently Graduate Course"
+                        label=" Insurance/Student Card"
                       />
-                      {data?.transcript && (
+                      {data?.insurance_student_card && (
                         <InputField
-                          label="Upload Transcript"
-                          name="transcript_file"
-                          required={data?.transcript}
+                          label="Upload Insurance Card/Student Card"
+                          name="insurance_student_card_file"
+                          required={data?.insurance_student_card}
                           type="file"
                           onChange={(e) =>
-                            handleFileChange(e, "transcript_file")
+                            handleFileChange(e, "insurance_student_card_file")
                           }
                         />
                       )}

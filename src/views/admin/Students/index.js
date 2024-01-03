@@ -1,15 +1,19 @@
 import { Button, IconButton, Tooltip } from "@mui/material";
+import DiscussionModal from "components/Modals/DiscussionModal";
 import SearchField from "components/SearchField";
 import { useState } from "react";
 import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
-import { FaPlusCircle } from "react-icons/fa";
+import { FaPlusCircle, FaRocketchat } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 
 const Students = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
   const navigate = useNavigate();
   const [searchText, setSearchText] = useState("");
-
+  const [openDiscussion, setOpenDiscussion] = useState(false);
+  const handleDiscussion = () => {
+    setOpenDiscussion(!openDiscussion);
+  };
   return (
     <div className="flex flex-wrap mt-4 dashBody">
       <div className="w-full mb-12 px-4">
@@ -32,14 +36,20 @@ const Students = ({ color = "light" }) => {
               <SearchField
                 {...{ type: "Student", searchText, setSearchText }}
               />
-              <Button
-                variant="contained"
-                startIcon={<FaPlusCircle />}
-                component={Link}
-                to="/admin/student/add"
-              >
-                Add Student
-              </Button>
+              <div className="flex items-center gap-4">
+                <FaRocketchat
+                  className="text-blue-500 text-3xl cursor-pointer"
+                  onClick={handleDiscussion}
+                />{" "}
+                <Button
+                  variant="contained"
+                  startIcon={<FaPlusCircle />}
+                  component={Link}
+                  to="/admin/student/add"
+                >
+                  Add Student
+                </Button>{" "}
+              </div>
             </div>
           </div>
           <div className="block w-full overflow-x-auto">
@@ -123,7 +133,10 @@ const Students = ({ color = "light" }) => {
             </table>
           </div>
         </div>
-      </div>
+      </div>{" "}
+      {openDiscussion && (
+        <DiscussionModal open={openDiscussion} setOpen={setOpenDiscussion} />
+      )}
     </div>
   );
 };

@@ -2,7 +2,7 @@ import { Button, IconButton, Tabs, Tooltip, Typography } from "@mui/material";
 import DeleteModal from "components/Modals/DeleteModal";
 import { useState } from "react";
 import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
-import { FaPlusCircle } from "react-icons/fa";
+import { FaPlusCircle, FaRocketchat } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { API_URL } from "const/constants";
@@ -15,6 +15,7 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import SearchField from "components/SearchField";
 import { useEffect } from "react";
+import DiscussionModal from "components/Modals/DiscussionModal";
 const tabs = [
   "TR Visa",
   "Student Visa",
@@ -56,7 +57,6 @@ const Visa = ({ color = "light" }) => {
     setValue(newValue);
   };
 
-
   const deleteData = () => {
     axios
       .delete(`${API_URL}/organization/delete/${openConfirmationModal?.id}`)
@@ -70,7 +70,10 @@ const Visa = ({ color = "light" }) => {
         toast.error("Error Deleting Data");
       });
   };
-
+  const [openDiscussion, setOpenDiscussion] = useState(false);
+  const handleDiscussion = () => {
+    setOpenDiscussion(!openDiscussion);
+  };
   return (
     <div className="flex flex-wrap mt-4 dashBody">
       <div className="w-full mb-12 px-4">
@@ -91,14 +94,20 @@ const Visa = ({ color = "light" }) => {
                 Visa Details
               </h3>
               <SearchField {...{ type: "Visa", searchText, setSearchText }} />
-              <Button
-                variant="contained"
-                startIcon={<FaPlusCircle />}
-                component={Link}
-                to="/admin/visa/add"
-              >
-                Add Visa Details
-              </Button>
+              <div className="flex items-center gap-4">
+                <FaRocketchat
+                  className="text-blue-500 text-3xl cursor-pointer"
+                  onClick={handleDiscussion}
+                />
+                <Button
+                  variant="contained"
+                  startIcon={<FaPlusCircle />}
+                  component={Link}
+                  to="/admin/visa/add"
+                >
+                  Add Visa Details
+                </Button>
+              </div>
             </div>
           </div>
           <Tabs
@@ -138,6 +147,9 @@ const Visa = ({ color = "light" }) => {
           }
           handleDelete={() => deleteData()}
         />
+      )}{" "}
+      {openDiscussion && (
+        <DiscussionModal open={openDiscussion} setOpen={setOpenDiscussion} />
       )}
       {openVisaForm && <VisaModel {...{ openVisaForm, setOpenVisaForm }} />}
     </div>

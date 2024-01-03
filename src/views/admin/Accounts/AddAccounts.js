@@ -1,5 +1,12 @@
-import { Autocomplete, Button, TextField } from "@mui/material";
+import {
+  Autocomplete,
+  Button,
+  IconButton,
+  TextField,
+  Tooltip,
+} from "@mui/material";
 import axios from "axios";
+import InputField from "components/Input/InputField";
 import DeleteModal from "components/Modals/DeleteModal";
 import { API_URL } from "const/constants";
 import useKothar from "context/useKothar";
@@ -7,11 +14,13 @@ import { useMaterialReactTable } from "material-react-table";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
+import { FaPlusCircle } from "react-icons/fa";
 
 const AddAccounts = ({ color = "light" }) => {
   const navigate = useNavigate();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
-
+  const [installments, setInstallments] = useState([{ index: 1 }]);
   const [{ courseList }, { refetchCourseList }] = useKothar();
 
   const deleteData = () => {
@@ -35,6 +44,14 @@ const AddAccounts = ({ color = "light" }) => {
     { title: "Visa", value: "visa" },
     { title: "Insurance", value: "insurance" },
   ];
+
+  const addInstallments = () => {
+    setInstallments((prev) => [...prev, { index: prev.length + 1 }]);
+  };
+
+  const handleDeleteInstallment = (index) => {
+    setInstallments((prev) => [...prev.filter((item, i) => i !== index)]);
+  };
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">
@@ -72,59 +89,54 @@ const AddAccounts = ({ color = "light" }) => {
             </div>
           </div>
           <div className="block w-full overflow-x-auto">
-            <div class="px-4">
-              <div class="container mx-auto px-2 py-2">
-                <div class="flex flex-col space-y-5">
-                  <div class="text-center">
-                    <h1 class="text-4xl font-bold mb-10">Account Details</h1>
+            <div className="px-4">
+              <div className="container mx-auto px-2 py-1">
+                <div className="flex flex-col space-y-5">
+                  <div className="text-center">
+                    <h1 className="text-4xl font-bold mb-10">
+                      Account Details
+                    </h1>
                   </div>
-                  <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                    <div class="md:col-span-2">
-                      <h2 class="text-2xl font-semibold mb-5">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div className="md:col-span-2">
+                      <h2 className="text-2xl font-semibold mb-5">
                         Divash Ranabhat
                       </h2>
-                      <p class="mb-2">Blake Street, Kogarah</p>
-                      <p class="mb-2">NSW, Australia</p>
-                      <p class="mb-2">+0430082553</p>
+                      <p className="mb-2">Blake Street, Kogarah</p>
+                      <p className="mb-2">NSW, Australia</p>
+                      <p className="mb-2">+0430082553</p>
                     </div>
-                    <div class="max-w-7xl mx-auto  lg:px-8">
-                      <div class="bg-white overflow-hidden">
-                        <div class="px-2 pb-2">
-                          <h3 class="text-lg leading-6 font-medium text-gray-900">
+                    <div className="max-w-7xl mx-auto  lg:px-8">
+                      <div className="bg-white overflow-hidden">
+                        <div className="px-2 pb-2">
+                          <h3 className="text-lg leading-6 font-medium text-gray-900">
                             Bill To
                           </h3>
                         </div>
-                        <div class="border-gray-200">
+                        <div className="border-gray-200">
                           <dl>
-                            <div class="px-2 py-2 sm:grid sm:grid-cols-3 sm:gap-4 ">
-                              <dt class="text-sm font-medium text-gray-500">
+                            <div className="px-2 py-1 sm:grid sm:grid-cols-3 sm:gap-4 ">
+                              <dt className="text-sm font-medium text-gray-500">
                                 Total Due
                               </dt>
-                              <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                              <dd className="mt-0 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                 $12,110.55
                               </dd>
                             </div>
-                            <div class=" px-2 py-2 sm:grid sm:grid-cols-3 sm:gap-4 ">
-                              <dt class="text-sm font-medium text-gray-500">
-                                Bank name
-                              </dt>
-                              <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                American Bank
-                              </dd>
-                            </div>
-                            <div class="px-2 py-2 sm:grid sm:grid-cols-3 sm:gap-4 ">
-                              <dt class="text-sm font-medium text-gray-500">
+
+                            <div className="px-2 py-1 sm:grid sm:grid-cols-3 sm:gap-4 ">
+                              <dt className="text-sm font-medium text-gray-500">
                                 Country
                               </dt>
-                              <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                              <dd className="mt-0 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                 Australia
                               </dd>
                             </div>
-                            <div class=" px-2 py-2 sm:grid sm:grid-cols-3 sm:gap-4 ">
-                              <dt class="text-sm font-medium text-gray-500">
+                            <div className=" px-2 py-1 sm:grid sm:grid-cols-3 sm:gap-4 ">
+                              <dt className="text-sm font-medium text-gray-500">
                                 Type
                               </dt>
-                              <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                              <dd className="mt-0 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                 RPL Certificate
                               </dd>
                             </div>
@@ -136,52 +148,169 @@ const AddAccounts = ({ color = "light" }) => {
                   <h1 className="text-lg text-gray-600 font-semibold">
                     Payment Installlments
                   </h1>
-                  <table class="table-auto w-full">
+                  <table className="table-auto w-full">
                     <thead>
                       <tr>
-                        <th class="border px-4 py-2">SN</th>
-                        <th class="border px-4 py-2">Date</th>
-                        <th class="border px-4 py-2">Amount</th>
-                        <th class="border px-4 py-2">Payment Method</th>
-                        <th class="border px-4 py-2">Remarks</th>
-                        <th class="border px-4 py-2">Attachment</th>
-                        <th class="border px-4 py-2">Action</th>
+                        <th className="border px-4 py-2">SN</th>
+                        <th className="border px-4 py-2">Date</th>
+                        <th className="border px-4 py-2">Amount</th>
+                        <th className="border px-4 py-2">Payment Method</th>
+                        <th className="border px-4 py-2">Remarks</th>
+                        <th className="border px-4 py-2">Commission Claimed</th>
+                        <th className="border px-4 py-2">Attachment</th>
+                        <th className="border px-4 py-2">Action</th>
                       </tr>
                     </thead>
                     <tbody>
+                      {installments?.map((item, i) => (
+                        <tr key={item?.index}>
+                          <td className="border text-center px-4 py-2">
+                            {i + 1}
+                          </td>
+                          <td className="border text-center px-4 py-2">
+                            <InputField type="date" name="date" />
+                          </td>
+                          <td className="border text-center px-4 py-2">
+                            <InputField
+                              type="number"
+                              name="amount"
+                              placeholder="Amount"
+                            />
+                          </td>
+                          <td className="border text-center  px-4 py-2">
+                            <InputField
+                              type="text"
+                              name="method"
+                              placeholder="Payment Method"
+                            />
+                          </td>
+                          <td className="border text-center px-4 py-2">
+                            <InputField
+                              type="text"
+                              name="remarks"
+                              placeholder="Enter Remarks"
+                              size="small"
+                            />
+                          </td>
+                          <td className="border text-center px-4 py-2">
+                            <div className="flex items-center gap-4">
+                              <Autocomplete
+                                onChange={(e, value) => {
+                                  setInstallments([]);
+                                }}
+                                size="small"
+                                required
+                                options={[
+                                  {
+                                    label: "Yes",
+                                    value: "yes",
+                                  },
+                                  { label: "No", value: "no" },
+                                ]}
+                                disablePortal
+                                renderInput={(params) => (
+                                  <TextField {...params} label="Yes/No" />
+                                )}
+                                ListboxProps={{
+                                  style: {
+                                    maxHeight: "180px",
+                                  },
+                                }}
+                              />
+                              <InputField
+                                type="text"
+                                name="comission"
+                                placeholder="Enter Comission"
+                              />
+                            </div>
+                          </td>
+                          <td className="border text-center px-4 py-2">
+                            <InputField
+                              type="file"
+                              name="remarks"
+                              placeholder="Upload Attachments"
+                            />
+                          </td>
+                          <td className="border text-center px-4 py-2">
+                            <div className="flex items-center">
+                              <Tooltip title="Edit Course" arrow>
+                                <IconButton
+                                  onClick={() =>
+                                    navigate("/admin/course/add", {})
+                                  }
+                                >
+                                  <AiFillEdit className="text-sky-600 cursor-pointer" />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title="Delete Course" arrow>
+                                <IconButton
+                                  onClick={() => handleDeleteInstallment(i)}
+                                >
+                                  <AiFillDelete className="text-red-600 cursor-pointer" />
+                                </IconButton>
+                              </Tooltip>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
                       <tr>
-                        <td class="border text-center px-4 py-2">1</td>
-                        <td class="border text-center px-4 py-2">
-                          App Customization
-                        </td>
-                        <td class="border text-center px-4 py-2">
-                          Edward Crowle y
-                        </td>
-                        <td class="border text-center  px-4 py-2">
-                          2023-07-26
-                        </td>
-                        <td class="border text-center px-4 py-2">$12,110.55</td>
-                        <td class="border text-center px-4 py-2">$12,110.55</td>
-                        <td classs="border text-center px-4 py-2">
-                          $12,110.55
+                        <td
+                          colSpan={"20"}
+                          className="border text-left px-4 py-2"
+                        >
+                          <Button
+                            variant="contained"
+                            startIcon={<FaPlusCircle />}
+                            onClick={addInstallments}
+                          >
+                            Add More Installments
+                          </Button>
                         </td>
                       </tr>
                     </tbody>
                   </table>
 
-                  <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-10">
-                    <div class="md:col-span-2">
-                      <h2 class="text-xl font-semibold mb-5">Note:</h2>
-                      <p class="mb-2">Cost: $24.00</p>
-                      <p class="mb-2">Discount: 0% 0% 0%</p>
-                    </div>
-                    <div>
-                      <h2 class="text-xl font-semibold mb-5">
+                  <div className="grid grid-cols-1  gap-5 mt-10">
+                    <div className="flex flex-col gap-2">
+                      <h2 className="text-xl font-semibold mb-5">
                         Payment Details:
                       </h2>
-                      <p class="mb-2">Invoice #: 740125</p>
-                      <p class="mb-2">Due Date: 2023-08-24</p>
-                      <p class="mb-2">Total Amount: $12,110.55</p>
+                      <div className="flex gap-2 items-center ">
+                        Amount:
+                        <InputField
+                          type="number"
+                          name="discount"
+                          placeholder="Discount Amount"
+                          className="w-[200px] p-1"
+                        />
+                      </div>
+                      <div className="flex gap-2 items-center">
+                        Discount:
+                        <InputField
+                          type="number"
+                          name="discount"
+                          placeholder="Discount Amount"
+                          className="w-[200px] p-1"
+                        />
+                      </div>
+                      <div className=" flex items-center gap-2">
+                        Due Date:
+                        <InputField
+                          type="file"
+                          name="total_amount"
+                          placeholder="Total Amount"
+                          className="w-[200px]"
+                        />
+                      </div>{" "}
+                      <div className=" flex items-center gap-2">
+                        Total Amount:
+                        <InputField
+                          type="number"
+                          name="total_amount"
+                          placeholder="Total Amount"
+                          className="w-[200px]"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>

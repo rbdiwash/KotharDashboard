@@ -2,7 +2,7 @@ import { Button, IconButton, Tooltip } from "@mui/material";
 import DeleteModal from "components/Modals/DeleteModal";
 import { useState } from "react";
 import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
-import { FaPlusCircle } from "react-icons/fa";
+import { FaChartArea, FaPlusCircle, FaRocketchat } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { API_URL } from "const/constants";
@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import useKothar from "context/useKothar";
 import { ImageName } from "components/helper";
 import SearchField from "components/SearchField";
+import DiscussionModal from "components/Modals/DiscussionModal";
 
 const Course = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
@@ -32,6 +33,11 @@ const Course = ({ color = "light" }) => {
       .catch((err) => {
         toast.error("Error Deleting Data");
       });
+  };
+
+  const [openDiscussion, setOpenDiscussion] = useState(false);
+  const handleDiscussion = () => {
+    setOpenDiscussion(!openDiscussion);
   };
 
   return (
@@ -56,14 +62,20 @@ const Course = ({ color = "light" }) => {
               <SearchField
                 {...{ type: "Courses", searchText, setSearchText }}
               />
-              <Button
-                variant="contained"
-                startIcon={<FaPlusCircle />}
-                component={Link}
-                to="/admin/course/add"
-              >
-                Add Course
-              </Button>
+              <div className="flex items-center gap-4">
+                <FaRocketchat
+                  className="text-blue-500 text-3xl cursor-pointer"
+                  onClick={handleDiscussion}
+                />
+                <Button
+                  variant="contained"
+                  startIcon={<FaPlusCircle />}
+                  component={Link}
+                  to="/admin/course/add"
+                >
+                  Add Course
+                </Button>
+              </div>
             </div>
           </div>
           <div className="block w-full overflow-x-auto">
@@ -158,6 +170,9 @@ const Course = ({ color = "light" }) => {
           </div>
         </div>
       </div>
+      {openDiscussion && (
+        <DiscussionModal open={openDiscussion} setOpen={setOpenDiscussion} />
+      )}
       {openConfirmationModal.state && (
         <DeleteModal
           open={openConfirmationModal.state}
