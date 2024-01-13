@@ -21,7 +21,9 @@ const AddAccounts = ({ color = "light" }) => {
   const navigate = useNavigate();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [installments, setInstallments] = useState([{ index: 1 }]);
+  console.log("🚀  installments:", installments);
   const [{ courseList }, { refetchCourseList }] = useKothar();
+  const [{ token }, { setToken }] = useKothar();
 
   const deleteData = () => {
     axios
@@ -34,6 +36,43 @@ const AddAccounts = ({ color = "light" }) => {
       })
       .catch((err) => {
         toast.error("Error Deleting Data");
+      });
+  };
+
+  const handleInputChange = (e, index) => {
+    const { name, value } = e.target;
+    const row = installments.find((item, i) => i === index);
+    setInstallments((prevState) => [
+      ...prevState.slice(0, index),
+      { ...row, [name]: value },
+      ...prevState.slice(index + 1, installments.length),
+    ]);
+  };
+
+  const handleFileChange = (e, index) => {
+    const { name, value } = e.target;
+
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+    axios
+      .post(`${API_URL}/api/upload`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        const row = installments.find((item, i) => i === index);
+
+        setInstallments((prevState) => [
+          ...prevState.slice(0, index),
+          { ...row, [name]: value },
+          ...prevState.slice(index + 1, installments.length),
+        ]);
+      })
+      .catch((err) => {
+        toast.error("Error Uploading file");
       });
   };
 
@@ -120,7 +159,7 @@ const AddAccounts = ({ color = "light" }) => {
                                 Total Due
                               </dt>
                               <dd className="mt-0 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                $12,110.55
+                                $0
                               </dd>
                             </div>
 
@@ -148,92 +187,170 @@ const AddAccounts = ({ color = "light" }) => {
                   <h1 className="text-lg text-gray-600 font-semibold">
                     Payment Installlments
                   </h1>
-                  <table className="table-auto w-full">
-                    <thead>
-                      <tr>
-                        <th className="border px-4 py-2">SN</th>
-                        <th className="border px-4 py-2">Date</th>
-                        <th className="border px-4 py-2">Amount</th>
-                        <th className="border px-4 py-2">Payment Method</th>
-                        <th className="border px-4 py-2">Remarks</th>
-                        <th className="border px-4 py-2">Commission Claimed</th>
-                        <th className="border px-4 py-2">Attachment</th>
-                        <th className="border px-4 py-2">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {installments?.map((item, i) => (
-                        <tr key={item?.index}>
-                          <td className="border text-center px-4 py-2">
-                            {i + 1}
-                          </td>
-                          <td className="border text-center px-4 py-2">
-                            <InputField type="date" name="date" />
-                          </td>
-                          <td className="border text-center px-4 py-2">
-                            <InputField
-                              type="number"
-                              name="amount"
-                              placeholder="Amount"
-                            />
-                          </td>
-                          <td className="border text-center  px-4 py-2">
-                            <InputField
-                              type="text"
-                              name="method"
-                              placeholder="Payment Method"
-                            />
-                          </td>
-                          <td className="border text-center px-4 py-2">
-                            <InputField
-                              type="text"
-                              name="remarks"
-                              placeholder="Enter Remarks"
-                              size="small"
-                            />
-                          </td>
-                          <td className="border text-center px-4 py-2">
-                            <div className="flex items-center gap-4">
-                              <Autocomplete
-                                onChange={(e, value) => {
-                                  setInstallments([]);
-                                }}
-                                size="small"
-                                required
-                                options={[
-                                  {
-                                    label: "Yes",
-                                    value: "yes",
-                                  },
-                                  { label: "No", value: "no" },
-                                ]}
-                                disablePortal
-                                renderInput={(params) => (
-                                  <TextField {...params} label="Yes/No" />
-                                )}
-                                ListboxProps={{
-                                  style: {
-                                    maxHeight: "180px",
-                                  },
-                                }}
+                  <div className="overflow-x-auto">
+                    <table className="table-auto w-full">
+                      <thead>
+                        <tr>
+                          <th className="border px-4 py-2">SN</th>
+                          <th className="border px-4 py-2">Date</th>
+                          <th className="border px-4 py-2">Amount</th>
+                          <th className="border px-4 py-2">Payment Method</th>
+                          <th className="border px-4 py-2">Remarks</th>
+                          <th className="border px-4 py-2">
+                            Commission Claimed
+                          </th>
+                          <th className="border px-4 py-2">Case Officer </th>
+                          <th className="border px-4 py-2">Agent Cost </th>
+                          <th className="border px-4 py-2">Status </th>
+                          <th className="border px-4 py-2">Attachment</th>
+                          <th className="border px-4 py-2">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {installments?.map((item, index) => (
+                          <tr key={item?.index}>
+                            <td className="border text-center px-4 py-2">
+                              {index + 1}
+                            </td>
+                            <td className="border text-center px-4 py-2">
+                              <InputField
+                                type="date"
+                                name="date"
+                                onChange={(e) => handleInputChange(e, index)}
+                                value={item?.date} 
                               />
+                            </td>
+                            <td className="border text-center px-4 py-2">
+                              <InputField
+                                type="number"
+                                name="amounts"
+                                placeholder="Amount"
+                                onChange={(e) => handleInputChange(e, index)}
+                                value={item?.amounts}
+                                className="min-w-[150px]"
+                              />
+                            </td>
+                            <td className="border text-center  px-4 py-2">
                               <InputField
                                 type="text"
-                                name="comission"
-                                placeholder="Enter Comission"
+                                name="method"
+                                placeholder="Payment Method"
+                                onChange={(e) => handleInputChange(e, index)}
+                                value={item?.method}
+                                className="min-w-[150px]"
                               />
-                            </div>
-                          </td>
-                          <td className="border text-center px-4 py-2">
-                            <InputField
-                              type="file"
-                              name="remarks"
-                              placeholder="Upload Attachments"
-                            />
-                          </td>
-                          <td className="border text-center px-4 py-2">
-                            <div className="flex items-center">
-                              <Tooltip title="Edit Course" arrow>
+                            </td>
+                            <td className="border text-center px-4 py-2">
+                              <InputField
+                                type="text"
+                                name="remarks"
+                                placeholder="Enter Remarks"
+                                size="small"
+                                onChange={(e) => handleInputChange(e, index)}
+                                value={item?.remarks}
+                                className="min-w-[150px]"
+                              />
+                            </td>
+                            <td className="border text-center px-4 py-2">
+                              <div className="flex items-center gap-4">
+                                <Autocomplete
+                                  onChange={(e, value) => {
+                                    const row = installments.find(
+                                      (item, i) => i === index
+                                    );
+                                    setInstallments((prevState) => [
+                                      ...prevState.slice(0, index),
+                                      { ...row, claimed: value.value },
+                                      ...prevState.slice(
+                                        index + 1,
+                                        installments.length
+                                      ),
+                                    ]);
+                                  }}
+                                  isOptionEqualToValue={(options, value) =>
+                                    options.value === value.value
+                                  }
+                                  value={item?.claimed}
+                                  name="claimed"
+                                  size="small"
+                                  required
+                                  options={[
+                                    {
+                                      label: "Yes",
+                                      value: "yes",
+                                    },
+                                    { label: "No", value: "no" },
+                                  ]}
+                                  disablePortal
+                                  renderInput={(params) => (
+                                    <TextField {...params} label="Yes/No" />
+                                  )}
+                                  ListboxProps={{
+                                    style: {
+                                      maxHeight: "180px",
+                                    },
+                                  }}
+                                />
+                                {item?.claimed === "yes" && (
+                                  <InputField
+                                    type="text"
+                                    name="comission"
+                                    placeholder="Enter Comission"
+                                    onChange={(e) =>
+                                      handleInputChange(e, index)
+                                    }
+                                    value={item?.comission}
+                                    className="min-w-[150px]"
+                                  />
+                                )}
+                              </div>
+                            </td>{" "}
+                            <td className="border text-center px-4 py-2">
+                              <InputField
+                                type="text"
+                                name="caseOfficer"
+                                placeholder="Case Officer"
+                                size="small"
+                                onChange={(e) => handleInputChange(e, index)}
+                                value={item?.caseOfficer}
+                                className="min-w-[150px]"
+                              />
+                            </td>{" "}
+                            <td className="border text-center px-4 py-2">
+                              <InputField
+                                type="number"
+                                name="agentCost "
+                                placeholder="Agent Cost"
+                                size="small"
+                                onChange={(e) => handleInputChange(e, index)}
+                                value={item?.agentCost}
+                                className="min-w-[150px]"
+                              />
+                            </td>{" "}
+                            <td className="border text-center px-4 py-2">
+                              <InputField
+                                type="text"
+                                name="status"
+                                placeholder="Status"
+                                size="small"
+                                onChange={(e) => handleInputChange(e, index)}
+                                value={item?.status}
+                                className="min-w-[150px]"
+                              />
+                            </td>
+                            <td className="border text-center px-4 py-2">
+                              <InputField
+                                type="file"
+                                name="remarks"
+                                placeholder="Upload Attachments"
+                                value={item?.amount}
+                                onChange={(e) => handleFileChange(e, index)}
+                                className="min-w-[150px]"
+                              />
+                            </td>
+                            <td className="border text-center px-4 py-2">
+                              <div className="flex items-center">
+                                {/* <Tooltip title="Edit Course" arrow>
                                 <IconButton
                                   onClick={() =>
                                     navigate("/admin/course/add", {})
@@ -241,36 +358,38 @@ const AddAccounts = ({ color = "light" }) => {
                                 >
                                   <AiFillEdit className="text-sky-600 cursor-pointer" />
                                 </IconButton>
-                              </Tooltip>
-                              <Tooltip title="Delete Course" arrow>
-                                <IconButton
-                                  onClick={() => handleDeleteInstallment(i)}
-                                >
-                                  <AiFillDelete className="text-red-600 cursor-pointer" />
-                                </IconButton>
-                              </Tooltip>
-                            </div>
+                              </Tooltip> */}
+                                <Tooltip title="Delete Course" arrow>
+                                  <IconButton
+                                    onClick={() =>
+                                      handleDeleteInstallment(index)
+                                    }
+                                  >
+                                    <AiFillDelete className="text-red-600 cursor-pointer" />
+                                  </IconButton>
+                                </Tooltip>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                        <tr>
+                          <td
+                            colSpan={"20"}
+                            className="border text-left px-4 py-2"
+                          >
+                            <Button
+                              variant="contained"
+                              startIcon={<FaPlusCircle />}
+                              onClick={addInstallments}
+                            >
+                              Add More Installments
+                            </Button>
                           </td>
                         </tr>
-                      ))}
-                      <tr>
-                        <td
-                          colSpan={"20"}
-                          className="border text-left px-4 py-2"
-                        >
-                          <Button
-                            variant="contained"
-                            startIcon={<FaPlusCircle />}
-                            onClick={addInstallments}
-                          >
-                            Add More Installments
-                          </Button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-
-                  <div className="grid grid-cols-1  gap-5 mt-10">
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="grid grid-cols-3  gap-5 py-10">
                     <div className="flex flex-col gap-2">
                       <h2 className="text-xl font-semibold mb-5">
                         Payment Details:
@@ -303,14 +422,12 @@ const AddAccounts = ({ color = "light" }) => {
                         />
                       </div>{" "}
                       <div className=" flex items-center gap-2">
-                        Total Amount:
-                        <InputField
-                          type="number"
-                          name="total_amount"
-                          placeholder="Total Amount"
-                          className="w-[200px]"
-                        />
+                        Total Amount: $0
                       </div>
+                    </div>
+                    <div className="col-span-1"></div>
+                    <div className="col-span-1 ml-auto mt-auto">
+                      <Button variant="contained">Submit</Button>
                     </div>
                   </div>
                 </div>

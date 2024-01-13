@@ -9,7 +9,6 @@ import { IoArrowBack } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ClearIcon from "@mui/icons-material/Clear";
-import { token } from "const/axios";
 
 const AddUni = ({ color = "light" }) => {
   const [data, setData] = useState({
@@ -81,12 +80,12 @@ const AddUni = ({ color = "light" }) => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file",   );
     axios
       .post(`${API_URL}/api/upload`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${"asdfsf"}`,
         },
       })
       .then((res) => {

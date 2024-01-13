@@ -20,6 +20,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import pdf from "../../../assets/img/pdf.png";
 import DeleteIcon from "@mui/icons-material/Delete";
+import DownloadIcon from "@mui/icons-material/Download";
 
 const AddVisaDetails = ({ color = "light" }) => {
   const [data, setData] = useState({
@@ -492,6 +493,25 @@ const AddVisaDetails = ({ color = "light" }) => {
                       type="file"
                       onChange={(e) => handleFileChange(e, "passport")}
                     />
+                    {data?.passport && (
+                      <div className="flex gap-4 items-center bg-gray-200 p-1 mt-2 rounded w-fit">
+                        {data?.name?.length > 30 ? (
+                          <Tooltip title={data?.name}>
+                            <span>{data?.name?.slice(0, 30)}</span>
+                          </Tooltip>
+                        ) : (
+                          <span>{data?.name?.slice(0, 30)}</span>
+                        )}
+                        <DownloadIcon
+                          className="cursor-pointer"
+                          // onClick={() => downloadFile()}
+                        />
+                        <Delete
+                          className="cursor-pointer"
+                          onClick={() => handleDeletePdf("passport")}
+                        />
+                      </div>
+                    )}
                   </div>
                   <div className="relative w-full mb-3">
                     <InputField

@@ -31,13 +31,11 @@ const AddSkillAssessment = ({ color = "light" }) => {
     visa_status: null,
     course_provider: null,
     course_completed: null,
-
     passport_number: "",
     date_of_issue: "",
     date_of_expiry: "",
     visa_status: "",
     visa_expiry: "",
-
     resume: "",
     passport: "",
     academic: [],
@@ -109,7 +107,6 @@ const AddSkillAssessment = ({ color = "light" }) => {
     //     toast.error("Error Uploading file");
     //   });
   };
-
 
   const handleDeletePdf = (name, i) => {
     setData({
@@ -296,6 +293,7 @@ const AddSkillAssessment = ({ color = "light" }) => {
                       required
                       type="date"
                       value={data?.data_of_issue}
+                      onChange={handleInputChange}
                     />
                   </div>
 
@@ -306,6 +304,7 @@ const AddSkillAssessment = ({ color = "light" }) => {
                       required
                       type="date"
                       value={data?.date_of_expiry}
+                      onChange={handleInputChange}
                     />
                   </div>
                   <div className="relative w-full mb-3">
@@ -327,6 +326,7 @@ const AddSkillAssessment = ({ color = "light" }) => {
                       required
                       type="date"
                       value={data?.visa_expiry}
+                      onChange={handleInputChange}
                     />
                   </div>
                 </div>
@@ -363,7 +363,7 @@ const AddSkillAssessment = ({ color = "light" }) => {
                     {data?.academic?.map((data, i) => (
                       <div className="flex gap-4 items-center bg-gray-200 p-1 mt-2 rounded w-fit">
                         <img src={pdf} alt="" className="h-8" />
-                        <span>{data?.name.slice(0, 30)}</span>
+                        <span>{data?.name?.slice(0, 30)}</span>
                         <Delete
                           className="cursor-pointer"
                           onClick={() => handleDeletePdf("academic", i)}
@@ -381,7 +381,7 @@ const AddSkillAssessment = ({ color = "light" }) => {
                     {data?.py?.map((data, i) => (
                       <div className="flex gap-4 items-center bg-gray-200 p-1 mt-2 rounded w-fit">
                         <img src={pdf} alt="" className="h-8" />
-                        <span>{data?.name.slice(0, 30)}</span>
+                        <span>{data?.name?.slice(0, 30)}</span>
                         <Delete
                           className="cursor-pointer"
                           onClick={() => handleDeletePdf("py", i)}

@@ -1,6 +1,10 @@
 import React from "react";
 import { Popover } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
+import { API_URL } from "const/constants";
+import useKothar from "context/useKothar";
 
 const UserDropdown = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -16,6 +20,27 @@ const UserDropdown = () => {
     navigate("/");
   };
 
+  const [{ token }, { setToken }] = useKothar();
+  const fetchToken = () => {
+    fetch(`${API_URL}/auth/register`, {
+      method: "POST",
+
+      body: JSON.stringify({
+        firstName: "Divash",
+        lastName: "Ranabhat",
+        email: `test@gmail.com`,
+        password: "123456789",
+      }),
+
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((response) => response.json())
+
+      .then((json) => setToken(json?.token));
+  };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -26,7 +51,7 @@ const UserDropdown = () => {
     <>
       <a
         className="text-slate-500 block"
-        href="#pablo"
+        href="#"
         onClick={handleClick}
         aria-describedby={id}
       >
@@ -60,30 +85,38 @@ const UserDropdown = () => {
             "bg-white text-base z-50 float-left py-2 list-none text-left rounded shadow-lg min-w-48"
           }
         >
-          <a
-            href="#pablo"
+          <Link
+            to="/"
             className={
               "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-slate-700"
             }
           >
             Divash Ranabhat
-          </a>
-          <a
-            href="#pablo"
+          </Link>
+          <Link
+            to="/"
             className={
               "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-slate-700"
             }
           >
             Profile
-          </a>
-          <a
-            href="#pablo"
+          </Link>
+          <Link
+            to="/"
             className={
               "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-slate-700"
             }
           >
             Settings
-          </a>
+          </Link>
+          <button
+            className={
+              "text-sm py-2 px-4 font-normal w-full whitespace-nowrap bg-transparent text-slate-700 text-left"
+            }
+            onClick={fetchToken}
+          >
+            Fetch Token
+          </button>
           <div className="h-0 my-2 border border-solid border-slate-100" />
           <p
             onClick={logOut}

@@ -1,10 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "const/axios";
+import axios from "axios";
+// import axios from "const/axios";
 
 import { API_URL } from "const/constants";
+import { useEffect } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 
 const useStateAndActions = () => {
+  const [token, setToken] = useState();
+
+ 
   const getData = async () => {
     const res = await axios.get(`organization/list`);
     return res?.data?.data;
@@ -86,6 +92,17 @@ const useStateAndActions = () => {
       //   },
     }
   );
+  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+  useEffect(() => {
+    if (token) {
+      refetchConsultancy();
+      refetchUniData();
+      refetchCourseList();
+      refetchStudent();
+      refetchUsers();
+    }
+  }, [token]);
 
   const state = {
     consultancyList,
@@ -93,6 +110,7 @@ const useStateAndActions = () => {
     courseList,
     studentList,
     usersList,
+    token,
   };
   const actions = {
     refetchConsultancy,
@@ -100,6 +118,7 @@ const useStateAndActions = () => {
     refetchCourseList,
     refetchStudent,
     refetchUsers,
+    setToken,
   };
 
   return [state, actions];
