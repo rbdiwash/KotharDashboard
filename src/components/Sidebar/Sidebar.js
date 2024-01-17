@@ -11,6 +11,7 @@ export default function Sidebar() {
   const location = useLocation();
   const options = [
     { label: "Dashboard", value: "dashboard", icon: "fas fa-tv" },
+    { label: "Clients", value: "client", icon: "fas fa-user" },
     { label: "University", value: "university", icon: "fas fa-school" },
     { label: "courses", value: "courses", icon: "fas fa-briefcase" },
     {
@@ -117,9 +118,9 @@ export default function Sidebar() {
               </div>
             </form>
             <hr className="mb-4 md:min-w-full" />
-            <h6 className="md:min-w-full text-slate-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
+            {/* <h6 className="md:min-w-full text-slate-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
               Admin Panel
-            </h6>
+            </h6> */}
             <ul className="md:flex-col md:min-w-full flex flex-col list-none">
               {options.map((item) => (
                 <li className="items-center" key={item?.value}>
