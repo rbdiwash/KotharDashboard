@@ -36,6 +36,7 @@ const WorkExperience = ({ workInfo, setWorkInfo }) => {
           <div className="relative w-full">
             <TextField
               fullWidth
+              size="small"
               label="Name of Organization"
               placeholder="Name of Organization"
               name="nameofOrg"

@@ -22,6 +22,7 @@ import { toast } from "react-toastify";
 import { IoArrowBack } from "react-icons/io5";
 import useKothar from "context/useKothar";
 import ClearIcon from "@mui/icons-material/Clear";
+import ClientDropdown from "components/Dropdowns/ClientDropdown";
 
 const AddRPLCertificate = ({ color = "light" }) => {
   const [data, setData] = useState({
@@ -199,7 +200,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                 </p>
                 <div className="grid grid-cols-2 gap-8">
                   <div className="relative w-full mb-3">
-                    <InputField
+                    {/* <InputField
                       label="Full Name"
                       placeholder="Full Name"
                       name="name"
@@ -207,7 +208,8 @@ const AddRPLCertificate = ({ color = "light" }) => {
                       type="text"
                       value={data?.name}
                       onChange={handleInputChange}
-                    />
+                    /> */}
+                    <ClientDropdown {...{ data, setData }} />
                   </div>
                   <div className="relative w-full mb-3">
                     <InputField
@@ -350,6 +352,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                           maxHeight: "180px",
                         },
                       }}
+                      size="small"
                     />
                   </div>
                   <div className="relative w-full mb-3">

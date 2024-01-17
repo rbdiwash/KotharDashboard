@@ -144,6 +144,7 @@ const Accounts = ({ color = "light" }) => {
               <form className="flex items-center justify-between w-full  rounded mr-3">
                 <div className="relative flex mx-auto  items-center">
                   <Autocomplete
+                    size="small"
                     disablePortal
                     options={options}
                     sx={{ width: 300 }}
@@ -153,6 +154,7 @@ const Accounts = ({ color = "light" }) => {
                     )}
                   />
                   <Autocomplete
+                    size="small"
                     disablePortal
                     options={options}
                     sx={{ width: 500 }}

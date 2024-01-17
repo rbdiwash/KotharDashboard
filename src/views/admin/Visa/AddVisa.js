@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 import pdf from "../../../assets/img/pdf.png";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DownloadIcon from "@mui/icons-material/Download";
+import ClientDropdown from "components/Dropdowns/ClientDropdown";
 
 const AddVisaDetails = ({ color = "light" }) => {
   const [data, setData] = useState({
@@ -208,17 +209,8 @@ const AddVisaDetails = ({ color = "light" }) => {
                   Personal Details
                 </p>
                 <div className="grid grid-cols-2 gap-8">
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Full Name"
-                      placeholder="Full Name"
-                      name="name"
-                      required
-                      type="text"
-                      value={data?.name}
-                      onChange={handleInputChange}
-                    />
-                  </div>
+                  <ClientDropdown {...{ data, setData }} />
+
                   <div className="relative w-full mb-3">
                     <InputField
                       label="Address"

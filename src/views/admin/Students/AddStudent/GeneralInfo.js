@@ -7,6 +7,7 @@ import {
   RadioGroup,
   TextField,
 } from "@mui/material";
+import ClientDropdown from "components/Dropdowns/ClientDropdown";
 import InputField from "components/Input/InputField";
 
 const GeneralInfo = ({ generalInfo, setGeneralInfo }) => {
@@ -26,21 +27,11 @@ const GeneralInfo = ({ generalInfo, setGeneralInfo }) => {
 
   return (
     <div className="grid grid-cols-3 gap-8 mt-6 items-end">
+      <ClientDropdown data={generalInfo} setData={setGeneralInfo} />
       <div className="relative w-full mb-3">
-        <TextField
+        <InputField
           fullWidth
-          label="Name"
-          placeholder="Enter Full Name"
-          name="name"
-          required
-          type="text"
-          value={generalInfo?.name}
-          onChange={handleInputChange}
-        />
-      </div>
-      <div className="relative w-full mb-3">
-        <TextField
-          fullWidth
+          size="small"
           type="email"
           placeholder="Email Address"
           name="email"
@@ -51,8 +42,9 @@ const GeneralInfo = ({ generalInfo, setGeneralInfo }) => {
         />
       </div>
       <div className="relative w-full mb-3">
-        <TextField
+        <InputField
           fullWidth
+          size="small"
           label="Mobile Number"
           placeholder="Mobile Number"
           name="number"
@@ -99,8 +91,8 @@ const GeneralInfo = ({ generalInfo, setGeneralInfo }) => {
       <div className="relative w-full mb-3">
         <Autocomplete
           disablePortal
+          size="small"
           required
-          size="medium"
           id="combo-box-demo"
           options={[
             { label: "Single", value: "single" },
@@ -108,7 +100,7 @@ const GeneralInfo = ({ generalInfo, setGeneralInfo }) => {
             { label: "Divorced", value: "divorced" },
           ]}
           renderInput={(params) => (
-            <TextField {...params} label="Marital Status" />
+            <InputField {...params} label="Marital Status" />
           )}
           onChange={(e, value) => {
             setGeneralInfo((prevState) => ({
@@ -119,8 +111,9 @@ const GeneralInfo = ({ generalInfo, setGeneralInfo }) => {
         />
       </div>
       <div className="relative w-full mb-3">
-        <TextField
+        <InputField
           fullWidth
+          size="small"
           required
           type="text"
           placeholder="Emergency Contact Name"
@@ -131,8 +124,9 @@ const GeneralInfo = ({ generalInfo, setGeneralInfo }) => {
         />
       </div>
       <div className="relative w-full mb-3">
-        <TextField
+        <InputField
           fullWidth
+          size="small"
           required
           type="email"
           placeholder="Emergency Email"
@@ -143,8 +137,9 @@ const GeneralInfo = ({ generalInfo, setGeneralInfo }) => {
         />
       </div>
       <div className="relative w-full mb-3">
-        <TextField
+        <InputField
           fullWidth
+          size="small"
           required
           type="number"
           placeholder="Emergency Contact Number"
@@ -155,8 +150,9 @@ const GeneralInfo = ({ generalInfo, setGeneralInfo }) => {
         />
       </div>
       <div className="relative w-full mb-3">
-        <TextField
+        <InputField
           fullWidth
+          size="small"
           required
           type="text"
           placeholder="Relation With Applicant"

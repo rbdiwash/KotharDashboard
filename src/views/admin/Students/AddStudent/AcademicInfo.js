@@ -58,6 +58,8 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
       <hr />
       <div className="grid grid-cols-3 gap-8 mt-6">
         <div className="relative w-full mb-3">
+          <label className="input-label">Select Board *</label>
+
           <Autocomplete
             onChange={(e, value) => {
               setAcademicInfo((prevState) => ({
@@ -68,9 +70,6 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             required
             value={academicInfo?.tenth?.board}
             name="tenth.board"
-            placeholder="Name of Board"
-            label="Name of Board"
-            defaultValue="Name of Board"
             options={[
               { label: "NEB", value: "neb" },
               { label: "HSEB", value: "hseb" },
@@ -78,11 +77,13 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             renderInput={(params) => (
               <TextField {...params} label="Select Board" />
             )}
+            size="small"
           />
         </div>
         <div className="relative col-span-2 w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             label="Name of the Institution"
             placeholder="Name of the Institution"
             name="tenth.nameOfSchool"
@@ -93,8 +94,9 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             label="Primary medium of Instruction"
             placeholder="Primary medium of Instruction"
             name="tenth.primaryMediumOfInstruction"
@@ -105,8 +107,9 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             label="Country of Study"
             placeholder="Country of Study"
             name="tenth.countryOfStudy"
@@ -117,8 +120,9 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             label="State of study"
             placeholder="State of study"
             name="tenth.stateOfStudy"
@@ -129,6 +133,8 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
+          <label className="input-label">Select Grading System *</label>
+
           <Autocomplete
             onChange={(e, value) => {
               setAcademicInfo((prevState) => ({
@@ -138,7 +144,6 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             }}
             required
             disablePortal
-            size="medium"
             id="combo-box-demo"
             options={[
               { label: "GPA", value: "gpa" },
@@ -147,11 +152,13 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             renderInput={(params) => (
               <TextField {...params} label="Grading System" />
             )}
+            size="small"
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             label="Score"
             placeholder="Score"
             name="tenth.score"
@@ -162,8 +169,9 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             type="text"
             placeholder="Your Score Out Of"
             name="tenth.scoreOutOf"
@@ -174,8 +182,9 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             label="Passout year"
             placeholder="Passout year"
             name="tenth.passsOutYear"
@@ -186,8 +195,9 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             type="text"
             placeholder="Degree"
             name="tenth.degree"
@@ -198,8 +208,9 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             type="text"
             placeholder="Degree title"
             name="tenth.degreeTitle"
@@ -232,6 +243,8 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
       <hr />
       <div className="grid grid-cols-3 gap-8 mt-6">
         <div className="relative w-full mb-3">
+          <label className="input-label">Select Board *</label>
+
           <Autocomplete
             onChange={(e, value) => {
               setAcademicInfo((prevState) => ({
@@ -242,9 +255,6 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             required
             value={academicInfo?.higher?.board}
             name="higher.board"
-            placeholder="Name of Board"
-            label="Name of Board"
-            defaultValue="Name of Board"
             options={[
               { label: "NEB", value: "neb" },
               { label: "HSEB", value: "hseb" },
@@ -252,11 +262,13 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             renderInput={(params) => (
               <TextField {...params} label="Select Board" />
             )}
+            size="small"
           />
         </div>
         <div className="relative col-span-2 w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             label="Name of the Institution"
             placeholder="Name of the Institution"
             name="higher.number"
@@ -267,8 +279,9 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             label="Primary medium of Instruction"
             placeholder="Primary medium of Instruction"
             name="higher.primaryMediumOfInstruction"
@@ -279,8 +292,9 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             label="Country of Study"
             placeholder="Country of Study"
             name="higher.countryOfStudy"
@@ -291,8 +305,9 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             label="State of study"
             placeholder="State of study"
             name="higher.stateOfStudy"
@@ -303,7 +318,10 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
+          <label className="input-label">Select Grading System *</label>
+
           <Autocomplete
+            size="small"
             onChange={(e, value) => {
               setAcademicInfo((prevState) => ({
                 ...prevState,
@@ -312,7 +330,6 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             }}
             required
             disablePortal
-            size="medium"
             id="combo-box-demo"
             options={[
               { label: "GPA", value: "gpa" },
@@ -324,8 +341,9 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             label="Score"
             placeholder="Score"
             name="higher.tenthScore"
@@ -336,8 +354,9 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             type="text"
             placeholder="Your Score Out Of"
             name="higher.email"
@@ -348,8 +367,9 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             label="Passout year"
             placeholder="Passout year"
             name="higher.passsOutYear"
@@ -360,7 +380,8 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
+            size="small"
             fullWidth
             type="text"
             placeholder="Degree"
@@ -372,7 +393,8 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
+            size="small"
             fullWidth
             type="text"
             placeholder="Degree title"
@@ -406,7 +428,10 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
       <hr />
       <div className="grid grid-cols-3 gap-8 mt-6">
         <div className="relative w-full mb-3">
+          <label className="input-label">Select Board *</label>
+
           <Autocomplete
+            size="small"
             onChange={(e, value) => {
               setAcademicInfo((prevState) => ({
                 ...prevState,
@@ -415,9 +440,6 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             }}
             value={academicInfo?.bachelor?.board}
             name="bachelor.board"
-            placeholder="Name of Board"
-            label="Name of Board"
-            defaultValue="Name of Board"
             options={[
               { label: "NEB", value: "neb" },
               { label: "HSEB", value: "hseb" },
@@ -428,8 +450,9 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           />
         </div>
         <div className="relative col-span-2 w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             label="Name of the Institution"
             placeholder="Name of the Institution"
             name="bachelor.number"
@@ -439,8 +462,9 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             label="Primary medium of Instruction"
             placeholder="Primary medium of Instruction"
             name="bachelor.primaryMediumOfInstruction"
@@ -450,7 +474,8 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
+            size="small"
             fullWidth
             label="Country of Study"
             placeholder="Country of Study"
@@ -461,7 +486,8 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
+            size="small"
             fullWidth
             label="State of study"
             placeholder="State of study"
@@ -472,7 +498,10 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
+          <label className="input-label">Select Grading System *</label>
+
           <Autocomplete
+            size="small"
             onChange={(e, value) => {
               setAcademicInfo((prevState) => ({
                 ...prevState,
@@ -480,7 +509,6 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
               }));
             }}
             disablePortal
-            size="medium"
             id="combo-box-demo"
             options={[
               { label: "GPA", value: "gpa" },
@@ -492,8 +520,9 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             label="Score"
             placeholder="Score"
             name="bachelor.tenthScore"
@@ -503,8 +532,9 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             type="text"
             placeholder="Your Score Out Of"
             name="bachelor.email"
@@ -514,8 +544,9 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             label="Passout year"
             placeholder="Passout year"
             name="bachelor.passsOutYear"
@@ -525,8 +556,9 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             type="text"
             placeholder="Degree"
             name="bachelor.degree"
@@ -536,9 +568,10 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
             type="text"
+            size="small"
             placeholder="Degree title"
             name="bachelor.degreeTitle"
             label="Degree title"

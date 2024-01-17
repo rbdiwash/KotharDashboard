@@ -70,11 +70,13 @@ const TestInfo = ({ testInfo, setTestInfo }) => {
             renderInput={(params) => (
               <TextField {...params} label="Select Test Type" />
             )}
+            size="small"
           />
         </div>
         <div className="relative w-full mb-3">
           <TextField
             fullWidth
+            size="small"
             label="Overall Score"
             placeholder="Overall Score"
             name="score"
@@ -88,6 +90,7 @@ const TestInfo = ({ testInfo, setTestInfo }) => {
         <div className="relative w-full mb-3">
           <TextField
             fullWidth
+            size="small"
             label="Unique ID"
             placeholder="Unique ID"
             name="uniqueId"
@@ -199,11 +202,13 @@ const TestInfo = ({ testInfo, setTestInfo }) => {
             renderInput={(params) => (
               <TextField {...params} label="Select Test Type" />
             )}
+            size="small"
           />
         </div>
         <div className="relative w-full mb-3">
           <TextField
             fullWidth
+            size="small"
             label="Overall Score"
             placeholder="Overall Score"
             name="score2"
@@ -217,6 +222,7 @@ const TestInfo = ({ testInfo, setTestInfo }) => {
         <div className="relative w-full mb-3">
           <TextField
             fullWidth
+            size="small"
             label="Unique ID"
             placeholder="Unique ID"
             name="uniqueId2"

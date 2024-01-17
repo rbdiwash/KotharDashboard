@@ -82,8 +82,9 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
 
       <div className="grid grid-cols-3 gap-8 mt-2 items-end">
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             label="Country"
             placeholder="Country"
             name="permanent.country"
@@ -94,8 +95,9 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             type="text"
             placeholder="Issue Date"
             name="permanent.state"
@@ -106,8 +108,9 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             type="text"
             placeholder="City"
             name="permanent.city"
@@ -118,8 +121,9 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             label="ZIP Code"
             placeholder="ZIP Code"
             name="permanent.zip"
@@ -139,8 +143,9 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
       />
       <div className="grid grid-cols-3 gap-8 mt-2 items-end">
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             label="Country"
             placeholder="Country"
             name="temp.country"
@@ -151,8 +156,9 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             type="text"
             placeholder="State/Province"
             name="temp.state"
@@ -163,8 +169,9 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             type="text"
             placeholder="City"
             name="temp.city"
@@ -175,8 +182,9 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             label="ZIP Code"
             placeholder="ZIP Code"
             name="temp.zip"
@@ -191,8 +199,9 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
 
       <div className="grid grid-cols-3 gap-8 mt-6 items-end">
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             label="Passport Number"
             placeholder="Passport Number"
             name="passport.number"
@@ -203,8 +212,9 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
           />
         </div>{" "}
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             type="text"
             placeholder="Country"
             name="passport.country"
@@ -215,8 +225,9 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
           />
         </div>
         <div className="relative w-full mb-3">
-          <TextField
+          <InputField
             fullWidth
+            size="small"
             label="Place of Birth"
             placeholder="Place of Birth"
             name="passport.placeOfBirth"
@@ -278,7 +289,7 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
             </RadioGroup>
           </FormControl>
           {addressInfo?.moreThanOneCitizen === "yes" && (
-            <TextField
+            <InputField
               fullWidth
               label="Name of the Country"
               placeholder="Name of the Country"
@@ -306,7 +317,7 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
             </RadioGroup>
           </FormControl>
           {addressInfo?.livingInAnotherCountry === "yes" && (
-            <TextField
+            <InputField
               fullWidth
               label="Name of the Country"
               placeholder="Name of the Country"
@@ -334,7 +345,7 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
             </RadioGroup>
           </FormControl>
           {addressInfo?.refusedFromAnyCountry === "yes" && (
-            <TextField
+            <InputField
               fullWidth
               label="Name of the Country"
               placeholder="Mention the name of the Country"
@@ -362,7 +373,7 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
             </RadioGroup>
           </FormControl>
           {addressInfo?.seriousMedicalCondition === "yes" && (
-            <TextField
+            <InputField
               fullWidth
               label="Name of the Medical Condition"
               placeholder="Mention the name of the Condition"
@@ -390,7 +401,7 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
             </RadioGroup>
           </FormControl>
           {addressInfo?.criminalOffence === "yes" && (
-            <TextField
+            <InputField
               fullWidth
               label="Cause of Criminal Offense"
               placeholder="Mention the Cause of Criminal Offense"
@@ -418,7 +429,7 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
             </RadioGroup>
           </FormControl>
           {addressInfo?.immigrationToOtherCountry === "yes" && (
-            <TextField
+            <InputField
               fullWidth
               label="Name of the Country"
               placeholder="Mention the Name of the Country"

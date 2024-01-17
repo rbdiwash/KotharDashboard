@@ -72,21 +72,6 @@ const AddClient = ({ color = "light" }) => {
     mutate({ ...data });
   };
 
-  const handleFileChange = (e, type) => {
-    const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append("file", file);
-    axios
-      .post(`${API_URL}/api/upload`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      })
-      .then((res) => {
-        setData({ ...data, [type]: res?.data?.data?.url });
-      })
-      .catch((err) => {
-        toast.error("Error Uploading file");
-      });
-  };
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">

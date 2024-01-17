@@ -112,6 +112,7 @@ const AddAccounts = ({ color = "light" }) => {
                   renderInput={(params) => (
                     <TextField {...params} placeholder="Select Type" />
                   )}
+                  size="small"
                 />
                 <Autocomplete
                   disablePortal
@@ -121,6 +122,7 @@ const AddAccounts = ({ color = "light" }) => {
                   renderInput={(params) => (
                     <TextField {...params} placeholder="Search using Name" />
                   )}
+                  size="small"
                 />
 
                 <Button variant="contained">Search </Button>
@@ -217,7 +219,7 @@ const AddAccounts = ({ color = "light" }) => {
                                 type="date"
                                 name="date"
                                 onChange={(e) => handleInputChange(e, index)}
-                                value={item?.date} 
+                                value={item?.date}
                               />
                             </td>
                             <td className="border text-center px-4 py-2">

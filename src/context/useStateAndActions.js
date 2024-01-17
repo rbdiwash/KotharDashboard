@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 // import axios from "const/axios";
-
 import { API_URL } from "const/constants";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -10,12 +9,25 @@ import { toast } from "react-toastify";
 const useStateAndActions = () => {
   const [token, setToken] = useState();
 
- 
   const getData = async () => {
     const res = await axios.get(`organization/list`);
     return res?.data?.data;
   };
   const { data: consultancyList, refetch: refetchConsultancy } = useQuery(
+    ["organization"],
+    getData,
+    {
+      refetchOnWindowFocus: false,
+      // onError: () => {
+      //   toast.error("Error Fetching Data");
+      // },
+    }
+  );
+  const getClientData = async () => {
+    const res = await axios.get(`client/list`);
+    return res?.data?.data;
+  };
+  const { data: clientList, refetch: refetchClient } = useQuery(
     ["organization"],
     getData,
     {
@@ -101,10 +113,12 @@ const useStateAndActions = () => {
       refetchCourseList();
       refetchStudent();
       refetchUsers();
+      refetchClient();
     }
   }, [token]);
 
   const state = {
+    clientList,
     consultancyList,
     uniData,
     courseList,
@@ -113,6 +127,7 @@ const useStateAndActions = () => {
     token,
   };
   const actions = {
+    refetchClient,
     refetchConsultancy,
     refetchUniData,
     refetchCourseList,

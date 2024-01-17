@@ -9,6 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import ClientDropdown from "components/Dropdowns/ClientDropdown";
 import InputField from "components/Input/InputField";
 import {
   API_URL,
@@ -117,18 +118,8 @@ export default function InsuranceModal({
           </BootstrapDialogTitle>
           <DialogContent dividers>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-end items-end min-w-[700px] px-4">
-              <div className="relative w-full mb-0">
-                <InputField
-                  label="Full Name"
-                  placeholder="Full Name"
-                  name="name"
-                  required
-                  type="text"
-                  value={data?.name}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="relative w-full mb-0">
+              <ClientDropdown {...{ data, setData }} />
+              <div className="relative w-full mb-3">
                 <InputField
                   label="Address"
                   placeholder="Address"
@@ -139,7 +130,7 @@ export default function InsuranceModal({
                   onChange={handleInputChange}
                 />
               </div>
-              <div className="relative w-full mb-0">
+              <div className="relative w-full mb-3">
                 <InputField
                   label="Phone Number"
                   placeholder="Phone Number"
@@ -150,11 +141,12 @@ export default function InsuranceModal({
                   onChange={handleInputChange}
                 />
               </div>
-              <div className="relative w-full mb-0">
+              <div className="relative w-full mb-3">
                 <label className="input-label">
                   Select Insurance Company *
                 </label>
                 <Autocomplete
+                  size="small"
                   onChange={(e, value) => {
                     setData((prevState) => ({
                       ...prevState,
@@ -175,7 +167,7 @@ export default function InsuranceModal({
                   }}
                 />
               </div>
-              <div className="relative w-full mb-0">
+              <div className="relative w-full mb-3">
                 <InputField
                   type="date"
                   placeholder="Start Date"
@@ -186,7 +178,7 @@ export default function InsuranceModal({
                   onChange={handleInputChange}
                 />
               </div>
-              <div className="relative w-full mb-0">
+              <div className="relative w-full mb-3">
                 <InputField
                   label="End Date"
                   placeholder="End Date"
@@ -197,7 +189,7 @@ export default function InsuranceModal({
                   onChange={handleInputChange}
                 />
               </div>
-              <div className="relative w-full mb-0">
+              <div className="relative w-full mb-3">
                 <InputField
                   type="text"
                   placeholder="Payment Type"
@@ -208,7 +200,7 @@ export default function InsuranceModal({
                   onChange={handleInputChange}
                 />
               </div>{" "}
-              <div className="relative w-full mb-0">
+              <div className="relative w-full mb-3">
                 <InputField
                   type="text"
                   placeholder="Cost"
@@ -219,9 +211,10 @@ export default function InsuranceModal({
                   onChange={handleInputChange}
                 />
               </div>
-              <div className="relative w-full mb-0">
+              <div className="relative w-full mb-3">
                 <label className="input-label">Select Insurance Type *</label>
                 <Autocomplete
+                  size="small"
                   onChange={(e, value) => {
                     setData((prevState) => ({
                       ...prevState,
@@ -246,7 +239,7 @@ export default function InsuranceModal({
                   }}
                 />
               </div>
-              <div className="relative w-full mb-0">
+              <div className="relative w-full mb-3">
                 <InputField
                   type="text"
                   placeholder="Case Officer"
@@ -257,11 +250,12 @@ export default function InsuranceModal({
                   onChange={handleInputChange}
                 />
               </div>
-              <div className="relative w-full mb-0">
+              <div className="relative w-full mb-3">
                 <label className="input-label">
                   Select Insurance Cover Type *
                 </label>
                 <Autocomplete
+                  size="small"
                   onChange={(e, value) => {
                     setData((prevState) => ({
                       ...prevState,
@@ -289,7 +283,7 @@ export default function InsuranceModal({
               {(data?.cover_type?.value === "couple" ||
                 data?.cover_type?.value === "family") && (
                 <>
-                  <div className="relative w-full mb-0">
+                  <div className="relative w-full mb-3">
                     <InputField
                       type="text"
                       placeholder="Spouse Name"
@@ -300,7 +294,7 @@ export default function InsuranceModal({
                       onChange={handleInputChange}
                     />
                   </div>
-                  <div className="relative w-full mb-0">
+                  <div className="relative w-full mb-3">
                     <InputField
                       type="text"
                       placeholder="Spouse Address"
