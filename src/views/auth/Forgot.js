@@ -19,7 +19,7 @@ export default function Forgot() {
     e.preventDefault();
     setMessage();
     axios
-      .post(`${API_URL}/api/forgot-password`, data)
+      .post(`${API_URL}/forgot-password`, data)
       .then((res) => {
         setMessage(res?.data?.message);
         setData({
