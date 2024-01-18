@@ -19,3 +19,61 @@ export const insurance_cover_type = [
   { label: "Family", value: "family" },
   { label: "Single Parent ", value: "single_parent" },
 ];
+export  const states = [
+  { label: "New South Wales", value: "New South Wales" },
+  { label: "Victoria", value: "Victoria" },
+  { label: "Queensland", value: "Queensland" },
+  { label: "Western Australia", value: "Western Australia" },
+  { label: "South Australia", value: "South Australia" },
+  { label: "Tasmania", value: "Tasmania" },
+];
+export const months = [
+  {
+    label: "Jan",
+    value: "January",
+  },
+  {
+    label: "Feb",
+    value: "February",
+  },
+  {
+    label: "March",
+    value: "March",
+  },
+  {
+    label: "Apr",
+    value: "April",
+  },
+  {
+    label: "May",
+    value: "May",
+  },
+  {
+    label: "Jun",
+    value: "June",
+  },
+  {
+    label: "July",
+    value: "July",
+  },
+  {
+    label: "Aug",
+    value: "August",
+  },
+  {
+    label: "Sep",
+    value: "September",
+  },
+  {
+    label: "Oct",
+    value: "October",
+  },
+  {
+    label: "Nov",
+    value: "November",
+  },
+  {
+    label: "Dec",
+    value: "December",
+  },
+];

@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import { API_URL } from "const/constants";
 import axios from "axios";
 import { IoArrowBack } from "react-icons/io5";
+import UniversityInfo from "./UniversityInfo";
 const AddStudent = () => {
   const steps = [
     "General Information",
@@ -230,7 +231,9 @@ const AddStudent = () => {
                 <Title title={"Work Experience"} />
                 <WorkExperience {...{ workInfo, setWorkInfo }} />
                 <Title title={"Language Test"} />
-                <TestInfo {...{ testInfo, setTestInfo }} />
+                <TestInfo {...{ testInfo, setTestInfo }} />{" "}
+                <Title title={"Course & University"} />
+                <UniversityInfo {...{ generalInfo, setGeneralInfo }} />
                 <div className="w-full flex justify-end mt-2 gap-4">
                   {/* <Button variant="outlined" component={Link} to=""> */}
                   <Button variant="outlined" onClick={() => navigate(-1)} to="">

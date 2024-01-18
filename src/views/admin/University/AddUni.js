@@ -9,6 +9,7 @@ import { IoArrowBack } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ClearIcon from "@mui/icons-material/Clear";
+import { states } from "const/constants";
 
 const AddUni = ({ color = "light" }) => {
   const [data, setData] = useState({
@@ -21,14 +22,6 @@ const AddUni = ({ color = "light" }) => {
     zipCode: null,
     image: null,
   });
-  const states = [
-    { label: "New South Wales", value: "New South Wales" },
-    { label: "Victoria", value: "Victoria" },
-    { label: "Queensland", value: "Queensland" },
-    { label: "Western Australia", value: "Western Australia" },
-    { label: "South Australia", value: "South Australia" },
-    { label: "Tasmania", value: "Tasmania" },
-  ];
 
   const navigate = useNavigate();
   const [{}, { refetchUniData }] = useKothar();
@@ -80,7 +73,7 @@ const AddUni = ({ color = "light" }) => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     const formData = new FormData();
-    formData.append("file",   );
+    formData.append("file");
     axios
       .post(`${API_URL}/api/upload`, formData, {
         headers: {
@@ -215,6 +208,7 @@ const AddUni = ({ color = "light" }) => {
                           maxHeight: "180px",
                         },
                       }}
+                      size="small"
                     />
                   </div>
                   <div className="relative w-full mb-3">

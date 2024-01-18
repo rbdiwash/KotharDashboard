@@ -100,7 +100,7 @@ const GeneralInfo = ({ generalInfo, setGeneralInfo }) => {
             { label: "Divorced", value: "divorced" },
           ]}
           renderInput={(params) => (
-            <InputField {...params} label="Marital Status" />
+            <TextField {...params} label="Marital Status" />
           )}
           onChange={(e, value) => {
             setGeneralInfo((prevState) => ({

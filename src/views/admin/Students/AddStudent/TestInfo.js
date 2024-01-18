@@ -53,11 +53,7 @@ const TestInfo = ({ testInfo, setTestInfo }) => {
               }));
             }}
             required
-            freeSolo
-            disablePortal
             value={testInfo?.testName}
-            id="testName"
-            placeholder="Test Type"
             label="Test Type"
             options={[
               { label: "IELTS", value: "ielts" },
@@ -67,6 +63,7 @@ const TestInfo = ({ testInfo, setTestInfo }) => {
               { label: "Duo Lingo", value: "duoLingo" },
               { label: "IELTS Waiver", value: "waiver" },
             ]}
+            disablePortal
             renderInput={(params) => (
               <TextField {...params} label="Select Test Type" />
             )}
@@ -119,7 +116,7 @@ const TestInfo = ({ testInfo, setTestInfo }) => {
         <>
           <div className="grid grid-cols-4 gap-8 mt-2">
             <div className="relative w-full mb-3">
-              <TextField
+              <InputField
                 fullWidth
                 label="Speaking Score"
                 placeholder="Speaking Score"
@@ -131,7 +128,7 @@ const TestInfo = ({ testInfo, setTestInfo }) => {
               />
             </div>
             <div className="relative w-full mb-3">
-              <TextField
+              <InputField
                 fullWidth
                 label="Listening Score"
                 placeholder="Listening Score"
@@ -143,7 +140,7 @@ const TestInfo = ({ testInfo, setTestInfo }) => {
               />
             </div>
             <div className="relative w-full mb-3">
-              <TextField
+              <InputField
                 fullWidth
                 label="Reading Score"
                 placeholder="Reading Score"
@@ -155,7 +152,7 @@ const TestInfo = ({ testInfo, setTestInfo }) => {
               />
             </div>
             <div className="relative w-full mb-3">
-              <TextField
+              <InputField
                 fullWidth
                 label="Writing Score"
                 placeholder="Writing Score"
@@ -188,7 +185,6 @@ const TestInfo = ({ testInfo, setTestInfo }) => {
               }));
             }}
             required
-            freeSolo
             disablePortal
             value={testInfo?.testName2}
             id="testName2"

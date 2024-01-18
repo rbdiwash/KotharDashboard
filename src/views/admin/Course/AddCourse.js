@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { IoArrowBack } from "react-icons/io5";
 import useKothar from "context/useKothar";
+import { months } from "const/constants";
 
 const AddCourse = ({ color = "light" }) => {
   const [data, setData] = useState({
@@ -167,6 +168,7 @@ const AddCourse = ({ color = "light" }) => {
                           maxHeight: "180px",
                         },
                       }}
+                      size="small"
                     />
                   </div>
                   <div className="relative w-full mb-3">
@@ -192,6 +194,7 @@ const AddCourse = ({ color = "light" }) => {
                           maxHeight: "180px",
                         },
                       }}
+                      size="small"
                     />
                   </div>
                   <div className="relative w-full mb-3">
@@ -225,54 +228,3 @@ const AddCourse = ({ color = "light" }) => {
 };
 
 export default AddCourse;
-
-const months = [
-  {
-    label: "Jan",
-    value: "January",
-  },
-  {
-    label: "Feb",
-    value: "February",
-  },
-  {
-    label: "March",
-    value: "March",
-  },
-  {
-    label: "Apr",
-    value: "April",
-  },
-  {
-    label: "May",
-    value: "May",
-  },
-  {
-    label: "Jun",
-    value: "June",
-  },
-  {
-    label: "July",
-    value: "July",
-  },
-  {
-    label: "Aug",
-    value: "August",
-  },
-  {
-    label: "Sep",
-    value: "September",
-  },
-  {
-    label: "Oct",
-    value: "October",
-  },
-  {
-    label: "Nov",
-    value: "November",
-  },
-  {
-    label: "Dec",
-    value: "December",
-  },
-];
