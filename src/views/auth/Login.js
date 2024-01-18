@@ -36,7 +36,7 @@ export default function Login() {
   };
 
   async function postData(payload) {
-    const resp = await axios.post(`${API_URL}/signin`, payload);
+    const resp = await axios.post(`${API_URL}/auth/authenticate`, payload);
     return resp;
   }
 
