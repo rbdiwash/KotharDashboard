@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Autocomplete, Button, TextField } from "@mui/material";
 import InputField from "components/Input/InputField";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -18,6 +18,7 @@ import { API_URL } from "const/constants";
 import axios from "axios";
 import { IoArrowBack } from "react-icons/io5";
 import UniversityInfo from "./UniversityInfo";
+import { student_status } from "const/constants";
 const AddStudent = () => {
   const steps = [
     "General Information",
@@ -121,8 +122,8 @@ const AddStudent = () => {
           }
         >
           <div className="rounded-t mb-0 px-10 py-3 border-0">
-            <div className="flex flex-wrap items-center">
-              <div className="relative   max-w-full flex justify-start gap-4 items-center">
+            <div className="flex justify-between items-center">
+              <div className="relative flex justify-start gap-4 items-center">
                 <IoArrowBack
                   className="text-xl cursor-pointer"
                   onClick={() => navigate(-1)}
@@ -131,6 +132,29 @@ const AddStudent = () => {
                   Add Student
                 </h3>
               </div>
+              <Autocomplete
+                onChange={(e, value) => {
+                  setGeneralInfo((prevState) => ({
+                    ...prevState,
+                    student_status: value,
+                  }));
+                }}
+                required
+                value={data?.student_status}
+                placeholder="Select Student Status"
+                options={student_status}
+                disablePortal
+                renderInput={(params) => (
+                  <TextField {...params} label="Select Student Status" />
+                )}
+                ListboxProps={{
+                  style: {
+                    maxHeight: "180px",
+                  },
+                }}
+                size="small"
+                sx={{ width: 300 }}
+              />
             </div>
           </div>
           <div className="block w-full overflow-x-auto mt-4 studentForm">

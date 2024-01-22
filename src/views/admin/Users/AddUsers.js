@@ -1,4 +1,15 @@
-import { Button, FormControl, MenuItem, Select } from "@mui/material";
+import {
+  Button,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  MenuItem,
+  RadioGroup,
+  Select,
+  Radio,
+  Autocomplete,
+  TextField,
+} from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import InputField from "components/Input/InputField";
@@ -45,7 +56,12 @@ const AddUsers = () => {
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    mutate({ ...data, mfa: true });
+    mutate({
+      ...data,
+      mfa: true,
+      type: data?.type?.value,
+      orgId: data?.orgId?.value,
+    });
   };
   return (
     <div className="flex flex-wrap mt-4 dashBody">
@@ -94,7 +110,6 @@ const AddUsers = () => {
                       onChange={handleInputChange}
                     />
                   </div>
-
                   <div className="relative w-full mb-3">
                     <InputField
                       type="email"
@@ -129,14 +144,27 @@ const AddUsers = () => {
                     />
                   </div>
                   <div className="relative w-full mb-3">
-                    <SelectField
-                      onChange={handleInputChange}
-                      required
+                    <label
+                      className="block uppercase text-slate-600 text-xs font-bold mb-2"
+                      htmlFor="grid-password"
+                    >
+                      Select Consultancy *
+                    </label>
+                    <Autocomplete
+                      disablePortal
+                      size="small"
                       value={data?.orgId}
-                      name="orgId"
-                      placeholder="Select Consultancy"
-                      label="Select Consultancy"
-                      options={consultancyList}
+                      required
+                      options={consultancyList || []}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Select Consultancy" />
+                      )}
+                      onChange={(e, value) => {
+                        setData((prevState) => ({
+                          ...prevState,
+                          orgId: value,
+                        }));
+                      }}
                     />
                   </div>
                   <div className="relative w-full mb-3">
@@ -144,18 +172,50 @@ const AddUsers = () => {
                       className="block uppercase text-slate-600 text-xs font-bold mb-2"
                       htmlFor="grid-password"
                     >
-                      User Type
+                      User Type *
                     </label>
-                    <FormControl fullWidth size="small">
-                      <Select
-                        value={data?.type}
-                        name="type"
-                        onChange={handleInputChange}
+                    <Autocomplete
+                      disablePortal
+                      size="small"
+                      required
+                      options={[
+                        { label: "Admin", value: "admin" },
+                        { label: "User", value: "user" },
+                      ]}
+                      renderInput={(params) => (
+                        <TextField {...params} label="User Type" />
+                      )}
+                      onChange={(e, value) => {
+                        setData((prevState) => ({
+                          ...prevState,
+                          type: value,
+                        }));
+                      }}
+                    />
+                  </div>{" "}
+                  <div className="relative w-full mb-1">
+                    <FormControl>
+                      <FormLabel className="text-slate-600 uppercase text-xs font-bold mb-2">
+                        Access to Discussion *
+                      </FormLabel>
+                      <RadioGroup
+                        row
                         required
+                        defaultValue="yes"
+                        name="access_to_discussion"
                       >
-                        <MenuItem value={"ADMIN"}>Admin</MenuItem>
-                        <MenuItem value={"USER"}>User</MenuItem>
-                      </Select>
+                        <FormControlLabel
+                          value="Yes"
+                          control={<Radio />}
+                          label="Yes"
+                        />
+
+                        <FormControlLabel
+                          value="No"
+                          control={<Radio />}
+                          label="No"
+                        />
+                      </RadioGroup>
                     </FormControl>
                   </div>
                 </div>

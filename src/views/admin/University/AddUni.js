@@ -47,8 +47,8 @@ const AddUni = ({ color = "light" }) => {
       toast.success(
         data?.id ? "Data updated Successfully" : "Data added Successfully"
       );
-      navigate("/admin/university");
       refetchUniData();
+      navigate("/admin/university");
     },
     onError() {
       toast.error(data?.id ? "Error Updating Data" : "Error Submitting Data");

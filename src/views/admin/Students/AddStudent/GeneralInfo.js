@@ -53,7 +53,7 @@ const GeneralInfo = ({ generalInfo, setGeneralInfo }) => {
           value={generalInfo?.number}
           onChange={handleInputChange}
         />
-      </div>{" "}
+      </div>
       <div className="relative w-full mb-3">
         <FormControl>
           <FormLabel className="text-slate-600 uppercase text-xs font-bold mb-2">
@@ -75,7 +75,7 @@ const GeneralInfo = ({ generalInfo, setGeneralInfo }) => {
             <FormControlLabel value="other" control={<Radio />} label="Other" />
           </RadioGroup>
         </FormControl>
-      </div>{" "}
+      </div>
       <div className="relative w-full mb-3">
         <InputField
           fullWidth
