@@ -21,6 +21,10 @@ const Consultancy = ({ color = "light" }) => {
   const [{ consultancyList }, { refetchConsultancy }] = useKothar();
 
   const deleteData = () => {
+    // axios({
+    //   method: "delete",
+    //   url: `${API_URL}/organization/delete/${openConfirmationModal?.id}`,
+    // })
     axios
       .delete(`${API_URL}/organization/delete/${openConfirmationModal?.id}`)
       .then((res) => {

@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { API_URL } from "const/constants";
 import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
+import useKothar from "context/useKothar";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ export default function Login() {
     setData((prevState) => ({ ...prevState, [name]: value }));
   };
   const [message, setMessage] = useState({});
+  const [{ token }, { setToken }] = useKothar();
 
   const validateEmail = (email) => {
     return String(email)
@@ -36,7 +38,10 @@ export default function Login() {
   };
 
   async function postData(payload) {
+    delete axios.defaults.headers.common["Authorization"];
+
     const resp = await axios.post(`${API_URL}/auth/authenticate`, payload);
+
     return resp;
   }
 
@@ -51,7 +56,8 @@ export default function Login() {
         username: "",
         password: "",
       });
-      localStorage.setItem("token", res?.data?.accessToken);
+      localStorage.setItem("token", res?.data?.token);
+      setToken(res?.data?.token);
       res?.data?.data?.mfa
         ? navigate("/email/verify")
         : navigate("/admin/dashboard");

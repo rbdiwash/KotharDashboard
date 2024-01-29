@@ -18,12 +18,14 @@ const University = ({ color = "light" }) => {
   const [{ uniData }, { refetchUniData }] = useKothar();
   const [searchText, setSearchText] = useState("");
   const deleteData = () => {
-    axios
-      .delete(`${API_URL}/university/delete/${openConfirmationModal?.id}`)
+    axios({
+      method: "delete",
+      url: `${API_URL}/university/delete/${openConfirmationModal?.id}`,
+    })
       .then((res) => {
-        toast.success("Data Deleted Successfully");
-        setOpenConfirmationModal({ state: false, id: null });
-        refetchUniData();
+        // toast.success("Data Deleted Successfully");
+        // setOpenConfirmationModal({ state: false, id: null });
+        // refetchUniData();
       })
       .error((err) => {
         toast.error("Error Deleting Data");

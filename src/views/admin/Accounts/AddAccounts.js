@@ -21,7 +21,6 @@ const AddAccounts = ({ color = "light" }) => {
   const navigate = useNavigate();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [installments, setInstallments] = useState([{ index: 1 }]);
-  console.log("🚀  installments:", installments);
   const [{ courseList }, { refetchCourseList }] = useKothar();
   const [{ token }, { setToken }] = useKothar();
 

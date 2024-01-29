@@ -7,7 +7,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 
 const useStateAndActions = () => {
-  const [token, setToken] = useState();
+  const [token, setToken] = useState(localStorage.getItem("token"));
 
   const getData = async () => {
     const res = await axios.get(`organization/list`);
@@ -105,7 +105,6 @@ const useStateAndActions = () => {
     }
   );
   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
   useEffect(() => {
     if (token) {
       refetchConsultancy();

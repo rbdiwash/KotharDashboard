@@ -18,7 +18,7 @@ const Clients = ({ color = "light" }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [searchText, setSearchText] = useState("");
 
-  const [{ consultancyList }, { refetchConsultancy }] = useKothar();
+  const [{ clientList }, { refetchClient }] = useKothar();
 
   const deleteData = () => {
     axios
@@ -26,7 +26,7 @@ const Clients = ({ color = "light" }) => {
       .then((res) => {
         toast.success("Data Deleted Successfully");
         setOpenConfirmationModal({ state: false, id: null });
-        refetchConsultancy();
+        refetchClient();
       })
       .error((err) => {
         toast.error("Error Deleting Data");
@@ -84,8 +84,8 @@ const Clients = ({ color = "light" }) => {
                 </tr>
               </thead>
               <tbody>
-                {consultancyList?.length > 0 ? (
-                  consultancyList?.map((item, index) => (
+                {clientList?.length > 0 ? (
+                  clientList?.map((item, index) => (
                     <tr key={item?.id || index}>
                       <td className="table-data text-left flex items-center">
                         {ImageName(item?.name)}
