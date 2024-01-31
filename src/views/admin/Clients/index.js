@@ -81,6 +81,7 @@ const Clients = ({ color = "light" }) => {
                   <th className={"table-head " + tableHeadClass}>
                     Visa Expiry
                   </th>
+                  <th className={"table-head " + tableHeadClass}>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -130,7 +131,7 @@ const Clients = ({ color = "light" }) => {
                           <Tooltip title="Edit University" arrow>
                             <IconButton
                               onClick={() =>
-                                navigate("/admin/consultancy/add", {
+                                navigate("/admin/client/add", {
                                   state: { item },
                                 })
                               }

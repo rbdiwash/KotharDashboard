@@ -67,25 +67,24 @@ const Users = ({ color = "dark" }) => {
         >
           <div className="rounded-t mb-0 px-4 py-3 border-0">
             <div className="flex flex-wrap items-center justify-between">
-                <h3
-                  className={
-                    "font-semibold text-lg " +
-                    (color === "light" ? "text-slate-700" : "text-white")
-                  }
-                >
-                  Users
-                </h3>{" "}
-                <SearchField {...{ type: "User", searchText, setSearchText }} />
-                <Button
-                  variant="outlined"
-                  startIcon={<FaPlusCircle />}
-                  component={Link}
-                  sx={{ color: "white" }}
-                  to="/admin/users/add"
-                >
-                  Add User
-                </Button>
-             
+              <h3
+                className={
+                  "font-semibold text-lg " +
+                  (color === "light" ? "text-slate-700" : "text-white")
+                }
+              >
+                Users
+              </h3>{" "}
+              <SearchField {...{ type: "User", searchText, setSearchText }} />
+              <Button
+                variant="outlined"
+                startIcon={<FaPlusCircle />}
+                component={Link}
+                sx={{ color: "white" }}
+                to="/admin/users/add"
+              >
+                Add User
+              </Button>
             </div>
           </div>
           <div className="block w-full overflow-x-auto">

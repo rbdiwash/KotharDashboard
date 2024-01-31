@@ -23,15 +23,9 @@ const AddClient = ({ color = "light" }) => {
     name: null,
     address: null,
     email: null,
-    website: null,
-    owner: null,
-    panNumber: null,
-    primaryContactNumber: null,
-    secondaryContactNumber: null,
-    logo: null,
     image: null,
   });
-  const [{}, { refetchConsultancy }] = useKothar();
+  const [{}, { refetchClient }] = useKothar();
 
   const navigate = useNavigate();
   const handleInputChange = (e) => {
@@ -40,6 +34,7 @@ const AddClient = ({ color = "light" }) => {
   };
 
   const { state } = useLocation();
+  console.log("🚀  data:", data);
 
   useEffect(() => {
     if (state) {
@@ -52,8 +47,8 @@ const AddClient = ({ color = "light" }) => {
       toast.success(
         data?.id ? "Data updated Successfully" : "Data added Successfully"
       );
-      navigate("/admin/consultancy");
-      refetchConsultancy();
+      navigate("/admin/client");
+      refetchClient();
     },
     onError() {
       toast.error(data?.id ? "Error Updating Data" : "Error Submitting Data");
@@ -62,16 +57,15 @@ const AddClient = ({ color = "light" }) => {
 
   async function postData(payload) {
     if (data?.id) {
-      await axios.put(`${API_URL}/organization/update/${payload?.id}`, payload);
+      await axios.put(`${API_URL}/client/update/${payload?.id}`, payload);
     } else {
-      await axios.post(`${API_URL}/organization/register`, payload);
+      await axios.post(`${API_URL}/client/register`, payload);
     }
   }
   const handleSubmit = (e) => {
     e.preventDefault();
     mutate({ ...data });
   };
-
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">
@@ -149,7 +143,9 @@ const AddClient = ({ color = "light" }) => {
                         row
                         required
                         defaultValue="female"
-                        name="radio-buttons-group"
+                        name="gender"
+                        onChange={handleInputChange}
+                        value={data?.gender}
                       >
                         <FormControlLabel
                           value="male"

@@ -3,6 +3,7 @@ import axios from "axios";
 import DeleteModal from "components/Modals/DeleteModal";
 import SearchField from "components/SearchField";
 import { ImageName } from "components/helper";
+import { delete_data } from "const/axios";
 import { API_URL } from "const/constants";
 import useKothar from "context/useKothar";
 import { useState } from "react";
@@ -15,21 +16,18 @@ const University = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
   const navigate = useNavigate();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
-  const [{ uniData }, { refetchUniData }] = useKothar();
+  const [{ uniData, token }, { refetchUniData }] = useKothar();
   const [searchText, setSearchText] = useState("");
+
   const deleteData = () => {
-    axios({
-      method: "delete",
-      url: `${API_URL}/university/delete/${openConfirmationModal?.id}`,
-    })
-      .then((res) => {
-        // toast.success("Data Deleted Successfully");
-        // setOpenConfirmationModal({ state: false, id: null });
-        // refetchUniData();
-      })
-      .error((err) => {
-        toast.error("Error Deleting Data");
-      });
+    delete_data(
+      `${API_URL}/university/delete/${openConfirmationModal?.id}`,
+      () => {
+        setOpenConfirmationModal({ state: false, id: null });
+        refetchUniData();
+      },
+      token
+    );
   };
 
   return (

@@ -24,13 +24,14 @@ const AddUni = ({ color = "light" }) => {
   });
 
   const navigate = useNavigate();
-  const [{}, { refetchUniData }] = useKothar();
+  const [{ token }, { refetchUniData }] = useKothar();
 
   const { state } = useLocation();
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setData((prevState) => ({ ...prevState, [name]: value }));
   };
+  console.log("🚀  data:", data);
   useEffect(() => {
     if (state) {
       setData({
@@ -75,16 +76,18 @@ const AddUni = ({ color = "light" }) => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     const formData = new FormData();
-    formData.append("file");
+    formData.append("file", file);
     axios
-      .post(`${API_URL}/api/upload`, formData, {
+      .post(`${API_URL}/file/upload`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${"asdfsf"}`,
+          Authorization: `Bearer ${token}`,
         },
       })
       .then((res) => {
-        setData({ ...data, image: res?.data?.data?.url });
+        console.log(res?.data);
+        toast.success("File Uploaded Successfully");
+        setData({ ...data, image: res?.data?.url });
       })
       .catch((err) => {
         toast.error("Error Uploading file");

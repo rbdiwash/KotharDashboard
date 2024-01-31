@@ -35,7 +35,8 @@ const Insurance = ({ color = "light" }) => {
       .catch((err) => {
         toast.error("Error Deleting Data");
       });
-  }; const [openDiscussion, setOpenDiscussion] = useState(false);
+  };
+  const [openDiscussion, setOpenDiscussion] = useState(false);
   const handleDiscussion = () => {
     setOpenDiscussion(!openDiscussion);
   };
