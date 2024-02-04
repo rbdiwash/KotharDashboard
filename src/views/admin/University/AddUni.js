@@ -1,4 +1,10 @@
-import { Autocomplete, Button, IconButton, TextField } from "@mui/material";
+import {
+  Autocomplete,
+  Button,
+  IconButton,
+  TextField,
+  Tooltip,
+} from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import InputField from "components/Input/InputField";
 import { API_URL } from "const/constants";
@@ -6,10 +12,12 @@ import axios from "const/axios";
 import useKothar from "context/useKothar";
 import { useEffect, useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ClearIcon from "@mui/icons-material/Clear";
 import { states } from "const/constants";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import UploadFile from "components/Input/UploadFile";
 
 const AddUni = ({ color = "light" }) => {
   const [data, setData] = useState({
@@ -31,7 +39,6 @@ const AddUni = ({ color = "light" }) => {
     const { name, value } = e.target;
     setData((prevState) => ({ ...prevState, [name]: value }));
   };
-  console.log("🚀  data:", data);
   useEffect(() => {
     if (state) {
       setData({
@@ -73,26 +80,6 @@ const AddUni = ({ color = "light" }) => {
     });
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append("file", file);
-    axios
-      .post(`${API_URL}/file/upload`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        console.log(res?.data);
-        toast.success("File Uploaded Successfully");
-        setData({ ...data, image: res?.data?.url });
-      })
-      .catch((err) => {
-        toast.error("Error Uploading file");
-      });
-  };
   return (
     <div className="flex flex-wrap mt-4">
       <div className="w-full mb-12 px-4">
@@ -227,32 +214,10 @@ const AddUni = ({ color = "light" }) => {
                       onChange={handleInputChange}
                     />
                   </div>
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Image of University"
-                      name="image"
-                      // required
-                      type="file"
-                      onChange={handleFileChange}
-                    />
-                    {data?.image && (
-                      <div class="show-image">
-                        <img
-                          src={data?.image}
-                          alt="Image"
-                          className="mr-auto mt-4 h-80 w-80 border p-3 object-cover"
-                        />
-                        <div className="delete">
-                          <IconButton>
-                            <ClearIcon
-                              sx={{ fontSize: 40 }}
-                              onClick={() => setData({ ...data, image: null })}
-                            />
-                          </IconButton>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+
+                  <UploadFile
+                    {...{ data, setData, label: "Image of University" }}
+                  />
                 </div>
                 <div className="w-full flex justify-end mt-6 gap-4">
                   <Button variant="outlined" onClick={() => navigate(-1)} to="">

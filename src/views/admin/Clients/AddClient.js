@@ -34,7 +34,6 @@ const AddClient = ({ color = "light" }) => {
   };
 
   const { state } = useLocation();
-  console.log("🚀  data:", data);
 
   useEffect(() => {
     if (state) {

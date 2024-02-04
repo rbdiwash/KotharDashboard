@@ -35,7 +35,6 @@ const Tables = Loadable(lazy(() => import("views/admin/Tables")));
 const Settings = Loadable(lazy(() => import("views/admin/Settings")));
 const Maps = Loadable(lazy(() => import("views/admin/Maps")));
 
-// ==============================|| MAIN ROUTING ||============================== //
 
 const AdminRoutes = {
   path: "/admin",
@@ -161,14 +160,3 @@ const AdminRoutes = {
 };
 
 export default AdminRoutes;
-//  name: null,
-//     address: null,
-//     email: null,
-//     website: null,
-//     owner: null,
-//     abn: null,
-//     panNumber: null,
-//     primaryContactNumber: null,
-//     secondaryContactNumber: null,
-//     logo: null,
-//     iamge: null,

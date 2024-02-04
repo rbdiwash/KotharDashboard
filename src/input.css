@@ -83,9 +83,17 @@ div.show-image:hover .delete {
 div.show-image .delete {
   position: absolute;
   display: none;
+  top: 20px;
+  right: 10px;
 }
 
-div.show-image .delete {
-  top: 20px;
+div.show-image:hover .download {
+  display: block;
+  cursor: pointer;
+}
+div.show-image .download {
+  position: absolute;
+  display: none;
+  bottom: 20px;
   right: 10px;
 }

@@ -190,6 +190,7 @@ const TabContent = ({
             <th className={"table-head " + tableHeadClass}>Reference </th>
             <th className={"table-head " + tableHeadClass}>Status </th>
             <th className={"table-head " + tableHeadClass}>Invoice </th>
+            <th className={"table-head " + tableHeadClass}>Action </th>
           </tr>
         </thead>
         <tbody>
@@ -219,6 +220,41 @@ const TabContent = ({
                 <td className="table-data">
                   <div className="flex items-center">
                     {item?.website || "-"}
+                  </div>
+                </td>
+                <td className="table-data">
+                  <div className="flex items-center">
+                    {item?.panNumber || "-"}
+                  </div>
+                </td>
+                <td className="table-data">
+                  <div className="flex items-center">
+                    {item?.panNumber || "-"}
+                  </div>
+                </td>
+                <td className="table-data">
+                  <div className="flex items-center">
+                    {item?.panNumber || "-"}
+                  </div>
+                </td>
+                <td className="table-data">
+                  <div className="flex items-center">
+                    {item?.panNumber || "-"}
+                  </div>
+                </td>
+                <td className="table-data">
+                  <div className="flex items-center">
+                    {item?.panNumber || "-"}
+                  </div>
+                </td>
+                <td className="table-data">
+                  <div className="flex items-center">
+                    {item?.panNumber || "-"}
+                  </div>
+                </td>
+                <td className="table-data">
+                  <div className="flex items-center">
+                    {item?.panNumber || "-"}
                   </div>
                 </td>
                 <td className="table-data">

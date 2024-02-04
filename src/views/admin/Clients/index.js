@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import useKothar from "context/useKothar";
 import { ImageName } from "components/helper";
 import SearchField from "components/SearchField";
+import { delete_data } from "const/axios";
 
 const Clients = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
@@ -18,19 +19,17 @@ const Clients = ({ color = "light" }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [searchText, setSearchText] = useState("");
 
-  const [{ clientList }, { refetchClient }] = useKothar();
+  const [{ clientList, token }, { refetchClient }] = useKothar();
 
   const deleteData = () => {
-    axios
-      .delete(`${API_URL}/organization/delete/${openConfirmationModal?.id}`)
-      .then((res) => {
-        toast.success("Data Deleted Successfully");
+    delete_data(
+      `${API_URL}/client/delete/${openConfirmationModal?.id}`,
+      () => {
         setOpenConfirmationModal({ state: false, id: null });
         refetchClient();
-      })
-      .error((err) => {
-        toast.error("Error Deleting Data");
-      });
+      },
+      token
+    );
   };
 
   return (

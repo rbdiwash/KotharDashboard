@@ -9,10 +9,13 @@ import { toast } from "react-toastify";
 const useStateAndActions = () => {
   const [token, setToken] = useState(localStorage.getItem("token"));
 
+  const [wholeLoading, setWholeLoading] = useState(false);
+
   const getData = async () => {
     const res = await axios.get(`organization/list`);
     return res?.data?.data;
   };
+
   const { data: consultancyList, refetch: refetchConsultancy } = useQuery(
     ["organization"],
     getData,
@@ -28,8 +31,8 @@ const useStateAndActions = () => {
     return res?.data?.data;
   };
   const { data: clientList, refetch: refetchClient } = useQuery(
-    ["organization"],
-    getData,
+    ["client"],
+    getClientData,
     {
       refetchOnWindowFocus: false,
       // onError: () => {
@@ -124,6 +127,7 @@ const useStateAndActions = () => {
     studentList,
     usersList,
     token,
+    wholeLoading,
   };
   const actions = {
     refetchClient,
@@ -133,6 +137,7 @@ const useStateAndActions = () => {
     refetchStudent,
     refetchUsers,
     setToken,
+    setWholeLoading,
   };
 
   return [state, actions];
