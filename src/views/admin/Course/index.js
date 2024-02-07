@@ -23,9 +23,8 @@ const Course = ({ color = "light" }) => {
 
   const deleteData = () => {
     axios
-      .delete(`${API_URL}/organization/delete/${openConfirmationModal?.id}`)
+      .delete(`${API_URL}/course/delete/${openConfirmationModal?.id}`)
       .then((res) => {
-        console.log(res);
         toast.success(res?.data?.message || "Data Deleted Successfully");
         setOpenConfirmationModal({ state: false, id: null });
         refetchCourseList();

@@ -17,10 +17,9 @@ const AddCourse = ({ color = "light" }) => {
     intake: [],
     level: null,
     name: null,
-    tuition: 100,
-    university: null,
-    universityId: null,
+    universities: [],
   });
+  console.log(data);
   const [{ uniData }, { refetchCourseList }] = useKothar();
 
   const navigate = useNavigate();
@@ -35,10 +34,10 @@ const AddCourse = ({ color = "light" }) => {
     if (state) {
       setData({
         ...state?.item,
-        university: {
-          name: state?.item?.university,
-          id: state?.item?.universityId,
-        },
+        // university: {
+        //   name: state?.item?.university,
+        //   id: state?.item?.universityId,
+        // },
         intake: months.filter(({ value: id1 }) =>
           state?.item?.intake?.split("/").some((id2) => id2 === id1)
         ),
@@ -53,7 +52,7 @@ const AddCourse = ({ color = "light" }) => {
       toast.success(
         data?.id ? "Data updated Successfully" : "Data added Successfully"
       );
-      navigate("/admin/courses");
+      navigate("/admin/course");
       refetchCourseList();
     },
     onError(err) {
@@ -73,8 +72,7 @@ const AddCourse = ({ color = "light" }) => {
     mutate({
       ...data,
       intake: data?.intake?.map((item) => item?.value).join("/"),
-      university: data?.university?.name,
-      universityId: data?.university?.id,
+      universities: data?.universities?.map((item) => item?.name),
     });
   };
 
@@ -148,17 +146,15 @@ const AddCourse = ({ color = "light" }) => {
                       onChange={(e, value) => {
                         setData((prevState) => ({
                           ...prevState,
-                          university: value,
+                          universities: value,
                         }));
                       }}
                       required
-                      value={data?.university}
+                      multiple
+                      // value={data?.university}
                       options={uniData || []}
                       getOptionLabel={(option) => option?.name || ""}
                       getOptionValue={(option) => option?.id}
-                      isOptionEqualToValue={(options, value) =>
-                        options.id === value.id
-                      }
                       disablePortal
                       renderInput={(params) => (
                         <TextField {...params} label="Select University" />

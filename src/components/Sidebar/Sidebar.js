@@ -11,9 +11,9 @@ export default function Sidebar() {
   const location = useLocation();
   const options = [
     { label: "Dashboard", value: "dashboard", icon: "fas fa-tv" },
-    { label: "Clients", value: "client", icon: "fas fa-user" },
+    { label: "Client", value: "client", icon: "fas fa-user" },
     { label: "University", value: "university", icon: "fas fa-school" },
-    { label: "courses", value: "courses", icon: "fas fa-briefcase" },
+    { label: "course", value: "course", icon: "fas fa-briefcase" },
     {
       label: "RPL Certificate",
       value: "rpl-certificate",
@@ -37,10 +37,10 @@ export default function Sidebar() {
     },
     { label: "consultancy", value: "consultancy", icon: "fas fa-briefcase" },
     { label: "Invoice", value: "invoice", icon: "fas fa-file-invoice-dollar" },
-    { label: "Users", value: "users", icon: "fas fa-user" },
+    { label: "User", value: "user", icon: "fas fa-user" },
     {
-      label: "Accounts",
-      value: "accounts",
+      label: "Account",
+      value: "account",
       icon: "fas fa-file-invoice-dollar",
     },
     // { label: "Settings", value: "setting", icon: "fas fa-tools" },

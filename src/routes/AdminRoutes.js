@@ -51,10 +51,10 @@ const AdminRoutes = {
     { path: "client/add", element: <AddClient /> },
 
     {
-      path: "accounts",
+      path: "account",
       element: <Accounts />,
     },
-    { path: "accounts/add", element: <AddAccounts /> },
+    { path: "account/add", element: <AddAccounts /> },
     {
       path: "university",
       element: <University />,
@@ -120,7 +120,7 @@ const AdminRoutes = {
       element: <AddRPLCertificate />,
     },
     {
-      path: "courses",
+      path: "course",
       element: <Course />,
     },
     {
@@ -132,7 +132,7 @@ const AdminRoutes = {
       element: <AddCourse />,
     },
     {
-      path: "users",
+      path: "user",
       element: <Users />,
     },
     {
@@ -144,7 +144,7 @@ const AdminRoutes = {
       element: <AddInvoice />,
     },
     {
-      path: "users/add",
+      path: "user/add",
       element: <AddUsers />,
     },
 

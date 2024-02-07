@@ -25,6 +25,8 @@ const AddClient = ({ color = "light" }) => {
     email: null,
     image: null,
   });
+  console.log("🚀  data:", data);
+
   const [{}, { refetchClient }] = useKothar();
 
   const navigate = useNavigate();
@@ -99,7 +101,6 @@ const AddClient = ({ color = "light" }) => {
                 <div className="grid grid-cols-3 gap-8 mt-6 items-end">
                   <div className="relative w-full mb-3">
                     <InputField
-                      fullWidth
                       label="Name"
                       placeholder="Enter Full Name"
                       name="name"
@@ -111,7 +112,6 @@ const AddClient = ({ color = "light" }) => {
                   </div>
                   <div className="relative w-full mb-3">
                     <InputField
-                      fullWidth
                       label="Full Address"
                       placeholder="Enter Full Address"
                       name="address"
@@ -123,7 +123,6 @@ const AddClient = ({ color = "light" }) => {
                   </div>
                   <div className="relative w-full mb-3">
                     <InputField
-                      fullWidth
                       type="date"
                       placeholder="Date of Birth"
                       name="dob"
@@ -167,7 +166,6 @@ const AddClient = ({ color = "light" }) => {
                   </div>
                   <div className="relative w-full mb-3">
                     <InputField
-                      fullWidth
                       type="email"
                       placeholder="Email Address"
                       name="email"
@@ -179,7 +177,6 @@ const AddClient = ({ color = "light" }) => {
                   </div>
                   <div className="relative w-full mb-3">
                     <InputField
-                      fullWidth
                       label="Mobile Number"
                       placeholder="Mobile Number"
                       name="number"
@@ -207,15 +204,17 @@ const AddClient = ({ color = "light" }) => {
                       required
                       type="date"
                       value={data?.dataOfIssue}
+                      onChange={handleInputChange}
                     />
                   </div>
                   <div className="relative w-full mb-3">
                     <InputField
                       label="Expiry Date"
-                      name="dateOfExpiry"
+                      name="passportExpiry"
                       required
                       type="date"
-                      value={data?.dateOfExpiry}
+                      value={data?.passportExpiry}
+                      onChange={handleInputChange}
                     />
                   </div>
                   <div className="relative w-full mb-3">

@@ -102,21 +102,21 @@ const Clients = ({ color = "light" }) => {
                       </td>
                       <td className="table-data">{item?.email || "-"}</td>
                       <td className="table-data">
-                        <div className="flex">{item?.owner || "-"}</div>
+                        <div className="flex">{item?.number || "-"}</div>
                       </td>
                       <td className="table-data">
                         <div className="flex items-center gap-2">
-                          {item?.primaryContactNumber || "-"}
+                          {item?.passportNumber || "-"}
                         </div>
                       </td>
                       <td className="table-data">
                         <div className="flex items-center">
-                          {item?.website || "-"}
+                          {item?.visa_status || "-"}
                         </div>
                       </td>
                       <td className="table-data">
                         <div className="flex items-center">
-                          {item?.panNumber || "-"}
+                          {item?.visa_expiry || "-"}
                         </div>
                       </td>
 
@@ -127,7 +127,7 @@ const Clients = ({ color = "light" }) => {
                               <AiFillEye className="text-sky-600 cursor-pointer" />
                             </IconButton>
                           </Tooltip>
-                          <Tooltip title="Edit University" arrow>
+                          <Tooltip title="Edit Client" arrow>
                             <IconButton
                               onClick={() =>
                                 navigate("/admin/client/add", {
@@ -138,7 +138,7 @@ const Clients = ({ color = "light" }) => {
                               <AiFillEdit className="text-sky-600 cursor-pointer" />
                             </IconButton>
                           </Tooltip>
-                          <Tooltip title="Delete University" arrow>
+                          <Tooltip title="Delete Client" arrow>
                             <IconButton
                               onClick={() =>
                                 setOpenConfirmationModal({
@@ -171,7 +171,7 @@ const Clients = ({ color = "light" }) => {
       {openConfirmationModal.state && (
         <DeleteModal
           open={openConfirmationModal.state}
-          item="University"
+          item="Client"
           handleCancel={() =>
             setOpenConfirmationModal({ state: false, id: null })
           }
