@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { IoArrowBack } from "react-icons/io5";
 import useKothar from "context/useKothar";
 import ClearIcon from "@mui/icons-material/Clear";
+import UploadFile from "components/Input/UploadFile";
 
 const AddConsultancy = ({ color = "light" }) => {
   const [data, setData] = useState({
@@ -23,6 +24,7 @@ const AddConsultancy = ({ color = "light" }) => {
     logo: null,
     image: null,
   });
+
   const [{}, { refetchConsultancy }] = useKothar();
 
   const navigate = useNavigate();
@@ -199,56 +201,24 @@ const AddConsultancy = ({ color = "light" }) => {
                     />
                   </div>
                   <div className="relative w-full mb-3">
-                    <InputField
-                      label="Logo of Consultancy"
-                      name="logo"
-                      // required
-                      type="file"
-                      onChange={(e) => handleFileChange(e, "logo")}
-                    />{" "}
-                    {data?.logo && (
-                      <div class="show-image">
-                        <img
-                          src={data?.logo}
-                          alt="Image"
-                          className="mr-auto mt-4 h-80 w-80 border p-3 object-cover"
-                        />
-                        <div className="delete">
-                          <IconButton>
-                            <ClearIcon
-                              sx={{ fontSize: 40 }}
-                              onClick={() => setData({ ...data, logo: null })}
-                            />
-                          </IconButton>
-                        </div>
-                      </div>
-                    )}
+                    <UploadFile
+                      {...{
+                        data,
+                        setData,
+                        imageKey: "logo",
+                        label: "Upload Logo",
+                      }}
+                    />
                   </div>
                   <div className="relative w-full mb-3">
-                    <InputField
-                      label="Image of Consultancy"
-                      name="image"
-                      // required
-                      type="file"
-                      onChange={(e) => handleFileChange(e, "image")}
-                    />{" "}
-                    {data?.image && (
-                      <div class="show-image">
-                        <img
-                          src={data?.image}
-                          alt="Image"
-                          className="mr-auto mt-4 h-80 w-80 border p-3 object-cover"
-                        />
-                        <div className="delete">
-                          <IconButton>
-                            <ClearIcon
-                              sx={{ fontSize: 40 }}
-                              onClick={() => setData({ ...data, image: null })}
-                            />
-                          </IconButton>
-                        </div>
-                      </div>
-                    )}
+                    <UploadFile
+                      {...{
+                        data,
+                        setData,
+                        imageKey: "image",
+                        label: "Upload Image of Consultancy",
+                      }}
+                    />
                   </div>
                 </div>
                 <div className="w-full flex justify-end mt-6 gap-4">

@@ -9,7 +9,6 @@ import Students from "views/admin/Students";
 import AddStudent from "views/admin/Students/AddStudent";
 import AddUsers from "views/admin/Users/AddUsers";
 import Consultancy from "views/admin/Consultancy";
-import ViewConsultancy from "views/admin/Consultancy/ViewConsultancy";
 import AddConsultancy from "views/admin/Consultancy/AddConsultancy";
 import StudentDetails from "views/admin/Students/StudentDetails";
 import Course from "views/admin/Course";
@@ -34,7 +33,6 @@ const Dashboard = Loadable(lazy(() => import("views/admin/Dashboard")));
 const Tables = Loadable(lazy(() => import("views/admin/Tables")));
 const Settings = Loadable(lazy(() => import("views/admin/Settings")));
 const Maps = Loadable(lazy(() => import("views/admin/Maps")));
-
 
 const AdminRoutes = {
   path: "/admin",
@@ -80,10 +78,6 @@ const AdminRoutes = {
     {
       path: "consultancy/edit/:id",
       element: <AddConsultancy />,
-    },
-    {
-      path: "consultancy/view/:id",
-      element: <ViewConsultancy />,
     },
 
     {

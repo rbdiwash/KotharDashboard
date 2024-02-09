@@ -14,6 +14,7 @@ export const delete_data = (url, onSuccess, token) => {
       Authorization: `Bearer ${token}`,
     },
   })
+    .then((res) => res?.json())
     .then(() => {
       onSuccess();
       toast.success("Data Deleted Successfully");

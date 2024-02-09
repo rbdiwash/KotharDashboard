@@ -216,7 +216,12 @@ const AddUni = ({ color = "light" }) => {
                   </div>
 
                   <UploadFile
-                    {...{ data, setData, label: "Image of University" }}
+                    {...{
+                      data,
+                      setData,
+                      label: "Image of University",
+                      imageKey: "image",
+                    }}
                   />
                 </div>
                 <div className="w-full flex justify-end mt-6 gap-4">

@@ -22,12 +22,8 @@ const Consultancy = ({ color = "light" }) => {
   const [{ consultancyList, token }, { refetchConsultancy }] = useKothar();
 
   const deleteData = () => {
-    // axios({
-    //   method: "delete",
-    //   url: `${API_URL}/organization/delete/${openConfirmationModal?.id}`,
-    // })
     delete_data(
-      `${API_URL}/organization/delete/${openConfirmationModal?.id}`,
+      `${API_URL}/organization/deleteasdf/${openConfirmationModal?.id}`,
       () => {
         setOpenConfirmationModal({ state: false, id: null });
         refetchConsultancy();

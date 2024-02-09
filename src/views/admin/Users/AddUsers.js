@@ -28,9 +28,12 @@ const AddUsers = () => {
     mobileNumber: null,
     email: null,
     username: null,
-    type: "ADMIN",
+    type: "",
   });
+  console.log("🚀  data:", data);
+
   const [{ consultancyList }, {}] = useKothar();
+  console.log("🚀  consultancyList:", consultancyList);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setData((prevState) => ({ ...prevState, [name]: value }));
@@ -60,7 +63,7 @@ const AddUsers = () => {
       ...data,
       mfa: true,
       type: data?.type?.value,
-      orgId: data?.orgId?.value,
+      orgId: data?.orgId?.id,
     });
   };
   return (
@@ -159,6 +162,11 @@ const AddUsers = () => {
                       renderInput={(params) => (
                         <TextField {...params} label="Select Consultancy" />
                       )}
+                      getOptionLabel={(option) => option?.name || ""}
+                      getOptionValue={(option) => option?.id}
+                      isOptionEqualToValue={(options, value) =>
+                        options.id === value.id
+                      }
                       onChange={(e, value) => {
                         setData((prevState) => ({
                           ...prevState,
@@ -185,6 +193,9 @@ const AddUsers = () => {
                       renderInput={(params) => (
                         <TextField {...params} label="User Type" />
                       )}
+                      isOptionEqualToValue={(options, value) =>
+                        options.value === value.value
+                      }
                       onChange={(e, value) => {
                         setData((prevState) => ({
                           ...prevState,
@@ -203,6 +214,7 @@ const AddUsers = () => {
                         required
                         defaultValue="yes"
                         name="access_to_discussion"
+                        value={data?.access_to_discussion}
                       >
                         <FormControlLabel
                           value="Yes"

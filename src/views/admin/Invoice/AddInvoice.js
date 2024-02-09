@@ -126,7 +126,7 @@ const AddInvoice = () => {
                     <InputField
                       label="Title"
                       placeholder="Enter Title"
-                      name="Title"
+                      name="title"
                       required
                       type="text"
                       value={data?.title}

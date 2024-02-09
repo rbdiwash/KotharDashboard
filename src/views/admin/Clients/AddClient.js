@@ -1,22 +1,19 @@
-import { Button, IconButton, TextField } from "@mui/material";
+import {
+  Button, FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup
+} from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import InputField from "components/Input/InputField";
 import { API_URL } from "const/constants";
+import useKothar from "context/useKothar";
 import { useEffect, useState } from "react";
+import { IoArrowBack } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { IoArrowBack } from "react-icons/io5";
-import useKothar from "context/useKothar";
-import ClearIcon from "@mui/icons-material/Clear";
-import {
-  Autocomplete,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Radio,
-  RadioGroup,
-} from "@mui/material";
 
 const AddClient = ({ color = "light" }) => {
   const [data, setData] = useState({
@@ -25,7 +22,6 @@ const AddClient = ({ color = "light" }) => {
     email: null,
     image: null,
   });
-  console.log("🚀  data:", data);
 
   const [{}, { refetchClient }] = useKothar();
 
@@ -200,10 +196,10 @@ const AddClient = ({ color = "light" }) => {
                   <div className="relative w-full mb-3">
                     <InputField
                       label="Date of Issue"
-                      name="dataOfIssue"
+                      name="dateOfIssue"
                       required
                       type="date"
-                      value={data?.dataOfIssue}
+                      value={data?.dateOfIssue}
                       onChange={handleInputChange}
                     />
                   </div>

@@ -29,15 +29,19 @@ const AddCourse = ({ color = "light" }) => {
   };
 
   const { state } = useLocation();
+  console.log(
+    uniData?.filter((item) =>
+      state?.item?.universities?.some((arg) => arg === item?.id)
+    )
+  );
 
   useEffect(() => {
     if (state) {
       setData({
         ...state?.item,
-        // university: {
-        //   name: state?.item?.university,
-        //   id: state?.item?.universityId,
-        // },
+        universities: uniData?.filter((item) =>
+          state?.item?.universities?.some((arg) => arg === item?.id)
+        ),
         intake: months.filter(({ value: id1 }) =>
           state?.item?.intake?.split("/").some((id2) => id2 === id1)
         ),
@@ -72,7 +76,7 @@ const AddCourse = ({ color = "light" }) => {
     mutate({
       ...data,
       intake: data?.intake?.map((item) => item?.value).join("/"),
-      universities: data?.universities?.map((item) => item?.name),
+      universities: data?.universities?.map((item) => item?.id),
     });
   };
 

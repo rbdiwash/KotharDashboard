@@ -20,6 +20,7 @@ import {
 } from "react-icons/ai";
 import { useState } from "react";
 import SearchField from "components/SearchField";
+import DeleteModal from "components/Modals/DeleteModal";
 
 const Invoice = ({ color = "dark" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
@@ -29,12 +30,14 @@ const Invoice = ({ color = "dark" }) => {
   const [searchText, setSearchText] = useState("");
 
   const getData = async () => {
-    const res = await axios.get(`${API_URL}/api/invoice/list`, {
+    const res = await axios.get(`${API_URL}/invoice/list`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return res?.data;
   };
-  const { data, error, isError, isLoading } = useQuery(["invoice"], getData);
+  const { data, error, isError, isLoading } = useQuery(["invoice"], getData, {
+    refetchOnWindowFocus: false,
+  });
 
   const imageName = (text) => {
     const splittedText = text?.split(" ");
@@ -62,15 +65,25 @@ const Invoice = ({ color = "dark" }) => {
   };
 
   const handleDownloadInvoice = (item) => {
-    const payload = item;
-
     axios
-      .post(`${API_URL}/api/invoice/invoice/download`, payload)
+      .post(`${API_URL}/invoice/download/${item?.invoiceId}`)
       .then((res) => {
-        console.log(res);
+        toast.success("Downloading started, please wait");
       })
       .catch((err) => {
-        console.error(err);
+        toast.error("Failed to start download, check network tab");
+      });
+  };
+  const deleteData = () => {
+    axios
+      .delete(`${API_URL}/invoice/delete/${openConfirmationModal?.id}`)
+      .then((res) => {
+        toast.success(res?.data?.message || "Data Deleted Successfully");
+        setOpenConfirmationModal({ state: false, id: null });
+        getData();
+      })
+      .catch((err) => {
+        toast.error("Error Deleting Data");
       });
   };
 
@@ -196,7 +209,7 @@ const Invoice = ({ color = "dark" }) => {
                               onClick={() =>
                                 setOpenConfirmationModal({
                                   state: true,
-                                  id: item?.id,
+                                  id: item?.invoiceId,
                                 })
                               }
                             >
@@ -292,6 +305,16 @@ const Invoice = ({ color = "dark" }) => {
             </div>
           </div>
         </Dialog>
+      )}{" "}
+      {openConfirmationModal.state && (
+        <DeleteModal
+          open={openConfirmationModal.state}
+          item="Invoice"
+          handleCancel={() =>
+            setOpenConfirmationModal({ state: false, id: null })
+          }
+          handleDelete={() => deleteData()}
+        />
       )}
     </div>
   );

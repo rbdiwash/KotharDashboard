@@ -3,6 +3,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import DeleteModal from "components/Modals/DeleteModal";
 import SearchField from "components/SearchField";
+import { delete_data } from "const/axios";
 import { API_URL } from "const/constants";
 import useKothar from "context/useKothar";
 import { tr } from "date-fns/locale";
@@ -14,9 +15,10 @@ import { toast } from "react-toastify";
 
 const Users = ({ color = "dark" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
-  const [{ usersList }, { refetchUsers }] = useKothar();
+  const [{ usersList, token }, { refetchUsers }] = useKothar();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [searchText, setSearchText] = useState("");
+  const navigate = useNavigate();
 
   const imageName = (text) => {
     const splittedText = text?.split(" ");
@@ -44,16 +46,14 @@ const Users = ({ color = "dark" }) => {
   };
 
   const deleteUser = () => {
-    axios
-      .delete(`${API_URL}/users/delete/${openConfirmationModal?.id}`)
-      .then((res) => {
-        toast.success("Data Deleted Successfully");
+    delete_data(
+      `${API_URL}/users/delete/${openConfirmationModal?.id}`,
+      () => {
         setOpenConfirmationModal({ state: false, id: null });
         refetchUsers();
-      })
-      .error((err) => {
-        toast.error("Error Deleting Data");
-      });
+      },
+      token
+    );
   };
 
   return (
@@ -81,7 +81,7 @@ const Users = ({ color = "dark" }) => {
                 startIcon={<FaPlusCircle />}
                 component={Link}
                 sx={{ color: "white" }}
-                to="/admin/users/add"
+                to="/admin/user/add"
               >
                 Add User
               </Button>
@@ -144,7 +144,18 @@ const Users = ({ color = "dark" }) => {
                             }
                           >
                             Verify Email
-                          </Button>
+                          </Button>{" "}
+                          <Tooltip title="Edit User" arrow>
+                            <IconButton
+                              onClick={() =>
+                                navigate("/admin/user/add", {
+                                  state: { item },
+                                })
+                              }
+                            >
+                              <AiFillEdit className="text-white cursor-pointer" />
+                            </IconButton>
+                          </Tooltip>
                           <Tooltip title="Delete User" arrow>
                             <IconButton
                               onClick={() =>

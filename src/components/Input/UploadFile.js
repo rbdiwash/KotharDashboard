@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import InputField from "./InputField";
 
-const UploadFile = ({ data, setData }) => {
+const UploadFile = ({ data, setData, imageKey, label }) => {
   const [{ token }, { setWholeLoading }] = useKothar();
 
   const handleFileChange = (e) => {
@@ -26,7 +26,7 @@ const UploadFile = ({ data, setData }) => {
       .then((res) => {
         toast.success("File Uploaded Successfully");
 
-        setData({ ...data, image: res?.data?.url });
+        setData({ ...data, [imageKey]: res?.data?.url });
         // setWholeLoading(false);
       })
       .catch((err) => {
@@ -42,16 +42,16 @@ const UploadFile = ({ data, setData }) => {
     <>
       <div className="relative w-full mb-3">
         <InputField
-          label="Image of University"
+          label={label || "Upload Image"}
           name="image"
           // required
           type="file"
           onChange={handleFileChange}
         />
-        {data?.image && (
-          <div class="show-image">
+        {data?.[imageKey] && (
+          <div className="show-image">
             <img
-              src={data?.image}
+              src={data?.[imageKey]}
               alt="Image"
               className="mr-auto mt-4 h-80 w-80 border p-3 object-cover"
             />
@@ -60,14 +60,14 @@ const UploadFile = ({ data, setData }) => {
                 <IconButton>
                   <ClearIcon
                     sx={{ fontSize: 40 }}
-                    onClick={() => setData({ ...data, image: null })}
+                    onClick={() => setData({ ...data, [imageKey]: null })}
                   />
                 </IconButton>
               </Tooltip>
             </div>
             <Link
               className="download"
-              to={data?.image}
+              to={data?.[imageKey]}
               download
               target="_blank"
               // onClick={downloadImage}
