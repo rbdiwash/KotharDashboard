@@ -107,6 +107,20 @@ const useStateAndActions = () => {
       //   },
     }
   );
+
+  const getInvoiceList = async () => {
+    const res = await axios.get(`${API_URL}/invoice/list`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    return res?.data?.data;
+  };
+  const { data: invoiceList, refetch: refetchInvoiceList } = useQuery(
+    ["invoice"],
+    getInvoiceList,
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   useEffect(() => {
     if (token) {
@@ -116,6 +130,7 @@ const useStateAndActions = () => {
       refetchStudent();
       refetchUsers();
       refetchClient();
+      refetchInvoiceList();
     }
   }, [token]);
 
@@ -126,6 +141,7 @@ const useStateAndActions = () => {
     courseList,
     studentList,
     usersList,
+    invoiceList,
     token,
     wholeLoading,
   };
@@ -137,6 +153,7 @@ const useStateAndActions = () => {
     refetchStudent,
     refetchUsers,
     setToken,
+    refetchInvoiceList,
     setWholeLoading,
   };
 

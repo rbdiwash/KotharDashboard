@@ -21,6 +21,8 @@ const AddInvoice = () => {
     invoices: [],
   });
   const { state } = useLocation();
+  const [{ invoiceList, token }, { refetchInvoiceList }] = useKothar();
+
   useEffect(() => {
     if (state) {
       setData({ ...state?.item });
@@ -46,6 +48,8 @@ const AddInvoice = () => {
       toast.success(
         data?.id ? "Data updated Successfully" : "Data added Successfully"
       );
+      navigate("/admin/invoice");
+      refetchInvoiceList();
     },
     onError() {
       toast.error(data?.id ? "Error Updating Data" : "Error Submitting Data");
@@ -53,9 +57,9 @@ const AddInvoice = () => {
   });
   async function postData(payload) {
     if (data?.id) {
-      await axios.put(`${API_URL}/api/invoice/update/${payload?.id}`, payload);
+      await axios.put(`${API_URL}/invoice/update/${payload?.id}`, payload);
     } else {
-      await axios.post(`${API_URL}/api/invoice`, payload);
+      await axios.post(`${API_URL}/invoice`, payload);
     }
   }
   const handleSubmit = (e) => {

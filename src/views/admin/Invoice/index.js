@@ -21,6 +21,7 @@ import {
 import { useState } from "react";
 import SearchField from "components/SearchField";
 import DeleteModal from "components/Modals/DeleteModal";
+import useKothar from "context/useKothar";
 
 const Invoice = ({ color = "dark" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
@@ -29,15 +30,7 @@ const Invoice = ({ color = "dark" }) => {
   const [openInvoice, setOpenInvoice] = useState(false);
   const [searchText, setSearchText] = useState("");
 
-  const getData = async () => {
-    const res = await axios.get(`${API_URL}/invoice/list`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
-    return res?.data;
-  };
-  const { data, error, isError, isLoading } = useQuery(["invoice"], getData, {
-    refetchOnWindowFocus: false,
-  });
+  const [{ invoiceList, token }, { refetchInvoiceList }] = useKothar();
 
   const imageName = (text) => {
     const splittedText = text?.split(" ");
@@ -80,7 +73,7 @@ const Invoice = ({ color = "dark" }) => {
       .then((res) => {
         toast.success(res?.data?.message || "Data Deleted Successfully");
         setOpenConfirmationModal({ state: false, id: null });
-        getData();
+        refetchInvoiceList();
       })
       .catch((err) => {
         toast.error("Error Deleting Data");
@@ -139,8 +132,8 @@ const Invoice = ({ color = "dark" }) => {
                 </tr>
               </thead>
               <tbody>
-                {data?.data?.length > 0 ? (
-                  data?.data?.map((item, index) => (
+                {invoiceList?.length > 0 ? (
+                  invoiceList?.map((item, index) => (
                     <tr key={item?.id || index}>
                       <th className="table-data text-left flex h-full">
                         {item?.name && imageName(item?.name || "Anand Pandey")}

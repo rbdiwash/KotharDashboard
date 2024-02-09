@@ -45,7 +45,7 @@ const AddClient = ({ color = "light" }) => {
         data?.id ? "Data updated Successfully" : "Data added Successfully"
       );
       navigate("/admin/client");
-      refetchClient();
+      refetchClient(); 
     },
     onError() {
       toast.error(data?.id ? "Error Updating Data" : "Error Submitting Data");
