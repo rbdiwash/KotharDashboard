@@ -12,6 +12,7 @@ import useKothar from "context/useKothar";
 import { ImageName } from "components/helper";
 import SearchField from "components/SearchField";
 import { delete_data } from "const/axios";
+import { useEffect } from "react";
 
 const Consultancy = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
@@ -20,6 +21,7 @@ const Consultancy = ({ color = "light" }) => {
   const [searchText, setSearchText] = useState("");
 
   const [{ consultancyList, token }, { refetchConsultancy }] = useKothar();
+  const [filteredData, setFilteredData] = useState(consultancyList);
 
   const deleteData = () => {
     delete_data(
@@ -31,6 +33,22 @@ const Consultancy = ({ color = "light" }) => {
       token
     );
   };
+
+  useEffect(() => {
+    if (searchText.length > 0) {
+      const filtered = consultancyList?.filter(
+        (client) =>
+          client?.name?.toLowerCase().includes(searchText?.toLowerCase()) ||
+          client?.owner?.toLowerCase().includes(searchText?.toLowerCase()) ||
+          client?.address?.toLowerCase().includes(searchText?.toLowerCase()) ||
+          client?.abn?.toLowerCase().includes(searchText?.toLowerCase()) ||
+          client?.email?.toLowerCase().includes(searchText?.toLowerCase())
+      );
+      setFilteredData(filtered);
+    } else {
+      setFilteredData(consultancyList);
+    }
+  }, [searchText]);
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">
@@ -82,8 +100,8 @@ const Consultancy = ({ color = "light" }) => {
                 </tr>
               </thead>
               <tbody>
-                {consultancyList?.length > 0 ? (
-                  consultancyList?.map((item, index) => (
+                {filteredData?.length > 0 ? (
+                  filteredData?.map((item, index) => (
                     <tr key={item?.id || index}>
                       <td className="table-data text-left flex items-center">
                         {ImageName(item?.name)}
@@ -114,7 +132,7 @@ const Consultancy = ({ color = "light" }) => {
                       </td>
                       <td className="table-data">
                         <div className="flex items-center">
-                          {item?.panNumber || "-"}
+                          {item?.abn || "-"}
                         </div>
                       </td>
 

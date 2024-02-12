@@ -29,19 +29,12 @@ const AddCourse = ({ color = "light" }) => {
   };
 
   const { state } = useLocation();
-  console.log(
-    uniData?.filter((item) =>
-      state?.item?.universities?.some((arg) => arg === item?.id)
-    )
-  );
 
   useEffect(() => {
     if (state) {
       setData({
         ...state?.item,
-        universities: uniData?.filter((item) =>
-          state?.item?.universities?.some((arg) => arg === item?.id)
-        ),
+
         intake: months.filter(({ value: id1 }) =>
           state?.item?.intake?.split("/").some((id2) => id2 === id1)
         ),
@@ -155,7 +148,7 @@ const AddCourse = ({ color = "light" }) => {
                       }}
                       required
                       multiple
-                      // value={data?.university}
+                      value={data?.universities}
                       options={uniData || []}
                       getOptionLabel={(option) => option?.name || ""}
                       getOptionValue={(option) => option?.id}

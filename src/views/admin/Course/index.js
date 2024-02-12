@@ -12,6 +12,7 @@ import useKothar from "context/useKothar";
 import { ImageName } from "components/helper";
 import SearchField from "components/SearchField";
 import DiscussionModal from "components/Modals/DiscussionModal";
+import { useEffect } from "react";
 
 const Course = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
@@ -20,6 +21,7 @@ const Course = ({ color = "light" }) => {
   const [searchText, setSearchText] = useState("");
 
   const [{ courseList }, { refetchCourseList }] = useKothar();
+  const [filteredData, setFilteredData] = useState(courseList);
 
   const deleteData = () => {
     axios
@@ -38,6 +40,21 @@ const Course = ({ color = "light" }) => {
   const handleDiscussion = () => {
     setOpenDiscussion(!openDiscussion);
   };
+
+  useEffect(() => {
+    if (searchText.length > 0) {
+      const filtered = courseList?.filter(
+        (client) =>
+          client?.name?.toLowerCase().includes(searchText?.toLowerCase()) ||
+          client?.level?.toLowerCase().includes(searchText?.toLowerCase()) ||
+          client?.duration?.toLowerCase().includes(searchText?.toLowerCase()) ||
+          client?.intake?.toLowerCase().includes(searchText?.toLowerCase())
+      );
+      setFilteredData(filtered);
+    } else {
+      setFilteredData(courseList);
+    }
+  }, [searchText]);
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">
@@ -93,8 +110,8 @@ const Course = ({ color = "light" }) => {
                 </tr>
               </thead>
               <tbody>
-                {courseList?.length > 0 ? (
-                  courseList?.map((item, index) => (
+                {filteredData?.length > 0 ? (
+                  filteredData?.map((item, index) => (
                     <tr key={item?.id || index}>
                       <td className="table-data">
                         {ImageName(item?.name)}
@@ -106,16 +123,12 @@ const Course = ({ color = "light" }) => {
                       <td className="table-data">
                         <div className="flex">{item?.duration || "-"} year</div>
                       </td>
-                      <td className="table-data">
-                        <div className="flex items-center">
-                          {item?.university || "-"}
-                        </div>
+                      <td className="table-data  ">
+                        {item?.universities
+                          ?.map((item) => item?.university)
+                          .join("/") || "-"}
                       </td>
-                      <td className="table-data">
-                        <div className="flex items-center">
-                          {item?.intake || "-"}
-                        </div>
-                      </td>{" "}
+                      <td className="table-data ">{item?.intake || "-"}</td>{" "}
                       <td className="table-data">
                         <div className="flex items-center">
                           {item?.fee || "-"}

@@ -12,14 +12,15 @@ import useKothar from "context/useKothar";
 import { ImageName } from "components/helper";
 import SearchField from "components/SearchField";
 import { delete_data } from "const/axios";
+import { useEffect } from "react";
 
 const Clients = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
   const navigate = useNavigate();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [searchText, setSearchText] = useState("");
-
   const [{ clientList, token }, { refetchClient }] = useKothar();
+  const [filteredData, setFilteredData] = useState(clientList);
 
   const deleteData = () => {
     delete_data(
@@ -31,6 +32,20 @@ const Clients = ({ color = "light" }) => {
       token
     );
   };
+
+  useEffect(() => {
+    if (searchText.length > 0) {
+      const filtered = clientList?.filter(
+        (client) =>
+          client?.name?.toLowerCase().includes(searchText?.toLowerCase()) ||
+          client?.email?.toLowerCase().includes(searchText?.toLowerCase()) ||
+          client?.visa_status?.toLowerCase().includes(searchText?.toLowerCase())
+      );
+      setFilteredData(filtered);
+    } else {
+      setFilteredData(clientList);
+    }
+  }, [searchText]);
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">
@@ -84,8 +99,8 @@ const Clients = ({ color = "light" }) => {
                 </tr>
               </thead>
               <tbody>
-                {clientList?.length > 0 ? (
-                  clientList?.map((item, index) => (
+                {filteredData?.length > 0 ? (
+                  filteredData?.map((item, index) => (
                     <tr key={item?.id || index}>
                       <td className="table-data text-left flex items-center">
                         {ImageName(item?.name)}

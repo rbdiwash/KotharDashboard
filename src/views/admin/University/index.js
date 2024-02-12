@@ -6,6 +6,7 @@ import { ImageName } from "components/helper";
 import { delete_data } from "const/axios";
 import { API_URL } from "const/constants";
 import useKothar from "context/useKothar";
+import { useEffect } from "react";
 import { useState } from "react";
 import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
 import { FaPlusCircle } from "react-icons/fa";
@@ -18,6 +19,7 @@ const University = ({ color = "light" }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [{ uniData, token }, { refetchUniData }] = useKothar();
   const [searchText, setSearchText] = useState("");
+  const [filteredData, setFilteredData] = useState(uniData);
 
   const deleteData = () => {
     delete_data(
@@ -29,6 +31,21 @@ const University = ({ color = "light" }) => {
       token
     );
   };
+
+  useEffect(() => {
+    if (searchText.length > 0) {
+      const filtered = uniData?.filter(
+        (client) =>
+          client?.name?.toLowerCase().includes(searchText?.toLowerCase()) ||
+          client?.email?.toLowerCase().includes(searchText?.toLowerCase()) ||
+          client?.abn?.toLowerCase().includes(searchText?.toLowerCase()) ||
+          client?.state?.toLowerCase().includes(searchText?.toLowerCase())
+      );
+      setFilteredData(filtered);
+    } else {
+      setFilteredData(uniData);
+    }
+  }, [searchText]);
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">
@@ -79,8 +96,8 @@ const University = ({ color = "light" }) => {
                 </tr>
               </thead>
               <tbody>
-                {uniData?.length > 0 ? (
-                  uniData?.map((item, index) => (
+                {filteredData?.length > 0 ? (
+                  filteredData?.map((item, index) => (
                     <tr key={item?.id || index}>
                       <td className="table-data text-left flex items-center">
                         {ImageName(item?.name)}

@@ -18,6 +18,7 @@ const AddConsultancy = ({ color = "light" }) => {
     email: null,
     website: null,
     owner: null,
+    abn: null,
     panNumber: null,
     primaryContactNumber: null,
     secondaryContactNumber: null,
@@ -172,10 +173,10 @@ const AddConsultancy = ({ color = "light" }) => {
                     <InputField
                       type="number"
                       placeholder="PAN Number/ABN Number"
-                      name="panNumber"
+                      name="abn"
                       label="PAN Number/ABN Number"
                       required
-                      value={data?.panNumber}
+                      value={data?.abn}
                       onChange={handleInputChange}
                     />
                   </div>
