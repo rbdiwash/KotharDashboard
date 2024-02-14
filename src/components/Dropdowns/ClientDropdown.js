@@ -12,7 +12,18 @@ const ClientDropdown = ({ data, setData }) => {
         onChange={(e, value) => {
           setData((prevState) => ({
             ...prevState,
-            value,
+            clientId: value?.id,
+            name: value?.name,
+            address: value?.address,
+            dob: value?.dob,
+            gender: value?.gender,
+            email: value?.email,
+            number: value?.number,
+            passportNumber: value?.passportNumber,
+            visa_expiry: value?.visa_expiry,
+            visa_status: value?.visa_status,
+            passportExpiry: value?.passportExpiry,
+            dateOfIssue: value?.dateOfIssue,
           }));
         }}
         required

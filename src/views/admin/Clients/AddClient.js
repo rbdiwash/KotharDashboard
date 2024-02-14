@@ -1,9 +1,10 @@
 import {
-  Button, FormControl,
+  Button,
+  FormControl,
   FormControlLabel,
   FormLabel,
   Radio,
-  RadioGroup
+  RadioGroup,
 } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
@@ -45,7 +46,7 @@ const AddClient = ({ color = "light" }) => {
         data?.id ? "Data updated Successfully" : "Data added Successfully"
       );
       navigate("/admin/client");
-      refetchClient(); 
+      refetchClient();
     },
     onError() {
       toast.error(data?.id ? "Error Updating Data" : "Error Submitting Data");
@@ -136,7 +137,6 @@ const AddClient = ({ color = "light" }) => {
                       <RadioGroup
                         row
                         required
-                        defaultValue="female"
                         name="gender"
                         onChange={handleInputChange}
                         value={data?.gender}

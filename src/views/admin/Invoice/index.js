@@ -22,6 +22,7 @@ import { useState } from "react";
 import SearchField from "components/SearchField";
 import DeleteModal from "components/Modals/DeleteModal";
 import useKothar from "context/useKothar";
+import { useEffect } from "react";
 
 const Invoice = ({ color = "dark" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
@@ -31,6 +32,7 @@ const Invoice = ({ color = "dark" }) => {
   const [searchText, setSearchText] = useState("");
 
   const [{ invoiceList, token }, { refetchInvoiceList }] = useKothar();
+  const [filteredData, setFilteredData] = useState(invoiceList);
 
   const imageName = (text) => {
     const splittedText = text?.split(" ");
@@ -79,6 +81,24 @@ const Invoice = ({ color = "dark" }) => {
         toast.error("Error Deleting Data");
       });
   };
+
+  useEffect(() => {
+    if (searchText.length > 0) {
+      const filtered = invoiceList?.filter(
+        (client) =>
+          client?.title?.toLowerCase().includes(searchText?.toLowerCase()) ||
+          client?.invoiceTo
+            ?.toLowerCase()
+            .includes(searchText?.toLowerCase()) ||
+          client?.paymentInfo?.accountName
+            ?.toLowerCase()
+            .includes(searchText?.toLowerCase())
+      );
+      setFilteredData(filtered);
+    } else {
+      setFilteredData(invoiceList);
+    }
+  }, [searchText]);
 
   return (
     <div className="flex flex-wrap mt-4  dashBody">
@@ -132,8 +152,8 @@ const Invoice = ({ color = "dark" }) => {
                 </tr>
               </thead>
               <tbody>
-                {invoiceList?.length > 0 ? (
-                  invoiceList?.map((item, index) => (
+                {filteredData?.length > 0 ? (
+                  filteredData?.map((item, index) => (
                     <tr key={item?.id || index}>
                       <th className="table-data text-left flex h-full">
                         {item?.name && imageName(item?.name || "Anand Pandey")}

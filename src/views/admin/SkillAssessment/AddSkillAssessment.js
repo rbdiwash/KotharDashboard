@@ -23,22 +23,10 @@ import ClientDropdown from "components/Dropdowns/ClientDropdown";
 const AddSkillAssessment = ({ color = "light" }) => {
   const [data, setData] = useState({
     status: false,
-    name: null,
-    address: null,
-    dob: null,
-    gender: null,
-    email: null,
-    number: null,
     visa_status: null,
     course_provider: null,
     course_completed: null,
-    passport_number: "",
-    date_of_issue: "",
-    date_of_expiry: "",
-    visa_status: "",
-    visa_expiry: "",
     resume: "",
-    passport: "",
     academic: [],
     py: [],
   });
@@ -64,7 +52,7 @@ const AddSkillAssessment = ({ color = "light" }) => {
       toast.success(
         data?.id ? "Data updated Successfully" : "Data added Successfully"
       );
-      navigate("/admin/consultancy");
+      navigate("/admin/skill-assessment");
       refetchConsultancy();
     },
     onError() {
@@ -170,9 +158,10 @@ const AddSkillAssessment = ({ color = "light" }) => {
                       placeholder="Address"
                       name="address"
                       required
+                      disabled
                       type="text"
                       value={data?.address}
-                      onChange={handleInputChange}
+                      // onChange={handleInputChange}
                     />
                   </div>
                   <div className="relative w-full mb-3">
@@ -180,38 +169,43 @@ const AddSkillAssessment = ({ color = "light" }) => {
                       label="Date of Birth"
                       placeholder="Date of Birth"
                       name="dob"
+                      disabled
                       required
                       type="date"
                       value={data?.dob}
-                      onChange={handleInputChange}
+                      // onChange={handleInputChange}
                     />
                   </div>
                   <div className="relative w-full mb-3">
-                    <FormControl>
+                    <FormControl value={data?.gender}>
                       <FormLabel className="text-slate-600 uppercase text-xs font-bold mb-2">
                         Gender
                       </FormLabel>
                       <RadioGroup
                         row
                         required
-                        defaultValue="female"
-                        name="radio-buttons-group"
+                        disabled
+                        value={data?.gender}
+                        name="gender"
                       >
                         <FormControlLabel
                           value="male"
                           control={<Radio />}
                           label="Male"
+                          disabled
                         />
 
                         <FormControlLabel
                           value="female"
                           control={<Radio />}
                           label="Female"
+                          disabled
                         />
                         <FormControlLabel
                           value="other"
                           control={<Radio />}
                           label="Other"
+                          disabled
                         />
                       </RadioGroup>
                     </FormControl>
@@ -224,7 +218,8 @@ const AddSkillAssessment = ({ color = "light" }) => {
                       label="Email"
                       required
                       value={data?.email}
-                      onChange={handleInputChange}
+                      disabled
+                      // onChange={handleInputChange}
                     />
                   </div>
                   <div className="relative w-full mb-3">
@@ -233,10 +228,11 @@ const AddSkillAssessment = ({ color = "light" }) => {
                       label="Mobile Number"
                       placeholder="Mobile Number"
                       name="number"
+                      disabled
                       required
                       type="number"
                       value={data?.number}
-                      onChange={handleInputChange}
+                      // onChange={handleInputChange}
                     />
                   </div>
                   <div className="relative w-full mb-3">
@@ -247,7 +243,7 @@ const AddSkillAssessment = ({ color = "light" }) => {
                       required
                       type="text"
                       value={data?.course_provider}
-                      onChange={handleInputChange}
+                      // onChange={handleInputChange}
                     />
                   </div>
                   <div className="relative w-full mb-3">
@@ -258,7 +254,7 @@ const AddSkillAssessment = ({ color = "light" }) => {
                       required
                       type="text"
                       value={data?.course_completed}
-                      onChange={handleInputChange}
+                      // onChange={handleInputChange}
                     />
                   </div>
                 </div>
@@ -270,33 +266,36 @@ const AddSkillAssessment = ({ color = "light" }) => {
                     <InputField
                       label="Passport Number"
                       placeholder="Passport Number"
-                      name="passport_number"
+                      name="passportNumber"
+                      disabled
                       required
                       type="number"
-                      value={data?.passport_number}
-                      onChange={handleInputChange}
+                      value={data?.passportNumber}
+                      // onChange={handleInputChange}
                     />
                   </div>
 
                   <div className="relative w-full mb-3">
                     <InputField
                       label="Date of Issue"
-                      name="data_of_issue"
+                      name="dateOfIssue"
+                      disabled
                       required
                       type="date"
-                      value={data?.data_of_issue}
-                      onChange={handleInputChange}
+                      value={data?.dateOfIssue}
+                      // onChange={handleInputChange}
                     />
                   </div>
 
                   <div className="relative w-full mb-3">
                     <InputField
                       label="Expiry Date"
-                      name="date_of_expiry"
+                      name="passportExpiry"
+                      disabled
                       required
                       type="date"
-                      value={data?.date_of_expiry}
-                      onChange={handleInputChange}
+                      value={data?.passportExpiry}
+                      // onChange={handleInputChange}
                     />
                   </div>
                   <div className="relative w-full mb-3">
@@ -304,10 +303,11 @@ const AddSkillAssessment = ({ color = "light" }) => {
                       label="Visa Status"
                       placeholder="Visa Status"
                       name="visa_status"
+                      disabled
                       required
                       type="text"
                       value={data?.visa_status}
-                      onChange={handleInputChange}
+                      // onChange={handleInputChange}
                     />
                   </div>
 
@@ -317,8 +317,9 @@ const AddSkillAssessment = ({ color = "light" }) => {
                       name="visa_expiry"
                       required
                       type="date"
+                      disabled
                       value={data?.visa_expiry}
-                      onChange={handleInputChange}
+                      // onChange={handleInputChange}
                     />
                   </div>
                 </div>
