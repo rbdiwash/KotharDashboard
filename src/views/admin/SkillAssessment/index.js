@@ -1,27 +1,25 @@
 import { Button, IconButton, Tooltip } from "@mui/material";
-import DeleteModal from "components/Modals/DeleteModal";
-import { useState } from "react";
-import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
-import { FaPlusCircle, FaRocketchat } from "react-icons/fa";
-import { useQuery } from "@tanstack/react-query";
-import { Link, useNavigate } from "react-router-dom";
-import { API_URL } from "const/constants";
 import axios from "axios";
-import { toast } from "react-toastify";
-import useKothar from "context/useKothar";
-import { ImageName } from "components/helper";
-import SkillAssessmentModal from "./AddSkillAssessment";
-import SearchField from "components/SearchField";
+import DeleteModal from "components/Modals/DeleteModal";
 import DiscussionModal from "components/Modals/DiscussionModal";
+import SearchField from "components/SearchField";
+import { ImageName } from "components/helper";
+import { API_URL } from "const/constants";
+import useKothar from "context/useKothar";
+import { useEffect, useState } from "react";
+import { AiFillDelete, AiFillEdit } from "react-icons/ai";
+import { FaPlusCircle, FaRocketchat } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const SkillAssessment = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
   const navigate = useNavigate();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
-  const [openInsuranceForm, setOpenInsuranceForm] = useState(false);
   const [searchText, setSearchText] = useState("");
 
   const [{ courseList }, { refetchCourseList }] = useKothar();
+  const [filteredData, setFilteredData] = useState(courseList);
 
   const deleteData = () => {
     axios
@@ -40,6 +38,21 @@ const SkillAssessment = ({ color = "light" }) => {
   const handleDiscussion = () => {
     setOpenDiscussion(!openDiscussion);
   };
+
+  useEffect(() => {
+    if (searchText.length > 0) {
+      const filtered = courseList?.filter(
+        (client) =>
+          client?.name?.toLowerCase().includes(searchText?.toLowerCase()) ||
+          client?.email?.toLowerCase().includes(searchText?.toLowerCase()) ||
+          client?.address?.toLowerCase().includes(searchText?.toLowerCase()) ||
+          client?.status?.toLowerCase().includes(searchText?.toLowerCase())
+      );
+      setFilteredData(filtered);
+    } else {
+      setFilteredData(courseList);
+    }
+  }, [searchText]);
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">
@@ -98,8 +111,8 @@ const SkillAssessment = ({ color = "light" }) => {
                 </tr>
               </thead>
               <tbody>
-                {courseList?.length > 0 ? (
-                  courseList?.map((item, index) => (
+                {filteredData?.length > 0 ? (
+                  filteredData?.map((item, index) => (
                     <tr key={item?.id || index}>
                       <td className="table-data">
                         {ImageName(item?.name)}
