@@ -18,17 +18,17 @@ const SkillAssessment = ({ color = "light" }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [searchText, setSearchText] = useState("");
 
-  const [{ courseList }, { refetchCourseList }] = useKothar();
-  const [filteredData, setFilteredData] = useState(courseList);
+  const [{ skillList }, { refetchSkillList }] = useKothar();
+  const [filteredData, setFilteredData] = useState(skillList);
 
   const deleteData = () => {
     axios
-      .delete(`${API_URL}/organization/delete/${openConfirmationModal?.id}`)
+      .delete(`${API_URL}/student/skill/delete/${openConfirmationModal?.id}`)
       .then((res) => {
         console.log(res);
         toast.success(res?.data?.message || "Data Deleted Successfully");
         setOpenConfirmationModal({ state: false, id: null });
-        refetchCourseList();
+        refetchSkillList();
       })
       .catch((err) => {
         toast.error("Error Deleting Data");
@@ -41,7 +41,7 @@ const SkillAssessment = ({ color = "light" }) => {
 
   useEffect(() => {
     if (searchText.length > 0) {
-      const filtered = courseList?.filter(
+      const filtered = skillList?.filter(
         (client) =>
           client?.name?.toLowerCase().includes(searchText?.toLowerCase()) ||
           client?.email?.toLowerCase().includes(searchText?.toLowerCase()) ||
@@ -50,7 +50,7 @@ const SkillAssessment = ({ color = "light" }) => {
       );
       setFilteredData(filtered);
     } else {
-      setFilteredData(courseList);
+      setFilteredData(skillList);
     }
   }, [searchText]);
 

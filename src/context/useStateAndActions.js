@@ -121,6 +121,32 @@ const useStateAndActions = () => {
       refetchOnWindowFocus: false,
     }
   );
+  const getVisaList = async () => {
+    const res = await axios.get(`${API_URL}/student/visa-applications`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    return res?.data?.data;
+  };
+  const { data: visaList, refetch: refetchVisaList } = useQuery(
+    ["visaList"],
+    getVisaList,
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
+  const getSkillAssessmentList = async () => {
+    const res = await axios.get(`${API_URL}/student/skill/list`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    return res?.data?.data;
+  };
+  const { data: skillList, refetch: refetchSkillList } = useQuery(
+    ["skill"],
+    getSkillAssessmentList,
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   useEffect(() => {
     if (token) {
@@ -131,6 +157,8 @@ const useStateAndActions = () => {
       refetchUsers();
       refetchClient();
       refetchInvoiceList();
+      refetchVisaList();
+      refetchSkillList();
     }
   }, [token]);
 
@@ -144,6 +172,8 @@ const useStateAndActions = () => {
     invoiceList,
     token,
     wholeLoading,
+    visaList,
+    skillList,
   };
   const actions = {
     refetchClient,
@@ -155,6 +185,8 @@ const useStateAndActions = () => {
     setToken,
     refetchInvoiceList,
     setWholeLoading,
+    refetchVisaList,
+    refetchSkillList,
   };
 
   return [state, actions];

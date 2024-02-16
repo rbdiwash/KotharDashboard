@@ -30,8 +30,7 @@ const AddSkillAssessment = ({ color = "light" }) => {
     academic: [],
     py: [],
   });
-  console.log("🚀  data:", data);
-  const [{}, { refetchConsultancy }] = useKothar();
+  const [{}, { refetchSkillList }] = useKothar();
 
   const navigate = useNavigate();
   const handleInputChange = (e) => {
@@ -53,7 +52,7 @@ const AddSkillAssessment = ({ color = "light" }) => {
         data?.id ? "Data updated Successfully" : "Data added Successfully"
       );
       navigate("/admin/skill-assessment");
-      refetchConsultancy();
+      refetchSkillList();
     },
     onError() {
       toast.error(data?.id ? "Error Updating Data" : "Error Submitting Data");
@@ -62,9 +61,12 @@ const AddSkillAssessment = ({ color = "light" }) => {
 
   async function postData(payload) {
     if (data?.id) {
-      await axios.put(`${API_URL}/organization/update/${payload?.id}`, payload);
+      await axios.put(
+        `${API_URL}/student/skill/update/${payload?.id}`,
+        payload
+      );
     } else {
-      await axios.post(`${API_URL}/organization/register`, payload);
+      await axios.post(`${API_URL}/student/skill/register`, payload);
     }
   }
   const handleSubmit = (e) => {

@@ -59,7 +59,7 @@ const AddVisaDetails = ({ color = "light" }) => {
     status: true,
     ten_year_address: [],
   });
-  const [{}, { refetchConsultancy }] = useKothar();
+  const [{}, { refetchVisaList }] = useKothar();
   const [tenYearAddress, setTenYearAddress] = useState([
     {
       from: null,
@@ -88,8 +88,8 @@ const AddVisaDetails = ({ color = "light" }) => {
       toast.success(
         data?.id ? "Data updated Successfully" : "Data added Successfully"
       );
-      navigate("/admin/consultancy");
-      refetchConsultancy();
+      navigate("/admin/visa");
+      refetchVisaList();
     },
     onError() {
       toast.error(data?.id ? "Error Updating Data" : "Error Submitting Data");

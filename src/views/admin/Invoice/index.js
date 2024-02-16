@@ -30,7 +30,6 @@ const Invoice = ({ color = "dark" }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [openInvoice, setOpenInvoice] = useState(false);
   const [searchText, setSearchText] = useState("");
-
   const [{ invoiceList, token }, { refetchInvoiceList }] = useKothar();
   const [filteredData, setFilteredData] = useState(invoiceList);
 
@@ -165,7 +164,7 @@ const Invoice = ({ color = "dark" }) => {
                               : "text-white")
                           }
                         >
-                          {item?.name || "-"}
+                          {item?.title || "-"}
                         </span>
                       </th>
                       <td className="table-data">

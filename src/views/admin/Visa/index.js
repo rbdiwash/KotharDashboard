@@ -50,7 +50,7 @@ const Visa = ({ color = "light" }) => {
   const [openVisaForm, setOpenVisaForm] = useState(false);
   const [searchText, setSearchText] = useState("");
 
-  const [{ courseList }, { refetchCourseList }] = useKothar();
+  const [{ visaList }, { refetchVisaList }] = useKothar();
   const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
@@ -59,12 +59,14 @@ const Visa = ({ color = "light" }) => {
 
   const deleteData = () => {
     axios
-      .delete(`${API_URL}/organization/delete/${openConfirmationModal?.id}`)
+      .delete(
+        `${API_URL}/student/visa-applications/${openConfirmationModal?.id}`
+      )
       .then((res) => {
         console.log(res);
         toast.success(res?.data?.message || "Data Deleted Successfully");
         setOpenConfirmationModal({ state: false, id: null });
-        refetchCourseList();
+        refetchVisaList();
       })
       .catch((err) => {
         toast.error("Error Deleting Data");
@@ -131,7 +133,7 @@ const Visa = ({ color = "light" }) => {
               {...{
                 tableHeadClass,
                 navigate,
-                courseList,
+                visaList,
                 setOpenConfirmationModal,
               }}
             />
@@ -161,7 +163,7 @@ export default Visa;
 const TabContent = ({
   tableHeadClass,
   navigate,
-  courseList,
+  visaList,
   setOpenConfirmationModal,
 }) => {
   return (
@@ -181,8 +183,8 @@ const TabContent = ({
           </tr>
         </thead>
         <tbody>
-          {courseList?.length > 0 ? (
-            courseList?.map((item, index) => (
+          {visaList?.length > 0 ? (
+            visaList?.map((item, index) => (
               <tr key={item?.id || index}>
                 <td className="table-data">
                   {ImageName(item?.name)}
