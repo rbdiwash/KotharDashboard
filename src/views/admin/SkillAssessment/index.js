@@ -193,7 +193,7 @@ const SkillAssessment = ({ color = "light" }) => {
       {openConfirmationModal.state && (
         <DeleteModal
           open={openConfirmationModal.state}
-          item="Course"
+          item="Skill Assessment"
           handleCancel={() =>
             setOpenConfirmationModal({ state: false, id: null })
           }

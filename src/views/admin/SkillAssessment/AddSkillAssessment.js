@@ -19,6 +19,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import pdf from "../../../assets/img/pdf.png";
 import ClientDropdown from "components/Dropdowns/ClientDropdown";
+import UploadFile from "components/Input/UploadFile";
 
 const AddSkillAssessment = ({ color = "light" }) => {
   const [data, setData] = useState({
@@ -29,6 +30,7 @@ const AddSkillAssessment = ({ color = "light" }) => {
     resume: "",
     academic: [],
     py: [],
+    gender: "",
   });
   const [{}, { refetchSkillList }] = useKothar();
 
@@ -39,6 +41,7 @@ const AddSkillAssessment = ({ color = "light" }) => {
   };
 
   const { state } = useLocation();
+  console.log("🚀  data:", data);
 
   useEffect(() => {
     if (state) {
@@ -76,27 +79,27 @@ const AddSkillAssessment = ({ color = "light" }) => {
 
   const handleFileChange = (e, name, type) => {
     const file = e.target.files[0];
-    if (type === "multiple") {
-      setData({ ...data, [name]: [...data?.[name], file] });
-    } else {
-      setData({ ...data, [name]: file });
-    }
-    // const formData = new FormData();
-    // formData.append("file", file);
-    // axios
-    //   .post(`${API_URL}/api/upload`, formData, {
-    //     headers: { "Content-Type": "multipart/form-data" },
-    //   })
-    //   .then((res) => {
-    //     if (type === "multiple") {
-    //       setData({ ...data, [name]: [...data?.[name], res?.data?.data?.url] });
-    //     } else {
-    //       setData({ ...data, [name]: res?.data?.data?.url });
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     toast.error("Error Uploading file");
-    //   });
+    // if (type === "multiple") {
+    //   setData({ ...data, [name]: [...data?.[name], file] });
+    // } else {
+    //   setData({ ...data, [name]: file });
+    // }
+    const formData = new FormData();
+    formData.append("file", file);
+    axios
+      .post(`${API_URL}/file/upload`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+      .then((res) => {
+        if (type === "multiple") {
+          setData({ ...data, [name]: [...data?.[name], res?.data?.data?.url] });
+        } else {
+          setData({ ...data, [name]: res?.data?.data?.url });
+        }
+      })
+      .catch((err) => {
+        toast.error("Error Uploading file");
+      });
   };
 
   const handleDeletePdf = (name, i) => {
@@ -179,7 +182,7 @@ const AddSkillAssessment = ({ color = "light" }) => {
                     />
                   </div>
                   <div className="relative w-full mb-3">
-                    <FormControl value={data?.gender}>
+                    <FormControl>
                       <FormLabel className="text-slate-600 uppercase text-xs font-bold mb-2">
                         Gender
                       </FormLabel>
@@ -329,24 +332,41 @@ const AddSkillAssessment = ({ color = "light" }) => {
                   Upload Documents
                 </p>
                 <div className="grid grid-cols-2 gap-8">
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Upload Updated Resume"
-                      name="resume"
-                      type="file"
-                      onChange={(e) => handleFileChange(e, "resume")}
-                    />
-                  </div>
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Upload Full Passport"
-                      name="passport"
-                      type="file"
-                      onChange={(e) => handleFileChange(e, "passport")}
-                    />
-                  </div>
-
-                  <div className="relative w-full mb-3">
+                  <UploadFile
+                    {...{
+                      data,
+                      setData,
+                      label: "Updated Resume",
+                      imageKey: "resume",
+                    }}
+                  />
+                  <UploadFile
+                    {...{
+                      data,
+                      setData,
+                      label: "Full Passport",
+                      imageKey: "passport",
+                    }}
+                  />{" "}
+                  <UploadFile
+                    {...{
+                      data,
+                      setData,
+                      label: "All Academic Documents(multiple)",
+                      imageKey: "academic",
+                      type: "multiple",
+                    }}
+                  />{" "}
+                  <UploadFile
+                    {...{
+                      data,
+                      setData,
+                      label: "All PY Certificate(multiple)",
+                      imageKey: "py",
+                      type: "multiple",
+                    }}
+                  />
+                  {/* <div className="relative w-full mb-3">
                     <InputField
                       label="Upload All Academic Documents(multiple)"
                       name="coe"
@@ -365,8 +385,8 @@ const AddSkillAssessment = ({ color = "light" }) => {
                         />
                       </div>
                     ))}
-                  </div>
-                  <div className="relative w-full mb-3">
+                  </div> */}
+                  {/* <div className="relative w-full mb-3">
                     <InputField
                       label="Upload All PY Certificate(multiple)"
                       name="coe"
@@ -383,7 +403,7 @@ const AddSkillAssessment = ({ color = "light" }) => {
                         />
                       </div>
                     ))}
-                  </div>
+                  </div> */}
                 </div>
                 <div className="w-full flex justify-end mt-6 gap-4">
                   {/* <Button variant="outlined" component={Link} to=""> */}

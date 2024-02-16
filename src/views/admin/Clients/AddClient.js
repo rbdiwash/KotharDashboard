@@ -22,6 +22,7 @@ const AddClient = ({ color = "light" }) => {
     address: null,
     email: null,
     image: null,
+    gender: null,
   });
 
   const [{}, { refetchClient }] = useKothar();

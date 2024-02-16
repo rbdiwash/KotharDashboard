@@ -68,6 +68,7 @@ const AddVisaDetails = ({ color = "light" }) => {
       uid: crypto.randomUUID(),
     },
   ]);
+  console.log("🚀  data:", data);
 
   const navigate = useNavigate();
   const handleInputChange = (e) => {
@@ -219,7 +220,7 @@ const AddVisaDetails = ({ color = "light" }) => {
                       required
                       type="text"
                       value={data?.address}
-                      onChange={handleInputChange}
+                      disabled
                     />
                   </div>
                   <div className="relative w-full mb-3">
@@ -230,7 +231,7 @@ const AddVisaDetails = ({ color = "light" }) => {
                       required
                       type="date"
                       value={data?.dob}
-                      onChange={handleInputChange}
+                      disabled
                     />
                   </div>
                   <div className="relative w-full mb-3">
@@ -241,8 +242,9 @@ const AddVisaDetails = ({ color = "light" }) => {
                       <RadioGroup
                         row
                         required
-                        defaultValue="female"
+                        value={data?.gender}
                         name="radio-buttons-group"
+                        disabled
                       >
                         <FormControlLabel
                           value="male"
@@ -271,7 +273,7 @@ const AddVisaDetails = ({ color = "light" }) => {
                       label="Email"
                       required
                       value={data?.email}
-                      onChange={handleInputChange}
+                      disabled
                     />
                   </div>
                   <div className="relative w-full mb-3">
@@ -283,7 +285,7 @@ const AddVisaDetails = ({ color = "light" }) => {
                       required
                       type="number"
                       value={data?.number}
-                      onChange={handleInputChange}
+                      disabled
                     />
                   </div>
                   <div className="relative w-full mb-3">
@@ -294,7 +296,7 @@ const AddVisaDetails = ({ color = "light" }) => {
                       required
                       type="text"
                       value={data?.courseProvider}
-                      onChange={handleInputChange}
+                      disabled
                     />
                   </div>
                   <div className="relative w-full mb-3">
@@ -305,7 +307,7 @@ const AddVisaDetails = ({ color = "light" }) => {
                       required
                       type="text"
                       value={data?.courseCompleted}
-                      onChange={handleInputChange}
+                      disabled
                     />
                   </div>
                 </div>
@@ -321,7 +323,7 @@ const AddVisaDetails = ({ color = "light" }) => {
                       required
                       type="number"
                       value={data?.passportNumber}
-                      onChange={handleInputChange}
+                      disabled
                     />
                   </div>
 
@@ -332,16 +334,18 @@ const AddVisaDetails = ({ color = "light" }) => {
                       required
                       type="date"
                       value={data?.dataOfIssue}
+                      disabled
                     />
                   </div>
 
                   <div className="relative w-full mb-3">
                     <InputField
                       label="Expiry Date"
-                      name="dateOfExpiry"
+                      name="passportExpiry"
                       required
                       type="date"
-                      value={data?.dateOfExpiry}
+                      value={data?.passportExpiry}
+                      disabled
                     />
                   </div>
                   <div className="relative w-full mb-3">
@@ -352,7 +356,7 @@ const AddVisaDetails = ({ color = "light" }) => {
                       required
                       type="text"
                       value={data?.visa_status}
-                      onChange={handleInputChange}
+                      disabled
                     />
                   </div>
 
@@ -363,6 +367,7 @@ const AddVisaDetails = ({ color = "light" }) => {
                       required
                       type="date"
                       value={data?.visa_expiry}
+                      disabled
                     />
                   </div>
                 </div>
@@ -446,10 +451,10 @@ const AddVisaDetails = ({ color = "light" }) => {
                   <div className="relative w-full mb-3">
                     <InputField
                       label="Police Check Lodge Date"
-                      name="dateOfExpiry"
+                      name="passportExpiry"
                       required
                       type="text"
-                      value={data?.dateOfExpiry}
+                      value={data?.passportExpiry}
                     />
                   </div>
                   <div className="relative w-full mb-3">

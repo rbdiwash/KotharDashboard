@@ -7,8 +7,9 @@ import useKothar from "context/useKothar";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import InputField from "./InputField";
+import { Delete } from "@mui/icons-material";
 
-const UploadFile = ({ data, setData, imageKey, label }) => {
+const UploadFile = ({ data, setData, imageKey, label, type = "single" }) => {
   const [{ token }, { setWholeLoading }] = useKothar();
 
   const handleFileChange = (e) => {
@@ -27,60 +28,102 @@ const UploadFile = ({ data, setData, imageKey, label }) => {
         toast.success("File Uploaded Successfully");
 
         setData({ ...data, [imageKey]: res?.data?.url });
-        // setWholeLoading(false);
+
+        if (type === "multiple") {
+          setData({
+            ...data,
+            [imageKey]: [...data?.[imageKey], res?.data?.url],
+          });
+        } else {
+          setData({ ...data, [imageKey]: res?.data?.url });
+        }
       })
       .catch((err) => {
         toast.error("Error Uploading file");
       });
   };
 
-  // const downloadImage = () => {
-  //   saveAs(data?.image);
-  // };
+  const handleDeletePdf = (name, i) => {
+    setData({
+      ...data,
+      [imageKey]: [...data?.[imageKey].filter((item, index) => i !== index)],
+    });
+  };
 
   return (
     <>
       <div className="relative w-full mb-3">
         <InputField
-          label={label || "Upload Image"}
+          label={`Upload ${label}` || "Upload Image"}
           name="image"
           // required
           type="file"
-          onChange={handleFileChange}
+          onChange={(e) => handleFileChange(e, imageKey, "multiple")}
         />
-        {data?.[imageKey] && (
-          <div className="show-image">
-            <img
-              src={data?.[imageKey]}
-              alt="Image"
-              className="mr-auto mt-4 h-80 w-80 border p-3 object-cover"
-            />
-            <div className="delete">
-              <Tooltip title="Delete Image">
-                <IconButton>
-                  <ClearIcon
-                    sx={{ fontSize: 40 }}
-                    onClick={() => setData({ ...data, [imageKey]: null })}
-                  />
-                </IconButton>
-              </Tooltip>
-            </div>
-            <Link
-              className="download"
-              to={data?.[imageKey]}
-              download
-              target="_blank"
-              // onClick={downloadImage}
-            >
-              <div className="flex items-center justify-between bg-gray-300 py-1 px-4">
-                <span className="text-lg font-semibold">Download Image</span>
-                <IconButton>
-                  <FileDownloadIcon sx={{ fontSize: 20 }} />
-                </IconButton>
+        {type !== "multiple"
+          ? data?.[imageKey] && (
+              <div className="show-image">
+                <img
+                  src={data?.[imageKey]}
+                  alt="Image"
+                  className="mr-auto mt-4 h-80 w-80 border p-3 object-cover"
+                />
+                <div className="delete">
+                  <Tooltip title="Delete Image">
+                    <IconButton>
+                      <ClearIcon
+                        sx={{ fontSize: 40 }}
+                        onClick={() => setData({ ...data, [imageKey]: null })}
+                      />
+                    </IconButton>
+                  </Tooltip>
+                </div>
+                <Link
+                  className="download"
+                  to={data?.[imageKey]}
+                  download
+                  target="_blank"
+                  // onClick={downloadImage}
+                >
+                  <div className="flex items-center justify-between bg-gray-300 py-1 px-4">
+                    <span className="text-lg font-semibold">
+                      Download Image
+                    </span>
+                    <IconButton>
+                      <FileDownloadIcon sx={{ fontSize: 20 }} />
+                    </IconButton>
+                  </div>
+                </Link>
               </div>
-            </Link>
-          </div>
-        )}
+            )
+          : data?.[imageKey]?.map((item, i) => (
+              <div
+                className="flex gap-4 items-center bg-gray-200 p-1 mt-2 rounded w-fit"
+                key={i}
+              >
+                <img src={item} alt="" className="h-8" />
+                <span>{item?.slice(0, 30)}</span>
+                <Link
+                  className="download"
+                  to={item}
+                  download
+                  target="_blank"
+                  // onClick={downloadImage}
+                >
+                  <Tooltip title="Download Image">
+                    <IconButton>
+                      <FileDownloadIcon sx={{ fontSize: 20 }} />
+                    </IconButton>
+                  </Tooltip>
+                </Link>
+                <Tooltip title="Delete Image">
+                  <Delete
+                    className="cursor-pointer"
+                    onClick={() => handleDeletePdf(imageKey, i)}
+                  />
+                </Tooltip>
+              </div>
+            ))}
       </div>
     </>
   );
