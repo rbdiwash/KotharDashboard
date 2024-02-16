@@ -22,6 +22,7 @@ import pdf from "../../../assets/img/pdf.png";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DownloadIcon from "@mui/icons-material/Download";
 import ClientDropdown from "components/Dropdowns/ClientDropdown";
+import UploadFile from "components/Input/UploadFile";
 
 const AddVisaDetails = ({ color = "light" }) => {
   const [data, setData] = useState({
@@ -324,7 +325,7 @@ const AddVisaDetails = ({ color = "light" }) => {
                       type="number"
                       value={data?.passportNumber}
                       disabled
-                    />
+                    />  
                   </div>
 
                   <div className="relative w-full mb-3">
@@ -510,139 +511,117 @@ const AddVisaDetails = ({ color = "light" }) => {
                       </div>
                     )}
                   </div>
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Upload Updated Resume"
-                      name="resume"
-                      type="file"
-                      onChange={(e) => handleFileChange(e, "resume")}
-                    />
-                  </div>
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Upload Birth Certificate"
-                      name="birth_certificate"
-                      type="file"
-                      onChange={(e) => handleFileChange(e, "birth_certificate")}
-                    />
-                  </div>
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Upload Current Visa"
-                      name="current_visa"
-                      type="file"
-                      onChange={(e) => handleFileChange(e, "current_visa")}
-                    />
-                  </div>
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Upload Insurance"
-                      name="insurance_doc"
-                      type="file"
-                      onChange={(e) => handleFileChange(e, "insurance_doc")}
-                    />
-                  </div>
 
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Upload All Academic (multiple)"
-                      name="all_academic"
-                      type="file"
-                      multiple
-                      onChange={(e) =>
-                        handleFileChange(e, "all_academic", "multiple")
-                      }
-                    />
-                    {data?.all_academic?.map((data, i) => (
-                      <div className="flex gap-4 items-center bg-gray-200 p-1 mt-2 rounded w-fit">
-                        <img src={pdf} alt="" className="h-8" />
-                        <span>{data?.name.slice(0, 30)}</span>
-                        <Delete
-                          className="cursor-pointer"
-                          onClick={() => handleDeletePdf("all_academic", i)}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Upload All COE's (multiple)"
-                      name="coe"
-                      type="file"
-                      multiple
-                      onChange={(e) => handleFileChange(e, "coe")}
-                    />
-                    {data?.coe?.map((data, i) => (
-                      <div className="flex gap-4 items-center bg-gray-200 p-1 mt-2 rounded w-fit">
-                        <img src={pdf} alt="" className="h-8" />
-                        <span>{data?.name.slice(0, 30)}</span>
-                        <Delete
-                          className="cursor-pointer"
-                          onClick={() => handleDeletePdf("coe", i)}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Upload Completion Letter"
-                      name="completion_letter"
-                      type="file"
-                      multiple
-                      onChange={(e) => handleFileChange(e, "completion_letter")}
-                    />
-                  </div>
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Upload Certificate of Graduation"
-                      name="graduation_certificate"
-                      type="file"
-                      multiple
-                      onChange={(e) =>
-                        handleFileChange(e, "graduation_certificate")
-                      }
-                    />
-                  </div>
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Upload IELTS/PTE (Overall 6)"
-                      name="ielts_pte"
-                      type="file"
-                      multiple
-                      onChange={(e) => handleFileChange(e, "ielts_pte")}
-                    />
-                  </div>
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Upload Police Report (National Police Certificate) "
-                      name="police_report"
-                      type="file"
-                      multiple
-                      onChange={(e) => handleFileChange(e, "police_report")}
-                    />
-                  </div>
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Upload Relationship Certificate "
-                      name="relationship_certificate"
-                      type="file"
-                      multiple
-                      onChange={(e) =>
-                        handleFileChange(e, "relationship_certificate")
-                      }
-                    />
-                  </div>
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Upload Marriage Certificate (if married)"
-                      name="marriage_certificate"
-                      type="file"
-                      multiple
-                      onChange={(e) =>
-                        handleFileChange(e, "marriage_certificate")
-                      }
-                    />
-                  </div>
+                  <UploadFile
+                    {...{
+                      data,
+                      setData,
+                      label: "Updated Resume",
+                      imageKey: "resume",
+                    }}
+                  />
+
+                  <UploadFile
+                    {...{
+                      data,
+                      setData,
+                      label: "Updated Birth Certificate",
+                      imageKey: "birth_certificate",
+                    }}
+                  />
+                  <UploadFile
+                    {...{
+                      data,
+                      setData,
+                      label: "Updated Current Visa",
+                      imageKey: "current_visa",
+                    }}
+                  />
+
+                  <UploadFile
+                    {...{
+                      data,
+                      setData,
+                      label: "Updated Insurance",
+                      imageKey: "insurance_doc",
+                    }}
+                  />
+
+                  <UploadFile
+                    {...{
+                      data,
+                      setData,
+                      label: "Updated All Academic (multiple)",
+                      imageKey: "all_academic",
+                      type: "multiple",
+                    }}
+                  />
+
+                  <UploadFile
+                    {...{
+                      data,
+                      setData,
+                      label: "Updated All COE's (multiple)",
+                      imageKey: "coe",
+                      type: "multiple",
+                    }}
+                  />
+                  <UploadFile
+                    {...{
+                      data,
+                      setData,
+                      label: "Updated Completion Letter",
+                      imageKey: "completion_letter",
+                      type: "multiple",
+                    }}
+                  />
+
+                  <UploadFile
+                    {...{
+                      data,
+                      setData,
+                      label: "Certificate of Graduation",
+                      imageKey: "graduation_certificate",
+                      type: "multiple",
+                    }}
+                  />
+
+                  <UploadFile
+                    {...{
+                      data,
+                      setData,
+                      label: "IELTS/PTE (Overall 6)",
+                      imageKey: "ielts_pte",
+                      type: "multiple",
+                    }}
+                  />
+
+                  <UploadFile
+                    {...{
+                      data,
+                      setData,
+                      label: "Police Report (National Police Certificate)",
+                      imageKey: "police_report",
+                      type: "multiple",
+                    }}
+                  />
+
+                  <UploadFile
+                    {...{
+                      data,
+                      setData,
+                      label: "Relationship Certificate",
+                      imageKey: "relationship_certificate",
+                    }}
+                  />
+                  <UploadFile
+                    {...{
+                      data,
+                      setData,
+                      label: "Marriage Certificate (if married)",
+                      imageKey: "marriage_certificate",
+                    }}
+                  />
                 </div>
                 <div className="grid grid-cols-1 gap-8 mt-4">
                   <div className="relative w-full mb-3">
@@ -656,6 +635,7 @@ const AddVisaDetails = ({ color = "light" }) => {
                       type="text"
                       className="border px-3 py-3 placeholder-slate-300 text-slate-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       rows="4"
+                      value={data?.note}
                       onChange={(e) => handleInputChange(e, "note")}
                     ></textarea>
                   </div>
