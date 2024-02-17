@@ -52,6 +52,7 @@ const Visa = ({ color = "light" }) => {
 
   const [{ visaList }, { refetchVisaList }] = useKothar();
   const [value, setValue] = useState(0);
+  const [filteredData, setFilteredData] = useState(visaList);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -76,6 +77,28 @@ const Visa = ({ color = "light" }) => {
   const handleDiscussion = () => {
     setOpenDiscussion(!openDiscussion);
   };
+
+
+  
+  useEffect(() => {
+    if (searchText.length > 0) {
+      const filtered = visaList?.filter(
+        (client) =>
+          client?.name?.toLowerCase().includes(searchText?.toLowerCase()) ||
+          client?.address
+            ?.toLowerCase()
+            .includes(searchText?.toLowerCase()) ||
+          client?.status?.toLowerCase().includes(searchText?.toLowerCase()) ||
+          client?.coverType
+            ?.toLowerCase()
+            .includes(searchText?.toLowerCase()) ||
+          client?.caseOfficer?.toLowerCase().includes(searchText?.toLowerCase())
+      );
+      setFilteredData(filtered);
+    } else {
+      setFilteredData(visaList);
+    }
+  }, [searchText]);
   return (
     <div className="flex flex-wrap mt-4 dashBody">
       <div className="w-full mb-12 px-4">

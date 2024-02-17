@@ -13,6 +13,7 @@ import { ImageName } from "components/helper";
 import InsuranceModal from "./InsuranceModal";
 import SearchField from "components/SearchField";
 import DiscussionModal from "components/Modals/DiscussionModal";
+import { useEffect } from "react";
 
 const Insurance = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
@@ -21,16 +22,18 @@ const Insurance = ({ color = "light" }) => {
   const [openInsuranceForm, setOpenInsuranceForm] = useState(false);
   const [searchText, setSearchText] = useState("");
 
-  const [{ courseList }, { refetchCourseList }] = useKothar();
+  const [{ insuranceList }, { refetchInsuranceList }] = useKothar();
+  const [filteredData, setFilteredData] = useState(insuranceList);
 
   const deleteData = () => {
     axios
-      .delete(`${API_URL}/organization/delete/${openConfirmationModal?.id}`)
+      .delete(
+        `${API_URL}/student/insurance/delete/${openConfirmationModal?.id}`
+      )
       .then((res) => {
-        console.log(res);
         toast.success(res?.data?.message || "Data Deleted Successfully");
         setOpenConfirmationModal({ state: false, id: null });
-        refetchCourseList();
+        refetchInsuranceList();
       })
       .catch((err) => {
         toast.error("Error Deleting Data");
@@ -40,6 +43,26 @@ const Insurance = ({ color = "light" }) => {
   const handleDiscussion = () => {
     setOpenDiscussion(!openDiscussion);
   };
+
+  useEffect(() => {
+    if (searchText.length > 0) {
+      const filtered = insuranceList?.filter(
+        (client) =>
+          client?.name?.toLowerCase().includes(searchText?.toLowerCase()) ||
+          client?.insuranceCompany
+            ?.toLowerCase()
+            .includes(searchText?.toLowerCase()) ||
+          client?.type?.toLowerCase().includes(searchText?.toLowerCase()) ||
+          client?.coverType
+            ?.toLowerCase()
+            .includes(searchText?.toLowerCase()) ||
+          client?.caseOfficer?.toLowerCase().includes(searchText?.toLowerCase())
+      );
+      setFilteredData(filtered);
+    } else {
+      setFilteredData(insuranceList);
+    }
+  }, [searchText]);
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">
@@ -109,8 +132,8 @@ const Insurance = ({ color = "light" }) => {
                 </tr>
               </thead>
               <tbody>
-                {courseList?.length > 0 ? (
-                  courseList?.map((item, index) => (
+                {insuranceList?.length > 0 ? (
+                  insuranceList?.map((item, index) => (
                     <tr key={item?.id || index}>
                       <td className="table-data">
                         {ImageName(item?.name)}

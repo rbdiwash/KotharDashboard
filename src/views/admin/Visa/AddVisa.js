@@ -58,7 +58,7 @@ const AddVisaDetails = ({ color = "light" }) => {
     nhhi_file: "",
     ndis_file: "",
     status: true,
-    ten_year_address: [],
+    tenYearAddress: [],
   });
   const [{}, { refetchVisaList }] = useKothar();
   const [tenYearAddress, setTenYearAddress] = useState([
@@ -100,14 +100,17 @@ const AddVisaDetails = ({ color = "light" }) => {
 
   async function postData(payload) {
     if (data?.id) {
-      await axios.put(`${API_URL}/organization/update/${payload?.id}`, payload);
+      await axios.put(
+        `${API_URL}/student/visa-applications/${payload?.id}`,
+        payload
+      );
     } else {
-      await axios.post(`${API_URL}/organization/register`, payload);
+      await axios.post(`${API_URL}/student/visa-applications`, payload);
     }
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    mutate({ ...data, ten_year_address: tenYearAddress });
+    mutate({ ...data, tenYearAddress: tenYearAddress });
   };
 
   const handleFileChange = (e, name, type) => {
@@ -297,7 +300,7 @@ const AddVisaDetails = ({ color = "light" }) => {
                       required
                       type="text"
                       value={data?.courseProvider}
-                      disabled
+                      onChange={handleInputChange}
                     />
                   </div>
                   <div className="relative w-full mb-3">
@@ -308,7 +311,7 @@ const AddVisaDetails = ({ color = "light" }) => {
                       required
                       type="text"
                       value={data?.courseCompleted}
-                      disabled
+                      onChange={handleInputChange}
                     />
                   </div>
                 </div>
@@ -325,7 +328,7 @@ const AddVisaDetails = ({ color = "light" }) => {
                       type="number"
                       value={data?.passportNumber}
                       disabled
-                    />  
+                    />
                   </div>
 
                   <div className="relative w-full mb-3">

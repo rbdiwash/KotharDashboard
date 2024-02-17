@@ -147,6 +147,19 @@ const useStateAndActions = () => {
       refetchOnWindowFocus: false,
     }
   );
+  const getInsuranceList = async () => {
+    const res = await axios.get(`${API_URL}/student/skill/list`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    return res?.data?.data;
+  };
+  const { data: insuranceList, refetch: refetchInsuranceList } = useQuery(
+    ["skill"],
+    getInsuranceList,
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   useEffect(() => {
     if (token) {
@@ -159,6 +172,7 @@ const useStateAndActions = () => {
       refetchInvoiceList();
       refetchVisaList();
       refetchSkillList();
+      refetchInsuranceList();
     }
   }, [token]);
 
@@ -174,6 +188,7 @@ const useStateAndActions = () => {
     wholeLoading,
     visaList,
     skillList,
+    insuranceList,
   };
   const actions = {
     refetchClient,
