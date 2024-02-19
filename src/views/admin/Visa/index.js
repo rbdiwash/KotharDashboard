@@ -61,7 +61,7 @@ const Visa = ({ color = "light" }) => {
   const deleteData = () => {
     axios
       .delete(
-        `${API_URL}/student/visa-applications/${openConfirmationModal?.id}`
+        `${API_URL}/visa-applications/${openConfirmationModal?.id}`
       )
       .then((res) => {
         console.log(res);

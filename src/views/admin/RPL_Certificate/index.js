@@ -26,7 +26,7 @@ const RPLCertificate = ({ color = "light" }) => {
 
   const deleteData = () => {
     axios
-      .delete(`${API_URL}/organization/delete/${openConfirmationModal?.id}`)
+      .delete(`${API_URL}/rpl/${openConfirmationModal?.id}`)
       .then((res) => {
         toast.success("Data Deleted Successfully");
         setOpenConfirmationModal({ state: false, id: null });

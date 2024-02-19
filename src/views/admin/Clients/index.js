@@ -24,7 +24,7 @@ const Clients = ({ color = "light" }) => {
 
   const deleteData = () => {
     delete_data(
-      `${API_URL}/client/delete/${openConfirmationModal?.id}`,
+      `${API_URL}/clients/${openConfirmationModal?.id}`,
       () => {
         setOpenConfirmationModal({ state: false, id: null });
         refetchClient();

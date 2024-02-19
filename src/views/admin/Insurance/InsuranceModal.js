@@ -64,11 +64,11 @@ export default function InsuranceModal({
   async function postData(payload) {
     if (data?.id) {
       await axios.put(
-        `${API_URL}/student/insurance/update/${payload?.id}`,
+        `${API_URL}/insurance/${payload?.id}`,
         payload
       );
     } else {
-      await axios.post(`${API_URL}/student/insurance/register`, payload);
+      await axios.post(`${API_URL}/insurance`, payload);
     }
   }
   const handleSubmit = (e) => {

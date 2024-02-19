@@ -65,11 +65,11 @@ const AddSkillAssessment = ({ color = "light" }) => {
   async function postData(payload) {
     if (data?.id) {
       await axios.put(
-        `${API_URL}/student/skill/update/${payload?.id}`,
+        `${API_URL}/skill-assessment/${payload?.id}`,
         payload
       );
     } else {
-      await axios.post(`${API_URL}/student/skill/register`, payload);
+      await axios.post(`${API_URL}/skill-assessment`, payload);
     }
   }
   const handleSubmit = (e) => {

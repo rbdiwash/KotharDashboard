@@ -23,7 +23,7 @@ const SkillAssessment = ({ color = "light" }) => {
 
   const deleteData = () => {
     axios
-      .delete(`${API_URL}/student/skill/delete/${openConfirmationModal?.id}`)
+      .delete(`${API_URL}/skill-assessment/${openConfirmationModal?.id}`)
       .then((res) => {
         console.log(res);
         toast.success(res?.data?.message || "Data Deleted Successfully");

@@ -56,9 +56,9 @@ const AddClient = ({ color = "light" }) => {
 
   async function postData(payload) {
     if (data?.id) {
-      await axios.put(`${API_URL}/client/update/${payload?.id}`, payload);
+      await axios.put(`${API_URL}/clients/${payload?.id}`, payload);
     } else {
-      await axios.post(`${API_URL}/client/register`, payload);
+      await axios.post(`${API_URL}/clients`, payload);
     }
   }
   const handleSubmit = (e) => {

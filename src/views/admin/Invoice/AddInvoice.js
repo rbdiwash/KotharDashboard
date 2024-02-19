@@ -57,7 +57,7 @@ const AddInvoice = () => {
   });
   async function postData(payload) {
     if (data?.id) {
-      await axios.put(`${API_URL}/invoice/update/${payload?.id}`, payload);
+      await axios.put(`${API_URL}/invoice/${payload?.id}`, payload);
     } else {
       await axios.post(`${API_URL}/invoice`, payload);
     }

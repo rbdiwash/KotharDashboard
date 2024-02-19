@@ -101,11 +101,11 @@ const AddVisaDetails = ({ color = "light" }) => {
   async function postData(payload) {
     if (data?.id) {
       await axios.put(
-        `${API_URL}/student/visa-applications/${payload?.id}`,
+        `${API_URL}/visa-applications/${payload?.id}`,
         payload
       );
     } else {
-      await axios.post(`${API_URL}/student/visa-applications`, payload);
+      await axios.post(`${API_URL}/visa-applications`, payload);
     }
   }
   const handleSubmit = (e) => {
