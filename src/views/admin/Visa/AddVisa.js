@@ -110,40 +110,10 @@ const AddVisaDetails = ({ color = "light" }) => {
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    mutate({ ...data, tenYearAddress: tenYearAddress });
+    mutate({ ...data, tenYearAddress: tenYearAddress, type: "student_visa" });
   };
 
-  const handleFileChange = (e, name, type) => {
-    const file = e.target.files[0];
-    if (type === "multiple") {
-      setData({ ...data, [name]: [...data?.[name], file] });
-    } else {
-      setData({ ...data, [name]: file });
-    }
-    // const formData = new FormData();
-    // formData.append("file", file);
-    // axios
-    //   .post(`${API_URL}/api/upload`, formData, {
-    //     headers: { "Content-Type": "multipart/form-data" },
-    //   })
-    //   .then((res) => {
-    //     if (type === "multiple") {
-    //       setData({ ...data, [name]: [...data?.[name], res?.data?.data?.url] });
-    //     } else {
-    //       setData({ ...data, [name]: res?.data?.data?.url });
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     toast.error("Error Uploading file");
-    //   });
-  };
 
-  const handleDeletePdf = (name, i) => {
-    setData({
-      ...data,
-      [name]: [...data?.[name].filter((item, index) => i !== index)],
-    });
-  };
 
   const handle10InputChange = (e, index) => {
     const { name, value } = e.target;
@@ -487,34 +457,15 @@ const AddVisaDetails = ({ color = "light" }) => {
                   Upload Documents
                 </p>
                 <div className="grid grid-cols-2 gap-8">
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Upload Full Passport"
-                      name="passport"
-                      type="file"
-                      onChange={(e) => handleFileChange(e, "passport")}
-                    />
-                    {data?.passport && (
-                      <div className="flex gap-4 items-center bg-gray-200 p-1 mt-2 rounded w-fit">
-                        {data?.name?.length > 30 ? (
-                          <Tooltip title={data?.name}>
-                            <span>{data?.name?.slice(0, 30)}</span>
-                          </Tooltip>
-                        ) : (
-                          <span>{data?.name?.slice(0, 30)}</span>
-                        )}
-                        <DownloadIcon
-                          className="cursor-pointer"
-                          // onClick={() => downloadFile()}
-                        />
-                        <Delete
-                          className="cursor-pointer"
-                          onClick={() => handleDeletePdf("passport")}
-                        />
-                      </div>
-                    )}
-                  </div>
-
+                  
+                  <UploadFile
+                    {...{
+                      data,
+                      setData,
+                      label: "Updated Full Passport",
+                      imageKey: "passport",
+                    }}
+                  />
                   <UploadFile
                     {...{
                       data,

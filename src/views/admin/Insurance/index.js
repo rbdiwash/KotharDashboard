@@ -23,6 +23,7 @@ const Insurance = ({ color = "light" }) => {
   const [searchText, setSearchText] = useState("");
 
   const [{ insuranceList }, { refetchInsuranceList }] = useKothar();
+  console.log("🚀  insuranceList:", insuranceList);
   const [filteredData, setFilteredData] = useState(insuranceList);
 
   const deleteData = () => {
@@ -132,8 +133,8 @@ const Insurance = ({ color = "light" }) => {
                 </tr>
               </thead>
               <tbody>
-                {insuranceList?.length > 0 ? (
-                  insuranceList?.map((item, index) => (
+                {filteredData?.length > 0 ? (
+                  filteredData?.map((item, index) => (
                     <tr key={item?.id || index}>
                       <td className="table-data">
                         {ImageName(item?.name)}
@@ -167,10 +168,10 @@ const Insurance = ({ color = "light" }) => {
                               <AiFillEye className="text-sky-600 cursor-pointer" />
                             </IconButton>
                           </Tooltip> */}
-                          <Tooltip title="Edit Course" arrow>
+                          <Tooltip title="Edit Insurance details" arrow>
                             <IconButton
                               onClick={() =>
-                                navigate("/admin/course/add", {
+                                navigate("/admin/insurance/add", {
                                   state: { item },
                                 })
                               }
@@ -178,7 +179,7 @@ const Insurance = ({ color = "light" }) => {
                               <AiFillEdit className="text-sky-600 cursor-pointer" />
                             </IconButton>
                           </Tooltip>
-                          <Tooltip title="Delete Course" arrow>
+                          <Tooltip title="Delete Insurance details" arrow>
                             <IconButton
                               onClick={() =>
                                 setOpenConfirmationModal({
@@ -211,7 +212,7 @@ const Insurance = ({ color = "light" }) => {
       {openConfirmationModal.state && (
         <DeleteModal
           open={openConfirmationModal.state}
-          item="Course"
+          item="Insurance details"
           handleCancel={() =>
             setOpenConfirmationModal({ state: false, id: null })
           }

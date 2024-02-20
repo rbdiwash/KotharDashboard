@@ -148,13 +148,14 @@ const useStateAndActions = () => {
     }
   );
   const getInsuranceList = async () => {
-    const res = await axios.get(`${API_URL}/student/skill/list`, {
+    const res = await axios.get(`${API_URL}/student/insurance/list`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
+    console.log("🚀  res:", res);
     return res?.data?.data;
   };
   const { data: insuranceList, refetch: refetchInsuranceList } = useQuery(
-    ["skill"],
+    ["insurance"],
     getInsuranceList,
     {
       refetchOnWindowFocus: false,

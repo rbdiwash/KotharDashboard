@@ -47,7 +47,6 @@ const Visa = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
   const navigate = useNavigate();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
-  const [openVisaForm, setOpenVisaForm] = useState(false);
   const [searchText, setSearchText] = useState("");
 
   const [{ visaList }, { refetchVisaList }] = useKothar();
@@ -78,16 +77,12 @@ const Visa = ({ color = "light" }) => {
     setOpenDiscussion(!openDiscussion);
   };
 
-
-  
   useEffect(() => {
     if (searchText.length > 0) {
       const filtered = visaList?.filter(
         (client) =>
           client?.name?.toLowerCase().includes(searchText?.toLowerCase()) ||
-          client?.address
-            ?.toLowerCase()
-            .includes(searchText?.toLowerCase()) ||
+          client?.address?.toLowerCase().includes(searchText?.toLowerCase()) ||
           client?.status?.toLowerCase().includes(searchText?.toLowerCase()) ||
           client?.coverType
             ?.toLowerCase()
@@ -166,7 +161,7 @@ const Visa = ({ color = "light" }) => {
       {openConfirmationModal.state && (
         <DeleteModal
           open={openConfirmationModal.state}
-          item="Course"
+          item="Visa Details"
           handleCancel={() =>
             setOpenConfirmationModal({ state: false, id: null })
           }
@@ -176,7 +171,6 @@ const Visa = ({ color = "light" }) => {
       {openDiscussion && (
         <DiscussionModal open={openDiscussion} setOpen={setOpenDiscussion} />
       )}
-      {openVisaForm && <VisaModel {...{ openVisaForm, setOpenVisaForm }} />}
     </div>
   );
 };
@@ -198,8 +192,7 @@ const TabContent = ({
             <th className={"table-head " + tableHeadClass}>Address</th>
             <th className={"table-head " + tableHeadClass}>Phone Number</th>
 
-            <th className={"table-head " + tableHeadClass}>Payment Type</th>
-            <th className={"table-head " + tableHeadClass}>Cost</th>
+            <th className={"table-head " + tableHeadClass}>Course Provider</th>
             <th className={"table-head " + tableHeadClass}>Status</th>
 
             <th className={"table-head " + tableHeadClass}>Action</th>
@@ -215,20 +208,18 @@ const TabContent = ({
                     {item?.name || "-"}
                   </span>
                 </td>
-                <td className="table-data">{item?.level || "-"}</td>
+                <td className="table-data">{item?.address || "-"}</td>
                 <td className="table-data">
-                  <div className="flex">{item?.duration || "-"} year</div>
+                  <div className="flex">{item?.number || "-"}</div>
                 </td>
                 <td className="table-data">
                   <div className="flex items-center">
-                    {item?.university || "-"}
+                    {item?.courseProvider || "-"}
                   </div>
                 </td>
+
                 <td className="table-data">
-                  <div className="flex items-center">{item?.intake || "-"}</div>
-                </td>
-                <td className="table-data">
-                  <div className="flex items-center">{item?.fee || "-"}</div>
+                  <div className="flex items-center">{item?.status || "-"}</div>
                 </td>
                 <td className="table-data text-right">
                   <div className="flex items-center">
@@ -237,10 +228,10 @@ const TabContent = ({
                               <AiFillEye className="text-sky-600 cursor-pointer" />
                             </IconButton>
                           </Tooltip> */}
-                    <Tooltip title="Edit Course" arrow>
+                    <Tooltip title="Edit Visa Details" arrow>
                       <IconButton
                         onClick={() =>
-                          navigate("/admin/course/add", {
+                          navigate("/admin/visa/add", {
                             state: { item },
                           })
                         }
@@ -248,7 +239,7 @@ const TabContent = ({
                         <AiFillEdit className="text-sky-600 cursor-pointer" />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title="Delete Course" arrow>
+                    <Tooltip title="Delete Visa Details" arrow>
                       <IconButton
                         onClick={() =>
                           setOpenConfirmationModal({
