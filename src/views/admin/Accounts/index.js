@@ -59,6 +59,78 @@ const data = [
     city: "Charleston",
     state: "South Carolina",
   },
+  {
+    name: {
+      firstName: "Joshua",
+      lastName: "Rolluffs",
+    },
+    address: "32188 Larkin Turnpike",
+    city: "Charleston",
+    state: "South Carolina",
+  },
+  {
+    name: {
+      firstName: "Joshua",
+      lastName: "Rolluffs",
+    },
+    address: "32188 Larkin Turnpike",
+    city: "Charleston",
+    state: "South Carolina",
+  },
+  {
+    name: {
+      firstName: "Joshua",
+      lastName: "Rolluffs",
+    },
+    address: "32188 Larkin Turnpike",
+    city: "Charleston",
+    state: "South Carolina",
+  },
+  {
+    name: {
+      firstName: "Joshua",
+      lastName: "Rolluffs",
+    },
+    address: "32188 Larkin Turnpike",
+    city: "Charleston",
+    state: "South Carolina",
+  },
+  {
+    name: {
+      firstName: "Joshua",
+      lastName: "Rolluffs",
+    },
+    address: "32188 Larkin Turnpike",
+    city: "Charleston",
+    state: "South Carolina",
+  },
+  {
+    name: {
+      firstName: "Joshua",
+      lastName: "Rolluffs",
+    },
+    address: "32188 Larkin Turnpike",
+    city: "Charleston",
+    state: "South Carolina",
+  },
+  {
+    name: {
+      firstName: "Joshua",
+      lastName: "Rolluffs",
+    },
+    address: "32188 Larkin Turnpike",
+    city: "Charleston",
+    state: "South Carolina",
+  },
+  {
+    name: {
+      firstName: "Divash",
+      lastName: "Ranabhat",
+    },
+    address: "32188 Larkin Turnpike",
+    city: "Charleston",
+    state: "South Carolina",
+  },
 ];
 const Accounts = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
@@ -172,7 +244,7 @@ const Accounts = ({ color = "light" }) => {
                   <Button
                     variant="contained"
                     component={Link}
-                    to="/admin/accounts/add"
+                    to="/admin/account/add"
                   >
                     Add Account Details
                   </Button>

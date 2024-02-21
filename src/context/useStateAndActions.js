@@ -12,7 +12,7 @@ const useStateAndActions = () => {
   const [wholeLoading, setWholeLoading] = useState(false);
 
   const getData = async () => {
-    const res = await axios.get(`organization/list`);
+    const res = await axios.get(`organization`);
     return res?.data?.data;
   };
 
@@ -27,7 +27,7 @@ const useStateAndActions = () => {
     }
   );
   const getClientData = async () => {
-    const res = await axios.get(`client/list`);
+    const res = await axios.get(`clients`);
     return res?.data?.data;
   };
   const { data: clientList, refetch: refetchClient } = useQuery(
@@ -41,7 +41,7 @@ const useStateAndActions = () => {
     }
   );
   const getUniData = async () => {
-    const res = await axios.get(`university/list`);
+    const res = await axios.get(`university`);
 
     return res?.data?.data;
   };
@@ -60,7 +60,7 @@ const useStateAndActions = () => {
   );
 
   const getCourseData = async () => {
-    const res = await axios.get(`course/list`);
+    const res = await axios.get(`course`);
     return res?.data?.data;
   };
   const { data: courseList, refetch: refetchCourseList } = useQuery(
@@ -76,7 +76,7 @@ const useStateAndActions = () => {
     }
   );
   const getStudent = async () => {
-    const res = await axios.get(`student/list`);
+    const res = await axios.get(`student`);
     return res?.data?.data;
   };
   const { data: studentList, refetch: refetchStudent } = useQuery(
@@ -92,7 +92,7 @@ const useStateAndActions = () => {
     }
   );
   const getUsers = async () => {
-    const res = await axios.get(`users/all`, {});
+    const res = await axios.get(`users`, {});
     return res?.data?.data;
   };
   const { data: usersList, refetch: refetchUsers } = useQuery(
@@ -109,7 +109,7 @@ const useStateAndActions = () => {
   );
 
   const getInvoiceList = async () => {
-    const res = await axios.get(`${API_URL}/invoice/list`, {
+    const res = await axios.get(`${API_URL}/invoice`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return res?.data?.data;
@@ -122,7 +122,7 @@ const useStateAndActions = () => {
     }
   );
   const getVisaList = async () => {
-    const res = await axios.get(`${API_URL}/student/visa-applications`, {
+    const res = await axios.get(`${API_URL}/visa-applications`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return res?.data?.data;
@@ -135,7 +135,7 @@ const useStateAndActions = () => {
     }
   );
   const getSkillAssessmentList = async () => {
-    const res = await axios.get(`${API_URL}/student/skill/list`, {
+    const res = await axios.get(`${API_URL}/skill-assessment`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return res?.data?.data;
@@ -148,7 +148,7 @@ const useStateAndActions = () => {
     }
   );
   const getInsuranceList = async () => {
-    const res = await axios.get(`${API_URL}/student/insurance/list`, {
+    const res = await axios.get(`${API_URL}/insurance`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     console.log("🚀  res:", res);

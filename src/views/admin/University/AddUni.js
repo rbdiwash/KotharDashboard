@@ -67,9 +67,9 @@ const AddUni = ({ color = "light" }) => {
 
   async function postData(payload) {
     if (data?.id) {
-      await axios.put(`${API_URL}/university/update/${payload?.id}`, payload);
+      await axios.put(`${API_URL}/university/${payload?.id}`, payload);
     } else {
-      await axios.post(`${API_URL}/university/register`, payload);
+      await axios.post(`${API_URL}/university`, payload);
     }
   }
   const handleSubmit = (e) => {

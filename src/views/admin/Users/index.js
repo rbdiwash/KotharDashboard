@@ -47,7 +47,7 @@ const Users = ({ color = "dark" }) => {
 
   const deleteUser = () => {
     delete_data(
-      `${API_URL}/users/delete/${openConfirmationModal?.id}`,
+      `${API_URL}/users/${openConfirmationModal?.id}`,
       () => {
         setOpenConfirmationModal({ state: false, id: null });
         refetchUsers();

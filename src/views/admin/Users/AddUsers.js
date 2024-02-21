@@ -52,7 +52,7 @@ const AddUsers = () => {
   });
   async function postData(payload) {
     if (data?.id) {
-      await axios.put(`${API_URL}/organization/update`, payload);
+      await axios.put(`${API_URL}/users/`, payload);
     } else {
       await axios.post(`${API_URL}/register/user`, payload);
     }

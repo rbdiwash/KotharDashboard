@@ -29,7 +29,7 @@ const Insurance = ({ color = "light" }) => {
   const deleteData = () => {
     axios
       .delete(
-        `${API_URL}/student/insurance/delete/${openConfirmationModal?.id}`
+        `${API_URL}/insurance/${openConfirmationModal?.id}`
       )
       .then((res) => {
         toast.success(res?.data?.message || "Data Deleted Successfully");

@@ -23,7 +23,7 @@ const University = ({ color = "light" }) => {
 
   const deleteData = () => {
     delete_data(
-      `${API_URL}/university/delete/${openConfirmationModal?.id}`,
+      `${API_URL}/university/${openConfirmationModal?.id}`,
       () => {
         setOpenConfirmationModal({ state: false, id: null });
         refetchUniData();

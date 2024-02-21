@@ -35,11 +35,11 @@ export default function InsuranceModal({
 
   const [data, setData] = React.useState({
     caseOfficer: "",
-    cost: "",
+    cost: 0,
     date: new Date().toISOString().split("T")[0],
     endDate: new Date().toISOString().split("T")[0],
     firstName: "",
-    id: studentDetails?.id || 1,
+    clientId: null,
     insuranceCompany: null,
     lastName: "",
     paymentType: "",
@@ -63,12 +63,9 @@ export default function InsuranceModal({
   });
   async function postData(payload) {
     if (data?.id) {
-      await axios.put(
-        `${API_URL}/student/insurance/update/${payload?.id}`,
-        payload
-      );
+      await axios.put(`${API_URL}/insurance/${payload?.id}`, payload);
     } else {
-      await axios.post(`${API_URL}/student/insurance/register`, payload);
+      await axios.post(`${API_URL}/insurance`, payload);
     }
   }
   const handleSubmit = (e) => {
@@ -80,6 +77,7 @@ export default function InsuranceModal({
       type: data?.type?.value,
       insuranceCompany: data?.insuranceCompany?.value,
       child: childName,
+      cost: Number(data?.cost),
     });
   };
   const handleInputChange = (e) => {
@@ -111,7 +109,6 @@ export default function InsuranceModal({
     ]);
   };
 
-  console.log(childName);
   return (
     <div>
       <BootstrapDialog
@@ -209,7 +206,7 @@ export default function InsuranceModal({
               </div>{" "}
               <div className="relative w-full mb-3">
                 <InputField
-                  type="text"
+                  type="number"
                   placeholder="Cost"
                   name="cost"
                   label="Cost"

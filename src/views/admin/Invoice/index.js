@@ -70,7 +70,7 @@ const Invoice = ({ color = "dark" }) => {
   };
   const deleteData = () => {
     axios
-      .delete(`${API_URL}/invoice/delete/${openConfirmationModal?.id}`)
+      .delete(`${API_URL}/invoice/${openConfirmationModal?.id}`)
       .then((res) => {
         toast.success(res?.data?.message || "Data Deleted Successfully");
         setOpenConfirmationModal({ state: false, id: null });

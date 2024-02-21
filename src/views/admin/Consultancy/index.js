@@ -25,7 +25,7 @@ const Consultancy = ({ color = "light" }) => {
 
   const deleteData = () => {
     delete_data(
-      `${API_URL}/organization/deleteasdf/${openConfirmationModal?.id}`,
+      `${API_URL}/organization/${openConfirmationModal?.id}`,
       () => {
         setOpenConfirmationModal({ state: false, id: null });
         refetchConsultancy();
