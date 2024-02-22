@@ -95,3 +95,15 @@ export const student_status = [
   { label: "Visa Rejected", value: "visa_rejected" },
   { label: "Admission SUccessful", value: "admission Successful" },
 ];
+export const rpl_status = [
+  { label: "Incomplete Application", value: "incomplete_application" },
+  { label: "Application Ready", value: "application_ready" },
+  { label: "Placement Waiting", value: "placement_waiting" },
+  { label: "Placement Processing", value: "placement_processing" },
+  { label: "Ready To Apply", value: "ready_to_apply" },
+  { label: "Certificate Processing", value: "certificate_processing" },
+  { label: "Certificate Ready", value: "certificate_ready" },
+  { label: "Payment Completed", value: "payment_completed" },
+  { label: "Softcopy sent", value: "softcopy_sent" },
+  { label: "Hardcopy sent", value: "hardcopy_sent" },
+];

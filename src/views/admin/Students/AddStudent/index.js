@@ -106,6 +106,7 @@ const AddStudent = () => {
     e.preventDefault();
     mutate({
       ...data,
+      // status: "all",
     });
   };
 
@@ -136,13 +137,13 @@ const AddStudent = () => {
                 onChange={(e, value) => {
                   setGeneralInfo((prevState) => ({
                     ...prevState,
-                    student_status: value,
+                    status: value,
                   }));
                 }}
                 required
-                value={data?.student_status}
+                value={data?.status}
                 placeholder="Select Student Status"
-                options={student_status}
+                options={status}
                 disablePortal
                 renderInput={(params) => (
                   <TextField {...params} label="Select Student Status" />

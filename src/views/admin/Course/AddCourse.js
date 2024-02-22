@@ -1,4 +1,10 @@
-import { Autocomplete, Button, TextField, makeStyles } from "@mui/material";
+import {
+  Autocomplete,
+  Button,
+  CircularProgress,
+  TextField,
+  makeStyles,
+} from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import axios from "const/axios";
 import InputField from "components/Input/InputField";
@@ -9,6 +15,8 @@ import { toast } from "react-toastify";
 import { IoArrowBack } from "react-icons/io5";
 import useKothar from "context/useKothar";
 import { months } from "const/constants";
+import Loader from "components/Loader";
+import WholeScreenLoader from "components/WholeScreenLoader";
 
 const AddCourse = ({ color = "light" }) => {
   const [data, setData] = useState({
@@ -19,7 +27,6 @@ const AddCourse = ({ color = "light" }) => {
     name: null,
     universities: [],
   });
-  console.log(data);
   const [{ uniData }, { refetchCourseList }] = useKothar();
 
   const navigate = useNavigate();
@@ -44,7 +51,7 @@ const AddCourse = ({ color = "light" }) => {
     }
   }, [state]);
 
-  const { mutate } = useMutation(postData, {
+  const { mutate, isLoading } = useMutation(postData, {
     onSuccess(suc) {
       toast.success(
         data?.id ? "Data updated Successfully" : "Data added Successfully"
@@ -101,6 +108,7 @@ const AddCourse = ({ color = "light" }) => {
             </div>
           </div>
           <div className="block w-full overflow-x-auto mt-8">
+            {isLoading && <WholeScreenLoader open={isLoading} />}
             <div className="flex-auto lg:px-10 py-10 pt-0">
               <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
                 <div className="grid grid-cols-2 gap-8 justify-end items-end">
@@ -207,7 +215,11 @@ const AddCourse = ({ color = "light" }) => {
                   <Button variant="outlined" onClick={() => navigate(-1)} to="">
                     Go Back
                   </Button>{" "}
-                  <Button variant="contained" type="submit">
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    disabled={isLoading}
+                  >
                     Submit
                   </Button>
                 </div>

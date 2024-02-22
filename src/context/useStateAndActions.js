@@ -134,6 +134,19 @@ const useStateAndActions = () => {
       refetchOnWindowFocus: false,
     }
   );
+  const getRPLList = async () => {
+    const res = await axios.get(`${API_URL}/rpl`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    return res?.data?.data;
+  };
+  const { data: rplList, refetch: refetchRPLList } = useQuery(
+    ["rplList"],
+    getRPLList,
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
   const getSkillAssessmentList = async () => {
     const res = await axios.get(`${API_URL}/skill-assessment`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -151,7 +164,6 @@ const useStateAndActions = () => {
     const res = await axios.get(`${API_URL}/insurance`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
-    console.log("🚀  res:", res);
     return res?.data?.data;
   };
   const { data: insuranceList, refetch: refetchInsuranceList } = useQuery(
@@ -174,6 +186,7 @@ const useStateAndActions = () => {
       refetchVisaList();
       refetchSkillList();
       refetchInsuranceList();
+      refetchRPLList();
     }
   }, [token]);
 
@@ -190,6 +203,7 @@ const useStateAndActions = () => {
     visaList,
     skillList,
     insuranceList,
+    rplList,
   };
   const actions = {
     refetchClient,
@@ -203,6 +217,7 @@ const useStateAndActions = () => {
     setWholeLoading,
     refetchVisaList,
     refetchSkillList,
+    refetchRPLList,
   };
 
   return [state, actions];

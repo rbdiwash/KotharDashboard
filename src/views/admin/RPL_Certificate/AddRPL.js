@@ -23,6 +23,8 @@ import { IoArrowBack } from "react-icons/io5";
 import useKothar from "context/useKothar";
 import ClearIcon from "@mui/icons-material/Clear";
 import ClientDropdown from "components/Dropdowns/ClientDropdown";
+import { rpl_status } from "const/constants";
+import UploadFile from "components/Input/UploadFile";
 
 const AddRPLCertificate = ({ color = "light" }) => {
   const [data, setData] = useState({
@@ -42,7 +44,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
     placement_required: null,
     passport: "",
     visa: "",
-    coe: "",
+    coe: [],
     license_file: "",
     photocard_file: "",
     bank_card_file: "",
@@ -73,7 +75,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
     }
   }, [state]);
 
-  const { mutate } = useMutation(postData, {
+  const { mutate, isLoading } = useMutation(postData, {
     onSuccess() {
       toast.success(
         data?.id ? "Data updated Successfully" : "Data added Successfully"
@@ -175,7 +177,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
           }
         >
           <div className="rounded-t mb-0 px-10 py-3 border-0">
-            <div className="flex flex-wrap items-center">
+            <div className="flex items-center">
               <div className="relative w-full  max-w-full flex justify-start gap-4 items-center">
                 <IoArrowBack
                   className="text-xl cursor-pointer"
@@ -190,6 +192,29 @@ const AddRPLCertificate = ({ color = "light" }) => {
                   Add RPL Certificate
                 </h3>
               </div>
+              <Autocomplete
+                onChange={(e, value) => {
+                  setData((prevState) => ({
+                    ...prevState,
+                    status: value,
+                  }));
+                }}
+                required
+                value={data?.status}
+                placeholder="Select Status"
+                options={rpl_status}
+                disablePortal
+                renderInput={(params) => (
+                  <TextField {...params} label="Select Status" />
+                )}
+                ListboxProps={{
+                  style: {
+                    maxHeight: "180px",
+                  },
+                }}
+                size="small"
+                sx={{ width: 300 }}
+              />
             </div>
           </div>
           <div className="block w-full overflow-x-auto mt-8">
@@ -200,15 +225,6 @@ const AddRPLCertificate = ({ color = "light" }) => {
                 </p>
                 <div className="grid grid-cols-2 gap-8">
                   <div className="relative w-full mb-3">
-                    {/* <InputField
-                      label="Full Name"
-                      placeholder="Full Name"
-                      name="name"
-                      required
-                      type="text"
-                      value={data?.name}
-                      onChange={handleInputChange}
-                    /> */}
                     <ClientDropdown {...{ data, setData }} />
                   </div>
                   <div className="relative w-full mb-3">
@@ -219,7 +235,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                       required
                       type="text"
                       value={data?.address}
-                      onChange={handleInputChange}
+                      disabled
                     />
                   </div>
                   <div className="relative w-full mb-3">
@@ -230,7 +246,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                       required
                       type="date"
                       value={data?.dob}
-                      onChange={handleInputChange}
+                      disabled
                     />
                   </div>
                   <div className="relative w-full mb-3">
@@ -238,12 +254,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                       <FormLabel className="text-slate-600 uppercase text-xs font-bold mb-2">
                         Gender
                       </FormLabel>
-                      <RadioGroup
-                        row
-                        required
-                        defaultValue="female"
-                        name="radio-buttons-group"
-                      >
+                      <RadioGroup row required disabled value={data?.gender}>
                         <FormControlLabel
                           value="male"
                           control={<Radio />}
@@ -271,7 +282,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                       label="Email"
                       required
                       value={data?.email}
-                      onChange={handleInputChange}
+                      disabled
                     />
                   </div>
                   <div className="relative w-full mb-3">
@@ -283,7 +294,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                       required
                       type="number"
                       value={data?.number}
-                      onChange={handleInputChange}
+                      disabled
                     />
                   </div>
                   <div className="relative w-full mb-3">
@@ -310,7 +321,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                       required
                       type="text"
                       value={data?.visa_status}
-                      onChange={handleInputChange}
+                      disabled
                     />
                   </div>
 
@@ -321,7 +332,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                       required
                       type="date"
                       value={data?.visa_expiry}
-                      onChange={handleInputChange}
+                      disabled
                     />
                   </div>
                 </div>
@@ -415,6 +426,18 @@ const AddRPLCertificate = ({ color = "light" }) => {
                         />
                       </RadioGroup>
                     </FormControl>
+                  </div>{" "}
+                  <div className="relative w-full mb-3">
+                    <InputField
+                      fullWidth
+                      label="Case Officer"
+                      placeholder="Case Officer"
+                      name="caseOfficer"
+                      required
+                      type="text"
+                      value={data?.caseOfficer}
+                      onChange={handleInputChange}
+                    />
                   </div>
                 </div>
 
@@ -422,46 +445,47 @@ const AddRPLCertificate = ({ color = "light" }) => {
                   Upload Documents
                 </p>
                 <div className="grid grid-cols-2 gap-8">
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Upload Valid Passport"
-                      name="passport"
-                      type="file"
-                      onChange={(e) => handleFileChange(e, "passport")}
-                    />
-                  </div>
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Upload Current Visa"
-                      name="visa"
-                      type="file"
-                      onChange={(e) => handleFileChange(e, "visa")}
-                    />
-                  </div>
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Upload All COE's"
-                      name="coe"
-                      type="file"
-                      onChange={(e) => handleFileChange(e, "coe")}
-                    />
-                  </div>
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Upload USI document"
-                      name="usi_document"
-                      type="file"
-                      onChange={(e) => handleFileChange(e, "usi_document")}
-                    />
-                  </div>{" "}
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Upload the Latest Resume"
-                      name="resume"
-                      type="file"
-                      onChange={(e) => handleFileChange(e, "resume")}
-                    />
-                  </div>
+                  <UploadFile
+                    {...{
+                      data,
+                      setData,
+                      label: "Valid Passport",
+                      imageKey: "passport",
+                    }}
+                  />{" "}
+                  <UploadFile
+                    {...{
+                      data,
+                      setData,
+                      label: "Current VisaCurrent Visa",
+                      imageKey: "visa",
+                    }}
+                  />
+                  <UploadFile
+                    {...{
+                      data,
+                      setData,
+                      label: " All COE's",
+                      imageKey: "coe",
+                      type: "multiple",
+                    }}
+                  />
+                  <UploadFile
+                    {...{
+                      data,
+                      setData,
+                      label: "USI document",
+                      imageKey: "usi_document",
+                    }}
+                  />
+                  <UploadFile
+                    {...{
+                      data,
+                      setData,
+                      label: "resume",
+                      imageKey: "resume",
+                    }}
+                  />
                 </div>
                 <div className="grid grid-cols-2 gap-8 border-t">
                   <FormControl
@@ -488,12 +512,13 @@ const AddRPLCertificate = ({ color = "light" }) => {
                         label="License (Australian only valid)"
                       />
                       {data?.license && (
-                        <InputField
-                          label="Upload any Australian Licence"
-                          name="license_file"
-                          required={data?.license}
-                          type="file"
-                          onChange={(e) => handleFileChange(e, "license_file")}
+                        <UploadFile
+                          {...{
+                            data,
+                            setData,
+                            label: "any Australian Licence",
+                            imageKey: "license_file",
+                          }}
                         />
                       )}
                       <FormControlLabel
@@ -507,14 +532,13 @@ const AddRPLCertificate = ({ color = "light" }) => {
                         label="Photo Card"
                       />
                       {data?.photocard && (
-                        <InputField
-                          label="Upload Photo Card"
-                          name="photocard_file"
-                          required={data?.photocard}
-                          type="file"
-                          onChange={(e) =>
-                            handleFileChange(e, "photocard_file")
-                          }
+                        <UploadFile
+                          {...{
+                            data,
+                            setData,
+                            label: "any Photo Card",
+                            imageKey: "photocard_file",
+                          }}
                         />
                       )}
                       <FormControlLabel
@@ -528,14 +552,13 @@ const AddRPLCertificate = ({ color = "light" }) => {
                         label="Bank Card"
                       />
                       {data?.bank_card && (
-                        <InputField
-                          label="Upload Bank Card Document"
-                          name="bank_card_file"
-                          checked={data?.bank_card_file}
-                          type="file"
-                          onChange={(e) =>
-                            handleFileChange(e, "bank_card_file")
-                          }
+                        <UploadFile
+                          {...{
+                            data,
+                            setData,
+                            label: "Bank Card Document",
+                            imageKey: "bank_card_file",
+                          }}
                         />
                       )}
                       <FormControlLabel
@@ -549,12 +572,13 @@ const AddRPLCertificate = ({ color = "light" }) => {
                         label="RSA/ Whitecard"
                       />
                       {data?.rsa && (
-                        <InputField
-                          label="Upload RSA/ Whitecard document"
-                          name="rsa_file"
-                          required={data?.rsa}
-                          type="file"
-                          onChange={(e) => handleFileChange(e, "rsa_file")}
+                        <UploadFile
+                          {...{
+                            data,
+                            setData,
+                            label: "RSA/ Whitecard document",
+                            imageKey: "rsa_file",
+                          }}
                         />
                       )}
                       <FormControlLabel
@@ -568,14 +592,13 @@ const AddRPLCertificate = ({ color = "light" }) => {
                         label=" Insurance/Student Card"
                       />
                       {data?.insurance_student_card && (
-                        <InputField
-                          label="Upload Insurance Card/Student Card"
-                          name="insurance_student_card_file"
-                          required={data?.insurance_student_card}
-                          type="file"
-                          onChange={(e) =>
-                            handleFileChange(e, "insurance_student_card_file")
-                          }
+                        <UploadFile
+                          {...{
+                            data,
+                            setData,
+                            label: "Insurance Card/Student Card",
+                            imageKey: "insurance_student_card_file",
+                          }}
                         />
                       )}
                       <FormControlLabel
@@ -589,12 +612,13 @@ const AddRPLCertificate = ({ color = "light" }) => {
                         label="Bills any with full name and address details"
                       />
                       {data?.bills && (
-                        <InputField
-                          label="Upload Bills"
-                          name="bills_file"
-                          required={data?.bills}
-                          type="file"
-                          onChange={(e) => handleFileChange(e, "bills_file")}
+                        <UploadFile
+                          {...{
+                            data,
+                            setData,
+                            label: "Bills",
+                            imageKey: "bills_file",
+                          }}
                         />
                       )}
                     </FormGroup>
@@ -617,13 +641,13 @@ const AddRPLCertificate = ({ color = "light" }) => {
                     <div className="grid grid-cols-2 gap-8">
                       {documents_for_placement?.map((item) => (
                         <div className="">
-                          <InputField
-                            label={`Upload ${item?.label}`}
-                            name={`${item?.value}_file`}
-                            type="file"
-                            onChange={(e) =>
-                              handleFileChange(e, `${item?.value}_file`)
-                            }
+                          <UploadFile
+                            {...{
+                              data,
+                              setData,
+                              label: `Upload ${item?.label}`,
+                              imageKey: `${item?.value}_file`,
+                            }}
                           />
                         </div>
                       ))}

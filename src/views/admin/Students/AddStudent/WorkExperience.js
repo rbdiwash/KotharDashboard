@@ -81,7 +81,15 @@ const WorkExperience = ({ workInfo, setWorkInfo }) => {
               value={item?.docs}
               onChange={(e) => handleInputChange(e, index)}
             />
-          </div>
+          </div>{" "}
+          {/* <UploadFile
+            {...{
+              data,
+              setData,
+              label: "Documents",
+              imageKey: "image",
+            }}
+          /> */}
           <Tooltip title="Delete experience">
             <Button>
               <DeleteIcon onClick={() => handleDeleteExp(item?.uid)} />

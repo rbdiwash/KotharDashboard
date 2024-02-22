@@ -31,27 +31,25 @@ const GeneralInfo = ({ generalInfo, setGeneralInfo }) => {
       <div className="relative w-full mb-3">
         <InputField
           fullWidth
-          size="small"
           type="email"
           placeholder="Email Address"
           name="email"
           label="Email Address"
           required
           value={generalInfo?.email}
-          onChange={handleInputChange}
+          disabled
         />
       </div>
       <div className="relative w-full mb-3">
         <InputField
           fullWidth
-          size="small"
           label="Mobile Number"
           placeholder="Mobile Number"
           name="number"
           required
           type="number"
           value={generalInfo?.number}
-          onChange={handleInputChange}
+          disabled
         />
       </div>
       <div className="relative w-full mb-3">
@@ -59,12 +57,7 @@ const GeneralInfo = ({ generalInfo, setGeneralInfo }) => {
           <FormLabel className="text-slate-600 uppercase text-xs font-bold mb-2">
             Gender
           </FormLabel>
-          <RadioGroup
-            row
-            required
-            defaultValue="female"
-            name="radio-buttons-group"
-          >
+          <RadioGroup row required disabled value={generalInfo?.gender}>
             <FormControlLabel value="male" control={<Radio />} label="Male" />
 
             <FormControlLabel
@@ -85,7 +78,7 @@ const GeneralInfo = ({ generalInfo, setGeneralInfo }) => {
           label="Date of Birth"
           required
           value={generalInfo?.dob}
-          onChange={handleInputChange}
+          disabled
         />
       </div>
       <div className="relative w-full mb-3">

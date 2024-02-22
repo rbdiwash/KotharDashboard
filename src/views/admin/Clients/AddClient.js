@@ -9,6 +9,7 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import InputField from "components/Input/InputField";
+import WholeScreenLoader from "components/WholeScreenLoader";
 import { API_URL } from "const/constants";
 import useKothar from "context/useKothar";
 import { useEffect, useState } from "react";
@@ -41,7 +42,7 @@ const AddClient = ({ color = "light" }) => {
     }
   }, [state]);
 
-  const { mutate } = useMutation(postData, {
+  const { mutate, isLoading } = useMutation(postData, {
     onSuccess() {
       toast.success(
         data?.id ? "Data updated Successfully" : "Data added Successfully"
@@ -248,7 +249,8 @@ const AddClient = ({ color = "light" }) => {
             </div>
           </div>
         </div>
-      </div>
+      </div>{" "}
+      {isLoading && <WholeScreenLoader open={isLoading} />}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { Button, IconButton, Tooltip } from "@mui/material";
+import { Button, IconButton, Popover, Tooltip } from "@mui/material";
 import DeleteModal from "components/Modals/DeleteModal";
 import { useState } from "react";
 import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
@@ -13,6 +13,8 @@ import { ImageName } from "components/helper";
 import SearchField from "components/SearchField";
 import { delete_data } from "const/axios";
 import { useEffect } from "react";
+import React from "react";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 const Clients = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
@@ -32,7 +34,11 @@ const Clients = ({ color = "light" }) => {
       token
     );
   };
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
   useEffect(() => {
     if (searchText.length > 0) {
       const filtered = clientList?.filter(
@@ -46,7 +52,12 @@ const Clients = ({ color = "light" }) => {
       setFilteredData(clientList);
     }
   }, [searchText]);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
   return (
     <div className="flex flex-wrap mt-4 dashBody">
       <div className="w-full mb-12 px-4">
@@ -67,14 +78,53 @@ const Clients = ({ color = "light" }) => {
                 Clients
               </h3>
               <SearchField {...{ type: "Client", searchText, setSearchText }} />
-              <Button
-                variant="contained"
-                startIcon={<FaPlusCircle />}
-                component={Link}
-                to="/admin/client/add"
+              <div className="flex items-center gap-4">
+                <Button
+                  variant="contained"
+                  startIcon={<FaPlusCircle />}
+                  component={Link}
+                  to="/admin/client/add"
+                >
+                  Add Client Details
+                </Button>
+                <a
+                  className="text-slate-500 block"
+                  href="#"
+                  onClick={handleClick}
+                  aria-describedby={id}
+                >
+                  <MoreVertIcon />
+                </a>
+              </div>
+              <Popover
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
               >
-                Add Client Details
-              </Button>
+                <div
+                  className={
+                    "bg-white text-base z-50 float-left py-2 list-none text-left rounded shadow-lg min-w-48"
+                  }
+                >
+                  <Link
+                    to="/"
+                    className={
+                      "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-slate-700"
+                    }
+                  >
+                    See Archived List
+                  </Link>
+                </div>
+              </Popover>
             </div>
           </div>
           <div className="block w-full overflow-x-auto">

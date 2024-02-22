@@ -8,6 +8,7 @@ import {
   TextField,
 } from "@mui/material";
 import InputField from "components/Input/InputField";
+import UploadFile from "components/Input/UploadFile";
 import { useState } from "react";
 
 const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
@@ -201,14 +202,13 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
         <div className="relative w-full mb-3">
           <InputField
             fullWidth
-            size="small"
             label="Passport Number"
             placeholder="Passport Number"
-            name="passport.number"
+            name="passportNumber"
             required
             type="text"
-            value={addressInfo?.passport?.number}
-            onChange={handleInputChange}
+            value={addressInfo?.passportNumber}
+            disabled
           />
         </div>{" "}
         <div className="relative w-full mb-3">
@@ -242,11 +242,11 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
             fullWidth
             type="date"
             placeholder="Date of Issue"
-            name="passport.issueDate"
+            name="dateOfIssue"
             label="Date of Issue"
             required
-            value={addressInfo?.passport?.issueDate}
-            onChange={handleInputChange}
+            value={addressInfo?.dateOfIssue}
+            disabled
           />
         </div>
         <div className="relative w-full mb-3">
@@ -254,21 +254,21 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
             fullWidth
             type="date"
             placeholder="Expiry Date"
-            name="passport.expiryDate"
+            name="passportExpiry"
             label="Expiry Date"
             required
-            value={addressInfo?.passport?.expiryDate}
-            onChange={handleInputChange}
-          />
-        </div>{" "}
-        <div className="relative w-full mb-3">
-          <InputField
-            label="Upload Full Passport"
-            name="passport"
-            type="file"
-            onChange={(e) => handleFileChange(e, "passport")}
+            value={addressInfo?.passportExpiry}
+            disabled
           />
         </div>
+        <UploadFile
+          {...{
+            addressInfo,
+            setAddressInfo,
+            label: "Full Passport",
+            imageKey: "passport",
+          }}
+        />
       </div>
       <div className="sub-heading">Nationality:</div>
 

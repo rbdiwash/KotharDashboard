@@ -54,7 +54,7 @@ const Course = ({ color = "light" }) => {
     } else {
       setFilteredData(courseList);
     }
-  }, [searchText]);
+  }, [searchText, courseList]);
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">

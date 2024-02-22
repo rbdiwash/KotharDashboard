@@ -1,9 +1,11 @@
+import useKothar from "context/useKothar";
 import React from "react";
 import { Link } from "react-router-dom";
 
-// components
-
 export default function CardPageVisits() {
+  const [{ skillList, studentList, insuranceList, visaList, rplList }, {}] =
+    useKothar();
+
   return (
     <>
       <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded">
@@ -41,7 +43,7 @@ export default function CardPageVisits() {
                   RPL Certificate
                 </th>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                  4,569
+                  {rplList?.length}
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                   340
@@ -62,7 +64,7 @@ export default function CardPageVisits() {
                   Student Admission
                 </th>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                  3,985
+                  {studentList?.length}
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                   319
@@ -83,7 +85,7 @@ export default function CardPageVisits() {
                   Visa
                 </th>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                  3,513
+                  {visaList?.length}
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                   294
@@ -104,7 +106,7 @@ export default function CardPageVisits() {
                   Insurance
                 </th>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                  2,050
+                  {insuranceList?.length ?? 0}
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                   147
@@ -125,7 +127,7 @@ export default function CardPageVisits() {
                   Skill Assessment
                 </th>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                  1,795
+                  {skillList?.length}
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                   190

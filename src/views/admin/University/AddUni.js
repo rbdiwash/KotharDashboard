@@ -18,6 +18,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { states } from "const/constants";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import UploadFile from "components/Input/UploadFile";
+import WholeScreenLoader from "components/WholeScreenLoader";
 
 const AddUni = ({ color = "light" }) => {
   const [data, setData] = useState({
@@ -25,7 +26,7 @@ const AddUni = ({ color = "light" }) => {
     abn: null,
     contactPerson: null,
     email: null,
-    country: null,
+    country: "Australia",
     state: [],
     zipCode: null,
     image: null,
@@ -50,15 +51,15 @@ const AddUni = ({ color = "light" }) => {
     }
   }, [state]);
 
-  const { mutate } = useMutation(postData, {
+  const { mutate, isLoading } = useMutation(postData, {
     onSuccess(res) {
       toast.success(
         data?.id ? "Data updated Successfully" : "Data added Successfully"
       );
       refetchUniData();
-      setTimeout(() => {
-        navigate("/admin/university");
-      }, 2000);
+      // setTimeout(() => {
+      navigate("/admin/university");
+      // }, 2000);
     },
     onError() {
       toast.error(data?.id ? "Error Updating Data" : "Error Submitting Data");
@@ -237,6 +238,7 @@ const AddUni = ({ color = "light" }) => {
           </div>
         </div>
       </div>
+      {isLoading && <WholeScreenLoader open={isLoading} />}
     </div>
   );
 };

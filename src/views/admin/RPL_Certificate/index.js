@@ -15,6 +15,7 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import SearchField from "components/SearchField";
 import DiscussionModal from "components/Modals/DiscussionModal";
+import { useEffect } from "react";
 
 const RPLCertificate = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
@@ -22,7 +23,8 @@ const RPLCertificate = ({ color = "light" }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [searchText, setSearchText] = useState("");
 
-  const [{ consultancyList }, { refetchConsultancy }] = useKothar();
+  const [{ rplList }, { refetchRPLList }] = useKothar();
+  const [filteredData, setFilteredData] = useState(rplList);
 
   const deleteData = () => {
     axios
@@ -30,7 +32,7 @@ const RPLCertificate = ({ color = "light" }) => {
       .then((res) => {
         toast.success("Data Deleted Successfully");
         setOpenConfirmationModal({ state: false, id: null });
-        refetchConsultancy();
+        refetchRPLList();
       })
       .error((err) => {
         toast.error("Error Deleting Data");
@@ -42,6 +44,20 @@ const RPLCertificate = ({ color = "light" }) => {
     setOpenDiscussion(!openDiscussion);
   };
 
+  useEffect(() => {
+    if (searchText.length > 0) {
+      const filtered = rplList?.filter(
+        (client) =>
+          client?.name?.toLowerCase().includes(searchText?.toLowerCase()) ||
+          client?.email?.toLowerCase().includes(searchText?.toLowerCase()) ||
+          client?.address?.toLowerCase().includes(searchText?.toLowerCase()) ||
+          client?.status?.toLowerCase().includes(searchText?.toLowerCase())
+      );
+      setFilteredData(filtered);
+    } else {
+      setFilteredData(rplList);
+    }
+  }, [searchText]);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -55,8 +71,8 @@ const RPLCertificate = ({ color = "light" }) => {
     "Certificate Processing",
     "Certificate Ready",
     "Payment Completed",
-    "Softcopy Sent",
-    "Hardcopy ssent",
+    "Softcopy sent",
+    "Hardcopy sent",
   ];
 
   function TabPanel(props) {
@@ -138,7 +154,7 @@ const RPLCertificate = ({ color = "light" }) => {
               {...{
                 tableHeadClass,
                 navigate,
-                consultancyList,
+                filteredData,
                 setOpenConfirmationModal,
                 color,
               }}
@@ -168,7 +184,7 @@ export default RPLCertificate;
 const TabContent = ({
   tableHeadClass,
   navigate,
-  consultancyList,
+  filteredData,
   setOpenConfirmationModal,
   color,
 }) => {
@@ -179,23 +195,22 @@ const TabContent = ({
           <tr>
             <th className={"table-head " + tableHeadClass}>Name</th>
             <th className={"table-head " + tableHeadClass}>Email</th>
-            <th className={"table-head " + tableHeadClass}>Mobile</th>
-            <th className={"table-head " + tableHeadClass}>Address</th>
-            <th className={"table-head " + tableHeadClass}>DOB</th>
             <th className={"table-head " + tableHeadClass}>USI Number</th>
             <th className={"table-head " + tableHeadClass}>Visa Status</th>
-            <th className={"table-head " + tableHeadClass}>Visa Expiry</th>
-            <th className={"table-head " + tableHeadClass}>Qualification</th>
+
+            <th className={"table-head " + tableHeadClass}>
+              Certification Type
+            </th>
             <th className={"table-head " + tableHeadClass}>Case Officer</th>
-            <th className={"table-head " + tableHeadClass}>Reference </th>
+
             <th className={"table-head " + tableHeadClass}>Status </th>
-            <th className={"table-head " + tableHeadClass}>Invoice </th>
+
             <th className={"table-head " + tableHeadClass}>Action </th>
           </tr>
         </thead>
         <tbody>
-          {consultancyList?.length > 0 ? (
-            consultancyList?.map((item, index) => (
+          {filteredData?.length > 0 ? (
+            filteredData?.map((item, index) => (
               <tr key={item?.id || index}>
                 <td className="table-data text-left flex items-center">
                   {ImageName(item?.name)}
@@ -210,57 +225,26 @@ const TabContent = ({
                 </td>
                 <td className="table-data">{item?.email || "-"}</td>
                 <td className="table-data">
-                  <div className="flex">{item?.owner || "-"}</div>
+                  <div className="flex">{item?.usiNumber || "-"}</div>
                 </td>
                 <td className="table-data">
                   <div className="flex items-center gap-2">
-                    {item?.primaryContactNumber || "-"}
+                    {item?.visaStatus || "-"}
+                  </div>
+                </td>
+
+                <td className="table-data">
+                  <div className="flex items-center">
+                    {item?.caseOfficer || "-"}
                   </div>
                 </td>
                 <td className="table-data">
                   <div className="flex items-center">
-                    {item?.website || "-"}
+                    {item?.certificate || "-"}
                   </div>
                 </td>
                 <td className="table-data">
-                  <div className="flex items-center">
-                    {item?.panNumber || "-"}
-                  </div>
-                </td>
-                <td className="table-data">
-                  <div className="flex items-center">
-                    {item?.panNumber || "-"}
-                  </div>
-                </td>
-                <td className="table-data">
-                  <div className="flex items-center">
-                    {item?.panNumber || "-"}
-                  </div>
-                </td>
-                <td className="table-data">
-                  <div className="flex items-center">
-                    {item?.panNumber || "-"}
-                  </div>
-                </td>
-                <td className="table-data">
-                  <div className="flex items-center">
-                    {item?.panNumber || "-"}
-                  </div>
-                </td>
-                <td className="table-data">
-                  <div className="flex items-center">
-                    {item?.panNumber || "-"}
-                  </div>
-                </td>
-                <td className="table-data">
-                  <div className="flex items-center">
-                    {item?.panNumber || "-"}
-                  </div>
-                </td>
-                <td className="table-data">
-                  <div className="flex items-center">
-                    {item?.panNumber || "-"}
-                  </div>
+                  <div className="flex items-center">{item?.status || "-"}</div>
                 </td>
 
                 <td className="table-data text-right">
