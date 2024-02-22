@@ -144,7 +144,7 @@ const AddStudent = () => {
                 required
                 value={data?.status}
                 placeholder="Select Student Status"
-                options={rpl_status}
+                options={student_status}
                 disablePortal
                 renderInput={(params) => (
                   <TextField {...params} label="Select Student Status" />

@@ -17,6 +17,7 @@ import SearchField from "components/SearchField";
 import { useEffect } from "react";
 import DiscussionModal from "components/Modals/DiscussionModal";
 const tabs = [
+  "All",
   "TR Visa",
   "Student Visa",
   "Dependent Visa",
@@ -49,21 +50,20 @@ const Visa = ({ color = "light" }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [searchText, setSearchText] = useState("");
 
-  const [{ visaList }, { refetchVisaList }] = useKothar();
+  const [{ visaList }, { refetchVisaList, getVisaList }] = useKothar();
   const [value, setValue] = useState(0);
   const [filteredData, setFilteredData] = useState(visaList);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    const status = event.target.innerText.toLowerCase().split(" ").join("_");
+    getVisaList(`status=${status}`);
   };
 
   const deleteData = () => {
     axios
-      .delete(
-        `${API_URL}/visa-applications/${openConfirmationModal?.id}`
-      )
+      .delete(`${API_URL}/visa-applications/${openConfirmationModal?.id}`)
       .then((res) => {
-        console.log(res);
         toast.success(res?.data?.message || "Data Deleted Successfully");
         setOpenConfirmationModal({ state: false, id: null });
         refetchVisaList();
@@ -193,6 +193,7 @@ const TabContent = ({
             <th className={"table-head " + tableHeadClass}>Phone Number</th>
 
             <th className={"table-head " + tableHeadClass}>Course Provider</th>
+            <th className={"table-head " + tableHeadClass}>Reference</th>
             <th className={"table-head " + tableHeadClass}>Status</th>
 
             <th className={"table-head " + tableHeadClass}>Action</th>
@@ -215,6 +216,11 @@ const TabContent = ({
                 <td className="table-data">
                   <div className="flex items-center">
                     {item?.courseProvider || "-"}
+                  </div>
+                </td>
+                <td className="table-data">
+                  <div className="flex items-center">
+                    {item?.reeference || "-"}
                   </div>
                 </td>
 

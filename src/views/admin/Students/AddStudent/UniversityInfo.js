@@ -85,7 +85,7 @@ const UniversityInfo = ({ generalInfo, setGeneralInfo }) => {
           }}
           size="small"
         />
-      </div>{" "}
+      </div>
       <div className="relative w-full mb-3">
         <label className="input-label">Select State *</label>
         <Autocomplete
@@ -147,7 +147,7 @@ const UniversityInfo = ({ generalInfo, setGeneralInfo }) => {
           }}
           size="small"
         />
-      </div>{" "}
+      </div>
       <div className="relative w-full mb-3">
         <InputField
           type="text"
@@ -156,6 +156,30 @@ const UniversityInfo = ({ generalInfo, setGeneralInfo }) => {
           label="Fees (per semester)"
           required
           value={generalInfo?.fee}
+          onChange={handleInputChange}
+        />
+      </div>
+      <div className="relative w-full mb-3">
+        <InputField
+          fullWidth
+          label="Case Officer"
+          placeholder="Case Officer"
+          name="caseOfficer"
+          required
+          type="text"
+          value={generalInfo?.caseOfficer}
+          onChange={handleInputChange}
+        />
+      </div>
+      <div className="relative w-full mb-3">
+        <InputField
+          fullWidth
+          label="Reference"
+          placeholder="Reference"
+          name="reference"
+          required
+          type="text"
+          value={generalInfo?.reference}
           onChange={handleInputChange}
         />
       </div>

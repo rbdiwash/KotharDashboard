@@ -39,6 +39,11 @@ const AdminRoutes = {
   element: <Admin />,
   children: [
     {
+      path: "",
+      element: <Dashboard />,
+    },
+
+    {
       path: "dashboard",
       element: <Dashboard />,
     },

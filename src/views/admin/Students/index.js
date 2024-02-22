@@ -1,6 +1,7 @@
 import { Button, IconButton, Tooltip } from "@mui/material";
 import DiscussionModal from "components/Modals/DiscussionModal";
 import SearchField from "components/SearchField";
+import useKothar from "context/useKothar";
 import { useState } from "react";
 import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
 import { FaPlusCircle, FaRocketchat } from "react-icons/fa";
@@ -8,6 +9,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Students = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
+  const [{ studentList }, { refetchStudent }] = useKothar();
   const navigate = useNavigate();
   const [searchText, setSearchText] = useState("");
   const [openDiscussion, setOpenDiscussion] = useState(false);
@@ -64,31 +66,33 @@ const Students = ({ color = "light" }) => {
                   <th className={"table-head " + tableHeadClass}>Country</th>
                   <th className={"table-head " + tableHeadClass}>Program</th>
                   <th className={"table-head " + tableHeadClass}>Intake</th>
+                  <th className={"table-head " + tableHeadClass}>
+                    Case Officer
+                  </th>
+                  <th className={"table-head " + tableHeadClass}>Reference</th>
                   <th className={"table-head " + tableHeadClass}>Action</th>
                 </tr>
               </thead>
               <tbody>
-                {[0, 1, 2, 3, 4].map((item, index) => (
+                {studentList?.map((item, index) => (
                   <tr key={item?.id || index}>
                     <th className="table-data text-left flex items-center">
-                      <img
-                        src={require("assets/img/bootstrap.jpg")}
-                        className="h-12 w-12 bg-white rounded-full border"
-                        alt="..."
-                      ></img>{" "}
                       <span
                         className={
                           "ml-3 font-bold " +
                           +(color === "light" ? "text-slate-600" : "text-white")
                         }
                       >
-                        University of Southern Queensland
+                        {item?.name || "-"}
                       </span>
                     </th>
-                    <td className="table-data">12345678790</td>
-                    <td className="table-data">uosq@college.au</td>
+                    <td className="table-data"> {item?.email || "-"}</td>
+                    <td className="table-data"> {item?.name || "-"}</td>
                     <td className="table-data">
-                      <div className="flex">Anand Pandey</div>
+                      <div className="flex">
+                        {" "}
+                        {item?.name || "-"} {item?.name || "-"}
+                      </div>
                     </td>
                     <td className="table-data">
                       <div className="flex items-center gap-2">
@@ -97,13 +101,28 @@ const Students = ({ color = "light" }) => {
                           alt="..."
                           className="w-10 h-10 rounded-full border-2 border-slate-50 shadow"
                         ></img>
-                        Australia
+                        {item?.name || "-"}
+                      </div>
+                    </td>
+
+                    <td className="table-data">
+                      <div className="flex items-center">
+                        {" "}
+                        {item?.name || "-"}
                       </div>
                     </td>
                     <td className="table-data">
-                      <div className="flex items-center">Sydney</div>
+                      <div className="flex items-center">
+                        {" "}
+                        {item?.caseOfficer || "-"}
+                      </div>
                     </td>
-
+                    <td className="table-data">
+                      <div className="flex items-center">
+                        {" "}
+                        {item?.reference || "-"}
+                      </div>
+                    </td>
                     <td className="table-data text-right">
                       <div className="flex items-center">
                         <Tooltip title="View Student Details" arrow>

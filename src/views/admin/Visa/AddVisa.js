@@ -100,10 +100,7 @@ const AddVisaDetails = ({ color = "light" }) => {
 
   async function postData(payload) {
     if (data?.id) {
-      await axios.put(
-        `${API_URL}/visa-applications/${payload?.id}`,
-        payload
-      );
+      await axios.put(`${API_URL}/visa-applications/${payload?.id}`, payload);
     } else {
       await axios.post(`${API_URL}/visa-applications`, payload);
     }
@@ -112,8 +109,6 @@ const AddVisaDetails = ({ color = "light" }) => {
     e.preventDefault();
     mutate({ ...data, tenYearAddress: tenYearAddress, type: "student_visa" });
   };
-
-
 
   const handle10InputChange = (e, index) => {
     const { name, value } = e.target;
@@ -404,31 +399,21 @@ const AddVisaDetails = ({ color = "light" }) => {
                     <InputField
                       label="Desired OVSC Insurance"
                       placeholder="Desired OVSC Insurance"
-                      name="passportNumber"
+                      name="desiredInsurance"
                       required
                       type="number"
-                      value={data?.passportNumber}
+                      value={data?.desiredInsurance}
                       onChange={handleInputChange}
                     />
                   </div>
-
                   <div className="relative w-full mb-3">
                     <InputField
                       label="Police Check Lodge Date"
-                      name="dataOfIssue"
+                      name="policeCheckLodgeDate"
                       required
                       type="date"
-                      value={data?.dataOfIssue}
-                    />
-                  </div>
-
-                  <div className="relative w-full mb-3">
-                    <InputField
-                      label="Police Check Lodge Date"
-                      name="passportExpiry"
-                      required
-                      type="text"
-                      value={data?.passportExpiry}
+                      value={data?.policeCheckLodgeDate}
+                      onChange={handleInputChange}
                     />
                   </div>
                   <div className="relative w-full mb-3">
@@ -442,7 +427,6 @@ const AddVisaDetails = ({ color = "light" }) => {
                       onChange={handleInputChange}
                     />
                   </div>
-
                   <div className="relative w-full mb-3">
                     <InputField
                       label="PTE Attainted Date"
@@ -450,6 +434,31 @@ const AddVisaDetails = ({ color = "light" }) => {
                       required
                       type="date"
                       value={data?.pte_date}
+                      onChange={handleInputChange}
+                    />
+                  </div>{" "}
+                  <div className="relative w-full mb-3">
+                    <InputField
+                      fullWidth
+                      label="Case Officer"
+                      placeholder="Case Officer"
+                      name="caseOfficer"
+                      required
+                      type="text"
+                      value={data?.caseOfficer}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="relative w-full mb-3">
+                    <InputField
+                      fullWidth
+                      label="Reference"
+                      placeholder="Reference"
+                      name="reference"
+                      required
+                      type="text"
+                      value={data?.reference}
+                      onChange={handleInputChange}
                     />
                   </div>
                 </div>
@@ -457,7 +466,6 @@ const AddVisaDetails = ({ color = "light" }) => {
                   Upload Documents
                 </p>
                 <div className="grid grid-cols-2 gap-8">
-                  
                   <UploadFile
                     {...{
                       data,

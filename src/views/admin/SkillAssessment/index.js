@@ -96,16 +96,15 @@ const SkillAssessment = ({ color = "light" }) => {
               <thead>
                 <tr>
                   <th className={"table-head " + tableHeadClass}>Full Name</th>
-                  <th className={"table-head " + tableHeadClass}>Address</th>
+                  <th className={"table-head " + tableHeadClass}>Email</th>
                   <th className={"table-head " + tableHeadClass}>
                     Phone Number
                   </th>
 
-                  <th className={"table-head " + tableHeadClass}>Cost</th>
-
                   <th className={"table-head " + tableHeadClass}>
                     Case Officer
                   </th>
+                  <th className={"table-head " + tableHeadClass}>Reference</th>
                   <th className={"table-head " + tableHeadClass}>Status</th>
                   <th className={"table-head " + tableHeadClass}>Action</th>
                 </tr>
@@ -120,36 +119,33 @@ const SkillAssessment = ({ color = "light" }) => {
                           {item?.name || "-"}
                         </span>
                       </td>
-                      <td className="table-data">{item?.level || "-"}</td>
+                      <td className="table-data">{item?.email || "-"}</td>
                       <td className="table-data">
-                        <div className="flex">{item?.duration || "-"} year</div>
+                        <div className="flex">{item?.number || "-"}</div>
                       </td>
                       <td className="table-data">
                         <div className="flex items-center">
-                          {item?.university || "-"}
+                          {item?.caseOfficer || "-"}
                         </div>
                       </td>
                       <td className="table-data">
                         <div className="flex items-center">
-                          {item?.intake || "-"}
+                          {item?.referencec || "-"}
                         </div>
                       </td>{" "}
                       <td className="table-data">
                         <div className="flex items-center">
-                          {item?.fee || "-"}
+                          {item?.status === "true"
+                            ? "Approved"
+                            : "Pending" || "-"}
                         </div>
                       </td>
                       <td className="table-data text-right">
                         <div className="flex items-center">
-                          {/* <Tooltip title="View" arrow>
-                            <IconButton>
-                              <AiFillEye className="text-sky-600 cursor-pointer" />
-                            </IconButton>
-                          </Tooltip> */}
                           <Tooltip title="Edit Course" arrow>
                             <IconButton
                               onClick={() =>
-                                navigate("/admin/course/add", {
+                                navigate("/admin/skill-assessment/add", {
                                   state: { item },
                                 })
                               }

@@ -97,36 +97,8 @@ const AddRPLCertificate = ({ color = "light" }) => {
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    mutate({ ...data });
+    mutate({ ...data, useExistingClientData: true });
   };
-
-  const handleFileChange = (e, type) => {
-    const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append("file", file);
-    axios
-      .post(`${API_URL}/api/upload`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      })
-      .then((res) => {
-        setData({ ...data, [type]: res?.data?.data?.url });
-      })
-      .catch((err) => {
-        toast.error("Error Uploading file");
-      });
-  };
-
-  const services = [
-    "Students Admission",
-    "RPL Certificate",
-    "Student Accommodation",
-    "Visa Application",
-    "Health Insurance",
-    "Professional Year",
-    "Individual Tax Return",
-    "Skills Assessment",
-    "Student Accommodation",
-  ];
 
   const documents_for_placement = [
     {
@@ -436,6 +408,18 @@ const AddRPLCertificate = ({ color = "light" }) => {
                       required
                       type="text"
                       value={data?.caseOfficer}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="relative w-full mb-3">
+                    <InputField
+                      fullWidth
+                      label="Reference"
+                      placeholder="Reference"
+                      name="reference"
+                      required
+                      type="text"
+                      value={data?.reference}
                       onChange={handleInputChange}
                     />
                   </div>

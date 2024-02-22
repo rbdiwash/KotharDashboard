@@ -41,13 +41,13 @@ const AddSkillAssessment = ({ color = "light" }) => {
   };
 
   const { state } = useLocation();
-  console.log("🚀  data:", data);
 
   useEffect(() => {
     if (state) {
       setData({ ...state?.item });
     }
   }, [state]);
+  console.log("🚀  data:", data);
 
   const { mutate } = useMutation(postData, {
     onSuccess() {
@@ -64,10 +64,7 @@ const AddSkillAssessment = ({ color = "light" }) => {
 
   async function postData(payload) {
     if (data?.id) {
-      await axios.put(
-        `${API_URL}/skill-assessment/${payload?.id}`,
-        payload
-      );
+      await axios.put(`${API_URL}/skill-assessment/${payload?.id}`, payload);
     } else {
       await axios.post(`${API_URL}/skill-assessment`, payload);
     }

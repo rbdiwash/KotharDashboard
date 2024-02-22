@@ -23,7 +23,7 @@ const RPLCertificate = ({ color = "light" }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [searchText, setSearchText] = useState("");
 
-  const [{ rplList }, { refetchRPLList }] = useKothar();
+  const [{ rplList }, { refetchRPLList, getRPLList }] = useKothar();
   const [filteredData, setFilteredData] = useState(rplList);
 
   const deleteData = () => {
@@ -58,11 +58,15 @@ const RPLCertificate = ({ color = "light" }) => {
       setFilteredData(rplList);
     }
   }, [searchText]);
-  const handleChange = (event, newValue) => {
+  const handleChange = (event, newValue, val) => {
     setValue(newValue);
+
+    const status = event.target.innerText.toLowerCase().split(" ").join("_");
+    getRPLList(`status=${status}`);
   };
 
   const tabs = [
+    "All",
     "Incomplete Application",
     "Application Ready",
     "Placement Waiting",
@@ -139,7 +143,6 @@ const RPLCertificate = ({ color = "light" }) => {
             variant="scrollable"
             scrollButtons
             allowScrollButtonsMobile
-            aria-label="visible arrows tabs example"
           >
             {tabs?.map((arg) => (
               <Tab
@@ -202,6 +205,7 @@ const TabContent = ({
               Certification Type
             </th>
             <th className={"table-head " + tableHeadClass}>Case Officer</th>
+            <th className={"table-head " + tableHeadClass}>Reeference</th>
 
             <th className={"table-head " + tableHeadClass}>Status </th>
 
@@ -236,6 +240,11 @@ const TabContent = ({
                 <td className="table-data">
                   <div className="flex items-center">
                     {item?.caseOfficer || "-"}
+                  </div>
+                </td>
+                <td className="table-data">
+                  <div className="flex items-center">
+                    {item?.reference || "-"}
                   </div>
                 </td>
                 <td className="table-data">

@@ -121,8 +121,12 @@ const useStateAndActions = () => {
       refetchOnWindowFocus: false,
     }
   );
-  const getVisaList = async () => {
-    const res = await axios.get(`${API_URL}/visa-applications`, {
+  const getVisaList = async (params) => {
+    let url =
+      typeof params === "string"
+        ? `${API_URL}/visa-applications?${params}`
+        : `${API_URL}/visa-applications`;
+    const res = await axios.get(url, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return res?.data?.data;
@@ -134,8 +138,12 @@ const useStateAndActions = () => {
       refetchOnWindowFocus: false,
     }
   );
-  const getRPLList = async () => {
-    const res = await axios.get(`${API_URL}/rpl`, {
+  const getRPLList = async (params) => {
+    let url =
+      typeof params === "string"
+        ? `${API_URL}/rpl?${params}`
+        : `${API_URL}/rpl`;
+    const res = await axios.get(url, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return res?.data?.data;
@@ -218,6 +226,8 @@ const useStateAndActions = () => {
     refetchVisaList,
     refetchSkillList,
     refetchRPLList,
+    getRPLList,
+    getVisaList,
   };
 
   return [state, actions];

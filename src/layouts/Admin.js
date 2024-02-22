@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 
 // components
 
@@ -7,11 +7,21 @@ import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
 import useKothar from "context/useKothar";
 import { Backdrop, CircularProgress } from "@mui/material";
+import { useEffect } from "react";
 
 // views
 
 export default function Admin() {
   const [{ wholeLoading }] = useKothar();
+  const token = localStorage.getItem("token");
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!token) {
+      navigate("/");
+    }
+  }, []);
+
   return (
     <>
       <>
