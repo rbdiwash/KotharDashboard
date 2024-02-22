@@ -19,6 +19,7 @@ import axios from "axios";
 import { IoArrowBack } from "react-icons/io5";
 import UniversityInfo from "./UniversityInfo";
 import { student_status } from "const/constants";
+import { rpl_status } from "const/constants";
 const AddStudent = () => {
   const steps = [
     "General Information",
@@ -143,7 +144,7 @@ const AddStudent = () => {
                 required
                 value={data?.status}
                 placeholder="Select Student Status"
-                options={status}
+                options={rpl_status}
                 disablePortal
                 renderInput={(params) => (
                   <TextField {...params} label="Select Student Status" />
