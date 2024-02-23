@@ -225,7 +225,9 @@ const TabContent = ({
                 </td>
 
                 <td className="table-data">
-                  <div className="flex items-center">{item?.status || "-"}</div>
+                  <div className="flex items-center">
+                    {item?.status === "true" ? "Approved" : "Pending" || "-"}
+                  </div>
                 </td>
                 <td className="table-data text-right">
                   <div className="flex items-center">

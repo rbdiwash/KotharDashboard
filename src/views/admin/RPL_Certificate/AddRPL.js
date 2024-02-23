@@ -80,7 +80,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
       toast.success(
         data?.id ? "Data updated Successfully" : "Data added Successfully"
       );
-      navigate("/admin/consultancy");
+      navigate("/admin/rpl-certificate");
       refetchConsultancy();
     },
     onError() {
@@ -93,6 +93,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
       await axios.put(`${API_URL}/rpl/${payload?.id}`, payload);
     } else {
       await axios.post(`${API_URL}/rpl`, payload);
+      alert("ok");
     }
   }
   const handleSubmit = (e) => {
@@ -168,7 +169,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                 onChange={(e, value) => {
                   setData((prevState) => ({
                     ...prevState,
-                    status: value,
+                    status: value?.value,
                   }));
                 }}
                 required
@@ -502,6 +503,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                             setData,
                             label: "any Australian Licence",
                             imageKey: "license_file",
+                            required: true,
                           }}
                         />
                       )}
@@ -522,6 +524,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                             setData,
                             label: "any Photo Card",
                             imageKey: "photocard_file",
+                            required: true,
                           }}
                         />
                       )}
@@ -542,6 +545,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                             setData,
                             label: "Bank Card Document",
                             imageKey: "bank_card_file",
+                            required: true,
                           }}
                         />
                       )}
@@ -562,6 +566,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                             setData,
                             label: "RSA/ Whitecard document",
                             imageKey: "rsa_file",
+                            required: true,
                           }}
                         />
                       )}
@@ -582,6 +587,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                             setData,
                             label: "Insurance Card/Student Card",
                             imageKey: "insurance_student_card_file",
+                            required: true,
                           }}
                         />
                       )}
@@ -602,6 +608,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                             setData,
                             label: "Bills",
                             imageKey: "bills_file",
+                            required: true,
                           }}
                         />
                       )}
@@ -644,7 +651,11 @@ const AddRPLCertificate = ({ color = "light" }) => {
                   <Button variant="outlined" onClick={() => navigate(-1)} to="">
                     Go Back
                   </Button>
-                  <Button variant="contained" type="submit">
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    // disabled={!data?.status}
+                  >
                     Submit
                   </Button>
                 </div>

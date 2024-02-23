@@ -168,7 +168,7 @@ const RPLCertificate = ({ color = "light" }) => {
       {openConfirmationModal.state && (
         <DeleteModal
           open={openConfirmationModal.state}
-          item="University"
+          item="RPL Details"
           handleCancel={() =>
             setOpenConfirmationModal({ state: false, id: null })
           }
@@ -263,10 +263,10 @@ const TabContent = ({
                         <AiFillEye className="text-sky-600 cursor-pointer" />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title="Edit University" arrow>
+                    <Tooltip title="Edit RPL Details" arrow>
                       <IconButton
                         onClick={() =>
-                          navigate("/admin/consultancy/add", {
+                          navigate("/admin/rpl-certificate /add", {
                             state: { item },
                           })
                         }
@@ -274,7 +274,7 @@ const TabContent = ({
                         <AiFillEdit className="text-sky-600 cursor-pointer" />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title="Delete University" arrow>
+                    <Tooltip title="Delete RPL Details" arrow>
                       <IconButton
                         onClick={() =>
                           setOpenConfirmationModal({

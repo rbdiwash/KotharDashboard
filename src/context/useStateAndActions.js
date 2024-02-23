@@ -141,7 +141,7 @@ const useStateAndActions = () => {
   const getRPLList = async (params) => {
     let url =
       typeof params === "string"
-        ? `${API_URL}/rpl?${params}`
+        ? `${API_URL}/rpl/?${params}`
         : `${API_URL}/rpl`;
     const res = await axios.get(url, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -220,14 +220,15 @@ const useStateAndActions = () => {
     refetchCourseList,
     refetchStudent,
     refetchUsers,
-    setToken,
     refetchInvoiceList,
-    setWholeLoading,
     refetchVisaList,
     refetchSkillList,
     refetchRPLList,
+    refetchInsuranceList,
     getRPLList,
     getVisaList,
+    setToken,
+    setWholeLoading,
   };
 
   return [state, actions];

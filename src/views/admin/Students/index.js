@@ -134,7 +134,7 @@ const Students = ({ color = "light" }) => {
                         </Tooltip>
                         <Tooltip title="Edit Student Details" arrow>
                           <IconButton
-                            onClick={() => navigate("/admin/university/add")}
+                            onClick={() => navigate("/admin/student/add")}
                           >
                             <AiFillEdit className="text-sky-600 cursor-pointer" />
                           </IconButton>

@@ -52,7 +52,7 @@ const SkillAssessment = ({ color = "light" }) => {
     } else {
       setFilteredData(skillList);
     }
-  }, [searchText]);
+  }, [searchText, skillList]);
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">

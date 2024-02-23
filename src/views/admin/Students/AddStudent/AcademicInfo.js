@@ -28,22 +28,7 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
     } else {
       setAcademicInfo({ ...academicInfo, [name]: file });
     }
-    // const formData = new FormData();
-    // formData.append("file", file);
-    // axios
-    //   .post(`${API_URL}/api/upload`, formData, {
-    //     headers: { "Content-Type": "multipart/form-data" },
-    //   })
-    //   .then((res) => {
-    //     if (type === "multiple") {
-    //       setData({ ...data, [name]: [...data?.[name], res?.data?.data?.url] });
-    //     } else {
-    //       setData({ ...data, [name]: res?.data?.data?.url });
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     toast.error("Error Uploading file");
-    //   });
+   
   };
 
   const handleDeletePdf = (name, i) => {
@@ -580,207 +565,18 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             />
           </div>
         ))}
-      </div>
+      </div>{" "}
+      <UploadFile
+        {...{
+          academicInfo,
+          setAcademicInfo,
+          label: "All Academic Documents(multiple)",
+          imageKey: "plusTwo",
+          type: "multiple",
+        }}
+      />
     </>
   );
 };
 
 export default AcademicInfo;
-
-{
-  /* {academicInfo?.identificationType && (
-          <>
-            <div className="relative w-full mb-3">
-              <InputField
-                label={
-                  academicInfo?.identificationType === "citizenship"
-                    ? "Citizenship Number"
-                    : academicInfo?.identificationType === "passport"
-                    ? "Passport Number"
-                    : "Licence Number"
-                }
-                placeholder={
-                  academicInfo?.identificationType === "citizenship"
-                    ? "Citizenship Number"
-                    : academicInfo?.identificationType === "passport"
-                    ? "Passport Number"
-                    : "Licence Number"
-                }
-                name={
-                  academicInfo?.identificationType === "passport"
-                    ? "passportNumber"
-                    : "identificationNumber"
-                }
-                required
-                type="text"
-                value={academicInfo?.identificationNumber}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div className="relative w-full mb-3">
-              <InputField
-                label="Nationality"
-                placeholder="Nationality"
-                name="nationality"
-                required
-                type="text"
-                value={academicInfo?.nationality}
-                onChange={handleInputChange}
-              />
-            </div>
-          </>
-        )} */
-}
-//  <div className="grid grid-cols-3 gap-8 mt-6">
-//    <div className="relative w-full mb-3">
-//      <SelectField
-//        onChange={handleInputChange}
-//        required
-//        value={academicInfo?.identificationType}
-//        name="identificationType"
-//        placeholder="Select Document"
-//        label="Select Document"
-//        defaultValue="Select Document Type"
-//        options={[
-//          { name: "Citizenship", id: "citizenship" },
-//          { name: "Passport", id: "passport" },
-//          { name: "Licence", id: "licence" },
-//        ]}
-//      />
-//    </div>
-//    {academicInfo?.identificationType && (
-//      <>
-//        <div className="relative w-full mb-3">
-//          <InputField
-//            label={
-//              academicInfo?.identificationType === "citizenship"
-//                ? "Citizenship Number"
-//                : academicInfo?.identificationType === "passport"
-//                ? "Passport Number"
-//                : "Licence Number"
-//            }
-//            placeholder={
-//              academicInfo?.identificationType === "citizenship"
-//                ? "Citizenship Number"
-//                : academicInfo?.identificationType === "passport"
-//                ? "Passport Number"
-//                : "Licence Number"
-//            }
-//            name={
-//              academicInfo?.identificationType === "passport"
-//                ? "passportNumber"
-//                : "identificationNumber"
-//            }
-//            required
-//            type="text"
-//            value={academicInfo?.identificationNumber}
-//            onChange={handleInputChange}
-//          />
-//        </div>
-//        <div className="relative w-full mb-3">
-//          <InputField
-//            label="Nationality"
-//            placeholder="Nationality"
-//            name="nationality"
-//            required
-//            type="text"
-//            value={academicInfo?.nationality}
-//            onChange={handleInputChange}
-//          />
-//        </div>
-//      </>
-//    )}
-//    <div className="relative w-full mb-3">
-//      <InputField
-//        label="Mobile Number"
-//        placeholder="Mobile Number"
-//        name="number"
-//        required
-//        type="text"
-//        value={academicInfo?.number}
-//        onChange={handleInputChange}
-//      />
-//    </div>
-//    <div className="relative w-full mb-3">
-//      <InputField
-//        type="email"
-//        placeholder="Email Address"
-//        name="email"
-//        label="Email Address"
-//        required
-//        value={academicInfo?.email}
-//        onChange={handleInputChange}
-//      />
-//    </div>
-//    <div className="relative w-full mb-3">
-//      <InputField
-//        label="Age"
-//        placeholder="Age"
-//        name="age"
-//        required
-//        type="number"
-//        value={academicInfo?.age}
-//        onChange={handleInputChange}
-//      />
-//    </div>
-//    <div className="relative w-full mb-3">
-//      <FormControl>
-//        <FormLabel className="text-slate-600 uppercase text-xs font-bold mb-2">
-//          Gender
-//        </FormLabel>
-//        <RadioGroup
-//          row
-//          required
-//          defaultValue="female"
-//          name="radio-buttons-group"
-//        >
-//          <FormControlLabel value="male" control={<Radio />} label="Male" />
-
-//          <FormControlLabel value="female" control={<Radio />} label="Female" />
-//          <FormControlLabel value="other" control={<Radio />} label="Other" />
-//        </RadioGroup>
-//      </FormControl>
-//    </div>
-//    <div className="relative w-full mb-3">
-//      <InputField
-//        type="number"
-//        placeholder="PAN Number/ABN Number"
-//        name="panNumber"
-//        label="PAN Number/ABN Number"
-//        required
-//        value={academicInfo?.panNumber}
-//        onChange={handleInputChange}
-//      />
-//    </div>
-//    <div className="relative w-full mb-3">
-//      <InputField
-//        type="number"
-//        placeholder="Primary Contact Number"
-//        name="primaryContactNumber"
-//        label="Primary Contact Number"
-//        required
-//        value={academicInfo?.primaryContactNumber}
-//        onChange={handleInputChange}
-//      />
-//    </div>
-//    <div className="relative w-full mb-3">
-//      <InputField
-//        type="number"
-//        placeholder="Secondary Contact Number"
-//        name="secondaryContactNumber"
-//        label="Secondary Contact Number"
-//        value={academicInfo?.secondaryContactNumber}
-//        onChange={handleInputChange}
-//      />
-//    </div>
-//    <div className="relative w-full mb-3">
-//      <InputField
-//        label="Upload your Image"
-//        name="logo"
-//        // required
-//        type="file"
-//        value={academicInfo?.image}
-//        onChange={handleInputChange}
-//      />
-//    </div>
-//  </div>;

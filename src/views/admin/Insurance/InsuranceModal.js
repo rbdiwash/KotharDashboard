@@ -19,6 +19,7 @@ import {
 import useKothar from "context/useKothar";
 import PropTypes from "prop-types";
 import * as React from "react";
+import { useEffect } from "react";
 import { useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -27,8 +28,9 @@ export default function InsuranceModal({
   setOpenInsuranceForm,
   studentDetails,
 }) {
+  console.log("🚀  openInsuranceForm:", openInsuranceForm);
   const handleClose = () => {
-    setOpenInsuranceForm(false);
+    setOpenInsuranceForm({ state: false, id: null });
   };
   const [childName, setChildName] = useState([]);
   const [{}, { refetchInsuranceList }] = useKothar();
@@ -49,12 +51,20 @@ export default function InsuranceModal({
     childrens: 0,
     child: childName,
   });
+  console.log("🚀  data:", data);
+
+  useEffect(() => {
+    if (openInsuranceForm?.id) {
+      setData(openInsuranceForm?.id);
+      setChildName(openInsuranceForm?.id?.child);
+    }
+  }, [openInsuranceForm]);
   const { mutate } = useMutation(postData, {
     onSuccess(suc) {
       toast.success(
         data?.id ? "Data updated Successfully" : "Data added Successfully"
       );
-      setOpenInsuranceForm(false);
+      setOpenInsuranceForm({ state: false, id: null });
       refetchInsuranceList();
     },
     onError(err) {
@@ -113,7 +123,7 @@ export default function InsuranceModal({
     <div>
       <BootstrapDialog
         onClose={handleClose}
-        open={openInsuranceForm}
+        open={openInsuranceForm?.state}
         maxWidth="xl"
       >
         <form action="" onSubmit={handleSubmit}>

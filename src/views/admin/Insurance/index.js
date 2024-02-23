@@ -1,25 +1,21 @@
 import { Button, IconButton, Tooltip } from "@mui/material";
-import DeleteModal from "components/Modals/DeleteModal";
-import { useState } from "react";
-import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
-import { FaPlusCircle, FaRocketchat } from "react-icons/fa";
-import { useQuery } from "@tanstack/react-query";
-import { Link, useNavigate } from "react-router-dom";
-import { API_URL } from "const/constants";
 import axios from "axios";
-import { toast } from "react-toastify";
-import useKothar from "context/useKothar";
-import { ImageName } from "components/helper";
-import InsuranceModal from "./InsuranceModal";
-import SearchField from "components/SearchField";
+import DeleteModal from "components/Modals/DeleteModal";
 import DiscussionModal from "components/Modals/DiscussionModal";
-import { useEffect } from "react";
+import SearchField from "components/SearchField";
+import { ImageName } from "components/helper";
+import { API_URL } from "const/constants";
+import useKothar from "context/useKothar";
+import { useEffect, useState } from "react";
+import { AiFillDelete, AiFillEdit } from "react-icons/ai";
+import { FaPlusCircle, FaRocketchat } from "react-icons/fa";
+import { toast } from "react-toastify";
+import InsuranceModal from "./InsuranceModal";
 
 const Insurance = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
-  const navigate = useNavigate();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
-  const [openInsuranceForm, setOpenInsuranceForm] = useState(false);
+  const [openInsuranceForm, setOpenInsuranceForm] = useState({});
   const [searchText, setSearchText] = useState("");
 
   const [{ insuranceList }, { refetchInsuranceList }] = useKothar();
@@ -28,9 +24,7 @@ const Insurance = ({ color = "light" }) => {
 
   const deleteData = () => {
     axios
-      .delete(
-        `${API_URL}/insurance/${openConfirmationModal?.id}`
-      )
+      .delete(`${API_URL}/insurance/${openConfirmationModal?.id}`)
       .then((res) => {
         toast.success(res?.data?.message || "Data Deleted Successfully");
         setOpenConfirmationModal({ state: false, id: null });
@@ -63,7 +57,7 @@ const Insurance = ({ color = "light" }) => {
     } else {
       setFilteredData(insuranceList);
     }
-  }, [searchText]);
+  }, [searchText, insuranceList]);
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">
@@ -95,7 +89,9 @@ const Insurance = ({ color = "light" }) => {
                 <Button
                   variant="contained"
                   startIcon={<FaPlusCircle />}
-                  onClick={() => setOpenInsuranceForm(!openInsuranceForm)}
+                  onClick={() =>
+                    setOpenInsuranceForm({ state: true, id: null })
+                  }
                 >
                   Add Insurance
                 </Button>
@@ -129,6 +125,7 @@ const Insurance = ({ color = "light" }) => {
                   <th className={"table-head " + tableHeadClass}>
                     Case Officer
                   </th>
+                  <th className={"table-head " + tableHeadClass}>Reference</th>
                   <th className={"table-head " + tableHeadClass}>Action</th>
                 </tr>
               </thead>
@@ -142,37 +139,64 @@ const Insurance = ({ color = "light" }) => {
                           {item?.name || "-"}
                         </span>
                       </td>
-                      <td className="table-data">{item?.level || "-"}</td>
+                      <td className="table-data">{item?.address || "-"}</td>
                       <td className="table-data">
-                        <div className="flex">{item?.duration || "-"} year</div>
+                        <div className="flex">{item?.number || "-"}</div>
                       </td>
                       <td className="table-data">
                         <div className="flex items-center">
-                          {item?.university || "-"}
+                          {item?.insuranceCompany || "-"}
                         </div>
                       </td>
                       <td className="table-data">
                         <div className="flex items-center">
-                          {item?.intake || "-"}
+                          {item?.startingDate || "-"}
                         </div>
                       </td>
                       <td className="table-data">
                         <div className="flex items-center">
-                          {item?.fee || "-"}
+                          {item?.endDate || "-"}
+                        </div>
+                      </td>
+                      <td className="table-data">
+                        <div className="flex items-center">
+                          {item?.paymentType || "-"}
+                        </div>
+                      </td>
+                      <td className="table-data">
+                        <div className="flex items-center">
+                          {item?.cost || "-"}
+                        </div>
+                      </td>
+                      <td className="table-data">
+                        <div className="flex items-center">
+                          {item?.type || "-"}
+                        </div>
+                      </td>
+                      <td className="table-data">
+                        <div className="flex items-center">
+                          {item?.coverType || "-"}
+                        </div>
+                      </td>
+
+                      <td className="table-data">
+                        <div className="flex items-center">
+                          {item?.caseOfficer || "-"}
+                        </div>
+                      </td>
+                      <td className="table-data">
+                        <div className="flex items-center">
+                          {item?.reference || "-"}
                         </div>
                       </td>
                       <td className="table-data text-right">
                         <div className="flex items-center">
-                          {/* <Tooltip title="View" arrow>
-                            <IconButton>
-                              <AiFillEye className="text-sky-600 cursor-pointer" />
-                            </IconButton>
-                          </Tooltip> */}
                           <Tooltip title="Edit Insurance details" arrow>
                             <IconButton
                               onClick={() =>
-                                navigate("/admin/insurance/add", {
-                                  state: { item },
+                                setOpenInsuranceForm({
+                                  state: true,
+                                  id: item,
                                 })
                               }
                             >

@@ -44,7 +44,7 @@ const AddSkillAssessment = ({ color = "light" }) => {
 
   useEffect(() => {
     if (state) {
-      setData({ ...state?.item });
+      setData({ ...state?.item, client: state?.item?.name });
     }
   }, [state]);
   console.log("🚀  data:", data);

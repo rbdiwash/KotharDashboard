@@ -27,11 +27,11 @@ const ClientDropdown = ({ data, setData }) => {
           }));
         }}
         required
-        value={data?.client}
+        value={{ name: data?.name, id: data?.id }}
         options={clientList || []}
         getOptionLabel={(option) => option?.name || ""}
         getOptionValue={(option) => option?.id}
-        isOptionEqualToValue={(options, value) => options.id === value.id}
+        isOptionEqualToValue={(options, value) => options.name === value.name}
         disablePortal
         size="small"
         renderInput={(params) => (

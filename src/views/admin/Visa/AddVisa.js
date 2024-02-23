@@ -65,7 +65,7 @@ const AddVisaDetails = ({ color = "light" }) => {
     {
       from: null,
       to: null,
-      full_address: "",
+      fullAddress: "",
       uid: crypto.randomUUID(),
     },
   ]);
@@ -82,6 +82,7 @@ const AddVisaDetails = ({ color = "light" }) => {
   useEffect(() => {
     if (state) {
       setData({ ...state?.item });
+      setTenYearAddress(state?.item?.ten_year_address);
     }
   }, [state]);
 
@@ -125,7 +126,7 @@ const AddVisaDetails = ({ color = "light" }) => {
       {
         from: null,
         to: null,
-        full_address: "",
+        fullAddress: "",
         uid: crypto.randomUUID(),
       },
     ]);
@@ -155,7 +156,7 @@ const AddVisaDetails = ({ color = "light" }) => {
                     (color === "light" ? "text-slate-700" : "text-white")
                   }
                 >
-                  Add Visa Details
+                  {data?.id ? "Edit" : "Add"} Visa Details
                 </h3>
               </div>
               <FormControlLabel
@@ -363,17 +364,17 @@ const AddVisaDetails = ({ color = "light" }) => {
                       <InputField
                         type="date"
                         placeholder="Insert Date"
-                        name="till"
+                        name="to"
                         className="min-w-[200px]"
-                        value={item?.till}
+                        value={item?.to}
                         onChange={(e) => handle10InputChange(e, i)}
                       />
                       <InputField
                         type="text"
                         placeholder="Full Address"
-                        name="full_address"
+                        name="fullAddress"
                         className="min-w-[500px]"
-                        value={item?.full_address}
+                        value={item?.fullAddress}
                         onChange={(e) => handle10InputChange(e, i)}
                       />
                       <Tooltip title="Delete Address">

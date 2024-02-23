@@ -9,7 +9,14 @@ import { toast } from "react-toastify";
 import InputField from "./InputField";
 import { Delete } from "@mui/icons-material";
 
-const UploadFile = ({ data, setData, imageKey, label, type = "single" }) => {
+const UploadFile = ({
+  data,
+  setData,
+  imageKey,
+  label,
+  type = "single",
+  required = false,
+}) => {
   const [{ token }, { setWholeLoading }] = useKothar();
 
   const handleFileChange = (e) => {
@@ -56,7 +63,7 @@ const UploadFile = ({ data, setData, imageKey, label, type = "single" }) => {
         <InputField
           label={`Upload ${label}` || "Upload Image"}
           name="image"
-          // required
+          required={required}
           type="file"
           onChange={(e) => handleFileChange(e, imageKey, "multiple")}
         />

@@ -15,8 +15,9 @@ import { delete_data } from "const/axios";
 import { useEffect } from "react";
 import React from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { IoArrowBack } from "react-icons/io5";
 
-const Clients = ({ color = "light" }) => {
+const ArchivedClients = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
   const navigate = useNavigate();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
@@ -69,24 +70,22 @@ const Clients = ({ color = "light" }) => {
         >
           <div className="rounded-t mb-0 px-4 py-3 border-0">
             <div className="flex flex-wrap items-center justify-between">
-              <h3
-                className={
-                  "font-semibold text-lg " +
-                  (color === "light" ? "text-slate-700" : "text-white")
-                }
-              >
-                Clients
-              </h3>
+              <div className="flex justify-start gap-4 items-center">
+                <IoArrowBack
+                  className="text-xl cursor-pointer"
+                  onClick={() => navigate(-1)}
+                />
+                <h3
+                  className={
+                    "font-semibold text-lg " +
+                    (color === "light" ? "text-slate-700" : "text-white")
+                  }
+                >
+                  Archived Clients
+                </h3>
+              </div>
               <SearchField {...{ type: "Client", searchText, setSearchText }} />
               <div className="flex items-center gap-4">
-                <Button
-                  variant="contained"
-                  startIcon={<FaPlusCircle />}
-                  component={Link}
-                  to="/admin/client/add"
-                >
-                  Add Client Details
-                </Button>
                 <a
                   className="text-slate-500 block"
                   href="#"
@@ -116,7 +115,7 @@ const Clients = ({ color = "light" }) => {
                   }
                 >
                   <Link
-                    to="/admin/client/archived"
+                    to="/"
                     className={
                       "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-slate-700"
                     }
@@ -247,4 +246,4 @@ const Clients = ({ color = "light" }) => {
   );
 };
 
-export default Clients;
+export default ArchivedClients;
