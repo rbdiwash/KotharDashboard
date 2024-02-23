@@ -26,8 +26,9 @@ const useStateAndActions = () => {
       // },
     }
   );
-  const getClientData = async () => {
-    const res = await axios.get(`clients`);
+  const getClientData = async (params) => {
+    let url = typeof params === "string" ? `/clients/?${params}` : `clients`;
+    const res = await axios.get(url);
     return res?.data?.data;
   };
   const { data: clientList, refetch: refetchClient } = useQuery(
@@ -38,6 +39,17 @@ const useStateAndActions = () => {
       // onError: () => {
       //   toast.error("Error Fetching Data");
       // },
+    }
+  );
+  const getArchivedClient = async () => {
+    const res = await axios.get(`clients/?active=N`);
+    return res?.data?.data;
+  };
+  const { data: archivedClientList, refetch: refetchArchivedClient } = useQuery(
+    ["archivedClient"],
+    getArchivedClient,
+    {
+      refetchOnWindowFocus: false,
     }
   );
   const getUniData = async () => {
@@ -124,7 +136,7 @@ const useStateAndActions = () => {
   const getVisaList = async (params) => {
     let url =
       typeof params === "string"
-        ? `${API_URL}/visa-applications?${params}`
+        ? `${API_URL}/visa-applications/?${params}`
         : `${API_URL}/visa-applications`;
     const res = await axios.get(url, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -212,6 +224,7 @@ const useStateAndActions = () => {
     skillList,
     insuranceList,
     rplList,
+    archivedClientList,
   };
   const actions = {
     refetchClient,
@@ -227,8 +240,11 @@ const useStateAndActions = () => {
     refetchInsuranceList,
     getRPLList,
     getVisaList,
+    getClientData,
     setToken,
     setWholeLoading,
+    getArchivedClient,
+    refetchArchivedClient,
   };
 
   return [state, actions];

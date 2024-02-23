@@ -22,15 +22,18 @@ const ArchivedClients = ({ color = "light" }) => {
   const navigate = useNavigate();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [searchText, setSearchText] = useState("");
-  const [{ clientList, token }, { refetchClient }] = useKothar();
-  const [filteredData, setFilteredData] = useState(clientList);
+  const [
+    { archivedClientList, token },
+    { refetchArchivedClient, getArchivedClient },
+  ] = useKothar();
+  const [filteredData, setFilteredData] = useState(archivedClientList);
 
   const deleteData = () => {
     delete_data(
       `${API_URL}/clients/${openConfirmationModal?.id}`,
       () => {
         setOpenConfirmationModal({ state: false, id: null });
-        refetchClient();
+        refetchArchivedClient();
       },
       token
     );
@@ -40,9 +43,13 @@ const ArchivedClients = ({ color = "light" }) => {
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
+  useEffect(() => {
+    getArchivedClient();
+  }, []);
   useEffect(() => {
     if (searchText.length > 0) {
-      const filtered = clientList?.filter(
+      const filtered = archivedClientList?.filter(
         (client) =>
           client?.name?.toLowerCase().includes(searchText?.toLowerCase()) ||
           client?.email?.toLowerCase().includes(searchText?.toLowerCase()) ||
@@ -50,7 +57,7 @@ const ArchivedClients = ({ color = "light" }) => {
       );
       setFilteredData(filtered);
     } else {
-      setFilteredData(clientList);
+      setFilteredData(archivedClientList);
     }
   }, [searchText]);
   const handleClose = () => {
@@ -202,7 +209,7 @@ const ArchivedClients = ({ color = "light" }) => {
                               <AiFillEdit className="text-sky-600 cursor-pointer" />
                             </IconButton>
                           </Tooltip>
-                          <Tooltip title="Delete Client" arrow>
+                          {/* <Tooltip title="Delete Client" arrow>
                             <IconButton
                               onClick={() =>
                                 setOpenConfirmationModal({
@@ -213,7 +220,7 @@ const ArchivedClients = ({ color = "light" }) => {
                             >
                               <AiFillDelete className="text-red-600 cursor-pointer" />
                             </IconButton>
-                          </Tooltip>
+                          </Tooltip> */}
                         </div>
                       </td>
                     </tr>

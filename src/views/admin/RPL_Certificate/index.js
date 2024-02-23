@@ -24,6 +24,7 @@ const RPLCertificate = ({ color = "light" }) => {
   const [searchText, setSearchText] = useState("");
 
   const [{ rplList }, { refetchRPLList, getRPLList }] = useKothar();
+  console.log("🚀  rplList:", rplList);
   const [filteredData, setFilteredData] = useState(rplList);
 
   const deleteData = () => {
@@ -57,11 +58,12 @@ const RPLCertificate = ({ color = "light" }) => {
     } else {
       setFilteredData(rplList);
     }
-  }, [searchText]);
+  }, [searchText, value]);
   const handleChange = (event, newValue, val) => {
     setValue(newValue);
-
     const status = event.target.innerText.toLowerCase().split(" ").join("_");
+    refetchRPLList();
+
     getRPLList(`status=${status}`);
   };
 
