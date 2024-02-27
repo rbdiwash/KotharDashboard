@@ -153,7 +153,6 @@ const AddSkillAssessment = ({ color = "light" }) => {
                 </p>
                 <div className="grid grid-cols-2 gap-8">
                   <ClientDropdown {...{ data, setData }} />
-
                   <div className="relative w-full mb-3">
                     <InputField
                       label="Address"
@@ -257,6 +256,30 @@ const AddSkillAssessment = ({ color = "light" }) => {
                       type="text"
                       value={data?.course_completed}
                       // onChange={handleInputChange}
+                    />
+                  </div>{" "}
+                  <div className="relative w-full mb-3">
+                    <InputField
+                      fullWidth
+                      label="Case Officer"
+                      placeholder="Case Officer"
+                      name="caseOfficer"
+                      required
+                      type="text"
+                      value={data?.caseOfficer}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="relative w-full mb-3">
+                    <InputField
+                      fullWidth
+                      label="Reference"
+                      placeholder="Reference"
+                      name="reference"
+                      required
+                      type="text"
+                      value={data?.reference}
+                      onChange={handleInputChange}
                     />
                   </div>
                 </div>

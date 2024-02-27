@@ -93,7 +93,6 @@ const AddRPLCertificate = ({ color = "light" }) => {
       await axios.put(`${API_URL}/rpl/${payload?.id}`, payload);
     } else {
       await axios.post(`${API_URL}/rpl`, payload);
-      alert("ok");
     }
   }
   const handleSubmit = (e) => {

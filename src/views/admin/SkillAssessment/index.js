@@ -45,7 +45,9 @@ const SkillAssessment = ({ color = "light" }) => {
         (client) =>
           client?.name?.toLowerCase().includes(searchText?.toLowerCase()) ||
           client?.email?.toLowerCase().includes(searchText?.toLowerCase()) ||
-          client?.address?.toLowerCase().includes(searchText?.toLowerCase()) ||
+          client?.caseOfficer
+            ?.toLowerCase()
+            .includes(searchText?.toLowerCase()) ||
           client?.status?.toLowerCase().includes(searchText?.toLowerCase())
       );
       setFilteredData(filtered);
@@ -130,7 +132,7 @@ const SkillAssessment = ({ color = "light" }) => {
                       </td>
                       <td className="table-data">
                         <div className="flex items-center">
-                          {item?.referencec || "-"}
+                          {item?.reference || "-"}
                         </div>
                       </td>{" "}
                       <td className="table-data">

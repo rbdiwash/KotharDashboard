@@ -10,7 +10,7 @@ const useStateAndActions = () => {
   const [token, setToken] = useState(localStorage.getItem("token"));
 
   const [wholeLoading, setWholeLoading] = useState(false);
-
+  const [rplList, setRPLList] = useState([]);
   const getData = async () => {
     const res = await axios.get(`organization`);
     return res?.data?.data;
@@ -150,23 +150,35 @@ const useStateAndActions = () => {
       refetchOnWindowFocus: false,
     }
   );
-  const getRPLList = async (params) => {
+  // const getRPLList = async (params) => {
+  //   let url =
+  //     typeof params === "string"
+  //       ? `${API_URL}/rpl/?${params}`
+  //       : `${API_URL}/rpl`;
+  //   const res = await axios.get(url, {
+  //     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+  //   });
+  //   return res?.data?.data;
+  // };
+  // const { data: rplList, refetch: refetchRPLList } = useQuery(
+  //   ["rplList"],
+  //   getRPLList,
+  //   {
+  //     refetchOnWindowFocus: false,
+  //   }
+  // );
+
+  const getRPLList = (params) => {
     let url =
       typeof params === "string"
         ? `${API_URL}/rpl/?${params}`
         : `${API_URL}/rpl`;
-    const res = await axios.get(url, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
-    return res?.data?.data;
+    axios
+      .get(url, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      })
+      .then((res) => setRPLList(res?.data?.data));
   };
-  const { data: rplList, refetch: refetchRPLList } = useQuery(
-    ["rplList"],
-    getRPLList,
-    {
-      refetchOnWindowFocus: false,
-    }
-  );
   const getSkillAssessmentList = async () => {
     const res = await axios.get(`${API_URL}/skill-assessment`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -206,7 +218,8 @@ const useStateAndActions = () => {
       refetchVisaList();
       refetchSkillList();
       refetchInsuranceList();
-      refetchRPLList();
+      getRPLList();
+      // refetchRPLList();
     }
   }, [token]);
 
@@ -236,7 +249,7 @@ const useStateAndActions = () => {
     refetchInvoiceList,
     refetchVisaList,
     refetchSkillList,
-    refetchRPLList,
+    // refetchRPLList,
     refetchInsuranceList,
     getRPLList,
     getVisaList,

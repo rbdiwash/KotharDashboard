@@ -23,7 +23,7 @@ const RPLCertificate = ({ color = "light" }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [searchText, setSearchText] = useState("");
 
-  const [{ rplList }, { refetchRPLList, getRPLList }] = useKothar();
+  const [{ rplList }, { getRPLList }] = useKothar();
   console.log("🚀  rplList:", rplList);
   const [filteredData, setFilteredData] = useState(rplList);
 
@@ -33,7 +33,7 @@ const RPLCertificate = ({ color = "light" }) => {
       .then((res) => {
         toast.success("Data Deleted Successfully");
         setOpenConfirmationModal({ state: false, id: null });
-        refetchRPLList();
+        getRPLList();
       })
       .error((err) => {
         toast.error("Error Deleting Data");
@@ -51,19 +51,21 @@ const RPLCertificate = ({ color = "light" }) => {
         (client) =>
           client?.name?.toLowerCase().includes(searchText?.toLowerCase()) ||
           client?.email?.toLowerCase().includes(searchText?.toLowerCase()) ||
-          client?.address?.toLowerCase().includes(searchText?.toLowerCase()) ||
-          client?.status?.toLowerCase().includes(searchText?.toLowerCase())
+          client?.caseOfficer
+            ?.toLowerCase()
+            .includes(searchText?.toLowerCase()) ||
+          client?.status?.toLowerCase().includes(searchText?.toLowerCase()) ||
+          client?.reference?.toLowerCase().includes(searchText?.toLowerCase())
       );
       setFilteredData(filtered);
     } else {
       setFilteredData(rplList);
     }
   }, [searchText, value]);
+
   const handleChange = (event, newValue, val) => {
     setValue(newValue);
     const status = event.target.innerText.toLowerCase().split(" ").join("_");
-    refetchRPLList();
-
     getRPLList(`status=${status}`);
   };
 

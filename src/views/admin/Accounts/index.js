@@ -133,12 +133,16 @@ const data = [
   },
 ];
 const Accounts = ({ color = "light" }) => {
-  const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
   const navigate = useNavigate();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [searchText, setSearchText] = useState("");
+  const [selectedType, setSelectedType] = useState("");
 
-  const [{ courseList }, { refetchCourseList }] = useKothar();
+  const [
+    { insuranceList, rplList, studentList, visaList, skillList },
+    { refetchCourseList },
+  ] = useKothar();
+  console.log("🚀  rplList:", rplList);
 
   const deleteData = () => {
     axios
@@ -157,10 +161,35 @@ const Accounts = ({ color = "light" }) => {
   const options = [
     { title: "RPL", value: "rpl" },
     { title: "Admission", value: "admission" },
-    { title: "Professional Year", value: "py" },
     { title: "Visa", value: "visa" },
     { title: "Insurance", value: "insurance" },
+    { title: "SkillAssessment", value: "skillList" },
   ];
+
+  const getClientOption = () => {
+    let secondOption = [];
+
+    switch (selectedType) {
+      case "rpl":
+        secondOption = rplList;
+        break;
+      case "admission":
+        secondOption = studentList;
+        break;
+      case "insurance":
+        secondOption = insuranceList;
+        break;
+      case "visa":
+        secondOption = visaList;
+        break;
+      case "skillList":
+        secondOption = skillList;
+        break;
+    }
+    return secondOption;
+  };
+
+  console.log(getClientOption());
 
   //nested data is ok, see accessorKeys in ColumnDef below
   const columns = useMemo(
@@ -220,6 +249,9 @@ const Accounts = ({ color = "light" }) => {
                     disablePortal
                     options={options}
                     sx={{ width: 300 }}
+                    onChange={(e, value) => {
+                      setSelectedType(value);
+                    }}
                     getOptionLabel={(option) => option.title}
                     renderInput={(params) => (
                       <TextField {...params} placeholder="Select Type" />
@@ -228,9 +260,9 @@ const Accounts = ({ color = "light" }) => {
                   <Autocomplete
                     size="small"
                     disablePortal
-                    options={options}
+                    options={getClientOption()}
                     sx={{ width: 500 }}
-                    getOptionLabel={(option) => option.title}
+                    // getOptionLabel={(option) => option.title}
                     renderInput={(params) => (
                       <TextField {...params} placeholder="Search using Name" />
                     )}
