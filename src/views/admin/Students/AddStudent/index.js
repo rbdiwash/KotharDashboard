@@ -1,25 +1,17 @@
 import { Autocomplete, Button, TextField } from "@mui/material";
-import InputField from "components/Input/InputField";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Box from "@mui/material/Box";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepButton from "@mui/material/StepButton";
-import Typography from "@mui/material/Typography";
-import GeneralInfo from "./GeneralInfo";
-import AcademicInfo from "./AcademicInfo";
-import TestInfo from "./TestInfo";
-import DocumentsAndAddress from "./DocumentsAndAddress";
-import WorkExperience from "./WorkExperience";
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "react-toastify";
-import { API_URL } from "const/constants";
 import axios from "axios";
+import { API_URL, student_status } from "const/constants";
+import { useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import AcademicInfo from "./AcademicInfo";
+import DocumentsAndAddress from "./DocumentsAndAddress";
+import GeneralInfo from "./GeneralInfo";
+import TestInfo from "./TestInfo";
 import UniversityInfo from "./UniversityInfo";
-import { student_status } from "const/constants";
-import { rpl_status } from "const/constants";
+import WorkExperience from "./WorkExperience";
 const AddStudent = () => {
   const steps = [
     "General Information",
@@ -29,7 +21,7 @@ const AddStudent = () => {
     "Test",
   ];
 
-  const [generalInfo, setGeneralInfo] = useState({});
+  const [generalInfo, setGeneralInfo] = useState({ gender: null });
   const [addressInfo, setAddressInfo] = useState({});
   const [academicInfo, setAcademicInfo] = useState({});
   const [workInfo, setWorkInfo] = useState([]);
@@ -98,9 +90,9 @@ const AddStudent = () => {
   });
   async function postData(payload) {
     if (data?.id) {
-      await axios.put(`${API_URL}/organization/update`, payload);
+      await axios.put(`${API_URL}/student/${data?.id}`, payload);
     } else {
-      await axios.post(`${API_URL}/student/offshore/payloads`, payload);
+      await axios.post(`${API_URL}/student`, payload);
     }
   }
   const handleSubmit = (e) => {
@@ -162,100 +154,16 @@ const AddStudent = () => {
           <div className="block w-full overflow-x-auto mt-4 studentForm">
             <div className="flex-auto lg:px-10 py-3 pt-0">
               <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
-                {/* <Box sx={{ width: "100%" }}>
-                  <Stepper nonLinear activeStep={activeStep}>
-                    {steps.map((label, index) => (
-                      <Step key={label} completed={completed[index]}>
-                        <StepButton color="inherit" onClick={handleStep(index)}>
-                          {label}
-                        </StepButton>
-                      </Step>
-                    ))}
-                  </Stepper>
-                  <div>
-                    {allStepsCompleted() ? (
-                      <>
-                        <Typography sx={{ mt: 2, mb: 1 }}>
-                          All steps completed - you&apos;re finished
-                        </Typography>
-                        <Box
-                          sx={{ display: "flex", flexDirection: "row", pt: 2 }}
-                        >
-                          <Box sx={{ flex: "1 1 auto" }} />
-                          <Button onClick={handleReset}>Reset</Button>
-                        </Box>
-                      </>
-                    ) : (
-                      <>
-                        <Typography sx={{ mt: 2, mb: 1, py: 1 }}>
-                          {activeStep === 0 ? (
-                            <GeneralInfo {...{ generalInfo, setGeneralInfo }} />
-                          ) : activeStep === 1 ? (
-                            <DocumentsAndAddress
-                              {...{ addressInfo, setAddressInfo }}
-                            />
-                          ) : activeStep === 2 ? (
-                            <AcademicInfo
-                              {...{ academicInfo, setAcademicInfo }}
-                            />
-                          ) : activeStep === 3 ? (
-                            <WorkExperience {...{ workInfo, setWorkInfo }} />
-                          ) : (
-                            <TestInfo {...{ testInfo, setTestInfo }} />
-                          )}
-                        </Typography>
-                        <Box
-                          sx={{ display: "flex", flexDirection: "row", pt: 2 }}
-                        >
-                          <Button
-                            color="inherit"
-                            disabled={activeStep === 0}
-                            onClick={handleBack}
-                            sx={{ mr: 1 }}
-                            variant="contained"
-                          >
-                            Back
-                          </Button>
-                          <Box sx={{ flex: "1 1 auto" }} />
-                          <Button
-                            onClick={handleNext}
-                            sx={{ mr: 1 }}
-                            variant="contained"
-                          >
-                            Next
-                          </Button>
-                          {activeStep !== steps.length &&
-                            (completed[activeStep] ? (
-                              <Typography
-                                variant="caption"
-                                sx={{ display: "inline-block" }}
-                              >
-                                Step {activeStep + 1} already completed
-                              </Typography>
-                            ) : (
-                              <Button
-                                onClick={handleComplete}
-                                variant="contained"
-                                type="submit"
-                              >
-                                {completedSteps() === totalSteps() - 1
-                                  ? "Finish"
-                                  : "Complete Step"}
-                              </Button>
-                            ))}
-                        </Box>
-                      </>
-                    )}
-                  </div>
-                </Box> */}
                 <Title title={"Personal Details"} />
                 <GeneralInfo {...{ generalInfo, setGeneralInfo }} />
                 <Title title={"Documents and Address"} />
-                <DocumentsAndAddress {...{ addressInfo, setAddressInfo }} />
+                <DocumentsAndAddress
+                  {...{ addressInfo, setAddressInfo, generalInfo }}
+                />
                 <Title title={"Academic Qualification"} />
                 <AcademicInfo {...{ academicInfo, setAcademicInfo }} />
-                <Title title={"Work Experience"} />
-                <WorkExperience {...{ workInfo, setWorkInfo }} />
+                {/* <Title title={"Work Experience"} />
+                <WorkExperience {...{ workInfo, setWorkInfo }} /> */}
                 <Title title={"Language Test"} />
                 <TestInfo {...{ testInfo, setTestInfo }} />{" "}
                 <Title title={"Course & University"} />

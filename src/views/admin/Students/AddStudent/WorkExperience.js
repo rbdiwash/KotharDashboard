@@ -1,6 +1,7 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Button, TextField, Tooltip } from "@mui/material";
 import InputField from "components/Input/InputField";
+import UploadFile from "components/Input/UploadFile";
 
 const WorkExperience = ({ workInfo, setWorkInfo }) => {
   const handleInputChange = (e, index) => {
@@ -32,9 +33,9 @@ const WorkExperience = ({ workInfo, setWorkInfo }) => {
       <div className="sub-heading">Work Experience:</div>
 
       {workInfo?.map((item, index) => (
-        <div className="flex items-end gap-8 mt-6" key={index}>
+        <div className="flex  gap-8 mt-6 items-center" key={index}>
           <div className="relative w-full">
-            <TextField
+            <InputField
               fullWidth
               size="small"
               label="Name of Organization"
@@ -71,25 +72,15 @@ const WorkExperience = ({ workInfo, setWorkInfo }) => {
               onChange={(e) => handleInputChange(e, index)}
             />
           </div>
-          <div className="relative w-full">
-            <InputField
-              fullWidth
-              label="Upload Documents"
-              name="permanent.zip"
-              required
-              type="file"
-              value={item?.docs}
-              onChange={(e) => handleInputChange(e, index)}
-            />
-          </div>{" "}
-          {/* <UploadFile
+
+          <UploadFile
             {...{
-              data,
-              setData,
+              data: workInfo,
+              setData: setWorkInfo,
               label: "Documents",
-              imageKey: "image",
+              imageKey: "documents",
             }}
-          /> */}
+          />
           <Tooltip title="Delete experience">
             <Button>
               <DeleteIcon onClick={() => handleDeleteExp(item?.uid)} />

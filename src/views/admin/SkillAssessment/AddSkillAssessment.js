@@ -74,37 +74,6 @@ const AddSkillAssessment = ({ color = "light" }) => {
     mutate({ ...data });
   };
 
-  const handleFileChange = (e, name, type) => {
-    const file = e.target.files[0];
-    // if (type === "multiple") {
-    //   setData({ ...data, [name]: [...data?.[name], file] });
-    // } else {
-    //   setData({ ...data, [name]: file });
-    // }
-    const formData = new FormData();
-    formData.append("file", file);
-    axios
-      .post(`${API_URL}/file/upload`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      })
-      .then((res) => {
-        if (type === "multiple") {
-          setData({ ...data, [name]: [...data?.[name], res?.data?.data?.url] });
-        } else {
-          setData({ ...data, [name]: res?.data?.data?.url });
-        }
-      })
-      .catch((err) => {
-        toast.error("Error Uploading file");
-      });
-  };
-
-  const handleDeletePdf = (name, i) => {
-    setData({
-      ...data,
-      [name]: [...data?.[name].filter((item, index) => i !== index)],
-    });
-  };
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">

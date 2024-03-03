@@ -1,43 +1,12 @@
 import { Autocomplete, TextField } from "@mui/material";
 import InputField from "components/Input/InputField";
+import UploadFile from "components/Input/UploadFile";
 import { useState } from "react";
 
 const TestInfo = ({ testInfo, setTestInfo }) => {
-  console.log("🚀  testInfo:", testInfo);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setTestInfo((prevState) => ({ ...prevState, [name]: value }));
-  };
-  const handleSelectChange = (e, value) => {
-    const { id } = e.target;
-    setTestInfo((prevState) => ({ ...prevState, [id]: value }));
-  };
-  const handleFileChange = (e, name, type) => {
-    const file = e.target.files[0];
-    if (type === "multiple") {
-      setTestInfo({
-        ...testInfo,
-        [name]: [...testInfo?.[name], file],
-      });
-    } else {
-      setTestInfo({ ...testInfo, [name]: file });
-    }
-    // const formData = new FormData();
-    // formData.append("file", file);
-    // axios
-    //   .post(`${API_URL}/api/upload`, formData, {
-    //     headers: { "Content-Type": "multipart/form-data" },
-    //   })
-    //   .then((res) => {
-    //     if (type === "multiple") {
-    //       setData({ ...data, [name]: [...data?.[name], res?.data?.data?.url] });
-    //     } else {
-    //       setData({ ...data, [name]: res?.data?.data?.url });
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     toast.error("Error Uploading file");
-    //   });
   };
 
   return (
@@ -49,7 +18,7 @@ const TestInfo = ({ testInfo, setTestInfo }) => {
             onChange={(e, value) => {
               setTestInfo((prevState) => ({
                 ...prevState,
-                testName: value,
+                testName: value?.value,
               }));
             }}
             required
@@ -63,6 +32,9 @@ const TestInfo = ({ testInfo, setTestInfo }) => {
               { label: "Duo Lingo", value: "duoLingo" },
               { label: "IELTS Waiver", value: "waiver" },
             ]}
+            isOptionEqualToValue={(options, value) =>
+              options.value === value.value
+            }
             disablePortal
             renderInput={(params) => (
               <TextField {...params} label="Select Test Type" />
@@ -109,6 +81,14 @@ const TestInfo = ({ testInfo, setTestInfo }) => {
             onChange={handleInputChange}
           />
         </div>
+        <UploadFile
+          {...{
+            data: testInfo,
+            setData: setTestInfo,
+            label: "Documents",
+            imageKey: "document1",
+          }}
+        />
       </div>
       {(testInfo?.testName?.value === "ielts" ||
         testInfo?.testName?.value === "pte" ||
@@ -165,15 +145,8 @@ const TestInfo = ({ testInfo, setTestInfo }) => {
             </div>
           </div>
         </>
-      )}{" "}
-      <div className="relative w-full mt-3">
-        <InputField
-          label="Upload Documents"
-          name="passport"
-          type="file"
-          onChange={(e) => handleFileChange(e, "document1")}
-        />
-      </div>
+      )}
+
       <div className="sub-heading">Select Test:</div>
       <div className="grid grid-cols-4 gap-8 items-end mt-2 ">
         <div className="relative w-full mb-3">
@@ -181,7 +154,7 @@ const TestInfo = ({ testInfo, setTestInfo }) => {
             onChange={(e, value) => {
               setTestInfo((prevState) => ({
                 ...prevState,
-                testName2: value,
+                testName2: value?.value,
               }));
             }}
             required
@@ -195,6 +168,9 @@ const TestInfo = ({ testInfo, setTestInfo }) => {
               { label: "GTE", value: "gte" },
               { label: "GMAT", value: "gmat" },
             ]}
+            isOptionEqualToValue={(options, value) =>
+              options.value === value.value
+            }
             renderInput={(params) => (
               <TextField {...params} label="Select Test Type" />
             )}
@@ -214,7 +190,6 @@ const TestInfo = ({ testInfo, setTestInfo }) => {
             onChange={handleInputChange}
           />
         </div>
-
         <div className="relative w-full mb-3">
           <TextField
             fullWidth
@@ -239,14 +214,14 @@ const TestInfo = ({ testInfo, setTestInfo }) => {
             value={testInfo?.doe2}
             onChange={handleInputChange}
           />
-        </div>
-      </div>
-      <div className="relative w-full mt-3">
-        <InputField
-          label="Upload Documents"
-          name="passport"
-          type="file"
-          onChange={(e) => handleFileChange(e, "document2")}
+        </div>{" "}
+        <UploadFile
+          {...{
+            data: testInfo,
+            setData: setTestInfo,
+            label: "Documents",
+            imageKey: "document2",
+          }}
         />
       </div>
     </div>

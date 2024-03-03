@@ -1,20 +1,13 @@
 import {
   Autocomplete,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Radio,
-  RadioGroup,
-  TextField,
+  TextField
 } from "@mui/material";
-import ClientDropdown from "components/Dropdowns/ClientDropdown";
 import InputField from "components/Input/InputField";
-import { states } from "const/constants";
-import { months } from "const/constants";
+import { months, states } from "const/constants";
 import useKothar from "context/useKothar";
 
 const UniversityInfo = ({ generalInfo, setGeneralInfo }) => {
-  const [{ uniData, courseData }, {}] = useKothar();
+  const [{ uniData, courseList }, {}] = useKothar();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -43,7 +36,7 @@ const UniversityInfo = ({ generalInfo, setGeneralInfo }) => {
           }}
           required
           value={generalInfo?.course}
-          options={courseData || []}
+          options={courseList || []}
           getOptionLabel={(option) => option?.name || ""}
           getOptionValue={(option) => option?.id}
           isOptionEqualToValue={(options, value) => options.id === value.id}

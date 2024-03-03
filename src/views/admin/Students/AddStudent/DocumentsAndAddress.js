@@ -11,7 +11,8 @@ import InputField from "components/Input/InputField";
 import UploadFile from "components/Input/UploadFile";
 import { useState } from "react";
 
-const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
+const DocumentsAndAddress = ({ addressInfo, setAddressInfo, generalInfo }) => {
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name?.split(".")?.length > 1) {
@@ -48,33 +49,6 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
         },
       }));
     }
-  };
-  const handleFileChange = (e, name, type) => {
-    const file = e.target.files[0];
-    if (type === "multiple") {
-      setAddressInfo({
-        ...addressInfo,
-        [name]: [...addressInfo?.[name], file],
-      });
-    } else {
-      setAddressInfo({ ...addressInfo, [name]: file });
-    }
-    // const formData = new FormData();
-    // formData.append("file", file);
-    // axios
-    //   .post(`${API_URL}/api/upload`, formData, {
-    //     headers: { "Content-Type": "multipart/form-data" },
-    //   })
-    //   .then((res) => {
-    //     if (type === "multiple") {
-    //       setData({ ...data, [name]: [...data?.[name], res?.data?.data?.url] });
-    //     } else {
-    //       setData({ ...data, [name]: res?.data?.data?.url });
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     toast.error("Error Uploading file");
-    //   });
   };
 
   return (
@@ -130,7 +104,7 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
             name="permanent.zip"
             required
             type="number"
-            value={addressInfo?.number}
+            value={addressInfo?.permanent?.zip}
             onChange={handleInputChange}
           />
         </div>
@@ -207,7 +181,7 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
             name="passportNumber"
             required
             type="text"
-            value={addressInfo?.passportNumber}
+            value={generalInfo?.passportNumber}
             disabled
           />
         </div>{" "}
@@ -245,7 +219,7 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
             name="dateOfIssue"
             label="Date of Issue"
             required
-            value={addressInfo?.dateOfIssue}
+            value={generalInfo?.dateOfIssue}
             disabled
           />
         </div>
@@ -257,7 +231,7 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo }) => {
             name="passportExpiry"
             label="Expiry Date"
             required
-            value={addressInfo?.passportExpiry}
+            value={generalInfo?.passportExpiry}
             disabled
           />
         </div>

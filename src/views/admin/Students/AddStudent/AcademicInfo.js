@@ -5,6 +5,7 @@ import pdf from "../../../../assets/img/pdf.png";
 import UploadFile from "components/Input/UploadFile";
 
 const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
+  console.log("🚀  academicInfo:", academicInfo);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name?.split(".")?.length > 1) {
@@ -17,25 +18,6 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
     } else {
       setAcademicInfo((prevState) => ({ ...prevState, [name]: value }));
     }
-  };
-  const handleFileChange = (e, name, type) => {
-    const file = e.target.files[0];
-    if (type === "multiple") {
-      setAcademicInfo({
-        ...academicInfo,
-        [name]: [...academicInfo?.[name], file],
-      });
-    } else {
-      setAcademicInfo({ ...academicInfo, [name]: file });
-    }
-   
-  };
-
-  const handleDeletePdf = (name, i) => {
-    setAcademicInfo({
-      ...academicInfo,
-      [name]: [...academicInfo?.[name].filter((item, index) => i !== index)],
-    });
   };
 
   return (
@@ -50,16 +32,19 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             onChange={(e, value) => {
               setAcademicInfo((prevState) => ({
                 ...prevState,
-                tenth: { ...prevState.tenth, board: value },
+                tenth: { ...prevState.tenth, board: value?.value },
               }));
             }}
             required
-            value={academicInfo?.tenth?.board}
+            value={academicInfo?.tenth?.board || null}
             name="tenth.board"
             options={[
               { label: "NEB", value: "neb" },
               { label: "HSEB", value: "hseb" },
             ]}
+            isOptionEqualToValue={(options, value) =>
+              options.value === value.value
+            }
             renderInput={(params) => (
               <TextField {...params} label="Select Board" />
             )}
@@ -125,9 +110,12 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             onChange={(e, value) => {
               setAcademicInfo((prevState) => ({
                 ...prevState,
-                tenth: { ...prevState.tenth, gradingSystem: value },
+                tenth: { ...prevState.tenth, gradingSystem: value?.value },
               }));
             }}
+            isOptionEqualToValue={(options, value) =>
+              options.value === value.value
+            }
             required
             disablePortal
             id="combo-box-demo"
@@ -209,10 +197,10 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
       </div>
       <UploadFile
         {...{
-          academicInfo,
-          setAcademicInfo,
+          data: academicInfo,
+          setData: setAcademicInfo,
           label: "All Academic Documents(multiple)",
-          imageKey: "coe",
+          imageKey: "tenth.documents",
           type: "multiple",
         }}
       />
@@ -226,12 +214,15 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             onChange={(e, value) => {
               setAcademicInfo((prevState) => ({
                 ...prevState,
-                higher: { ...prevState.higher, board: value },
+                higher: { ...prevState.higher, board: value?.value },
               }));
             }}
             required
             value={academicInfo?.higher?.board}
             name="higher.board"
+            isOptionEqualToValue={(options, value) =>
+              options.value === value.value
+            }
             options={[
               { label: "NEB", value: "neb" },
               { label: "HSEB", value: "hseb" },
@@ -302,7 +293,7 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             onChange={(e, value) => {
               setAcademicInfo((prevState) => ({
                 ...prevState,
-                higher: { ...prevState.higher, gradingSystem: value },
+                higher: { ...prevState.higher, gradingSystem: value?.value },
               }));
             }}
             required
@@ -312,6 +303,9 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
               { label: "GPA", value: "gpa" },
               { label: "Percentage", value: "percentage" },
             ]}
+            isOptionEqualToValue={(options, value) =>
+              options.value === value.value
+            }
             renderInput={(params) => (
               <TextField {...params} label="Grading System" />
             )}
@@ -388,7 +382,7 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           academicInfo,
           setAcademicInfo,
           label: "All Academic Documents(multiple)",
-          imageKey: "plusTwo",
+          imageKey: "higher.documents",
           type: "multiple",
         }}
       />
@@ -403,9 +397,12 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             onChange={(e, value) => {
               setAcademicInfo((prevState) => ({
                 ...prevState,
-                higher: { ...prevState.bachelor, board: value },
+                higher: { ...prevState.bachelor, board: value?.value },
               }));
             }}
+            isOptionEqualToValue={(options, value) =>
+              options.value === value.value
+            }
             value={academicInfo?.bachelor?.board}
             name="bachelor.board"
             options={[
@@ -473,15 +470,20 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             onChange={(e, value) => {
               setAcademicInfo((prevState) => ({
                 ...prevState,
-                bachelor: { ...prevState.bachelor, gradingSystem: value },
+                bachelor: {
+                  ...prevState.bachelor,
+                  gradingSystem: value?.value,
+                },
               }));
             }}
             disablePortal
-            id="combo-box-demo"
             options={[
               { label: "GPA", value: "gpa" },
               { label: "Percentage", value: "percentage" },
             ]}
+            isOptionEqualToValue={(options, value) =>
+              options.value === value.value
+            }
             renderInput={(params) => (
               <TextField {...params} label="Grading System" />
             )}
@@ -547,31 +549,13 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             onChange={handleInputChange}
           />
         </div>
-      </div>{" "}
-      <div className="relative w-full mb-3">
-        <InputField
-          label="Upload All Academic Documents(multiple)"
-          name="coe"
-          type="file"
-          onChange={(e) => handleFileChange(e, "bachelor", "multiple")}
-        />
-        {academicInfo?.bachelor?.map((data, i) => (
-          <div className="flex gap-4 items-center bg-gray-200 p-1 mt-2 rounded w-fit">
-            <img src={pdf} alt="" className="h-8" />
-            <span>{data?.name.slice(0, 30)}</span>
-            <Delete
-              className="cursor-pointer"
-              onClick={() => handleDeletePdf("bachelor", i)}
-            />
-          </div>
-        ))}
-      </div>{" "}
+      </div>
       <UploadFile
         {...{
           academicInfo,
           setAcademicInfo,
           label: "All Academic Documents(multiple)",
-          imageKey: "plusTwo",
+          imageKey: "bachelor.documents",
           type: "multiple",
         }}
       />

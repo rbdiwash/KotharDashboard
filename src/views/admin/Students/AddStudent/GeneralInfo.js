@@ -86,7 +86,6 @@ const GeneralInfo = ({ generalInfo, setGeneralInfo }) => {
           disablePortal
           size="small"
           required
-          id="combo-box-demo"
           options={[
             { label: "Single", value: "single" },
             { label: "Married", value: "married" },
