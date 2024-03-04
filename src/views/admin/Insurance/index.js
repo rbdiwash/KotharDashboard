@@ -247,7 +247,12 @@ const Insurance = ({ color = "light" }) => {
         <InsuranceModal {...{ openInsuranceForm, setOpenInsuranceForm }} />
       )}{" "}
       {openDiscussion && (
-        <DiscussionModal open={openDiscussion} setOpen={setOpenDiscussion} />
+        <DiscussionModal
+          open={openDiscussion}
+          setOpen={setOpenDiscussion}
+          studentList={insuranceList}
+          type="insurance"
+        />
       )}
     </div>
   );

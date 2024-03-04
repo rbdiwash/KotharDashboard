@@ -79,10 +79,6 @@ const Course = ({ color = "light" }) => {
                 {...{ type: "Courses", searchText, setSearchText }}
               />
               <div className="flex items-center gap-4">
-                <FaRocketchat
-                  className="text-blue-500 text-3xl cursor-pointer"
-                  onClick={handleDiscussion}
-                />
                 <Button
                   variant="contained"
                   startIcon={<FaPlusCircle />}

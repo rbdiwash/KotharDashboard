@@ -258,6 +258,7 @@ const useStateAndActions = () => {
     setWholeLoading,
     getArchivedClient,
     refetchArchivedClient,
+    setRPLList,
   };
 
   return [state, actions];

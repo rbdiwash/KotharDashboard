@@ -17,11 +17,11 @@ import SearchField from "components/SearchField";
 import { useEffect } from "react";
 import DiscussionModal from "components/Modals/DiscussionModal";
 const tabs = [
-  "All",
-  "TR Visa",
-  "Student Visa",
-  "Dependent Visa",
-  "Visitor/Tourist Visa",
+  { label: "All", value: "all" },
+  { label: "TR Visa", value: "tr" },
+  { label: "Student Visa", value: "student" },
+  { label: "Dependent Visa", value: "dependent" },
+  { label: "Visitor/Tourist Visa", value: "visitor" },
 ];
 
 function TabPanel(props) {
@@ -58,6 +58,7 @@ const Visa = ({ color = "light" }) => {
     setValue(newValue);
     const status = event.target.innerText.toLowerCase().split(" ").join("_");
     getVisaList(`status=${status}`);
+    console.log("🚀  newValue:", newValue);
   };
 
   const deleteData = () => {
@@ -93,7 +94,10 @@ const Visa = ({ color = "light" }) => {
     } else {
       setFilteredData(visaList);
     }
-  }, [searchText]);
+  }, [searchText, visaList]);
+
+
+  
   return (
     <div className="flex flex-wrap mt-4 dashBody">
       <div className="w-full mb-12 px-4">
@@ -122,8 +126,13 @@ const Visa = ({ color = "light" }) => {
                 <Button
                   variant="contained"
                   startIcon={<FaPlusCircle />}
-                  component={Link}
-                  to="/admin/visa/add"
+                  // component={Link}
+                  // to="/admin/visa/add"
+                  onClick={() =>
+                    navigate("/admin/visa/add", {
+                      state: { value },
+                    })
+                  }
                 >
                   Add Visa Details
                 </Button>
@@ -136,12 +145,11 @@ const Visa = ({ color = "light" }) => {
             variant="scrollable"
             scrollButtons
             allowScrollButtonsMobile
-            aria-label="visible arrows tabs example"
           >
             {tabs?.map((arg) => (
               <Tab
-                label={arg}
-                key={arg}
+                label={arg?.label}
+                key={arg?.label}
                 sx={{ fontWeight: "bold", fontSize: 16 }}
               />
             ))}
@@ -153,6 +161,7 @@ const Visa = ({ color = "light" }) => {
                 navigate,
                 visaList,
                 setOpenConfirmationModal,
+                filteredData,
               }}
             />
           </TabPanel>
@@ -169,7 +178,12 @@ const Visa = ({ color = "light" }) => {
         />
       )}{" "}
       {openDiscussion && (
-        <DiscussionModal open={openDiscussion} setOpen={setOpenDiscussion} />
+        <DiscussionModal
+          open={openDiscussion}
+          setOpen={setOpenDiscussion}
+          studentList={visaList}
+          type="visa"
+        />
       )}
     </div>
   );
@@ -180,8 +194,8 @@ export default Visa;
 const TabContent = ({
   tableHeadClass,
   navigate,
-  visaList,
   setOpenConfirmationModal,
+  filteredData,
 }) => {
   return (
     <div className="block w-full overflow-x-auto">
@@ -200,8 +214,8 @@ const TabContent = ({
           </tr>
         </thead>
         <tbody>
-          {visaList?.length > 0 ? (
-            visaList?.map((item, index) => (
+          {filteredData?.length > 0 ? (
+            filteredData?.map((item, index) => (
               <tr key={item?.id || index}>
                 <td className="table-data">
                   {ImageName(item?.name)}
@@ -231,11 +245,6 @@ const TabContent = ({
                 </td>
                 <td className="table-data text-right">
                   <div className="flex items-center">
-                    {/* <Tooltip title="View" arrow>
-                            <IconButton>
-                              <AiFillEye className="text-sky-600 cursor-pointer" />
-                            </IconButton>
-                          </Tooltip> */}
                     <Tooltip title="Edit Visa Details" arrow>
                       <IconButton
                         onClick={() =>

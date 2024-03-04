@@ -1,4 +1,10 @@
-import { Button, IconButton, Tooltip, Typography } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  IconButton,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import DeleteModal from "components/Modals/DeleteModal";
 import { useState } from "react";
 import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
@@ -22,11 +28,30 @@ const RPLCertificate = ({ color = "light" }) => {
   const navigate = useNavigate();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [searchText, setSearchText] = useState("");
-
-  const [{ rplList }, { getRPLList }] = useKothar();
-  console.log("🚀  rplList:", rplList);
+  const [loading, setLoading] = useState(false);
+  const [{ rplList }, { setRPLList }] = useKothar();
   const [filteredData, setFilteredData] = useState(rplList);
 
+  const [value, setValue] = useState(0);
+  const [openDiscussion, setOpenDiscussion] = useState(false);
+  const handleDiscussion = () => {
+    setOpenDiscussion(!openDiscussion);
+  };
+
+  const getRPLList = (params) => {
+    let url =
+      typeof params === "string"
+        ? `${API_URL}/rpl/?${params}`
+        : `${API_URL}/rpl`;
+    axios
+      .get(url, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      })
+      .then((res) => {
+        setRPLList(res?.data?.data);
+        setLoading(false);
+      });
+  };
   const deleteData = () => {
     axios
       .delete(`${API_URL}/rpl/${openConfirmationModal?.id}`)
@@ -39,12 +64,6 @@ const RPLCertificate = ({ color = "light" }) => {
         toast.error("Error Deleting Data");
       });
   };
-  const [value, setValue] = useState(0);
-  const [openDiscussion, setOpenDiscussion] = useState(false);
-  const handleDiscussion = () => {
-    setOpenDiscussion(!openDiscussion);
-  };
-
   useEffect(() => {
     if (searchText.length > 0) {
       const filtered = rplList?.filter(
@@ -61,11 +80,12 @@ const RPLCertificate = ({ color = "light" }) => {
     } else {
       setFilteredData(rplList);
     }
-  }, [searchText, value]);
+  }, [searchText, rplList]);
 
   const handleChange = (event, newValue, val) => {
     setValue(newValue);
     const status = event.target.innerText.toLowerCase().split(" ").join("_");
+    setLoading(true);
     getRPLList(`status=${status}`);
   };
 
@@ -108,8 +128,7 @@ const RPLCertificate = ({ color = "light" }) => {
       <div className="w-full mb-12 px-4">
         <div
           className={
-            "relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded " +
-            (color === "light" ? "bg-white" : "bg-sky-900 text-white")
+            "relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-white"
           }
         >
           <div className="rounded-t mb-0 px-4 py-3 border-0">
@@ -121,7 +140,7 @@ const RPLCertificate = ({ color = "light" }) => {
                 }
               >
                 RPL Certificates
-              </h3>{" "}
+              </h3>
               <SearchField
                 {...{ type: "RPL Certificate", searchText, setSearchText }}
               />
@@ -129,7 +148,7 @@ const RPLCertificate = ({ color = "light" }) => {
                 <FaRocketchat
                   className="text-blue-500 text-3xl cursor-pointer"
                   onClick={handleDiscussion}
-                />{" "}
+                />
                 <Button
                   variant="contained"
                   startIcon={<FaPlusCircle />}
@@ -137,7 +156,7 @@ const RPLCertificate = ({ color = "light" }) => {
                   to="/admin/rpl-certificate/add"
                 >
                   Add Client Details
-                </Button>{" "}
+                </Button>
               </div>
             </div>
           </div>
@@ -164,6 +183,7 @@ const RPLCertificate = ({ color = "light" }) => {
                 filteredData,
                 setOpenConfirmationModal,
                 color,
+                loading,
               }}
             />
           </TabPanel>
@@ -178,9 +198,14 @@ const RPLCertificate = ({ color = "light" }) => {
           }
           handleDelete={() => deleteData()}
         />
-      )}{" "}
+      )}
       {openDiscussion && (
-        <DiscussionModal open={openDiscussion} setOpen={setOpenDiscussion} />
+        <DiscussionModal
+          open={openDiscussion}
+          setOpen={setOpenDiscussion}
+          studentList={rplList}
+          type="rpl"
+        />
       )}
     </div>
   );
@@ -193,7 +218,7 @@ const TabContent = ({
   navigate,
   filteredData,
   setOpenConfirmationModal,
-  color,
+  loading,
 }) => {
   return (
     <div className="block w-full overflow-x-auto mt-0">
@@ -217,91 +242,100 @@ const TabContent = ({
           </tr>
         </thead>
         <tbody>
-          {filteredData?.length > 0 ? (
-            filteredData?.map((item, index) => (
-              <tr key={item?.id || index}>
-                <td className="table-data text-left flex items-center">
-                  {ImageName(item?.name)}
-                  <span
-                    className={
-                      "ml-3 font-bold " +
-                      +(color === "light" ? "text-slate-600" : "text-white")
-                    }
-                  >
-                    {item?.name || "-"}
-                  </span>
-                </td>
-                <td className="table-data">{item?.email || "-"}</td>
-                <td className="table-data">
-                  <div className="flex">{item?.usiNumber || "-"}</div>
-                </td>
-                <td className="table-data">
-                  <div className="flex items-center gap-2">
-                    {item?.visaStatus || "-"}
-                  </div>
-                </td>
-
-                <td className="table-data">
-                  <div className="flex items-center">
-                    {item?.caseOfficer || "-"}
-                  </div>
-                </td>
-                <td className="table-data">
-                  <div className="flex items-center">
-                    {item?.reference || "-"}
-                  </div>
-                </td>
-                <td className="table-data">
-                  <div className="flex items-center">
-                    {item?.certificate || "-"}
-                  </div>
-                </td>
-                <td className="table-data">
-                  <div className="flex items-center">{item?.status || "-"}</div>
-                </td>
-
-                <td className="table-data text-right">
-                  <div className="flex items-center">
-                    <Tooltip title="View" arrow>
-                      <IconButton>
-                        <AiFillEye className="text-sky-600 cursor-pointer" />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Edit RPL Details" arrow>
-                      <IconButton
-                        onClick={() =>
-                          navigate("/admin/rpl-certificate /add", {
-                            state: { item },
-                          })
-                        }
-                      >
-                        <AiFillEdit className="text-sky-600 cursor-pointer" />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Delete RPL Details" arrow>
-                      <IconButton
-                        onClick={() =>
-                          setOpenConfirmationModal({
-                            state: true,
-                            id: item?.id,
-                          })
-                        }
-                      >
-                        <AiFillDelete className="text-red-600 cursor-pointer" />
-                      </IconButton>
-                    </Tooltip>
-                  </div>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr key={1}>
-              <td colSpan={14}>
-                <div className="text-lg text-center my-10">
-                  No Results Found
+          {loading ? (
+            <tr>
+              <td colSpan={12}>
+                <div className="w-full h-[50vh] flex items-center justify-center text-center">
+                  <CircularProgress />
                 </div>
               </td>
             </tr>
+          ) : (
+            <>
+              {filteredData?.length > 0 ? (
+                filteredData?.map((item, index) => (
+                  <tr key={item?.id || index}>
+                    <td className="table-data text-left flex items-center">
+                      {ImageName(item?.name)}
+                      <span className={"ml-3 font-bold text-slate-600"}>
+                        {item?.name || "-"}
+                      </span>
+                    </td>
+                    <td className="table-data">{item?.email || "-"}</td>
+                    <td className="table-data">
+                      <div className="flex">{item?.usiNumber || "-"}</div>
+                    </td>
+                    <td className="table-data">
+                      <div className="flex items-center gap-2">
+                        {item?.visaStatus || "-"}
+                      </div>
+                    </td>
+
+                    <td className="table-data">
+                      <div className="flex items-center">
+                        {item?.caseOfficer || "-"}
+                      </div>
+                    </td>
+                    <td className="table-data">
+                      <div className="flex items-center">
+                        {item?.reference || "-"}
+                      </div>
+                    </td>
+                    <td className="table-data">
+                      <div className="flex items-center">
+                        {item?.certificate || "-"}
+                      </div>
+                    </td>
+                    <td className="table-data">
+                      <div className="flex items-center">
+                        {item?.status || "-"}
+                      </div>
+                    </td>
+
+                    <td className="table-data text-right">
+                      <div className="flex items-center">
+                        <Tooltip title="View" arrow>
+                          <IconButton>
+                            <AiFillEye className="text-sky-600 cursor-pointer" />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Edit RPL Details" arrow>
+                          <IconButton
+                            onClick={() =>
+                              navigate("/admin/rpl-certificate /add", {
+                                state: { item },
+                              })
+                            }
+                          >
+                            <AiFillEdit className="text-sky-600 cursor-pointer" />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Delete RPL Details" arrow>
+                          <IconButton
+                            onClick={() =>
+                              setOpenConfirmationModal({
+                                state: true,
+                                id: item?.id,
+                              })
+                            }
+                          >
+                            <AiFillDelete className="text-red-600 cursor-pointer" />
+                          </IconButton>
+                        </Tooltip>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr key={1}>
+                  <td colSpan={14}>
+                    <div className="text-lg text-center my-10">
+                      No Results Found
+                    </div>
+                  </td>
+                </tr>
+              )}
+            </>
           )}
         </tbody>
       </table>

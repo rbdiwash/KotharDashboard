@@ -186,7 +186,12 @@ const SkillAssessment = ({ color = "light" }) => {
         </div>
       </div>{" "}
       {openDiscussion && (
-        <DiscussionModal open={openDiscussion} setOpen={setOpenDiscussion} />
+        <DiscussionModal
+          open={openDiscussion}
+          setOpen={setOpenDiscussion}
+          studentList={skillList}
+          type="skill-assessment"
+        />
       )}
       {openConfirmationModal.state && (
         <DeleteModal

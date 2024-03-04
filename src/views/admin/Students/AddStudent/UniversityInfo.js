@@ -1,7 +1,4 @@
-import {
-  Autocomplete,
-  TextField
-} from "@mui/material";
+import { Autocomplete, TextField } from "@mui/material";
 import InputField from "components/Input/InputField";
 import { months, states } from "const/constants";
 import useKothar from "context/useKothar";
@@ -31,7 +28,7 @@ const UniversityInfo = ({ generalInfo, setGeneralInfo }) => {
           onChange={(e, value) => {
             setGeneralInfo((prevState) => ({
               ...prevState,
-              course: value,
+              course: value?.id,
             }));
           }}
           required
@@ -58,7 +55,7 @@ const UniversityInfo = ({ generalInfo, setGeneralInfo }) => {
           onChange={(e, value) => {
             setGeneralInfo((prevState) => ({
               ...prevState,
-              university: value,
+              university: value?.id,
             }));
           }}
           required
@@ -85,7 +82,7 @@ const UniversityInfo = ({ generalInfo, setGeneralInfo }) => {
           onChange={(e, value) => {
             setGeneralInfo((prevState) => ({
               ...prevState,
-              state: value,
+              state: value?.value,
             }));
           }}
           required
@@ -121,7 +118,7 @@ const UniversityInfo = ({ generalInfo, setGeneralInfo }) => {
           onChange={(e, value) => {
             setGeneralInfo((prevState) => ({
               ...prevState,
-              intake: value,
+              intake: value?.value,
             }));
           }}
           required

@@ -23,7 +23,14 @@ const AddStudent = () => {
 
   const [generalInfo, setGeneralInfo] = useState({ gender: null });
   const [addressInfo, setAddressInfo] = useState({});
-  const [academicInfo, setAcademicInfo] = useState({});
+  const [academicInfo, setAcademicInfo] = useState({
+    tenthDocuments: [],
+    higherDocuments: [],
+    bachelorDocuments: [],
+    tenth: { board: null,  gradingSystem: null },
+    higher: { board: null, gradingSystem: null },
+    bachelor: { board: null, gradingSystem: null },
+  });
   const [workInfo, setWorkInfo] = useState([]);
   const [testInfo, setTestInfo] = useState({});
 
@@ -130,7 +137,7 @@ const AddStudent = () => {
                 onChange={(e, value) => {
                   setGeneralInfo((prevState) => ({
                     ...prevState,
-                    status: value,
+                    status: value.value,
                   }));
                 }}
                 required

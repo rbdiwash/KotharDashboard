@@ -59,8 +59,17 @@ const AddVisaDetails = ({ color = "light" }) => {
     ndis_file: "",
     status: true,
     tenYearAddress: [],
+    type: null,
   });
+  const tabs = [
+    { label: "All", value: "all" },
+    { label: "TR Visa", value: "tr" },
+    { label: "Student Visa", value: "student" },
+    { label: "Dependent Visa", value: "dependent" },
+    { label: "Visitor/Tourist Visa", value: "visitor" },
+  ];
   const [{}, { refetchVisaList }] = useKothar();
+
   const [tenYearAddress, setTenYearAddress] = useState([
     {
       from: null,
@@ -69,7 +78,6 @@ const AddVisaDetails = ({ color = "light" }) => {
       uid: crypto.randomUUID(),
     },
   ]);
-  console.log("🚀  data:", data);
 
   const navigate = useNavigate();
   const handleInputChange = (e) => {
@@ -80,7 +88,7 @@ const AddVisaDetails = ({ color = "light" }) => {
   const { state } = useLocation();
 
   useEffect(() => {
-    if (state) {
+    if (state?.item) {
       setData({ ...state?.item });
       setTenYearAddress(state?.item?.ten_year_address);
     }
@@ -108,7 +116,14 @@ const AddVisaDetails = ({ color = "light" }) => {
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    mutate({ ...data, tenYearAddress: tenYearAddress, type: "student_visa" });
+    mutate({
+      ...data,
+      tenYearAddress: tenYearAddress,
+      type: "student_visa",
+      type: tabs.find((item, i) => {
+        return i === state.value;
+      })?.value,
+    });
   };
 
   const handle10InputChange = (e, index) => {

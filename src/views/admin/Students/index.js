@@ -2,6 +2,7 @@ import { Button, IconButton, Tooltip } from "@mui/material";
 import DiscussionModal from "components/Modals/DiscussionModal";
 import SearchField from "components/SearchField";
 import useKothar from "context/useKothar";
+import { useEffect } from "react";
 import { useState } from "react";
 import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
 import { FaPlusCircle, FaRocketchat } from "react-icons/fa";
@@ -16,6 +17,25 @@ const Students = ({ color = "light" }) => {
   const handleDiscussion = () => {
     setOpenDiscussion(!openDiscussion);
   };
+  const [filteredData, setFilteredData] = useState(studentList);
+
+  useEffect(() => {
+    if (searchText.length > 0) {
+      const filtered = studentList?.filter(
+        (client) =>
+          client?.name?.toLowerCase().includes(searchText?.toLowerCase()) ||
+          client?.email?.toLowerCase().includes(searchText?.toLowerCase()) ||
+          client?.caseOfficer
+            ?.toLowerCase()
+            .includes(searchText?.toLowerCase()) ||
+          client?.status?.toLowerCase().includes(searchText?.toLowerCase())
+      );
+      setFilteredData(filtered);
+    } else {
+      setFilteredData(studentList);
+    }
+  }, [searchText, studentList]);
+
   return (
     <div className="flex flex-wrap mt-4 dashBody">
       <div className="w-full mb-12 px-4">
@@ -60,67 +80,43 @@ const Students = ({ color = "light" }) => {
                 <tr>
                   <th className={"table-head " + tableHeadClass}>Name</th>
                   <th className={"table-head " + tableHeadClass}>Email</th>
-                  <th className={"table-head " + tableHeadClass}>
-                    Applied University
-                  </th>
-                  <th className={"table-head " + tableHeadClass}>Country</th>
-                  <th className={"table-head " + tableHeadClass}>Program</th>
+                  <th className={"table-head " + tableHeadClass}>Course</th>
+                  <th className={"table-head " + tableHeadClass}>University</th>
                   <th className={"table-head " + tableHeadClass}>Intake</th>
                   <th className={"table-head " + tableHeadClass}>
                     Case Officer
                   </th>
                   <th className={"table-head " + tableHeadClass}>Reference</th>
+                  <th className={"table-head " + tableHeadClass}>Status</th>
                   <th className={"table-head " + tableHeadClass}>Action</th>
                 </tr>
               </thead>
               <tbody>
-                {studentList?.map((item, index) => (
+                {filteredData?.map((item, index) => (
                   <tr key={item?.id || index}>
-                    <th className="table-data text-left flex items-center">
-                      <span
-                        className={
-                          "ml-3 font-bold " +
-                          +(color === "light" ? "text-slate-600" : "text-white")
-                        }
-                      >
-                        {item?.name || "-"}
-                      </span>
-                    </th>
+                    <th className="table-data">{item?.name || "-"}</th>
                     <td className="table-data"> {item?.email || "-"}</td>
-                    <td className="table-data"> {item?.name || "-"}</td>
-                    <td className="table-data">
-                      <div className="flex">
-                        {" "}
-                        {item?.name || "-"} {item?.name || "-"}
-                      </div>
-                    </td>
+                    <td className="table-data"> {item?.course || "-"}</td>
+                    <td className="table-data">{item?.university || "-"}</td>
                     <td className="table-data">
                       <div className="flex items-center gap-2">
-                        <img
-                          src={require("assets/img/country/aus.png")}
-                          alt="..."
-                          className="w-10 h-10 rounded-full border-2 border-slate-50 shadow"
-                        ></img>
-                        {item?.name || "-"}
+                        {item?.intake || "-"}
                       </div>
                     </td>
 
                     <td className="table-data">
                       <div className="flex items-center">
-                        {" "}
-                        {item?.name || "-"}
-                      </div>
-                    </td>
-                    <td className="table-data">
-                      <div className="flex items-center">
-                        {" "}
                         {item?.caseOfficer || "-"}
                       </div>
                     </td>
                     <td className="table-data">
                       <div className="flex items-center">
-                        {" "}
                         {item?.reference || "-"}
+                      </div>
+                    </td>
+                    <td className="table-data">
+                      <div className="flex items-center">
+                        {item?.status || "-"}
                       </div>
                     </td>
                     <td className="table-data text-right">

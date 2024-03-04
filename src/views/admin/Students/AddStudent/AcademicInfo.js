@@ -116,6 +116,7 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             isOptionEqualToValue={(options, value) =>
               options.value === value.value
             }
+            value={academicInfo?.tenth?.gradingSystem || null}
             required
             disablePortal
             id="combo-box-demo"
@@ -200,7 +201,7 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
           data: academicInfo,
           setData: setAcademicInfo,
           label: "All Academic Documents(multiple)",
-          imageKey: "tenth.documents",
+          imageKey: "tenthDocuments",
           type: "multiple",
         }}
       />
@@ -379,10 +380,10 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
       </div>{" "}
       <UploadFile
         {...{
-          academicInfo,
-          setAcademicInfo,
+          data: academicInfo,
+          setData: setAcademicInfo,
           label: "All Academic Documents(multiple)",
-          imageKey: "higher.documents",
+          imageKey: "higherDocuments",
           type: "multiple",
         }}
       />
@@ -397,7 +398,7 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             onChange={(e, value) => {
               setAcademicInfo((prevState) => ({
                 ...prevState,
-                higher: { ...prevState.bachelor, board: value?.value },
+                bachelor: { ...prevState.bachelor, board: value?.value },
               }));
             }}
             isOptionEqualToValue={(options, value) =>
@@ -552,10 +553,10 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
       </div>
       <UploadFile
         {...{
-          academicInfo,
-          setAcademicInfo,
+          data: academicInfo,
+          setData: setAcademicInfo,
           label: "All Academic Documents(multiple)",
-          imageKey: "bachelor.documents",
+          imageKey: "bachelorDocuments",
           type: "multiple",
         }}
       />
