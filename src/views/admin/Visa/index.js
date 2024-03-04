@@ -56,9 +56,11 @@ const Visa = ({ color = "light" }) => {
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-    const status = event.target.innerText.toLowerCase().split(" ").join("_");
+    const status = tabs.find((item, i) => {
+      return i === newValue;
+    })?.value;
+
     getVisaList(`status=${status}`);
-    console.log("🚀  newValue:", newValue);
   };
 
   const deleteData = () => {
@@ -96,8 +98,6 @@ const Visa = ({ color = "light" }) => {
     }
   }, [searchText, visaList]);
 
-
-  
   return (
     <div className="flex flex-wrap mt-4 dashBody">
       <div className="w-full mb-12 px-4">
