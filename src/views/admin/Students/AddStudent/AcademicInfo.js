@@ -5,7 +5,6 @@ import pdf from "../../../../assets/img/pdf.png";
 import UploadFile from "components/Input/UploadFile";
 
 const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
-  console.log("🚀  academicInfo:", academicInfo);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name?.split(".")?.length > 1) {
@@ -57,10 +56,10 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             size="small"
             label="Name of the Institution"
             placeholder="Name of the Institution"
-            name="tenth.nameOfSchool"
+            name="tenth.name"
             required
             type="text"
-            value={academicInfo?.tenth?.nameOfSchool}
+            value={academicInfo?.tenth?.name}
             onChange={handleInputChange}
           />
         </div>
@@ -240,10 +239,10 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             size="small"
             label="Name of the Institution"
             placeholder="Name of the Institution"
-            name="higher.number"
+            name="higher.name"
             required
             type="text"
-            value={academicInfo?.higher?.number}
+            value={academicInfo?.higher?.name}
             onChange={handleInputChange}
           />
         </div>
@@ -318,10 +317,10 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             size="small"
             label="Score"
             placeholder="Score"
-            name="higher.tenthScore"
+            name="higher.score"
             required
             type="text"
-            value={academicInfo?.higher?.tenthScore}
+            value={academicInfo?.higher?.score}
             onChange={handleInputChange}
           />
         </div>
@@ -331,10 +330,10 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             size="small"
             type="text"
             placeholder="Your Score Out Of"
-            name="higher.email"
+            name="higher.scoreOutOf"
             label="Out Of"
             required
-            value={academicInfo?.higher?.email}
+            value={academicInfo?.higher?.scoreOutOf}
             onChange={handleInputChange}
           />
         </div>
@@ -421,9 +420,9 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             size="small"
             label="Name of the Institution"
             placeholder="Name of the Institution"
-            name="bachelor.number"
+            name="bachelor.name"
             type="text"
-            value={academicInfo?.bachelor?.number}
+            value={academicInfo?.bachelor?.name}
             onChange={handleInputChange}
           />
         </div>
@@ -496,9 +495,9 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             size="small"
             label="Score"
             placeholder="Score"
-            name="bachelor.tenthScore"
+            name="bachelor.score"
             type="text"
-            value={academicInfo?.bachelor?.tenthScore}
+            value={academicInfo?.bachelor?.score}
             onChange={handleInputChange}
           />
         </div>
@@ -508,9 +507,9 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             size="small"
             type="text"
             placeholder="Your Score Out Of"
-            name="bachelor.email"
+            name="bachelor.scoreOutOf"
             label="Out Of"
-            value={academicInfo?.bachelor?.email}
+            value={academicInfo?.bachelor?.scoreOutOf}
             onChange={handleInputChange}
           />
         </div>

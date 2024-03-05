@@ -240,7 +240,7 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo, generalInfo }) => {
             addressInfo,
             setAddressInfo,
             label: "Full Passport",
-            imageKey: "passport",
+            imageKey: "passportFile",
           }}
         />
       </div>

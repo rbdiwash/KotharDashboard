@@ -21,63 +21,103 @@ const AddStudent = () => {
     "Test",
   ];
 
-  const [generalInfo, setGeneralInfo] = useState({ gender: null });
-  const [addressInfo, setAddressInfo] = useState({});
+  const [generalInfo, setGeneralInfo] = useState({
+    gender: null,
+    clientId: null,
+    maritalStatus: null,
+    emergency: { name: "", email: "", contact: null, relation: null },
+    course: null,
+    university: null,
+    state: null,
+    intake: null,
+    fee: null,
+    caseOfficer: null,
+    reference: null,
+    status: null, 
+  });
+  const [addressInfo, setAddressInfo] = useState({
+    permanent: { country: null, state: null, city: null, zip: null },
+    temo: { country: null, state: null, city: null, zip: null },
+    passport: { country: null, placeOfBirth: null },
+    passportFile: null,
+    moreThanOneCitizen: null,
+    secondCountryName: null,
+    livingInAnotherCountry: null,
+    secondLivingCountryName: null,
+    refusedFromAnyCountry: null,
+    refusedCountryName: null,
+    seriousMedicalCondition: null,
+    medicalCause: null,
+    criminalOffence: null,
+    causeOfCriminalOffence: null,
+    immigrationToOtherCountry: null,
+    immigratedCountry: null,
+  });
   const [academicInfo, setAcademicInfo] = useState({
     tenthDocuments: [],
     higherDocuments: [],
     bachelorDocuments: [],
-    tenth: { board: null,  gradingSystem: null },
-    higher: { board: null, gradingSystem: null },
-    bachelor: { board: null, gradingSystem: null },
+    tenth: {
+      board: null,
+      gradingSystem: null,
+      nameOfSchool: null,
+      primaryMediumOfInstruction: null,
+      countryOfStudy: null,
+      stateOfStudy: null,
+      score: null,
+      scoreOutOf: null,
+      passsOutYear: null,
+      degree: null,
+      degreeTitle: null,
+    },
+    higher: {
+      board: null,
+      gradingSystem: null,
+      name: null,
+      primaryMediumOfInstruction: null,
+      countryOfStudy: null,
+      stateOfStudy: null,
+      score: null,
+      scoreOutOf: null,
+      passsOutYear: null,
+      degree: null,
+      degreeTitle: null,
+    },
+    bachelor: {
+      board: null,
+
+      gradingSystem: null,
+      name: null,
+      primaryMediumOfInstruction: null,
+      countryOfStudy: null,
+      stateOfStudy: null,
+      score: null,
+      scoreOutOf: null,
+      passsOutYear: null,
+      degree: null,
+      degreeTitle: null,
+    },
   });
   const [workInfo, setWorkInfo] = useState([]);
-  const [testInfo, setTestInfo] = useState({});
+  const [testInfo, setTestInfo] = useState({
+    testName: null,
+    score: null,
+    uniqueId: null,
+    doe: null,
+    document1: null,
+    speaking: null,
+    listening: null,
+    reading: null,
+    writing: null,
+    testName2: null,
+    score2: null,
+    uniqueId2: null,
+    doe2: null,
+    document2: null,
+  });
 
   const navigate = useNavigate();
-  const [activeStep, setActiveStep] = useState(0);
-  const [completed, setCompleted] = useState({});
 
-  const totalSteps = () => {
-    return steps.length;
-  };
-
-  const completedSteps = () => {
-    return Object.keys(completed).length;
-  };
-
-  const isLastStep = () => {
-    return activeStep === totalSteps() - 1;
-  };
-
-  const allStepsCompleted = () => {
-    return completedSteps() === totalSteps();
-  };
-
-  const handleNext = () => {
-    const newActiveStep =
-      isLastStep() && !allStepsCompleted()
-        ? // It's the last step, but not all steps have been completed,
-          // find the first step that has been completed
-          steps.findIndex((step, i) => !(i in completed))
-        : activeStep + 1;
-    setActiveStep(newActiveStep);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleStep = (step) => () => {
-    setActiveStep(step);
-  };
-
-  const handleComplete = () => {
-    const newCompleted = completed;
-    newCompleted[activeStep] = true;
-    setCompleted(newCompleted);
-    handleNext();
-  };
   const data = {
     ...generalInfo,
     ...addressInfo,
@@ -110,10 +150,6 @@ const AddStudent = () => {
     });
   };
 
-  const handleReset = () => {
-    setActiveStep(0);
-    setCompleted({});
-  };
   return (
     <div className="flex flex-wrap mt-4 dashBody">
       <div className="w-full mb-12 px-4">

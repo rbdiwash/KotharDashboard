@@ -100,6 +100,7 @@ const GeneralInfo = ({ generalInfo, setGeneralInfo }) => {
               maritalStatus: value,
             }));
           }}
+          value={generalInfo?.maritalStatus}
         />
       </div>
       <div className="relative w-full mb-3">
