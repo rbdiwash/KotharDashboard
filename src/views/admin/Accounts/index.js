@@ -142,7 +142,6 @@ const Accounts = ({ color = "light" }) => {
     { insuranceList, rplList, studentList, visaList, skillList },
     { refetchCourseList },
   ] = useKothar();
-  console.log("🚀  rplList:", rplList);
 
   const deleteData = () => {
     axios
@@ -189,7 +188,6 @@ const Accounts = ({ color = "light" }) => {
     return secondOption;
   };
 
-  console.log(getClientOption());
 
   //nested data is ok, see accessorKeys in ColumnDef below
   const columns = useMemo(
@@ -250,7 +248,7 @@ const Accounts = ({ color = "light" }) => {
                     options={options}
                     sx={{ width: 300 }}
                     onChange={(e, value) => {
-                      setSelectedType(value);
+                      setSelectedType(value?.value);
                     }}
                     getOptionLabel={(option) => option.title}
                     renderInput={(params) => (

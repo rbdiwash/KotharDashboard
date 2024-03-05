@@ -13,14 +13,6 @@ import TestInfo from "./TestInfo";
 import UniversityInfo from "./UniversityInfo";
 import WorkExperience from "./WorkExperience";
 const AddStudent = () => {
-  const steps = [
-    "General Information",
-    "Documents and Address",
-    "Academic Qualification",
-    "Work Experience",
-    "Test",
-  ];
-
   const [generalInfo, setGeneralInfo] = useState({
     gender: null,
     clientId: null,
@@ -33,7 +25,7 @@ const AddStudent = () => {
     fee: null,
     caseOfficer: null,
     reference: null,
-    status: null, 
+    status: null,
   });
   const [addressInfo, setAddressInfo] = useState({
     permanent: { country: null, state: null, city: null, zip: null },

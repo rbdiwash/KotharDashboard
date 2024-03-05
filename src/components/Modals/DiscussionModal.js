@@ -85,7 +85,7 @@ export default function DiscussionModal({ open, setOpen, studentList, type }) {
             <div className="min-h-[400px] flex flex-col h-full">
               <Autocomplete
                 disablePortal
-                options={studentList}
+                options={studentList || []}
                 sx={{ width: 500, mx: "auto" }}
                 getOptionLabel={(option) => option.name}
                 getOptionValue={(option) => option.id}

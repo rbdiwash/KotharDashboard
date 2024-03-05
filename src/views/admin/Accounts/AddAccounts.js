@@ -16,13 +16,22 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
 import { FaPlusCircle } from "react-icons/fa";
+import UploadFile from "components/Input/UploadFile";
+import { useMutation } from "@tanstack/react-query";
 
 const AddAccounts = ({ color = "light" }) => {
   const navigate = useNavigate();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [installments, setInstallments] = useState([{ index: 1 }]);
-  const [{ courseList }, { refetchCourseList }] = useKothar();
+  const [selectedType, setSelectedType] = useState("");
+  const [selectedStudent, setSelectedStudent] = useState();
+  const [data, setData] = useState({});
+  const [
+    { rplList, studentList, visaList, skillList, insuranceList },
+    { refetchCourseList },
+  ] = useKothar();
   const [{ token }, { setToken }] = useKothar();
+  console.log("🚀  skillList:", skillList);
 
   const deleteData = () => {
     axios
@@ -77,11 +86,36 @@ const AddAccounts = ({ color = "light" }) => {
 
   const options = [
     { title: "RPL", value: "rpl" },
-    { title: "Admission", value: "admission" },
-    { title: "Professional Year", value: "py" },
+    { title: "Student", value: "student" },
     { title: "Visa", value: "visa" },
     { title: "Insurance", value: "insurance" },
+    {
+      title: "Skill Assessment",
+      value: "skill-assessment",
+    },
   ];
+  const getClientOption = () => {
+    let secondOption = [];
+
+    switch (selectedType?.value) {
+      case "rpl":
+        secondOption = rplList;
+        break;
+      case "student":
+        secondOption = studentList;
+        break;
+      case "insurance":
+        secondOption = insuranceList;
+        break;
+      case "visa":
+        secondOption = visaList;
+        break;
+      case "skill-assessment":
+        secondOption = skillList;
+        break;
+    }
+    return secondOption;
+  };
 
   const addInstallments = () => {
     setInstallments((prev) => [...prev, { index: prev.length + 1 }]);
@@ -89,6 +123,26 @@ const AddAccounts = ({ color = "light" }) => {
 
   const handleDeleteInstallment = (index) => {
     setInstallments((prev) => [...prev.filter((item, i) => i !== index)]);
+  };
+
+  const { mutate, isLoading } = useMutation(postData, {
+    onSuccess() {
+      toast.success(
+        data?.id ? "Data updated Successfully" : "Data added Successfully"
+      );
+    },
+    onError() {
+      toast.error(data?.id ? "Error Updating Data" : "Error Submitting Data");
+    },
+  });
+
+  async function postData(payload) {
+    await axios.post(`${API_URL}/clients`, payload);
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    mutate({ ...data, installments, client: selectedStudent, document: [] });
   };
 
   return (
@@ -104,24 +158,30 @@ const AddAccounts = ({ color = "light" }) => {
             <div className="flex flex-wrap items-center justify-between">
               <form className="flex items-between justify-center gap-2 w-full  rounded mr-3">
                 <Autocomplete
+                  size="small"
                   disablePortal
                   options={options}
                   sx={{ width: 300 }}
+                  onChange={(e, value) => {
+                    setSelectedType(value);
+                  }}
                   getOptionLabel={(option) => option.title}
                   renderInput={(params) => (
                     <TextField {...params} placeholder="Select Type" />
                   )}
-                  size="small"
                 />
                 <Autocomplete
+                  size="small"
                   disablePortal
-                  options={options}
+                  options={getClientOption()}
                   sx={{ width: 500 }}
-                  getOptionLabel={(option) => option.title}
+                  getOptionLabel={(option) => option.name}
                   renderInput={(params) => (
                     <TextField {...params} placeholder="Search using Name" />
                   )}
-                  size="small"
+                  onChange={(e, value) => {
+                    setSelectedStudent(value);
+                  }}
                 />
 
                 <Button variant="contained">Search </Button>
@@ -140,11 +200,10 @@ const AddAccounts = ({ color = "light" }) => {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                     <div className="md:col-span-2">
                       <h2 className="text-2xl font-semibold mb-5">
-                        Divash Ranabhat
+                        {selectedStudent?.name}
                       </h2>
-                      <p className="mb-2">Blake Street, Kogarah</p>
-                      <p className="mb-2">NSW, Australia</p>
-                      <p className="mb-2">+0430082553</p>
+                      <p className="mb-2"> {selectedStudent?.address}</p>
+                      <p className="mb-2"> {selectedStudent?.number}</p>
                     </div>
                     <div className="max-w-7xl mx-auto  lg:px-8">
                       <div className="bg-white overflow-hidden">
@@ -177,7 +236,7 @@ const AddAccounts = ({ color = "light" }) => {
                                 Type
                               </dt>
                               <dd className="mt-0 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                RPL Certificate
+                                {selectedType?.title}
                               </dd>
                             </div>
                           </dl>
@@ -227,7 +286,7 @@ const AddAccounts = ({ color = "light" }) => {
                                 name="amounts"
                                 placeholder="Amount"
                                 onChange={(e) => handleInputChange(e, index)}
-                                value={item?.amounts}
+                                value={item?.amount}
                                 className="min-w-[150px]"
                               />
                             </td>
@@ -237,7 +296,7 @@ const AddAccounts = ({ color = "light" }) => {
                                 name="method"
                                 placeholder="Payment Method"
                                 onChange={(e) => handleInputChange(e, index)}
-                                value={item?.method}
+                                value={item?.paymentMethod}
                                 className="min-w-[150px]"
                               />
                             </td>
@@ -248,7 +307,7 @@ const AddAccounts = ({ color = "light" }) => {
                                 placeholder="Enter Remarks"
                                 size="small"
                                 onChange={(e) => handleInputChange(e, index)}
-                                value={item?.remarks}
+                                value={item?.remark}
                                 className="min-w-[150px]"
                               />
                             </td>
@@ -344,7 +403,7 @@ const AddAccounts = ({ color = "light" }) => {
                                 type="file"
                                 name="remarks"
                                 placeholder="Upload Attachments"
-                                value={item?.amount}
+                                value={item?.document}
                                 onChange={(e) => handleFileChange(e, index)}
                                 className="min-w-[150px]"
                               />
@@ -399,9 +458,12 @@ const AddAccounts = ({ color = "light" }) => {
                         Amount:
                         <InputField
                           type="number"
-                          name="discount"
+                          name="amount"
                           placeholder="Discount Amount"
                           className="w-[200px] p-1"
+                          onChange={(e) =>
+                            setData({ ...data, amount: e.target.value })
+                          }
                         />
                       </div>
                       <div className="flex gap-2 items-center">
@@ -411,15 +473,20 @@ const AddAccounts = ({ color = "light" }) => {
                           name="discount"
                           placeholder="Discount Amount"
                           className="w-[200px] p-1"
+                          onChange={(e) =>
+                            setData({ ...data, discount: e.target.value })
+                          }
                         />
                       </div>
                       <div className=" flex items-center gap-2">
                         Due Date:
                         <InputField
-                          type="file"
-                          name="total_amount"
-                          placeholder="Total Amount"
+                          type="date"
+                          name="dueDate"
                           className="w-[200px]"
+                          onChange={(e) =>
+                            setData({ ...data, dueDate: e.target.value })
+                          }
                         />
                       </div>{" "}
                       <div className=" flex items-center gap-2">
@@ -428,7 +495,9 @@ const AddAccounts = ({ color = "light" }) => {
                     </div>
                     <div className="col-span-1"></div>
                     <div className="col-span-1 ml-auto mt-auto">
-                      <Button variant="contained">Submit</Button>
+                      <Button variant="contained" onClick={handleSubmit}>
+                        Submit
+                      </Button>
                     </div>
                   </div>
                 </div>
