@@ -11,6 +11,7 @@ import { Link, useNavigate } from "react-router-dom";
 const Students = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
   const [{ studentList }, { refetchStudent }] = useKothar();
+  console.log(studentList);
   const navigate = useNavigate();
   const [searchText, setSearchText] = useState("");
   const [openDiscussion, setOpenDiscussion] = useState(false);

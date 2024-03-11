@@ -12,16 +12,19 @@ import GeneralInfo from "./GeneralInfo";
 import TestInfo from "./TestInfo";
 import UniversityInfo from "./UniversityInfo";
 import WorkExperience from "./WorkExperience";
+import useKothar from "context/useKothar";
 const AddStudent = () => {
+    const [{ token }, { refetchStudent }] = useKothar();
+
   const [generalInfo, setGeneralInfo] = useState({
     gender: null,
     clientId: null,
-    maritalStatus: null,
+    maritalStatus: [],
     emergency: { name: "", email: "", contact: null, relation: null },
     course: null,
     university: null,
-    state: null,
-    intake: null,
+    state: [],
+    intake: [],
     fee: null,
     caseOfficer: null,
     reference: null,
@@ -112,16 +115,57 @@ const AddStudent = () => {
 
   const data = {
     ...generalInfo,
-    ...addressInfo,
-    academicInfo,
-    workInfo,
-    testInfo,
+    course: generalInfo?.course?.id,
+    university: generalInfo?.university?.id,
+    state: generalInfo?.state?.value,
+    intake: generalInfo?.intake?.value,
+    status: generalInfo?.status?.value,
+    maritalStatus: generalInfo?.maritalStatus?.value,
+    ...{
+      ...addressInfo,
+      permanent: {
+        ...addressInfo?.permanent,
+        state: addressInfo?.permanent?.state?.value,
+      },
+      temp: {
+        ...addressInfo?.temp,
+        state: addressInfo?.temp?.state?.value,
+      },
+    },
+    ...{
+      ...academicInfo,
+      tenth: {
+        ...academicInfo?.tenth,
+        board: academicInfo?.tenth?.board?.value,
+        gradingSystem: academicInfo?.tenth?.gradingSystem?.value,
+      },
+      higher: {
+        ...academicInfo?.higher,
+        board: academicInfo?.higher?.board?.value,
+        gradingSystem: academicInfo?.higher?.gradingSystem?.value,
+      },
+      bachelor: {
+        ...academicInfo?.bachelor,
+        board: academicInfo?.bachelor?.board?.value,
+        gradingSystem: academicInfo?.bachelor?.gradingSystem?.value,
+      },
+    },
+    ...workInfo,
+    ...{
+      ...testInfo,
+      testName: testInfo?.testName?.value,
+      testName2: testInfo?.testName2?.value,
+    },
   };
   const { isLoading, isError, error, mutate } = useMutation(postData, {
     onSuccess() {
       toast.success(
         data?.id ? "Data updated Successfully" : "Data added Successfully"
       );
+      refetchStudent();
+      // setTimeout(() => {
+      navigate("/admin/student");
+      // }, 2000);
     },
     onError() {
       toast.error(data?.id ? "Error Updating Data" : "Error Submitting Data");
@@ -165,7 +209,7 @@ const AddStudent = () => {
                 onChange={(e, value) => {
                   setGeneralInfo((prevState) => ({
                     ...prevState,
-                    status: value.value,
+                    status: value,
                   }));
                 }}
                 required

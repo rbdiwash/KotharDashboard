@@ -31,7 +31,7 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             onChange={(e, value) => {
               setAcademicInfo((prevState) => ({
                 ...prevState,
-                tenth: { ...prevState.tenth, board: value?.value },
+                tenth: { ...prevState.tenth, board: value },
               }));
             }}
             required
@@ -109,7 +109,7 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             onChange={(e, value) => {
               setAcademicInfo((prevState) => ({
                 ...prevState,
-                tenth: { ...prevState.tenth, gradingSystem: value?.value },
+                tenth: { ...prevState.tenth, gradingSystem: value },
               }));
             }}
             isOptionEqualToValue={(options, value) =>
@@ -118,7 +118,6 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             value={academicInfo?.tenth?.gradingSystem || null}
             required
             disablePortal
-            id="combo-box-demo"
             options={[
               { label: "GPA", value: "gpa" },
               { label: "Percentage", value: "percentage" },
@@ -214,7 +213,7 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             onChange={(e, value) => {
               setAcademicInfo((prevState) => ({
                 ...prevState,
-                higher: { ...prevState.higher, board: value?.value },
+                higher: { ...prevState.higher, board: value },
               }));
             }}
             required
@@ -293,12 +292,11 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             onChange={(e, value) => {
               setAcademicInfo((prevState) => ({
                 ...prevState,
-                higher: { ...prevState.higher, gradingSystem: value?.value },
+                higher: { ...prevState.higher, gradingSystem: value },
               }));
             }}
             required
             disablePortal
-            id="combo-box-demo"
             options={[
               { label: "GPA", value: "gpa" },
               { label: "Percentage", value: "percentage" },
@@ -397,7 +395,7 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             onChange={(e, value) => {
               setAcademicInfo((prevState) => ({
                 ...prevState,
-                bachelor: { ...prevState.bachelor, board: value?.value },
+                bachelor: { ...prevState.bachelor, board: value },
               }));
             }}
             isOptionEqualToValue={(options, value) =>
@@ -472,7 +470,7 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
                 ...prevState,
                 bachelor: {
                   ...prevState.bachelor,
-                  gradingSystem: value?.value,
+                  gradingSystem: value,
                 },
               }));
             }}

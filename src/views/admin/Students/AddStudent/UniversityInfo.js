@@ -19,6 +19,7 @@ const UniversityInfo = ({ generalInfo, setGeneralInfo }) => {
       setGeneralInfo((prevState) => ({ ...prevState, [name]: value }));
     }
   };
+  console.log(generalInfo);
 
   return (
     <div className="grid grid-cols-3 gap-8 mt-6 items-end">
@@ -28,13 +29,13 @@ const UniversityInfo = ({ generalInfo, setGeneralInfo }) => {
           onChange={(e, value) => {
             setGeneralInfo((prevState) => ({
               ...prevState,
-              course: value?.id,
+              course: value,
             }));
           }}
           required
           value={generalInfo?.course}
           options={courseList || []}
-          getOptionLabel={(option) => option?.name || ""}
+          getOptionLabel={(option) => option?.name ?? option}
           getOptionValue={(option) => option?.id}
           isOptionEqualToValue={(options, value) => options.id === value.id}
           disablePortal
@@ -55,7 +56,7 @@ const UniversityInfo = ({ generalInfo, setGeneralInfo }) => {
           onChange={(e, value) => {
             setGeneralInfo((prevState) => ({
               ...prevState,
-              university: value?.id,
+              university: value,
             }));
           }}
           required
@@ -82,11 +83,10 @@ const UniversityInfo = ({ generalInfo, setGeneralInfo }) => {
           onChange={(e, value) => {
             setGeneralInfo((prevState) => ({
               ...prevState,
-              state: value?.value,
+              state: value,
             }));
           }}
           required
-          multiple
           value={generalInfo?.state}
           placeholder="Select State"
           options={states || []}
@@ -118,11 +118,10 @@ const UniversityInfo = ({ generalInfo, setGeneralInfo }) => {
           onChange={(e, value) => {
             setGeneralInfo((prevState) => ({
               ...prevState,
-              intake: value?.value,
+              intake: value,
             }));
           }}
           required
-          multiple
           value={generalInfo?.intake}
           placeholder="Select Intake"
           options={months}
