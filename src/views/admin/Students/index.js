@@ -93,58 +93,68 @@ const Students = ({ color = "light" }) => {
                 </tr>
               </thead>
               <tbody>
-                {filteredData?.map((item, index) => (
-                  <tr key={item?.id || index}>
-                    <th className="table-data">{item?.name || "-"}</th>
-                    <td className="table-data"> {item?.email || "-"}</td>
-                    <td className="table-data"> {item?.course || "-"}</td>
-                    <td className="table-data">{item?.university || "-"}</td>
-                    <td className="table-data">
-                      <div className="flex items-center gap-2">
-                        {item?.intake || "-"}
-                      </div>
-                    </td>
+                {filteredData?.length > 0 ? (
+                  filteredData?.map((item, index) => (
+                    <tr key={item?.id || index}>
+                      <th className="table-data">{item?.name || "-"}</th>
+                      <td className="table-data"> {item?.email || "-"}</td>
+                      <td className="table-data"> {item?.course || "-"}</td>
+                      <td className="table-data">{item?.university || "-"}</td>
+                      <td className="table-data">
+                        <div className="flex items-center gap-2">
+                          {item?.intake || "-"}
+                        </div>
+                      </td>
 
-                    <td className="table-data">
-                      <div className="flex items-center">
-                        {item?.caseOfficer || "-"}
-                      </div>
-                    </td>
-                    <td className="table-data">
-                      <div className="flex items-center">
-                        {item?.reference || "-"}
-                      </div>
-                    </td>
-                    <td className="table-data">
-                      <div className="flex items-center">
-                        {item?.status || "-"}
-                      </div>
-                    </td>
-                    <td className="table-data text-right">
-                      <div className="flex items-center">
-                        <Tooltip title="View Student Details" arrow>
-                          <Link to="/admin/student/view">
-                            <IconButton>
-                              <AiFillEye className="text-sky-600 cursor-pointer" />
+                      <td className="table-data">
+                        <div className="flex items-center">
+                          {item?.caseOfficer || "-"}
+                        </div>
+                      </td>
+                      <td className="table-data">
+                        <div className="flex items-center">
+                          {item?.reference || "-"}
+                        </div>
+                      </td>
+                      <td className="table-data">
+                        <div className="flex items-center">
+                          {item?.status || "-"}
+                        </div>
+                      </td>
+                      <td className="table-data text-right">
+                        <div className="flex items-center">
+                          <Tooltip title="View Student Details" arrow>
+                            <Link to="/admin/student/view">
+                              <IconButton>
+                                <AiFillEye className="text-sky-600 cursor-pointer" />
+                              </IconButton>
+                            </Link>
+                          </Tooltip>
+                          <Tooltip title="Edit Student Details" arrow>
+                            <IconButton
+                              onClick={() => navigate("/admin/student/add")}
+                            >
+                              <AiFillEdit className="text-sky-600 cursor-pointer" />
                             </IconButton>
-                          </Link>
-                        </Tooltip>
-                        <Tooltip title="Edit Student Details" arrow>
-                          <IconButton
-                            onClick={() => navigate("/admin/student/add")}
-                          >
-                            <AiFillEdit className="text-sky-600 cursor-pointer" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Delete Student Info" arrow>
-                          <IconButton>
-                            <AiFillDelete className="text-red-600 cursor-pointer" />
-                          </IconButton>
-                        </Tooltip>
+                          </Tooltip>
+                          <Tooltip title="Delete Student Info" arrow>
+                            <IconButton>
+                              <AiFillDelete className="text-red-600 cursor-pointer" />
+                            </IconButton>
+                          </Tooltip>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr key={1}>
+                    <td colSpan={8}>
+                      <div className="text-lg text-center my-10">
+                        No Results Found
                       </div>
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>

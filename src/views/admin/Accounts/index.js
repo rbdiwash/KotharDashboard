@@ -188,7 +188,6 @@ const Accounts = ({ color = "light" }) => {
     return secondOption;
   };
 
-
   //nested data is ok, see accessorKeys in ColumnDef below
   const columns = useMemo(
     () => [

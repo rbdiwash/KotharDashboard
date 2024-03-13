@@ -43,7 +43,7 @@ export default function DiscussionModal({ open, setOpen, studentList, type }) {
   });
 
   async function postData(payload) {
-    await axios.post(`${API_URL}/disucssions/${studentId}/`, payload);
+    await axios.post(`${API_URL}/disucssion/${studentId}/`, payload);
   }
   const submitPost = (e) => {
     e.preventDefault();
@@ -52,7 +52,7 @@ export default function DiscussionModal({ open, setOpen, studentList, type }) {
 
   const fetchDiscussions = async (id) => {
     await axios
-      .get(`${API_URL}/disucssions/${studentId}/?type=${type}`)
+      .get(`${API_URL}/disucssion/${studentId}/?type=${type}`)
       .then((res) => setCommentsList(res?.data?.data))
       .catch((err) => console.log(err));
   };
@@ -94,8 +94,9 @@ export default function DiscussionModal({ open, setOpen, studentList, type }) {
                 )}
                 size="small"
                 onChange={(e, value) => {
-                  fetchDiscussions(value?.value);
-                  setStudentId(value?.value);
+                  console.log(value);
+                  fetchDiscussions(value?.clientId);
+                  setStudentId(value?.clientId);
                 }}
               />
               <div className="flex flex-col justify-between h-full">

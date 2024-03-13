@@ -388,7 +388,7 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
       <hr />
       <div className="grid grid-cols-3 gap-8 mt-6">
         <div className="relative w-full mb-3">
-          <label className="input-label">Select Board *</label>
+          <label className="input-label">Select Board</label>
 
           <Autocomplete
             size="small"

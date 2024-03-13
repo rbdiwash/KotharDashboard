@@ -2,42 +2,37 @@ import {
   Autocomplete,
   Button,
   IconButton,
+  OutlinedInput,
   TextField,
   Tooltip,
 } from "@mui/material";
+import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import InputField from "components/Input/InputField";
+import UploadFile from "components/Input/UploadFile";
 import DeleteModal from "components/Modals/DeleteModal";
 import { API_URL } from "const/constants";
 import useKothar from "context/useKothar";
-import { useMaterialReactTable } from "material-react-table";
-import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
+import { useState } from "react";
+import { AiFillDelete } from "react-icons/ai";
 import { FaPlusCircle } from "react-icons/fa";
-import UploadFile from "components/Input/UploadFile";
-import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 const AddAccounts = ({ color = "light" }) => {
-  const navigate = useNavigate();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [installments, setInstallments] = useState([{ index: 1 }]);
-  const [selectedType, setSelectedType] = useState("");
+  const [selectedType, setSelectedType] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState();
   const [data, setData] = useState({});
   const [
     { rplList, studentList, visaList, skillList, insuranceList },
     { refetchCourseList },
   ] = useKothar();
-  const [{ token }, { setToken }] = useKothar();
-  console.log("🚀  skillList:", skillList);
 
   const deleteData = () => {
     axios
       .delete(`${API_URL}/organization/delete/${openConfirmationModal?.id}`)
       .then((res) => {
-        console.log(res);
         toast.success(res?.data?.message || "Data Deleted Successfully");
         setOpenConfirmationModal({ state: false, id: null });
         refetchCourseList();
@@ -57,40 +52,13 @@ const AddAccounts = ({ color = "light" }) => {
     ]);
   };
 
-  const handleFileChange = (e, index) => {
-    const { name, value } = e.target;
-
-    const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append("file", file);
-    axios
-      .post(`${API_URL}/api/upload`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        const row = installments.find((item, i) => i === index);
-
-        setInstallments((prevState) => [
-          ...prevState.slice(0, index),
-          { ...row, [name]: value },
-          ...prevState.slice(index + 1, installments.length),
-        ]);
-      })
-      .catch((err) => {
-        toast.error("Error Uploading file");
-      });
-  };
-
   const options = [
-    { title: "RPL", value: "rpl" },
-    { title: "Student", value: "student" },
-    { title: "Visa", value: "visa" },
-    { title: "Insurance", value: "insurance" },
+    { label: "RPL", value: "rpl" },
+    { label: "Student", value: "student" },
+    { label: "Visa", value: "visa" },
+    { label: "Insurance", value: "insurance" },
     {
-      title: "Skill Assessment",
+      label: "Skill Assessment",
       value: "skill-assessment",
     },
   ];
@@ -114,18 +82,19 @@ const AddAccounts = ({ color = "light" }) => {
         secondOption = skillList;
         break;
     }
-    return secondOption;
+    return secondOption ?? [];
   };
 
+
   const addInstallments = () => {
-    setInstallments((prev) => [...prev, { index: prev.length + 1 }]);
+    setInstallments((prev) => [...prev, { index: prev.length + 1, amount: 0 }]);
   };
 
   const handleDeleteInstallment = (index) => {
     setInstallments((prev) => [...prev.filter((item, i) => i !== index)]);
   };
 
-  const { mutate, isLoading } = useMutation(postData, {
+  const { mutate } = useMutation(postData, {
     onSuccess() {
       toast.success(
         data?.id ? "Data updated Successfully" : "Data added Successfully"
@@ -137,14 +106,43 @@ const AddAccounts = ({ color = "light" }) => {
   });
 
   async function postData(payload) {
-    await axios.post(`${API_URL}/clients`, payload);
+    await axios.post(`${API_URL}/accounts`, payload);
   }
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    mutate({ ...data, installments, client: selectedStudent, document: [] });
+    console.log({
+      ...data,
+      installments: installments?.map((item) => ({
+        ...item,
+        claimed: item?.claimed?.value,
+      })),
+      client: selectedStudent?.id,
+      document: [],
+      type: selectedType?.value,
+    });
+    mutate({
+      ...data,
+      ...installments.map((item) => ({
+        ...item,
+        claimed: item?.claimed?.value,
+      })),
+      client: selectedStudent,
+      document: [],
+      type: selectedType,
+    });
   };
 
+  const totalAmountAfterDiscount = () => {
+    let totalAmount = 0;
+    let priceAfterDiscount = 0;
+    installments?.forEach((item) => {
+      totalAmount = totalAmount + Number(item?.amount);
+    });
+    priceAfterDiscount =
+      totalAmount - (Number(data?.discount) / 100) * totalAmount;
+    return priceAfterDiscount;
+  };
   return (
     <div className="flex flex-wrap mt-4 dashBody">
       <div className="w-full mb-12 px-4">
@@ -164,11 +162,16 @@ const AddAccounts = ({ color = "light" }) => {
                   sx={{ width: 300 }}
                   onChange={(e, value) => {
                     setSelectedType(value);
+                    setSelectedStudent(null);
                   }}
-                  getOptionLabel={(option) => option.title}
+                  getOptionLabel={(option) => option.label}
                   renderInput={(params) => (
                     <TextField {...params} placeholder="Select Type" />
                   )}
+                  value={selectedType}
+                  isOptionEqualToValue={(options, value) =>
+                    options.value === value.value
+                  }
                 />
                 <Autocomplete
                   size="small"
@@ -176,12 +179,14 @@ const AddAccounts = ({ color = "light" }) => {
                   options={getClientOption()}
                   sx={{ width: 500 }}
                   getOptionLabel={(option) => option.name}
+                  getOptionKey={(option) => option.id}
                   renderInput={(params) => (
                     <TextField {...params} placeholder="Search using Name" />
                   )}
                   onChange={(e, value) => {
                     setSelectedStudent(value);
                   }}
+                  value={selectedStudent}
                 />
 
                 <Button variant="contained">Search </Button>
@@ -216,7 +221,7 @@ const AddAccounts = ({ color = "light" }) => {
                           <dl>
                             <div className="px-2 py-1 sm:grid sm:grid-cols-3 sm:gap-4 ">
                               <dt className="text-sm font-medium text-gray-500">
-                                Total Due
+                                Total Due:
                               </dt>
                               <dd className="mt-0 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                 $0
@@ -225,7 +230,7 @@ const AddAccounts = ({ color = "light" }) => {
 
                             <div className="px-2 py-1 sm:grid sm:grid-cols-3 sm:gap-4 ">
                               <dt className="text-sm font-medium text-gray-500">
-                                Country
+                                Country:
                               </dt>
                               <dd className="mt-0 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                 Australia
@@ -233,7 +238,7 @@ const AddAccounts = ({ color = "light" }) => {
                             </div>
                             <div className=" px-2 py-1 sm:grid sm:grid-cols-3 sm:gap-4 ">
                               <dt className="text-sm font-medium text-gray-500">
-                                Type
+                                Type:
                               </dt>
                               <dd className="mt-0 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                 {selectedType?.title}
@@ -250,7 +255,7 @@ const AddAccounts = ({ color = "light" }) => {
                   <div className="overflow-x-auto">
                     <table className="table-auto w-full">
                       <thead>
-                        <tr>
+                        <tr className="bg-gray-200">
                           <th className="border px-4 py-2">SN</th>
                           <th className="border px-4 py-2">Date</th>
                           <th className="border px-4 py-2">Amount</th>
@@ -280,17 +285,17 @@ const AddAccounts = ({ color = "light" }) => {
                                 value={item?.date}
                               />
                             </td>
-                            <td className="border text-center px-4 py-2">
+                            <td className="border text-center px-4 py-2 min-w-[200px]">
                               <InputField
                                 type="number"
-                                name="amounts"
+                                name="amount"
                                 placeholder="Amount"
                                 onChange={(e) => handleInputChange(e, index)}
                                 value={item?.amount}
                                 className="min-w-[150px]"
                               />
                             </td>
-                            <td className="border text-center  px-4 py-2">
+                            <td className="border text-center  px-4 py-2 min-w-[200px]">
                               <InputField
                                 type="text"
                                 name="method"
@@ -300,7 +305,7 @@ const AddAccounts = ({ color = "light" }) => {
                                 className="min-w-[150px]"
                               />
                             </td>
-                            <td className="border text-center px-4 py-2">
+                            <td className="border text-center px-4 py-2 min-w-[200px]">
                               <InputField
                                 type="text"
                                 name="remarks"
@@ -308,10 +313,16 @@ const AddAccounts = ({ color = "light" }) => {
                                 size="small"
                                 onChange={(e) => handleInputChange(e, index)}
                                 value={item?.remark}
-                                className="min-w-[150px]"
                               />
                             </td>
-                            <td className="border text-center px-4 py-2">
+                            <td
+                              className={
+                                `border text-center px-4 py-2 ` +
+                                (installments[index]?.claimed?.value === "yes"
+                                  ? "min-w-[300px]"
+                                  : `min-w-[200px]`)
+                              }
+                            >
                               <div className="flex items-center gap-4">
                                 <Autocomplete
                                   onChange={(e, value) => {
@@ -320,7 +331,7 @@ const AddAccounts = ({ color = "light" }) => {
                                     );
                                     setInstallments((prevState) => [
                                       ...prevState.slice(0, index),
-                                      { ...row, claimed: value.value },
+                                      { ...row, claimed: value },
                                       ...prevState.slice(
                                         index + 1,
                                         installments.length
@@ -345,13 +356,14 @@ const AddAccounts = ({ color = "light" }) => {
                                   renderInput={(params) => (
                                     <TextField {...params} label="Yes/No" />
                                   )}
+                                  className="min-w-[100px]"
                                   ListboxProps={{
                                     style: {
                                       maxHeight: "180px",
                                     },
                                   }}
                                 />
-                                {item?.claimed === "yes" && (
+                                {item?.claimed?.value === "yes" && (
                                   <InputField
                                     type="text"
                                     name="comission"
@@ -360,12 +372,11 @@ const AddAccounts = ({ color = "light" }) => {
                                       handleInputChange(e, index)
                                     }
                                     value={item?.comission}
-                                    className="min-w-[150px]"
                                   />
                                 )}
                               </div>
-                            </td>{" "}
-                            <td className="border text-center px-4 py-2">
+                            </td>
+                            <td className="border text-center px-4 py-2 min-w-[200px]">
                               <InputField
                                 type="text"
                                 name="caseOfficer"
@@ -373,10 +384,9 @@ const AddAccounts = ({ color = "light" }) => {
                                 size="small"
                                 onChange={(e) => handleInputChange(e, index)}
                                 value={item?.caseOfficer}
-                                className="min-w-[150px]"
                               />
-                            </td>{" "}
-                            <td className="border text-center px-4 py-2">
+                            </td>
+                            <td className="border text-center px-4 py-2 min-w-[200px]">
                               <InputField
                                 type="number"
                                 name="agentCost "
@@ -384,10 +394,9 @@ const AddAccounts = ({ color = "light" }) => {
                                 size="small"
                                 onChange={(e) => handleInputChange(e, index)}
                                 value={item?.agentCost}
-                                className="min-w-[150px]"
                               />
-                            </td>{" "}
-                            <td className="border text-center px-4 py-2">
+                            </td>
+                            <td className="border text-center px-4 py-2 min-w-[200px]">
                               <InputField
                                 type="text"
                                 name="status"
@@ -398,14 +407,14 @@ const AddAccounts = ({ color = "light" }) => {
                                 className="min-w-[150px]"
                               />
                             </td>
-                            <td className="border text-center px-4 py-2">
-                              <InputField
-                                type="file"
-                                name="remarks"
-                                placeholder="Upload Attachments"
-                                value={item?.document}
-                                onChange={(e) => handleFileChange(e, index)}
-                                className="min-w-[150px]"
+                            <td className="border text-center px-4 py-2 min-w-[250px]">
+                              <UploadFile
+                                {...{
+                                  data: installments,
+                                  setData: setInstallments,
+                                  imageKey: "document",
+                                  label: "Document",
+                                }}
                               />
                             </td>
                             <td className="border text-center px-4 py-2">
@@ -452,45 +461,44 @@ const AddAccounts = ({ color = "light" }) => {
                   <div className="grid grid-cols-3  gap-5 py-10">
                     <div className="flex flex-col gap-2">
                       <h2 className="text-xl font-semibold mb-5">
-                        Payment Details:
+                        Payment Details
                       </h2>
                       <div className="flex gap-2 items-center ">
-                        Amount:
-                        <InputField
-                          type="number"
-                          name="amount"
-                          placeholder="Discount Amount"
-                          className="w-[200px] p-1"
-                          onChange={(e) =>
-                            setData({ ...data, amount: e.target.value })
-                          }
-                        />
+                        Total Amount: $
+                        {installments.reduce(
+                          (a, b) => a + (Number(b.amount) || 0),
+                          0
+                        )}
                       </div>
                       <div className="flex gap-2 items-center">
                         Discount:
-                        <InputField
-                          type="number"
+                        <OutlinedInput
                           name="discount"
-                          placeholder="Discount Amount"
-                          className="w-[200px] p-1"
+                          placeholder="In percentage"
+                          type="number"
+                          sx={{ width: "50%" }}
+                          size="small"
+                          endAdornment={"%"}
                           onChange={(e) =>
                             setData({ ...data, discount: e.target.value })
                           }
                         />
                       </div>
                       <div className=" flex items-center gap-2">
-                        Due Date:
-                        <InputField
+                        <span> Due Date: </span>
+                        <OutlinedInput
                           type="date"
+                          size="small"
+                          sx={{ width: "50%" }}
                           name="dueDate"
-                          className="w-[200px]"
                           onChange={(e) =>
                             setData({ ...data, dueDate: e.target.value })
                           }
                         />
-                      </div>{" "}
+                      </div>
                       <div className=" flex items-center gap-2">
-                        Total Amount: $0
+                        Total Amount after Discount: $
+                        {totalAmountAfterDiscount() || 0}
                       </div>
                     </div>
                     <div className="col-span-1"></div>

@@ -13,7 +13,7 @@ const UploadFile = ({
   data,
   setData,
   imageKey,
-  label,
+  label = "Document",
   type = "single",
   required = false,
 }) => {
