@@ -154,7 +154,7 @@ const TestInfo = ({ testInfo, setTestInfo }) => {
             onChange={(e, value) => {
               setTestInfo((prevState) => ({
                 ...prevState,
-                testName2: value?.value,
+                testName2: value,
               }));
             }}
             required

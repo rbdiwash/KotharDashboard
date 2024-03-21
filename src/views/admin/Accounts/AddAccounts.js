@@ -85,7 +85,6 @@ const AddAccounts = ({ color = "light" }) => {
     return secondOption ?? [];
   };
 
-
   const addInstallments = () => {
     setInstallments((prev) => [...prev, { index: prev.length + 1, amount: 0 }]);
   };
@@ -123,13 +122,13 @@ const AddAccounts = ({ color = "light" }) => {
     });
     mutate({
       ...data,
-      ...installments.map((item) => ({
+      installments: installments.map((item) => ({
         ...item,
         claimed: item?.claimed?.value,
       })),
       client: selectedStudent,
       document: [],
-      type: selectedType,
+      type: selectedType?.value,
     });
   };
 
@@ -389,7 +388,7 @@ const AddAccounts = ({ color = "light" }) => {
                             <td className="border text-center px-4 py-2 min-w-[200px]">
                               <InputField
                                 type="number"
-                                name="agentCost "
+                                name="agentCost"
                                 placeholder="Agent Cost"
                                 size="small"
                                 onChange={(e) => handleInputChange(e, index)}

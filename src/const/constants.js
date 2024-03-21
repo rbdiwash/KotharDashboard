@@ -3,7 +3,7 @@
 // export const API_URL =
 // "https://cors-anywhere.herokuapp.com/" + "http://13.50.26.213:8080";
 // export const API_URL = "http://24.144.69.54:8080/api/v1";
-export const API_URL = "https://kothar.samyakluitel.com/api/v1";
+export const API_URL = "http://170.64.251.113:8080/api/v1";
 // export const API_URL = "http://localhost:8080/api/v1";
 
 // export const API_URL = "https://api.kotharedu.com/api/v1";

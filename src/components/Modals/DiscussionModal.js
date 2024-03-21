@@ -52,7 +52,7 @@ export default function DiscussionModal({ open, setOpen, studentList, type }) {
 
   const fetchDiscussions = async (id) => {
     await axios
-      .get(`${API_URL}/disucssion/${studentId}/?type=${type}`)
+      .get(`${API_URL}/disucssion/${id}/?type=${type}`)
       .then((res) => setCommentsList(res?.data?.data))
       .catch((err) => console.log(err));
   };
@@ -95,8 +95,8 @@ export default function DiscussionModal({ open, setOpen, studentList, type }) {
                 size="small"
                 onChange={(e, value) => {
                   console.log(value);
-                  fetchDiscussions(value?.clientId);
-                  setStudentId(value?.clientId);
+                  fetchDiscussions(value?.id);
+                  setStudentId(value?.id);
                 }}
               />
               <div className="flex flex-col justify-between h-full">
