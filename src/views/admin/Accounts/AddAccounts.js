@@ -110,13 +110,14 @@ const AddAccounts = ({ color = "light" }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(selectedStudent);
     console.log({
       ...data,
       installments: installments?.map((item) => ({
         ...item,
         claimed: item?.claimed?.value,
       })),
-      client: selectedStudent?.id,
+      client: selectedStudent?.clientId,
       document: [],
       type: selectedType?.value,
     });
@@ -126,9 +127,11 @@ const AddAccounts = ({ color = "light" }) => {
         ...item,
         claimed: item?.claimed?.value,
       })),
-      client: selectedStudent,
+      clientId: Number(selectedStudent?.clientId),
       document: [],
       type: selectedType?.value,
+      paymentType: "",
+      amount: "",
     });
   };
 

@@ -81,7 +81,6 @@ const University = ({ color = "light" }) => {
   const table = useMaterialReactTable({
     columns,
     data: uniData,
-
   });
 
   useEffect(() => {
@@ -132,9 +131,9 @@ const University = ({ color = "light" }) => {
             </div>
           </div>
           <div className="block w-full overflow-x-auto">
-            {/* <MaterialReactTable table={table} /> */}
+            <MaterialReactTable table={table} />
 
-            <table className="items-center w-full bg-transparent border-collapse">
+            {/* <table className="items-center w-full bg-transparent border-collapse">
               <thead>
                 <tr>
                   <th className={"table-head " + tableHeadClass}>Name</th>
@@ -236,7 +235,7 @@ const University = ({ color = "light" }) => {
                   </tr>
                 )}
               </tbody>
-            </table>
+            </table> */}
           </div>
         </div>
       </div>

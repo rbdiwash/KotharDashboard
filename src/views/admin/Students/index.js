@@ -110,7 +110,9 @@ const Students = ({ color = "light" }) => {
                 {filteredData?.length > 0 ? (
                   filteredData?.map((item, index) => (
                     <tr key={item?.id || index}>
-                      <th className="table-data">{item?.name || "-"}</th>
+                      <th className="table-data text-left">
+                        {item?.name || "-"}
+                      </th>
                       <td className="table-data"> {item?.email || "-"}</td>
                       <td className="table-data"> {item?.course || "-"}</td>
                       <td className="table-data">{item?.university || "-"}</td>
@@ -182,7 +184,12 @@ const Students = ({ color = "light" }) => {
         </div>
       </div>{" "}
       {openDiscussion && (
-        <DiscussionModal open={openDiscussion} setOpen={setOpenDiscussion} />
+        <DiscussionModal
+          open={openDiscussion}
+          setOpen={setOpenDiscussion}
+          studentList={studentList}
+          type="student"
+        />
       )}
       {openConfirmationModal.state && (
         <DeleteModal
