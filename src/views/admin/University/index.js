@@ -6,6 +6,11 @@ import { ImageName } from "components/helper";
 import { delete_data } from "const/axios";
 import { API_URL } from "const/constants";
 import useKothar from "context/useKothar";
+import {
+  MaterialReactTable,
+  useMaterialReactTable,
+} from "material-react-table";
+import { useMemo } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
@@ -31,6 +36,53 @@ const University = ({ color = "light" }) => {
       token
     );
   };
+
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: "name", //access nested data with dot notation
+        header: "Name",
+        size: 150,
+      },
+      {
+        accessorKey: "email", //access nested data with dot notation
+        header: "Email",
+        size: 150,
+      },
+      {
+        accessorKey: "abn", //access nested data with dot notation
+        header: "ABN",
+        size: 150,
+      },
+      {
+        accessorKey: "contactPerson", //access nested data with dot notation
+        header: "Contact Person",
+        size: 150,
+      },
+      {
+        accessorKey: "country", //access nested data with dot notation
+        header: "Country",
+        size: 150,
+      },
+      {
+        accessorKey: "state", //access nested data with dot notation
+        header: "State",
+        size: 150,
+      },
+      {
+        accessorKey: "zipCode", //access nested data with dot notation
+        header: "Zip Code",
+        size: 150,
+      },
+    ],
+    []
+  );
+
+  const table = useMaterialReactTable({
+    columns,
+    data: uniData,
+
+  });
 
   useEffect(() => {
     if (searchText.length > 0) {
@@ -80,6 +132,8 @@ const University = ({ color = "light" }) => {
             </div>
           </div>
           <div className="block w-full overflow-x-auto">
+            {/* <MaterialReactTable table={table} /> */}
+
             <table className="items-center w-full bg-transparent border-collapse">
               <thead>
                 <tr>

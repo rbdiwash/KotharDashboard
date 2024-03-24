@@ -1,6 +1,9 @@
 import { Button, IconButton, Tooltip } from "@mui/material";
+import DeleteModal from "components/Modals/DeleteModal";
 import DiscussionModal from "components/Modals/DiscussionModal";
 import SearchField from "components/SearchField";
+import { delete_data } from "const/axios";
+import { API_URL } from "const/constants";
 import useKothar from "context/useKothar";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -10,8 +13,8 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Students = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
-  const [{ studentList }, { refetchStudent }] = useKothar();
-  console.log(studentList);
+  const [{ studentList, token }, { refetchStudent }] = useKothar();
+  const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const navigate = useNavigate();
   const [searchText, setSearchText] = useState("");
   const [openDiscussion, setOpenDiscussion] = useState(false);
@@ -36,6 +39,17 @@ const Students = ({ color = "light" }) => {
       setFilteredData(studentList);
     }
   }, [searchText, studentList]);
+
+  const deleteData = () => {
+    delete_data(
+      `${API_URL}/student/${openConfirmationModal?.id}`,
+      () => {
+        setOpenConfirmationModal({ state: false, id: null });
+        refetchStudent();
+      },
+      token
+    );
+  };
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">
@@ -138,7 +152,14 @@ const Students = ({ color = "light" }) => {
                             </IconButton>
                           </Tooltip>
                           <Tooltip title="Delete Student Info" arrow>
-                            <IconButton>
+                            <IconButton
+                              onClick={() =>
+                                setOpenConfirmationModal({
+                                  state: true,
+                                  id: item?.id,
+                                })
+                              }
+                            >
                               <AiFillDelete className="text-red-600 cursor-pointer" />
                             </IconButton>
                           </Tooltip>
@@ -162,6 +183,16 @@ const Students = ({ color = "light" }) => {
       </div>{" "}
       {openDiscussion && (
         <DiscussionModal open={openDiscussion} setOpen={setOpenDiscussion} />
+      )}
+      {openConfirmationModal.state && (
+        <DeleteModal
+          open={openConfirmationModal.state}
+          item="Student Information"
+          handleCancel={() =>
+            setOpenConfirmationModal({ state: false, id: null })
+          }
+          handleDelete={() => deleteData()}
+        />
       )}
     </div>
   );

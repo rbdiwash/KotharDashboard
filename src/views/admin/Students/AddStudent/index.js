@@ -14,7 +14,7 @@ import UniversityInfo from "./UniversityInfo";
 import WorkExperience from "./WorkExperience";
 import useKothar from "context/useKothar";
 const AddStudent = () => {
-    const [{ token }, { refetchStudent }] = useKothar();
+  const [{ token }, { refetchStudent }] = useKothar();
 
   const [generalInfo, setGeneralInfo] = useState({
     gender: null,
@@ -119,7 +119,7 @@ const AddStudent = () => {
     university: generalInfo?.university?.id,
     state: generalInfo?.state?.value,
     intake: generalInfo?.intake?.value,
-    status: generalInfo?.status?.value,
+    status: generalInfo?.status?.label,
     maritalStatus: generalInfo?.maritalStatus?.value,
     ...{
       ...addressInfo,
@@ -151,7 +151,8 @@ const AddStudent = () => {
       },
     },
     ...workInfo,
-    ...{
+
+    testInfor: {
       ...testInfo,
       testName: testInfo?.testName?.value,
       testName2: testInfo?.testName2?.value,
