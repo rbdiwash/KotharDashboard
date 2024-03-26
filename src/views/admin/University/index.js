@@ -121,7 +121,7 @@ const University = ({ color = "light" }) => {
 
   const table = useMaterialReactTable({
     columns,
-    data: uniData,
+    data: uniData || [],
   });
 
   useEffect(() => {
@@ -172,109 +172,7 @@ const University = ({ color = "light" }) => {
             </div>
           </div>
           <div className="block w-full overflow-x-auto">
-            {/* {uniData && <MaterialReactTable table={table} />} */}
-
-            <table className="items-center w-full bg-transparent border-collapse">
-              <thead>
-                <tr>
-                  <th className={"table-head "}>Name</th>
-                  <th className={"table-head "}>Email</th>
-                  <th className={"table-head "}>ABN Number</th>
-                  <th className={"table-head "}>Contact Person</th>
-                  <th className={"table-head "}>Country</th>
-                  <th className={"table-head "}>State</th>
-                  <th className={"table-head "}>ZIP Code</th>
-                  <th className={"table-head "}>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredData?.length > 0 ? (
-                  filteredData?.map((item, index) => (
-                    <tr key={item?.id || index}>
-                      <td className="table-data text-left flex items-center">
-                        {ImageName(item?.name)}
-                        <span
-                          className={
-                            "ml-3 font-bold " +
-                            +(color === "light"
-                              ? "text-slate-600"
-                              : "text-white")
-                          }
-                        >
-                          {item?.name}
-                        </span>
-                      </td>
-                      <td className="table-data">{item?.email}</td>
-                      <td className="table-data">{item?.abn}</td>
-                      <td className="table-data">
-                        <div className="flex">{item?.contactPerson}</div>
-                      </td>
-                      <td className="table-data">
-                        <div className="flex items-center gap-2">
-                          {(item?.country === "Australia" ||
-                            item?.country === "australia") && (
-                            <img
-                              src={require("assets/img/country/aus.png")}
-                              alt="..."
-                              className="w-10 h-10 rounded-full border-2 border-slate-50 shadow"
-                            ></img>
-                          )}
-
-                          {item?.country}
-                        </div>
-                      </td>
-                      <td className="table-data">
-                        <div className="flex items-center">{item?.state}</div>
-                      </td>
-                      <td className="table-data">
-                        <div className="flex items-center">{item?.zipCode}</div>
-                      </td>
-
-                      <td className="table-data text-right">
-                        <div className="flex items-center">
-                          <Tooltip title="View" arrow>
-                            <IconButton>
-                              <AiFillEye className="text-sky-600 cursor-pointer" />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="Edit University" arrow>
-                            <IconButton
-                              onClick={() =>
-                                navigate("/admin/university/add", {
-                                  state: { item },
-                                })
-                              }
-                            >
-                              <AiFillEdit className="text-sky-600 cursor-pointer" />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="Delete University" arrow>
-                            <IconButton
-                              onClick={() =>
-                                setOpenConfirmationModal({
-                                  state: true,
-                                  id: item?.id,
-                                })
-                              }
-                            >
-                              <AiFillDelete className="text-red-600 cursor-pointer" />
-                            </IconButton>
-                          </Tooltip>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr key={1}>
-                    <td colSpan={8}>
-                      <div className="text-lg text-center my-10">
-                        No Results Found
-                      </div>
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+            {uniData && <MaterialReactTable table={table} />}
           </div>
         </div>
       </div>
