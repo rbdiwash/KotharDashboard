@@ -7,14 +7,14 @@ axios.defaults.baseURL = API_URL;
 export default axios;
 
 export const delete_data = (url, onSuccess, token) => {
-  fetch(url, {
+  axios({
+    url: url,
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
   })
-    .then((res) => res?.json())
     .then(() => {
       onSuccess();
       toast.success("Data Deleted Successfully");

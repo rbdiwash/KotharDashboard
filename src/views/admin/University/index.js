@@ -19,7 +19,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const University = ({ color = "light" }) => {
-  const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
   const navigate = useNavigate();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [{ uniData, token }, { refetchUniData }] = useKothar();
@@ -43,6 +42,13 @@ const University = ({ color = "light" }) => {
         accessorKey: "name", //access nested data with dot notation
         header: "Name",
         size: 150,
+        Cell: ({ renderedCellValue }) => (
+          <Tooltip title={renderedCellValue}>
+            <div className="flex items-center">
+              <div className="h-10 mr-2">{renderedCellValue}</div>
+            </div>
+          </Tooltip>
+        ),
       },
       {
         accessorKey: "email", //access nested data with dot notation
@@ -73,6 +79,41 @@ const University = ({ color = "light" }) => {
         accessorKey: "zipCode", //access nested data with dot notation
         header: "Zip Code",
         size: 150,
+      },
+      {
+        accessorKey: "actions", //access nested data with dot notation
+        header: "Actions",
+        size: 150,
+        Cell: ({ row, renderedCellValue }) => {
+          const item = row.original;
+          return (
+            <div className="flex items-center">
+              <Tooltip title="Edit University" arrow>
+                <IconButton
+                  onClick={() =>
+                    navigate("/admin/university/add", {
+                      state: { item },
+                    })
+                  }
+                >
+                  <AiFillEdit className="text-sky-600 cursor-pointer" />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Delete University" arrow>
+                <IconButton
+                  onClick={() =>
+                    setOpenConfirmationModal({
+                      state: true,
+                      id: row?.original?.id,
+                    })
+                  }
+                >
+                  <AiFillDelete className="text-red-600 cursor-pointer" />
+                </IconButton>
+              </Tooltip>
+            </div>
+          );
+        },
       },
     ],
     []
@@ -131,21 +172,19 @@ const University = ({ color = "light" }) => {
             </div>
           </div>
           <div className="block w-full overflow-x-auto">
-            <MaterialReactTable table={table} />
+            {/* {uniData && <MaterialReactTable table={table} />} */}
 
-            {/* <table className="items-center w-full bg-transparent border-collapse">
+            <table className="items-center w-full bg-transparent border-collapse">
               <thead>
                 <tr>
-                  <th className={"table-head " + tableHeadClass}>Name</th>
-                  <th className={"table-head " + tableHeadClass}>Email</th>
-                  <th className={"table-head " + tableHeadClass}>ABN Number</th>
-                  <th className={"table-head " + tableHeadClass}>
-                    Contact Person
-                  </th>
-                  <th className={"table-head " + tableHeadClass}>Country</th>
-                  <th className={"table-head " + tableHeadClass}>State</th>
-                  <th className={"table-head " + tableHeadClass}>ZIP Code</th>
-                  <th className={"table-head " + tableHeadClass}>Action</th>
+                  <th className={"table-head "}>Name</th>
+                  <th className={"table-head "}>Email</th>
+                  <th className={"table-head "}>ABN Number</th>
+                  <th className={"table-head "}>Contact Person</th>
+                  <th className={"table-head "}>Country</th>
+                  <th className={"table-head "}>State</th>
+                  <th className={"table-head "}>ZIP Code</th>
+                  <th className={"table-head "}>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -235,7 +274,7 @@ const University = ({ color = "light" }) => {
                   </tr>
                 )}
               </tbody>
-            </table> */}
+            </table>
           </div>
         </div>
       </div>
