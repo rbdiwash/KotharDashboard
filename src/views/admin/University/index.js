@@ -1,3 +1,4 @@
+import { SpaRounded } from "@mui/icons-material";
 import { Button, IconButton, Tooltip } from "@mui/material";
 import axios from "axios";
 import DeleteModal from "components/Modals/DeleteModal";
@@ -122,6 +123,8 @@ const University = ({ color = "light" }) => {
   const table = useMaterialReactTable({
     columns,
     data: uniData || [],
+    rowNumberDisplayMode: "original",
+    enableRowNumbers: true,
   });
 
   useEffect(() => {
@@ -158,9 +161,9 @@ const University = ({ color = "light" }) => {
               >
                 Universities
               </h3>
-              <SearchField
+              {/* <SearchField
                 {...{ type: "University", searchText, setSearchText }}
-              />
+              /> */}
               <Button
                 variant="contained"
                 startIcon={<FaPlusCircle />}
@@ -172,7 +175,7 @@ const University = ({ color = "light" }) => {
             </div>
           </div>
           <div className="block w-full overflow-x-auto">
-            {uniData && <MaterialReactTable table={table} />}
+            <MaterialReactTable table={table} />
           </div>
         </div>
       </div>
