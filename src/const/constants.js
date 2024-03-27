@@ -16,10 +16,10 @@ export const insurance_companies = [
   { label: "ahm Health Insurance", value: "ahm Health Insurance" },
 ];
 export const insurance_cover_type = [
-  { label: "Single", value: "single" },
-  { label: "Couple", value: "couple" },
-  { label: "Family", value: "family" },
-  { label: "Single Parent ", value: "single_parent" },
+  { label: "Single", value: "Single" },
+  { label: "Couple", value: "Couple" },
+  { label: "Family", value: "Family" },
+  { label: "Single Parent ", value: "Single Parent" },
 ];
 export const states = [
   { label: "New South Wales", value: "New South Wales" },
@@ -32,18 +32,18 @@ export const states = [
 export const months = [
   {
     label: "Jan",
-    value: "January",
+    value: "Jan",
   },
   {
     label: "Feb",
-    value: "February",
+    value: "Feb",
   },
   {
     label: "March",
     value: "March",
   },
   {
-    label: "Apr",
+    label: "April",
     value: "April",
   },
   {
@@ -51,7 +51,7 @@ export const months = [
     value: "May",
   },
   {
-    label: "Jun",
+    label: "June",
     value: "June",
   },
   {
@@ -60,23 +60,23 @@ export const months = [
   },
   {
     label: "Aug",
-    value: "August",
+    value: "Aug",
   },
   {
-    label: "Sep",
-    value: "September",
+    label: "Sept",
+    value: "Sept",
   },
   {
     label: "Oct",
-    value: "October",
+    value: "Oct",
   },
   {
     label: "Nov",
-    value: "November",
+    value: "Nov",
   },
   {
     label: "Dec",
-    value: "December",
+    value: "Dec",
   },
 ];
 //  GTE applied, GtE approved, Gte Rejeected, Applied for COE, COE Receive, VISA Applied, Admission Successful

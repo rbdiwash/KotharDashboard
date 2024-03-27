@@ -38,8 +38,8 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             value={academicInfo?.tenth?.board || null}
             name="tenth.board"
             options={[
-              { label: "NEB", value: "neb" },
-              { label: "HSEB", value: "hseb" },
+              { label: "NEB", value: "NEB" },
+              { label: "HSEB", value: "HSEB" },
             ]}
             isOptionEqualToValue={(options, value) =>
               options.value === value.value
@@ -56,10 +56,10 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             size="small"
             label="Name of the Institution"
             placeholder="Name of the Institution"
-            name="tenth.name"
+            name="tenth.nameOfSchool"
             required
             type="text"
-            value={academicInfo?.tenth?.name}
+            value={academicInfo?.tenth?.nameOfSchool}
             onChange={handleInputChange}
           />
         </div>
@@ -119,8 +119,8 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             required
             disablePortal
             options={[
-              { label: "GPA", value: "gpa" },
-              { label: "Percentage", value: "percentage" },
+              { label: "GPA", value: "GPA" },
+              { label: "Percentage", value: "PERCENTAGE" },
             ]}
             renderInput={(params) => (
               <TextField {...params} label="Grading System" />
@@ -160,10 +160,10 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             size="small"
             label="Passout year"
             placeholder="Passout year"
-            name="tenth.passsOutYear"
+            name="tenth.passOutYear"
             required
             type="number"
-            value={academicInfo?.tenth?.passsOutYear}
+            value={academicInfo?.tenth?.passOutYear}
             onChange={handleInputChange}
           />
         </div>
@@ -220,11 +220,11 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             value={academicInfo?.higher?.board}
             name="higher.board"
             isOptionEqualToValue={(options, value) =>
-              options.value === value.value
+              options?.value === value?.value
             }
             options={[
-              { label: "NEB", value: "neb" },
-              { label: "HSEB", value: "hseb" },
+              { label: "NEB", value: "NEB" },
+              { label: "HSEB", value: "HSEB" },
             ]}
             renderInput={(params) => (
               <TextField {...params} label="Select Board" />
@@ -238,10 +238,10 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             size="small"
             label="Name of the Institution"
             placeholder="Name of the Institution"
-            name="higher.name"
+            name="higher.nameOfSchool"
             required
             type="text"
-            value={academicInfo?.higher?.name}
+            value={academicInfo?.higher?.nameOfSchool}
             onChange={handleInputChange}
           />
         </div>
@@ -298,8 +298,8 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             required
             disablePortal
             options={[
-              { label: "GPA", value: "gpa" },
-              { label: "Percentage", value: "percentage" },
+              { label: "GPA", value: "GPA" },
+              { label: "Percentage", value: "PERCENTAGE" },
             ]}
             isOptionEqualToValue={(options, value) =>
               options.value === value.value
@@ -341,10 +341,10 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             size="small"
             label="Passout year"
             placeholder="Passout year"
-            name="higher.passsOutYear"
+            name="higher.passOutYear"
             required
             type="number"
-            value={academicInfo?.higher?.passsOutYear}
+            value={academicInfo?.higher?.passOutYear}
             onChange={handleInputChange}
           />
         </div>
@@ -399,13 +399,13 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
               }));
             }}
             isOptionEqualToValue={(options, value) =>
-              options.value === value.value
+              options?.value === value?.value
             }
             value={academicInfo?.bachelor?.board}
             name="bachelor.board"
             options={[
-              { label: "NEB", value: "neb" },
-              { label: "HSEB", value: "hseb" },
+              { label: "NEB", value: "NEB" },
+              { label: "HSEB", value: "HSEB" },
             ]}
             renderInput={(params) => (
               <TextField {...params} label="Select Board" />
@@ -418,9 +418,9 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             size="small"
             label="Name of the Institution"
             placeholder="Name of the Institution"
-            name="bachelor.name"
+            name="bachelor.nameOfSchool"
             type="text"
-            value={academicInfo?.bachelor?.name}
+            value={academicInfo?.bachelor?.nameOfSchool}
             onChange={handleInputChange}
           />
         </div>
@@ -480,7 +480,7 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
               { label: "Percentage", value: "percentage" },
             ]}
             isOptionEqualToValue={(options, value) =>
-              options.value === value.value
+              options?.value === value?.value
             }
             renderInput={(params) => (
               <TextField {...params} label="Grading System" />
@@ -517,9 +517,9 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             size="small"
             label="Passout year"
             placeholder="Passout year"
-            name="bachelor.passsOutYear"
+            name="bachelor.passOutYear"
             type="number"
-            value={academicInfo?.bachelor?.passsOutYear}
+            value={academicInfo?.bachelor?.passOutYear}
             onChange={handleInputChange}
           />
         </div>

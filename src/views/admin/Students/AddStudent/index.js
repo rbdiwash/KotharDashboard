@@ -16,6 +16,7 @@ import useKothar from "context/useKothar";
 import { useEffect } from "react";
 const AddStudent = () => {
   const [{ token }, { refetchStudent }] = useKothar();
+  const navigate = useNavigate();
 
   const [generalInfo, setGeneralInfo] = useState({
     gender: null,
@@ -81,7 +82,6 @@ const AddStudent = () => {
     },
     bachelor: {
       board: null,
-
       gradingSystem: null,
       name: null,
       primaryMediumOfInstruction: null,
@@ -112,8 +112,6 @@ const AddStudent = () => {
     document2: null,
   });
 
-  const navigate = useNavigate();
-
   const data = {
     ...generalInfo,
     course: generalInfo?.course?.id,
@@ -133,7 +131,7 @@ const AddStudent = () => {
         state: addressInfo?.temp?.state?.value,
       },
     },
-    ...{
+    academicInfo: {
       ...academicInfo,
       tenth: {
         ...academicInfo?.tenth,
@@ -151,8 +149,7 @@ const AddStudent = () => {
         gradingSystem: academicInfo?.bachelor?.gradingSystem?.value,
       },
     },
-    ...workInfo,
-
+    workInfo: { ...workInfo },
     testInfo: {
       ...testInfo,
       testName: testInfo?.testName?.value,
@@ -160,7 +157,7 @@ const AddStudent = () => {
     },
   };
 
-  const { isLoading, isError, error, mutate } = useMutation(postData, {
+  const { mutate } = useMutation(postData, {
     onSuccess() {
       toast.success(
         data?.id ? "Data updated Successfully" : "Data added Successfully"
@@ -175,28 +172,59 @@ const AddStudent = () => {
     },
   });
   const { state } = useLocation();
-  console.log("🚀  state:", state);
 
   useEffect(() => {
     if (state) {
       const value = state?.item;
-      console.log("🚀  value:", value);
-      console.log("🚀  state:", state);
-
       setGeneralInfo({
+        name: value?.name,
+        address: value?.address,
+        dob: value?.dob,
         gender: value?.gender,
-        clientId: null,
-        maritalStatus: [],
-        emergency: { name: "", email: "", contact: null, relation: null },
-        course: null,
-        university: null,
+        email: value?.email,
+        number: value?.number,
+        passportNumber: value?.passportNumber,
+        visa_expiry: value?.visa_expiry,
+        visa_status: value?.visa_status,
+        passportExpiry: value?.passportExpiry,
+        dateOfIssue: value?.dateOfIssue,
+        id: value?.clientId,
+        maritalStatus: value?.maritalStatus,
+        emergency: {
+          name: value?.emergency?.name,
+          email: value?.emergency?.email,
+          contact: value?.emergency?.contact,
+          relation: value?.emergency?.relation,
+        },
+        course: value?.course,
+        university: value?.university,
         state: [],
-        intake: [],
-        fee: null,
-        caseOfficer: null,
-        reference: null,
-        status: null,
+        intake: [value?.intake],
+        fee: value?.fee,
+        caseOfficer: value?.caseOfficer,
+        reference: value?.reference,
+        status: value?.status,
       });
+      setAddressInfo({
+        ...addressInfo,
+        permanent: value?.permanent,
+        temp: value?.temp,
+        passport: value?.passport,
+        passportFile: value?.passportFile,
+        moreThanOneCitizen: value?.moreThanOneCitizen,
+        secondCountryName: value?.secondCountryName,
+        livingInAnotherCountry: value?.livingInAnotherCountry,
+        secondLivingCountryName: value?.secondLivingCountryName,
+        refusedFromAnyCountry: value?.refusedFromAnyCountry,
+        refusedCountryName: value?.refusedCountryName,
+        seriousMedicalCondition: value?.seriousMedicalCondition,
+        medicalCause: value?.medicalCause,
+        criminalOffence: value?.criminalOffence,
+        causeOfCriminalOffence: value?.causeOfCriminalOffence,
+        immigrationToOtherCountry: value?.immigrationToOtherCountry,
+        immigratedCountry: value?.immigratedCountry,
+      });
+      setAcademicInfo(value.academicInfo);
     }
   }, [state]);
 

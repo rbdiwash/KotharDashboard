@@ -174,7 +174,7 @@ const Insurance = ({ color = "light" }) => {
                       </td>
                       <td className="table-data">
                         <div className="flex items-center">
-                          {item?.coverType || "-"}
+                          {item?.cover_type || "-"}
                         </div>
                       </td>
 

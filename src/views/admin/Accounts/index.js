@@ -17,140 +17,22 @@ import DiscussionModal from "components/Modals/DiscussionModal";
 const Accounts = ({ color = "light" }) => {
   const navigate = useNavigate();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
-  const [searchText, setSearchText] = useState("");
-  const [selectedType, setSelectedType] = useState("");
-  const data = [
-    {
-      name: {
-        firstName: "John",
-        lastName: "Doe",
-      },
-      address: "261 Erdman Ford",
-      city: "East Daphne",
-      state: "Kentucky",
-    },
-    {
-      name: {
-        firstName: "Jane",
-        lastName: "Doe",
-      },
-      address: "769 Dominic Grove",
-      city: "Columbus",
-      state: "Ohio",
-    },
-    {
-      name: {
-        firstName: "Joe",
-        lastName: "Doe",
-      },
-      address: "566 Brakus Inlet",
-      city: "South Linda",
-      state: "West Virginia",
-    },
-    {
-      name: {
-        firstName: "Kevin",
-        lastName: "Vandy",
-      },
-      address: "722 Emie Stream",
-      city: "Lincoln",
-      state: "Nebraska",
-    },
-    {
-      name: {
-        firstName: "Joshua",
-        lastName: "Rolluffs",
-      },
-      address: "32188 Larkin Turnpike",
-      city: "Charleston",
-      state: "South Carolina",
-    },
-    {
-      name: {
-        firstName: "Joshua",
-        lastName: "Rolluffs",
-      },
-      address: "32188 Larkin Turnpike",
-      city: "Charleston",
-      state: "South Carolina",
-    },
-    {
-      name: {
-        firstName: "Joshua",
-        lastName: "Rolluffs",
-      },
-      address: "32188 Larkin Turnpike",
-      city: "Charleston",
-      state: "South Carolina",
-    },
-    {
-      name: {
-        firstName: "Joshua",
-        lastName: "Rolluffs",
-      },
-      address: "32188 Larkin Turnpike",
-      city: "Charleston",
-      state: "South Carolina",
-    },
-    {
-      name: {
-        firstName: "Joshua",
-        lastName: "Rolluffs",
-      },
-      address: "32188 Larkin Turnpike",
-      city: "Charleston",
-      state: "South Carolina",
-    },
-    {
-      name: {
-        firstName: "Joshua",
-        lastName: "Rolluffs",
-      },
-      address: "32188 Larkin Turnpike",
-      city: "Charleston",
-      state: "South Carolina",
-    },
-    {
-      name: {
-        firstName: "Joshua",
-        lastName: "Rolluffs",
-      },
-      address: "32188 Larkin Turnpike",
-      city: "Charleston",
-      state: "South Carolina",
-    },
-    {
-      name: {
-        firstName: "Joshua",
-        lastName: "Rolluffs",
-      },
-      address: "32188 Larkin Turnpike",
-      city: "Charleston",
-      state: "South Carolina",
-    },
-    {
-      name: {
-        firstName: "Divash",
-        lastName: "Ranabhat",
-      },
-      address: "32188 Larkin Turnpike",
-      city: "Charleston",
-      state: "South Carolina",
-    },
-  ];
+  const [selectedType, setSelectedType] = useState(null);
+  const [selectedStudent, setSelectedStudent] = useState(null);
+
   const [
-    { insuranceList, rplList, studentList, visaList, skillList },
-    { refetchCourseList },
+    { insuranceList, rplList, studentList, visaList, skillList, accountsList },
+    { refetchAccountList },
   ] = useKothar();
 
   const deleteData = () => {
     axios
-      .delete(`${API_URL}/organization/delete/${openConfirmationModal?.id}`)
+      .delete(`${API_URL}/accounts/${openConfirmationModal?.id}`)
       .then((res) => {
         console.log(res);
         toast.success(res?.data?.message || "Data Deleted Successfully");
         setOpenConfirmationModal({ state: false, id: null });
-        refetchCourseList();
+        refetchAccountList();
       })
       .catch((err) => {
         toast.error("Error Deleting Data");
@@ -158,21 +40,24 @@ const Accounts = ({ color = "light" }) => {
   };
 
   const options = [
-    { title: "RPL", value: "rpl" },
-    { title: "Admission", value: "admission" },
-    { title: "Visa", value: "visa" },
-    { title: "Insurance", value: "insurance" },
-    { title: "SkillAssessment", value: "skillList" },
+    { label: "RPL", value: "rpl" },
+    { label: "Student", value: "student" },
+    { label: "Visa", value: "visa" },
+    { label: "Insurance", value: "insurance" },
+    {
+      label: "Skill Assessment",
+      value: "skill-assessment",
+    },
   ];
 
   const getClientOption = () => {
     let secondOption = [];
 
-    switch (selectedType) {
+    switch (selectedType?.value) {
       case "rpl":
         secondOption = rplList;
         break;
-      case "admission":
+      case "student":
         secondOption = studentList;
         break;
       case "insurance":
@@ -181,39 +66,38 @@ const Accounts = ({ color = "light" }) => {
       case "visa":
         secondOption = visaList;
         break;
-      case "skillList":
+      case "skill-assessment":
         secondOption = skillList;
         break;
     }
-    return secondOption;
+    return secondOption ?? [];
   };
 
-  //nested data is ok, see accessorKeys in ColumnDef below
   const columns = useMemo(
     () => [
       {
-        accessorKey: "name.firstName", //access nested data with dot notation
-        header: "First Name",
+        accessorKey: "name", //access nested data with dot notation
+        header: "Full Name",
         size: 150,
       },
       {
-        accessorKey: "name.lastName",
-        header: "Last Name",
+        accessorKey: "amount",
+        header: "Total Amount",
         size: 150,
       },
       {
-        accessorKey: "address", //normal accessorKey
-        header: "Address",
+        accessorKey: "discount", //normal accessorKey
+        header: "Discount",
         size: 200,
       },
       {
-        accessorKey: "city",
-        header: "City",
+        accessorKey: "dueDate",
+        header: "Due Date",
         size: 150,
       },
       {
-        accessorKey: "state",
-        header: "State",
+        accessorKey: "Action",
+        header: "Action",
         size: 150,
       },
     ],
@@ -222,7 +106,7 @@ const Accounts = ({ color = "light" }) => {
 
   const table = useMaterialReactTable({
     columns,
-    data, //data must be memoized or stable (useState, useMemo, defined outside of this component, etc.)
+    data: accountsList,
   });
   const [openDiscussion, setOpenDiscussion] = useState(false);
   const handleDiscussion = () => {
@@ -247,24 +131,34 @@ const Accounts = ({ color = "light" }) => {
                     options={options}
                     sx={{ width: 300 }}
                     onChange={(e, value) => {
-                      setSelectedType(value?.value);
+                      setSelectedType(value);
+                      setSelectedStudent(null);
                     }}
-                    getOptionLabel={(option) => option.title}
+                    getOptionLabel={(option) => option.label}
                     renderInput={(params) => (
                       <TextField {...params} placeholder="Select Type" />
                     )}
+                    value={selectedType}
+                    isOptionEqualToValue={(options, value) =>
+                      options.value === value.value
+                    }
                   />
                   <Autocomplete
                     size="small"
                     disablePortal
                     options={getClientOption()}
                     sx={{ width: 500 }}
-                    // getOptionLabel={(option) => option.title}
+                    getOptionLabel={(option) => option.name}
+                    getOptionKey={(option) => option.id}
                     renderInput={(params) => (
                       <TextField {...params} placeholder="Search using Name" />
                     )}
+                    onChange={(e, value) => {
+                      setSelectedStudent(value);
+                    }}
+                    value={selectedStudent}
                   />
-                </div>{" "}
+                </div>
                 <div className="flex items-center gap-4">
                   <FaRocketchat
                     className="text-blue-500 text-3xl cursor-pointer"

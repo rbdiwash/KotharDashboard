@@ -22,11 +22,12 @@ const AddAccounts = ({ color = "light" }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [installments, setInstallments] = useState([{ index: 1 }]);
   const [selectedType, setSelectedType] = useState(null);
-  const [selectedStudent, setSelectedStudent] = useState();
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  console.log("🚀  selectedStudent:", selectedStudent);
   const [data, setData] = useState({});
   const [
     { rplList, studentList, visaList, skillList, insuranceList },
-    { refetchCourseList },
+    { refetchAccountList },
   ] = useKothar();
 
   const deleteData = () => {
@@ -35,7 +36,7 @@ const AddAccounts = ({ color = "light" }) => {
       .then((res) => {
         toast.success(res?.data?.message || "Data Deleted Successfully");
         setOpenConfirmationModal({ state: false, id: null });
-        refetchCourseList();
+        refetchAccountList();
       })
       .catch((err) => {
         toast.error("Error Deleting Data");
@@ -110,17 +111,7 @@ const AddAccounts = ({ color = "light" }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(selectedStudent);
-    console.log({
-      ...data,
-      installments: installments?.map((item) => ({
-        ...item,
-        claimed: item?.claimed?.value,
-      })),
-      client: selectedStudent?.clientId,
-      document: [],
-      type: selectedType?.value,
-    });
+
     mutate({
       ...data,
       installments: installments.map((item) => ({
@@ -131,7 +122,8 @@ const AddAccounts = ({ color = "light" }) => {
       document: [],
       type: selectedType?.value,
       paymentType: "",
-      amount: "",
+      amount: installments.reduce((a, b) => a + (Number(b.amount) || 0), 0),
+      amountAfterDiscount: 0,
     });
   };
 

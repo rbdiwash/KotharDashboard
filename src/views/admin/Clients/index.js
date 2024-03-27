@@ -51,7 +51,7 @@ const Clients = ({ color = "light" }) => {
     } else {
       setFilteredData(clientList);
     }
-  }, [searchText]);
+  }, [searchText, clientList]);
   const handleClose = () => {
     setAnchorEl(null);
   };

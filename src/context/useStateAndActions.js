@@ -26,9 +26,8 @@ const useStateAndActions = () => {
       // },
     }
   );
-  const getClientData = async (params) => {
-    let url = typeof params === "string" ? `/clients/?${params}` : `clients`;
-    const res = await axios.get(url);
+  const getClientData = async () => {
+    const res = await axios.get(`clients/?active=Y`);
     return res?.data?.data;
   };
   const { data: clientList, refetch: refetchClient } = useQuery(
@@ -205,6 +204,19 @@ const useStateAndActions = () => {
       refetchOnWindowFocus: false,
     }
   );
+  const getAccountsList = async () => {
+    const res = await axios.get(`${API_URL}/accounts`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    return res?.data?.data;
+  };
+  const { data: accountsList = [], refetch: refetchAccountList } = useQuery(
+    ["insurance"],
+    getAccountsList,
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   useEffect(() => {
     if (token) {
@@ -219,6 +231,7 @@ const useStateAndActions = () => {
       refetchSkillList();
       refetchInsuranceList();
       getRPLList();
+      refetchAccountList();
       // refetchRPLList();
     }
   }, [token]);
@@ -238,6 +251,7 @@ const useStateAndActions = () => {
     insuranceList,
     rplList,
     archivedClientList,
+    accountsList,
   };
   const actions = {
     refetchClient,
@@ -251,6 +265,7 @@ const useStateAndActions = () => {
     refetchSkillList,
     // refetchRPLList,
     refetchInsuranceList,
+    refetchAccountList,
     getRPLList,
     getVisaList,
     getClientData,
