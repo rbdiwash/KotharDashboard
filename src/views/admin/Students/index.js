@@ -12,7 +12,6 @@ import { FaPlusCircle, FaRocketchat } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 
 const Students = ({ color = "light" }) => {
-  const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
   const [{ studentList, token }, { refetchStudent }] = useKothar();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const navigate = useNavigate();
@@ -93,17 +92,15 @@ const Students = ({ color = "light" }) => {
             <table className="items-center w-full bg-transparent border-collapse">
               <thead>
                 <tr>
-                  <th className={"table-head " + tableHeadClass}>Name</th>
-                  <th className={"table-head " + tableHeadClass}>Email</th>
-                  <th className={"table-head " + tableHeadClass}>Course</th>
-                  <th className={"table-head " + tableHeadClass}>University</th>
-                  <th className={"table-head " + tableHeadClass}>Intake</th>
-                  <th className={"table-head " + tableHeadClass}>
-                    Case Officer
-                  </th>
-                  <th className={"table-head " + tableHeadClass}>Reference</th>
-                  <th className={"table-head " + tableHeadClass}>Status</th>
-                  <th className={"table-head " + tableHeadClass}>Action</th>
+                  <th className={"table-head "}>Name</th>
+                  <th className={"table-head "}>Email</th>
+                  <th className={"table-head "}>Course</th>
+                  <th className={"table-head "}>University</th>
+                  <th className={"table-head "}>Intake</th>
+                  <th className={"table-head "}>Case Officer</th>
+                  <th className={"table-head "}>Reference</th>
+                  <th className={"table-head "}>Status</th>
+                  <th className={"table-head "}>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -148,7 +145,11 @@ const Students = ({ color = "light" }) => {
                           </Tooltip>
                           <Tooltip title="Edit Student Details" arrow>
                             <IconButton
-                              onClick={() => navigate("/admin/student/add")}
+                              onClick={() =>
+                                navigate(`/admin/student/edit/${item?.id}`, {
+                                  state: { item },
+                                })
+                              }
                             >
                               <AiFillEdit className="text-sky-600 cursor-pointer" />
                             </IconButton>

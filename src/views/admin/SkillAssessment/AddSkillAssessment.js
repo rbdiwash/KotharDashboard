@@ -41,13 +41,13 @@ const AddSkillAssessment = ({ color = "light" }) => {
   };
 
   const { state } = useLocation();
+  console.log("🚀  state:", state);
 
   useEffect(() => {
     if (state) {
       setData({ ...state?.item, client: state?.item?.name });
     }
   }, [state]);
-  console.log("🚀  data:", data);
 
   const { mutate } = useMutation(postData, {
     onSuccess() {

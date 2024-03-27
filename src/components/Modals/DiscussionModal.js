@@ -8,13 +8,16 @@ import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete, TextField, Tooltip } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { API_URL } from "const/constants";
 import useKothar from "context/useKothar";
 import { toast } from "react-toastify";
 import { useState } from "react";
+import { useRef } from "react";
+import { useEffect } from "react";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -29,13 +32,17 @@ export default function DiscussionModal({ open, setOpen, studentList, type }) {
   const [studentId, setStudentId] = useState(null);
   const [commentsList, setCommentsList] = useState([]);
   const [text, setText] = useState("");
+  const buttonRef = useRef(null);
+  const [{ token }, {}] = useKothar();
   const handleClose = () => {
     setOpen(false);
   };
+  const userEmail = localStorage.getItem("userEmail");
 
   const { mutate } = useMutation(postData, {
     onSuccess() {
-      toast.success("Comment added Successfully");
+      fetchDiscussions(studentId);
+      setText("");
     },
     onError() {
       toast.error("Error Submitting Comment");
@@ -43,7 +50,7 @@ export default function DiscussionModal({ open, setOpen, studentList, type }) {
   });
 
   async function postData(payload) {
-    await axios.post(`${API_URL}/disucssion/${studentId}`, payload);
+    await axios.post(`${API_URL}/discussion/${studentId}`, payload);
   }
   const submitPost = (e) => {
     e.preventDefault();
@@ -52,9 +59,30 @@ export default function DiscussionModal({ open, setOpen, studentList, type }) {
 
   const fetchDiscussions = async (id) => {
     await axios
-      .get(`${API_URL}/disucssion/${id}/?type=${type}`)
-      .then((res) => setCommentsList(res?.data?.data))
+      .get(`${API_URL}/discussion/${id}?type=${type}`)
+      .then((res) => {
+        setCommentsList(res?.data?.comments);
+        buttonRef.current.scrollIntoView();
+      })
       .catch((err) => console.log(err));
+  };
+
+  const deleteIndividualComment = (commentId) => {
+    axios({
+      url: `${API_URL}/discussion/comment/${commentId}`,
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(() => {
+        toast.success("Data Deleted Successfully");
+        fetchDiscussions(studentId);
+      })
+      .catch(() => {
+        toast.error("Error Deleting Data");
+      });
   };
 
   return (
@@ -99,40 +127,48 @@ export default function DiscussionModal({ open, setOpen, studentList, type }) {
                 }}
               />
               <div className="flex flex-col justify-between h-full">
-                <div className="max-h-[400px] overflow-y-auto">
+                <div className="max-h-[400px] overflow-y-auto" ref={buttonRef}>
                   {commentsList?.length > 0 ? (
                     commentsList?.map((arg) => (
-                      <article
-                        class="p-6 mb-6 text-base bg-white rounded-lg border-b"
-                        key={JSON.stringify(arg)}
-                      >
-                        <footer class="flex justify-between items-center mb-2">
-                          <div class="flex items-center">
-                            <p class="inline-flex items-center mr-3 text-sm text-gray-900 ">
-                              <img
-                                class="mr-2 w-6 h-6 rounded-full"
-                                src="https://flowbite.com/docs/images/people/profile-picture-2.jpg"
-                                alt="Post"
-                              />
-                              {arg?.postedBy || "-"}
+                      <div id="chatbox" class="p-4">
+                        {userEmail === arg?.commentedBy ? (
+                          <div class="mb-2 text-right">
+                            <p className="text-sm mb-2 text-gray-400">
+                              {arg?.commentedBy}{" "}
+                              {new Date(arg?.date)?.toLocaleString()}
                             </p>
-                            <p class="text-sm text-gray-600 ">
-                              <time
-                                pubdate
-                                datetime="2022-02-08"
-                                title="February 8th, 2022"
-                              >
-                                {arg?.date}
-                              </time>
+                            <div className="flex items-center justify-end gap-2 cursor-pointer">
+                              <Tooltip title="Delete this comment">
+                                <DeleteIcon
+                                  sx={{ color: "grey" }}
+                                  onClick={() =>
+                                    deleteIndividualComment(arg?.id)
+                                  }
+                                />
+                              </Tooltip>
+                              <p class="bg-blue-500 text-white rounded-lg py-2 px-4 inline-block">
+                                {arg?.text}
+                              </p>
+                            </div>
+                          </div>
+                        ) : (
+                          <div class="mb-2">
+                            <p className="text-sm mb-2 text-gray-400">
+                              {arg?.commentedBy}{" "}
+                              {new Date(arg?.date)?.toLocaleString()}
+                            </p>
+                            <p class="bg-gray-200 text-gray-700 rounded-lg py-2 px-4 inline-block">
+                              {arg?.text}
                             </p>
                           </div>
-                        </footer>
-                        <p class="text-gray-500 ">{arg?.text}</p>
-                      </article>
+                        )}
+                        <AlwaysScrollToBottom />
+                      </div>
                     ))
                   ) : (
                     <article class="p-6 mb-6 text-base bg-white text-center py-12">
-                      No Conversations found
+                      No Conversations found. You can start conversation any
+                      time.
                     </article>
                   )}
                 </div>
@@ -150,10 +186,16 @@ export default function DiscussionModal({ open, setOpen, studentList, type }) {
                 class="px-0 text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none w-full"
                 placeholder="Write a comment..."
                 onChange={(e) => setText(e.target.value)}
+                value={text}
               ></textarea>
             </div>
 
-            <Button variant="contained" type="submit" className="ml-auto">
+            <Button
+              variant="contained"
+              type="submit"
+              className="ml-auto"
+              disabled={!text}
+            >
               Post comment
             </Button>
           </DialogActions>
@@ -162,3 +204,9 @@ export default function DiscussionModal({ open, setOpen, studentList, type }) {
     </React.Fragment>
   );
 }
+
+const AlwaysScrollToBottom = () => {
+  const elementRef = useRef();
+  useEffect(() => elementRef.current.scrollIntoView());
+  return <div ref={elementRef} />;
+};

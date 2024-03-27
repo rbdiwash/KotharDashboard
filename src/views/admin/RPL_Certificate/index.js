@@ -302,7 +302,7 @@ const TabContent = ({
                         <Tooltip title="Edit RPL Details" arrow>
                           <IconButton
                             onClick={() =>
-                              navigate("/admin/rpl-certificate /add", {
+                              navigate("/admin/rpl-certificate/add", {
                                 state: { item },
                               })
                             }

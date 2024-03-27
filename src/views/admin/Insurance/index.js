@@ -19,7 +19,6 @@ const Insurance = ({ color = "light" }) => {
   const [searchText, setSearchText] = useState("");
 
   const [{ insuranceList }, { refetchInsuranceList }] = useKothar();
-  console.log("🚀  insuranceList:", insuranceList);
   const [filteredData, setFilteredData] = useState(insuranceList);
 
   const deleteData = () => {
@@ -57,7 +56,7 @@ const Insurance = ({ color = "light" }) => {
     } else {
       setFilteredData(insuranceList);
     }
-  }, [searchText, insuranceList]);
+  }, [searchText, insuranceList, openConfirmationModal]);
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">

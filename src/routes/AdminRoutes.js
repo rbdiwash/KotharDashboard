@@ -74,6 +74,8 @@ const AdminRoutes = {
       element: <Students />,
     },
     { path: "student/add", element: <AddStudent /> },
+    { path: "student/edit/:id", element: <AddStudent /> },
+
     { path: "student/view", element: <StudentDetails /> },
 
     {

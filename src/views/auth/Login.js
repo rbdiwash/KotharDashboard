@@ -16,7 +16,6 @@ export default function Login() {
     const { name, value } = e.target;
     setData((prevState) => ({ ...prevState, [name]: value }));
   };
-  const [message, setMessage] = useState({});
   const [{ token }, { setToken }] = useKothar();
 
   const validateEmail = (email) => {
@@ -51,12 +50,12 @@ export default function Login() {
     isLoading,
   } = useMutation(postData, {
     onSuccess: async (res) => {
-      setMessage({ success: res?.data?.message });
       setData({
         username: "",
         password: "",
       });
       localStorage.setItem("token", res?.data?.token);
+      localStorage.setItem('userEmail',data?.username)
       setToken(res?.data?.token);
       res?.data?.data?.mfa
         ? navigate("/email/verify")

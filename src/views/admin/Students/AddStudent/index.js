@@ -4,7 +4,7 @@ import axios from "axios";
 import { API_URL, student_status } from "const/constants";
 import { useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import AcademicInfo from "./AcademicInfo";
 import DocumentsAndAddress from "./DocumentsAndAddress";
@@ -13,6 +13,7 @@ import TestInfo from "./TestInfo";
 import UniversityInfo from "./UniversityInfo";
 import WorkExperience from "./WorkExperience";
 import useKothar from "context/useKothar";
+import { useEffect } from "react";
 const AddStudent = () => {
   const [{ token }, { refetchStudent }] = useKothar();
 
@@ -152,12 +153,13 @@ const AddStudent = () => {
     },
     ...workInfo,
 
-    testInfor: {
+    testInfo: {
       ...testInfo,
       testName: testInfo?.testName?.value,
       testName2: testInfo?.testName2?.value,
     },
   };
+
   const { isLoading, isError, error, mutate } = useMutation(postData, {
     onSuccess() {
       toast.success(
@@ -172,6 +174,32 @@ const AddStudent = () => {
       toast.error(data?.id ? "Error Updating Data" : "Error Submitting Data");
     },
   });
+  const { state } = useLocation();
+  console.log("🚀  state:", state);
+
+  useEffect(() => {
+    if (state) {
+      const value = state?.item;
+      console.log("🚀  value:", value);
+      console.log("🚀  state:", state);
+
+      setGeneralInfo({
+        gender: value?.gender,
+        clientId: null,
+        maritalStatus: [],
+        emergency: { name: "", email: "", contact: null, relation: null },
+        course: null,
+        university: null,
+        state: [],
+        intake: [],
+        fee: null,
+        caseOfficer: null,
+        reference: null,
+        status: null,
+      });
+    }
+  }, [state]);
+
   async function postData(payload) {
     if (data?.id) {
       await axios.put(`${API_URL}/student/${data?.id}`, payload);

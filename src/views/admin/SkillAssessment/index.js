@@ -144,7 +144,7 @@ const SkillAssessment = ({ color = "light" }) => {
                       </td>
                       <td className="table-data text-right">
                         <div className="flex items-center">
-                          <Tooltip title="Edit Course" arrow>
+                          <Tooltip title="Edit Skill Assessment Details" arrow>
                             <IconButton
                               onClick={() =>
                                 navigate("/admin/skill-assessment/add", {
@@ -155,7 +155,10 @@ const SkillAssessment = ({ color = "light" }) => {
                               <AiFillEdit className="text-sky-600 cursor-pointer" />
                             </IconButton>
                           </Tooltip>
-                          <Tooltip title="Delete Course" arrow>
+                          <Tooltip
+                            title="Delete Skill Assessment Details"
+                            arrow
+                          >
                             <IconButton
                               onClick={() =>
                                 setOpenConfirmationModal({
