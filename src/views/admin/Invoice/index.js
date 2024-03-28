@@ -23,6 +23,7 @@ import SearchField from "components/SearchField";
 import DeleteModal from "components/Modals/DeleteModal";
 import useKothar from "context/useKothar";
 import { useEffect } from "react";
+import { delete_data } from "const/axios";
 
 const Invoice = ({ color = "dark" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
@@ -63,22 +64,22 @@ const Invoice = ({ color = "dark" }) => {
       .post(`${API_URL}/invoice/download/${item?.invoiceId}`)
       .then((res) => {
         toast.success("Downloading started, please wait");
+        // const a = document.createElement("a");
+        // a.href = `data:application/pdf;base64,${res?.data}`;
+        // a.download = a.href;
+        // document.body.appendChild(a);
+        // a.click();
+        // document.body.removeChild(a);
       })
       .catch((err) => {
         toast.error("Failed to start download, check network tab");
       });
   };
   const deleteData = () => {
-    axios
-      .delete(`${API_URL}/invoice/${openConfirmationModal?.id}`)
-      .then((res) => {
-        toast.success(res?.data?.message || "Data Deleted Successfully");
-        setOpenConfirmationModal({ state: false, id: null });
-        refetchInvoiceList();
-      })
-      .catch((err) => {
-        toast.error("Error Deleting Data");
-      });
+    delete_data(`${API_URL}/invoice/${openConfirmationModal?.id}`, () => {
+      setOpenConfirmationModal({ state: false, id: null });
+      refetchInvoiceList();
+    });
   };
 
   useEffect(() => {
@@ -97,7 +98,7 @@ const Invoice = ({ color = "dark" }) => {
     } else {
       setFilteredData(invoiceList);
     }
-  }, [searchText]);
+  }, [searchText, invoiceList]);
 
   return (
     <div className="flex flex-wrap mt-4  dashBody">
@@ -154,8 +155,7 @@ const Invoice = ({ color = "dark" }) => {
                 {filteredData?.length > 0 ? (
                   filteredData?.map((item, index) => (
                     <tr key={item?.id || index}>
-                      <th className="table-data text-left flex h-full">
-                        {item?.name && imageName(item?.name || "Anand Pandey")}
+                      <td className="table-data text-left">
                         <span
                           className={
                             "ml-3 font-bold " +
@@ -166,7 +166,7 @@ const Invoice = ({ color = "dark" }) => {
                         >
                           {item?.title || "-"}
                         </span>
-                      </th>
+                      </td>
                       <td className="table-data">
                         <div className="flex items-center gap-2">
                           {item?.invoiceTo}
@@ -193,11 +193,11 @@ const Invoice = ({ color = "dark" }) => {
                               <AiFillEye className="text-white cursor-pointer" />
                             </IconButton>
                           </Tooltip>
-                          <Tooltip title="Print Invoice" arrow>
+                          {/* <Tooltip title="Print Invoice" arrow>
                             <IconButton onClick={() => window.print()}>
                               <AiFillPrinter className="text-white" />
                             </IconButton>
-                          </Tooltip>
+                          </Tooltip> */}
                           <Tooltip title="Download Invoice" arrow>
                             <IconButton
                               onClick={() => handleDownloadInvoice(item)}

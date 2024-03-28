@@ -8,9 +8,9 @@ const WorkExperience = ({ workInfo, setWorkInfo }) => {
     const { name, value } = e.target;
     const row = workInfo.find((item, i) => i === index);
     setWorkInfo((prevState) => [
-      ...prevState.slice(0, index),
+      ...prevState?.slice(0, index),
       { ...row, [name]: value },
-      ...prevState.slice(index + 1, workInfo.length),
+      ...prevState?.slice(index + 1, workInfo.length),
     ]);
   };
   const handleAddMore = () => {

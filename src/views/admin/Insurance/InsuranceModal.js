@@ -49,6 +49,7 @@ export default function InsuranceModal({
   const [data, setData] = React.useState(initalState);
   useEffect(() => {
     if (openInsuranceForm?.id) {
+      console.log(openInsuranceForm.id);
       setData(openInsuranceForm?.id);
       setChildName(openInsuranceForm?.id?.child);
     } else {
@@ -79,7 +80,7 @@ export default function InsuranceModal({
     mutate({
       ...data,
       firstName: data?.name,
-      cover_type: data?.cover_type?.value,
+      coverType: data?.coverType?.value,
       type: data?.type?.value,
       insuranceCompany: data?.insuranceCompany?.value,
       child: childName,
@@ -109,9 +110,9 @@ export default function InsuranceModal({
   const handleChildInputChange = (value, name, i) => {
     const foundChild = childName.find((arg, index) => i === index);
     setChildName((prevState) => [
-      ...prevState.slice(0, i),
+      ...prevState?.slice(0, i),
       value,
-      ...prevState.slice(i + 1, childName.length),
+      ...prevState?.slice(i + 1, childName.length),
     ]);
   };
 
@@ -279,12 +280,12 @@ export default function InsuranceModal({
                   onChange={(e, value) => {
                     setData((prevState) => ({
                       ...prevState,
-                      cover_type: value,
+                      coverType: value?.value,
                     }));
                   }}
                   required
                   freeSolo
-                  value={data?.cover_type}
+                  value={data?.coverType}
                   options={insurance_cover_type}
                   disablePortal
                   renderInput={(params) => (
@@ -300,8 +301,8 @@ export default function InsuranceModal({
                   }}
                 />
               </div>
-              {(data?.cover_type?.value === "Couple" ||
-                data?.cover_type?.value === "Family") && (
+              {(data?.coverType?.value === "Couple" ||
+                data?.coverType?.value === "Family") && (
                 <>
                   <div className="relative w-full mb-3">
                     <InputField
@@ -309,7 +310,7 @@ export default function InsuranceModal({
                       placeholder="Spouse Name"
                       name="spouseName"
                       label="Spouse Name"
-                      required={data?.cover_type?.value === "couple"}
+                      required={data?.coverType?.value === "couple"}
                       value={data?.spouseName}
                       onChange={handleInputChange}
                     />
@@ -320,7 +321,7 @@ export default function InsuranceModal({
                       placeholder="Spouse Address"
                       name="spouseAddress"
                       label="Spouse Address"
-                      required={data?.cover_type?.value === "couple"}
+                      required={data?.coverType?.value === "couple"}
                       value={data?.spouseAddress}
                       onChange={handleInputChange}
                     />
@@ -331,15 +332,15 @@ export default function InsuranceModal({
                       placeholder="Spouse Phone Number"
                       name="spousePhoneNumber"
                       label="Spouse Phone Number"
-                      required={data?.cover_type?.value === "couple"}
+                      required={data?.coverType?.value === "couple"}
                       value={data?.spousePhoneNumber}
                       onChange={handleInputChange}
                     />
                   </div>
                 </>
               )}
-              {(data?.cover_type?.value === "Family" ||
-                data?.cover_type?.value === "Single Parent") && (
+              {(data?.coverType?.value === "Family" ||
+                data?.coverType?.value === "Single Parent") && (
                 <>
                   <div className="relative w-full mb-0">
                     <InputField
@@ -347,7 +348,7 @@ export default function InsuranceModal({
                       placeholder="Number of Childrens"
                       name="childrens"
                       label="Number of Childrens"
-                      required={data?.cover_type?.value === "couple"}
+                      required={data?.coverType?.value === "couple"}
                       value={data?.childrens}
                       onChange={handleInputChange}
                     />
@@ -362,7 +363,7 @@ export default function InsuranceModal({
                       placeholder={`Children Name ${item?.index}`}
                       name={`child${item?.index}`}
                       label={`Children Name ${item?.index}`}
-                      required={data?.cover_type?.value === "couple"}
+                      required={data?.coverType?.value === "couple"}
                       value={childName[item]}
                       onChange={(e) =>
                         handleChildInputChange(

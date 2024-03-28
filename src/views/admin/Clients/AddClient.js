@@ -219,20 +219,20 @@ const AddClient = ({ color = "light" }) => {
                     <InputField
                       label="Visa Status"
                       placeholder="Visa Status"
-                      name="visa_status"
+                      name="visaStatus"
                       required
                       type="text"
-                      value={data?.visa_status}
+                      value={data?.visaStatus}
                       onChange={handleInputChange}
                     />
                   </div>
                   <div className="relative w-full mb-3">
                     <InputField
                       label="Visa Expiry"
-                      name="visa_expiry"
+                      name="visaExpiry"
                       required
                       type="date"
-                      value={data?.visa_expiry}
+                      value={data?.visaExpiry}
                       onChange={handleInputChange}
                     />
                   </div>

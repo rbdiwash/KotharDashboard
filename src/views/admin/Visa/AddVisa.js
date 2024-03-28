@@ -36,30 +36,27 @@ const AddVisaDetails = ({ color = "light" }) => {
     visa_status: null,
     visa_expiry: "",
     certificate: "",
-    currently_enrolled_course: "",
-    currently_enrolled_university: "",
-    course_end_data: "",
-    placement_required: null,
-    passport: "",
+    currentlyEnrolledCourse: "",
+    currentlyEnrolledUniversity: "",
+    courseEndData: "",
+    placementRequired: null,
     visa: "",
-    coe: [],
-    all_academic: [],
-    license_file: "",
-    photocard_file: "",
-    bank_card_file: "",
-    rsa_file: "",
-    transcript_file: "",
-    bills_file: "",
-    covid_file: "",
-    flu_file: "",
-    police_check_file: "",
-    ndis_file: "",
-    wwvp_file: "",
-    nhhi_file: "",
-    ndis_file: "",
     status: true,
     tenYearAddress: [],
     type: null,
+    passport: null,
+    resume: "",
+    birthCertificate: "",
+    currentVisa: "",
+    insuranceDoc: "",
+    allAcademic: "",
+    coe: "",
+    completionLetter: "",
+    graduationCertificate: "",
+    ieltsPte: "",
+    policeReport: "",
+    relationshipCertificate: "",
+    marriageCertificate: "",
   });
   const tabs = [
     { label: "All", value: "all" },
@@ -130,9 +127,9 @@ const AddVisaDetails = ({ color = "light" }) => {
     const { name, value } = e.target;
     const row = tenYearAddress.find((item, i) => i === index);
     setTenYearAddress((prevState) => [
-      ...prevState.slice(0, index),
+      ...prevState?.slice(0, index),
       { ...row, [name]: value },
-      ...prevState.slice(index + 1, tenYearAddress.length),
+      ...prevState?.slice(index + 1, tenYearAddress.length),
     ]);
   };
   const handleAddMore = () => {
@@ -504,7 +501,7 @@ const AddVisaDetails = ({ color = "light" }) => {
                       data,
                       setData,
                       label: "Updated Birth Certificate",
-                      imageKey: "birth_certificate",
+                      imageKey: "birthCertificate",
                     }}
                   />
                   <UploadFile
@@ -512,7 +509,7 @@ const AddVisaDetails = ({ color = "light" }) => {
                       data,
                       setData,
                       label: "Updated Current Visa",
-                      imageKey: "current_visa",
+                      imageKey: "currentVisa",
                     }}
                   />
 
@@ -521,7 +518,7 @@ const AddVisaDetails = ({ color = "light" }) => {
                       data,
                       setData,
                       label: "Updated Insurance",
-                      imageKey: "insurance_doc",
+                      imageKey: "insuranceDoc",
                     }}
                   />
 
@@ -530,7 +527,7 @@ const AddVisaDetails = ({ color = "light" }) => {
                       data,
                       setData,
                       label: "Updated All Academic (multiple)",
-                      imageKey: "all_academic",
+                      imageKey: "allAcademic",
                       type: "multiple",
                     }}
                   />
@@ -549,7 +546,7 @@ const AddVisaDetails = ({ color = "light" }) => {
                       data,
                       setData,
                       label: "Updated Completion Letter",
-                      imageKey: "completion_letter",
+                      imageKey: "completionLetter",
                       type: "multiple",
                     }}
                   />
@@ -559,7 +556,7 @@ const AddVisaDetails = ({ color = "light" }) => {
                       data,
                       setData,
                       label: "Certificate of Graduation",
-                      imageKey: "graduation_certificate",
+                      imageKey: "graduationCertificate",
                       type: "multiple",
                     }}
                   />
@@ -569,7 +566,7 @@ const AddVisaDetails = ({ color = "light" }) => {
                       data,
                       setData,
                       label: "IELTS/PTE (Overall 6)",
-                      imageKey: "ielts_pte",
+                      imageKey: "ieltsPte",
                       type: "multiple",
                     }}
                   />
@@ -579,7 +576,7 @@ const AddVisaDetails = ({ color = "light" }) => {
                       data,
                       setData,
                       label: "Police Report (National Police Certificate)",
-                      imageKey: "police_report",
+                      imageKey: "policeReport",
                       type: "multiple",
                     }}
                   />
@@ -589,7 +586,7 @@ const AddVisaDetails = ({ color = "light" }) => {
                       data,
                       setData,
                       label: "Relationship Certificate",
-                      imageKey: "relationship_certificate",
+                      imageKey: "relationshipCertificate",
                     }}
                   />
                   <UploadFile
@@ -597,7 +594,7 @@ const AddVisaDetails = ({ color = "light" }) => {
                       data,
                       setData,
                       label: "Marriage Certificate (if married)",
-                      imageKey: "marriage_certificate",
+                      imageKey: "marriageCertificate",
                     }}
                   />
                 </div>

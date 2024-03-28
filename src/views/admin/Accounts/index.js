@@ -24,6 +24,7 @@ const Accounts = ({ color = "light" }) => {
     { insuranceList, rplList, studentList, visaList, skillList, accountsList },
     { refetchAccountList },
   ] = useKothar();
+  console.log("🚀  accountsList:", accountsList);
 
   const deleteData = () => {
     axios

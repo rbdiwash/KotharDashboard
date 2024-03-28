@@ -19,6 +19,16 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
     }
   };
 
+  const boards = [
+    { label: "NEB", value: "NEB" },
+    { label: "HSEB", value: "HSEB" },
+  ];
+
+  const resultMode = [
+    { label: "GPA", value: "GPA" },
+    { label: "Percentage", value: "PERCENTAGE" },
+  ];
+
   return (
     <>
       <div className="sub-heading">Grade 10th or Equivalent:</div>
@@ -31,16 +41,17 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             onChange={(e, value) => {
               setAcademicInfo((prevState) => ({
                 ...prevState,
-                tenth: { ...prevState.tenth, board: value },
+                tenth: { ...prevState?.tenth, board: value.value },
               }));
             }}
             required
-            value={academicInfo?.tenth?.board || null}
+            value={
+              boards.find(
+                (item) => item?.value === academicInfo?.tenth?.board
+              ) ?? null
+            }
             name="tenth.board"
-            options={[
-              { label: "NEB", value: "NEB" },
-              { label: "HSEB", value: "HSEB" },
-            ]}
+            options={boards}
             isOptionEqualToValue={(options, value) =>
               options.value === value.value
             }
@@ -109,19 +120,20 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             onChange={(e, value) => {
               setAcademicInfo((prevState) => ({
                 ...prevState,
-                tenth: { ...prevState.tenth, gradingSystem: value },
+                tenth: { ...prevState?.tenth, gradingSystem: value.value },
               }));
             }}
             isOptionEqualToValue={(options, value) =>
               options.value === value.value
             }
-            value={academicInfo?.tenth?.gradingSystem || null}
+            value={
+              resultMode.find(
+                (item) => item?.value === academicInfo?.tenth?.gradingSystem
+              ) ?? null
+            }
             required
             disablePortal
-            options={[
-              { label: "GPA", value: "GPA" },
-              { label: "Percentage", value: "PERCENTAGE" },
-            ]}
+            options={resultMode}
             renderInput={(params) => (
               <TextField {...params} label="Grading System" />
             )}
@@ -213,19 +225,20 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             onChange={(e, value) => {
               setAcademicInfo((prevState) => ({
                 ...prevState,
-                higher: { ...prevState.higher, board: value },
+                higher: { ...prevState?.higher, board: value.value },
               }));
             }}
             required
-            value={academicInfo?.higher?.board}
+            value={
+              boards.find(
+                (item) => item?.value === academicInfo?.higher?.board
+              ) ?? null
+            }
             name="higher.board"
             isOptionEqualToValue={(options, value) =>
               options?.value === value?.value
             }
-            options={[
-              { label: "NEB", value: "NEB" },
-              { label: "HSEB", value: "HSEB" },
-            ]}
+            options={boards}
             renderInput={(params) => (
               <TextField {...params} label="Select Board" />
             )}
@@ -292,21 +305,23 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             onChange={(e, value) => {
               setAcademicInfo((prevState) => ({
                 ...prevState,
-                higher: { ...prevState.higher, gradingSystem: value },
+                higher: { ...prevState?.higher, gradingSystem: value.value },
               }));
             }}
             required
             disablePortal
-            options={[
-              { label: "GPA", value: "GPA" },
-              { label: "Percentage", value: "PERCENTAGE" },
-            ]}
+            options={resultMode}
             isOptionEqualToValue={(options, value) =>
               options.value === value.value
             }
             renderInput={(params) => (
               <TextField {...params} label="Grading System" />
             )}
+            value={
+              resultMode.find(
+                (item) => item?.value === academicInfo?.higher?.gradingSystem
+              ) ?? null
+            }
           />
         </div>
         <div className="relative w-full mb-3">
@@ -395,18 +410,17 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
             onChange={(e, value) => {
               setAcademicInfo((prevState) => ({
                 ...prevState,
-                bachelor: { ...prevState.bachelor, board: value },
+                bachelor: { ...prevState?.bachelor, board: value.value },
               }));
             }}
             isOptionEqualToValue={(options, value) =>
               options?.value === value?.value
             }
-            value={academicInfo?.bachelor?.board}
+            value={boards.find(
+              (item) => item?.value === academicInfo?.bachelor?.board
+            )}
             name="bachelor.board"
-            options={[
-              { label: "NEB", value: "NEB" },
-              { label: "HSEB", value: "HSEB" },
-            ]}
+            options={boards}
             renderInput={(params) => (
               <TextField {...params} label="Select Board" />
             )}
@@ -469,21 +483,21 @@ const AcademicInfo = ({ academicInfo, setAcademicInfo }) => {
               setAcademicInfo((prevState) => ({
                 ...prevState,
                 bachelor: {
-                  ...prevState.bachelor,
+                  ...prevState?.bachelor,
                   gradingSystem: value,
                 },
               }));
             }}
             disablePortal
-            options={[
-              { label: "GPA", value: "gpa" },
-              { label: "Percentage", value: "percentage" },
-            ]}
+            options={resultMode}
             isOptionEqualToValue={(options, value) =>
               options?.value === value?.value
             }
             renderInput={(params) => (
               <TextField {...params} label="Grading System" />
+            )}
+            value={resultMode.find(
+              (item) => item.value === academicInfo?.bachelor?.gradingSystem
             )}
           />
         </div>

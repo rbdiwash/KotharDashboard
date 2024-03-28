@@ -47,9 +47,9 @@ const AddAccounts = ({ color = "light" }) => {
     const { name, value } = e.target;
     const row = installments.find((item, i) => i === index);
     setInstallments((prevState) => [
-      ...prevState.slice(0, index),
+      ...prevState?.slice(0, index),
       { ...row, [name]: value },
-      ...prevState.slice(index + 1, installments.length),
+      ...prevState?.slice(index + 1, installments.length),
     ]);
   };
 
@@ -111,7 +111,6 @@ const AddAccounts = ({ color = "light" }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     mutate({
       ...data,
       installments: installments.map((item) => ({
@@ -325,9 +324,9 @@ const AddAccounts = ({ color = "light" }) => {
                                         (item, i) => i === index
                                       );
                                       setInstallments((prevState) => [
-                                        ...prevState.slice(0, index),
+                                        ...prevState?.slice(0, index),
                                         { ...row, claimed: value },
-                                        ...prevState.slice(
+                                        ...prevState?.slice(
                                           index + 1,
                                           installments.length
                                         ),
@@ -361,12 +360,12 @@ const AddAccounts = ({ color = "light" }) => {
                                   {item?.claimed?.value === "yes" && (
                                     <InputField
                                       type="text"
-                                      name="comission"
-                                      placeholder="Enter Comission"
+                                      name="commission"
+                                      placeholder="Enter Commission"
                                       onChange={(e) =>
                                         handleInputChange(e, index)
                                       }
-                                      value={item?.comission}
+                                      value={item?.commission}
                                     />
                                   )}
                                 </div>

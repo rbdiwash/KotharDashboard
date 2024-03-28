@@ -4,7 +4,6 @@ import React from "react";
 
 const ClientDropdown = ({ data, setData }) => {
   const [{ clientList }, {}] = useKothar();
-  console.log(data?.name, data?.id);
   return (
     <div className="relative w-full mb-3">
       <label className="input-label">Select Client *</label>

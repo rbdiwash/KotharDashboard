@@ -24,9 +24,9 @@ import UploadFile from "components/Input/UploadFile";
 const AddSkillAssessment = ({ color = "light" }) => {
   const [data, setData] = useState({
     status: false,
-    visa_status: null,
-    course_provider: null,
-    course_completed: null,
+    visaStatus: null,
+    courseProvider: null,
+    courseCompleted: null,
     resume: "",
     academic: [],
     py: [],
@@ -73,7 +73,6 @@ const AddSkillAssessment = ({ color = "light" }) => {
     e.preventDefault();
     mutate({ ...data });
   };
-
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">
@@ -209,10 +208,10 @@ const AddSkillAssessment = ({ color = "light" }) => {
                     <InputField
                       label="Course Provider"
                       placeholder="Course Provider"
-                      name="course_provider"
+                      name="courseProvider"
                       required
                       type="text"
-                      value={data?.course_provider}
+                      value={data?.courseProvider}
                       // onChange={handleInputChange}
                     />
                   </div>
@@ -220,10 +219,10 @@ const AddSkillAssessment = ({ color = "light" }) => {
                     <InputField
                       label="Course Completed"
                       placeholder="Course Completed"
-                      name="course_completed"
+                      name="courseCompleted"
                       required
                       type="text"
-                      value={data?.course_completed}
+                      value={data?.courseCompleted}
                       // onChange={handleInputChange}
                     />
                   </div>{" "}
@@ -296,11 +295,11 @@ const AddSkillAssessment = ({ color = "light" }) => {
                     <InputField
                       label="Visa Status"
                       placeholder="Visa Status"
-                      name="visa_status"
+                      name="visaStatus"
                       disabled
                       required
                       type="text"
-                      value={data?.visa_status}
+                      value={data?.visaStatus}
                       // onChange={handleInputChange}
                     />
                   </div>
@@ -308,11 +307,11 @@ const AddSkillAssessment = ({ color = "light" }) => {
                   <div className="relative w-full mb-3">
                     <InputField
                       label="Visa Expiry"
-                      name="visa_expiry"
+                      name="visaExpiry"
                       required
                       type="date"
                       disabled
-                      value={data?.visa_expiry}
+                      value={data?.visaExpiry}
                       // onChange={handleInputChange}
                     />
                   </div>

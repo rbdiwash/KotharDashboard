@@ -24,6 +24,11 @@ const GeneralInfo = ({ generalInfo, setGeneralInfo }) => {
       setGeneralInfo((prevState) => ({ ...prevState, [name]: value }));
     }
   };
+  const maritalStatusOptions = [
+    { label: "Single", value: "single" },
+    { label: "Married", value: "married" },
+    { label: "Divorced", value: "divorced" },
+  ];
 
   return (
     <div className="grid grid-cols-3 gap-8 mt-6 items-end">
@@ -86,21 +91,21 @@ const GeneralInfo = ({ generalInfo, setGeneralInfo }) => {
           disablePortal
           size="small"
           required
-          options={[
-            { label: "Single", value: "single" },
-            { label: "Married", value: "married" },
-            { label: "Divorced", value: "divorced" },
-          ]}
+          options={maritalStatusOptions}
           renderInput={(params) => (
             <TextField {...params} label="Marital Status" />
           )}
           onChange={(e, value) => {
             setGeneralInfo((prevState) => ({
               ...prevState,
-              maritalStatus: value,
+              maritalStatus: value.value,
             }));
           }}
-          value={generalInfo?.maritalStatus}
+          value={
+            maritalStatusOptions.find(
+              (item) => item?.value === generalInfo?.maritalStatus
+            ) ?? null
+          }
         />
       </div>
       <div className="relative w-full mb-3">

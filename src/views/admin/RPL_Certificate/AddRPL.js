@@ -35,31 +35,30 @@ const AddRPLCertificate = ({ color = "light" }) => {
     email: null,
     number: null,
     usiNumber: null,
-    visa_status: null,
-    visa_expiry: "",
+    visaStatus: null,
+    visaExpiry: "",
     certificate: "",
-    currently_enrolled_course: "",
-    currently_enrolled_university: "",
-    course_end_data: "",
-    placement_required: null,
+    currentlyEnrolledCourse: "",
+    currentlyEnrolledUniversity: "",
+    courseEndDate: "",
+    placementRequired: null,
     passport: "",
     visa: "",
     coe: [],
-    license_file: "",
-    photocard_file: "",
-    bank_card_file: "",
-    rsa_file: "",
-    transcript_file: "",
-    bills_file: "",
-    covid_file: "",
-    flu_file: "",
-    police_check_file: "",
-    ndis_file: "",
-    wwvp_file: "",
-    nhhi_file: "",
-    ndis_file: "",
+    licenseFile: "",
+    photoCardFile: "",
+    bankCardFile: "",
+    rsaFile: "",
+    transcriptFile: "",
+    billsFile: "",
+    covidFile: "",
+    fluFile: "",
+    policeCheckFile: "",
+    ndisFile: "",
+    wwvpFile: "",
+    nhhiFile: "",
   });
-  const [{}, { refetchConsultancy }] = useKothar();
+  const [{}, { getRPLList }] = useKothar();
 
   const navigate = useNavigate();
   const handleInputChange = (e) => {
@@ -71,7 +70,12 @@ const AddRPLCertificate = ({ color = "light" }) => {
 
   useEffect(() => {
     if (state) {
-      setData({ ...state?.item });
+      console.log(state.item);
+      setData({
+        ...state?.item,
+        placementRequired:
+          state?.item?.placementRequired === true ? "yes" : "no",
+      });
     }
   }, [state]);
 
@@ -81,7 +85,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
         data?.id ? "Data updated Successfully" : "Data added Successfully"
       );
       navigate("/admin/rpl-certificate");
-      refetchConsultancy();
+      getRPLList();
     },
     onError() {
       toast.error(data?.id ? "Error Updating Data" : "Error Submitting Data");
@@ -97,7 +101,13 @@ const AddRPLCertificate = ({ color = "light" }) => {
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    mutate({ ...data, useExistingClientData: true });
+    console.log(data);
+
+    // mutate({
+    //   ...data,
+    //   useExistingClientData: true,
+    //   placementRequired: "yes" ? true : false,
+    // });
   };
 
   const documents_for_placement = [
@@ -127,17 +137,13 @@ const AddRPLCertificate = ({ color = "light" }) => {
       [event.target.name]: event.target.checked,
     });
   };
-  const handleChangeCheckbox = (event) => {
-    setData({
-      ...data,
-      [event.target.name]: event.target.checked,
-    });
-  };
 
-  const { license, photocard, bank_card, rsa, transcript, bills } = data;
+  const { license, photocard, bank_card, rsa, bills, insurance_student_card } =
+    data;
   const error =
-    [license, photocard, bank_card, rsa, transcript, bills].filter((v) => v)
-      .length < 3;
+    [license, photocard, bank_card, rsa, bills, insurance_student_card].filter(
+      (v) => v
+    ).length < 3;
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">
@@ -289,10 +295,10 @@ const AddRPLCertificate = ({ color = "light" }) => {
                     <InputField
                       label="Visa Status"
                       placeholder="Visa Status"
-                      name="visa_status"
+                      name="visaStatus"
                       required
                       type="text"
-                      value={data?.visa_status}
+                      value={data?.visaStatus}
                       disabled
                     />
                   </div>
@@ -300,10 +306,10 @@ const AddRPLCertificate = ({ color = "light" }) => {
                   <div className="relative w-full mb-3">
                     <InputField
                       label="Visa Expiry"
-                      name="visa_expiry"
+                      name="visaExpiry"
                       required
                       type="date"
-                      value={data?.visa_expiry}
+                      value={data?.visaExpiry}
                       disabled
                     />
                   </div>
@@ -343,10 +349,10 @@ const AddRPLCertificate = ({ color = "light" }) => {
                       fullWidth
                       label="Currently Enrolled Course"
                       placeholder="Currently Enrolled Course"
-                      name="currently_enrolled_course"
+                      name="currentlyEnrolledCourse"
                       required
                       type="text"
-                      value={data?.currently_enrolled_course}
+                      value={data?.currentlyEnrolledCourse}
                       onChange={handleInputChange}
                     />
                   </div>
@@ -355,10 +361,10 @@ const AddRPLCertificate = ({ color = "light" }) => {
                       fullWidth
                       label="Currently Enrolled University"
                       placeholder="Currently Enrolled University"
-                      name="currently_enrolled_university"
+                      name="currentlyEnrolledUniversity"
                       required
                       type="text"
-                      value={data?.currently_enrolled_university}
+                      value={data?.currentlyEnrolledUniversity}
                       onChange={handleInputChange}
                     />
                   </div>
@@ -367,10 +373,10 @@ const AddRPLCertificate = ({ color = "light" }) => {
                       fullWidth
                       label="Expected Course End Date"
                       placeholder="Expected Course End Date"
-                      name="course_end_data"
+                      name="courseEndDate"
                       required
                       type="date"
-                      value={data?.course_end_data}
+                      value={data?.courseEndDate}
                       onChange={handleInputChange}
                     />
                   </div>
@@ -382,8 +388,9 @@ const AddRPLCertificate = ({ color = "light" }) => {
                       <RadioGroup
                         row
                         required
-                        defaultValue="female"
-                        name="radio-buttons-group"
+                        name="placementRequired"
+                        value={data?.placementRequired}
+                        onChange={handleInputChange}
                       >
                         <FormControlLabel
                           value="yes"
@@ -502,7 +509,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                             setData,
                             label: "any Australian Licence",
                             imageKey: "license_file",
-                            required: true,
+                            // required: true,
                           }}
                         />
                       )}
@@ -523,7 +530,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                             setData,
                             label: "any Photo Card",
                             imageKey: "photocard_file",
-                            required: true,
+                            // required: true,
                           }}
                         />
                       )}
@@ -544,7 +551,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                             setData,
                             label: "Bank Card Document",
                             imageKey: "bank_card_file",
-                            required: true,
+                            // required: true,
                           }}
                         />
                       )}

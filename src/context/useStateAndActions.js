@@ -211,7 +211,7 @@ const useStateAndActions = () => {
     return res?.data?.data;
   };
   const { data: accountsList = [], refetch: refetchAccountList } = useQuery(
-    ["insurance"],
+    ["accounts"],
     getAccountsList,
     {
       refetchOnWindowFocus: false,

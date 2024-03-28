@@ -22,6 +22,7 @@ import Box from "@mui/material/Box";
 import SearchField from "components/SearchField";
 import DiscussionModal from "components/Modals/DiscussionModal";
 import { useEffect } from "react";
+import { delete_data } from "const/axios";
 
 const RPLCertificate = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
@@ -53,16 +54,10 @@ const RPLCertificate = ({ color = "light" }) => {
       });
   };
   const deleteData = () => {
-    axios
-      .delete(`${API_URL}/rpl/${openConfirmationModal?.id}`)
-      .then((res) => {
-        toast.success("Data Deleted Successfully");
-        setOpenConfirmationModal({ state: false, id: null });
-        getRPLList();
-      })
-      .error((err) => {
-        toast.error("Error Deleting Data");
-      });
+    delete_data(`${API_URL}/rpl/${openConfirmationModal?.id}`, () => {
+      setOpenConfirmationModal({ state: false, id: null });
+      getRPLList();
+    });
   };
   useEffect(() => {
     if (searchText.length > 0) {
