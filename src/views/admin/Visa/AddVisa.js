@@ -433,20 +433,20 @@ const AddVisaDetails = ({ color = "light" }) => {
                     <InputField
                       label="PTE Score"
                       placeholder="PTE Score"
-                      name="pte_score"
+                      name="pteScore"
                       required
                       type="text"
-                      value={data?.pte_score}
+                      value={data?.pteScore}
                       onChange={handleInputChange}
                     />
                   </div>
                   <div className="relative w-full mb-3">
                     <InputField
                       label="PTE Attainted Date"
-                      name="pte_date"
+                      name="pteDate"
                       required
                       type="date"
-                      value={data?.pte_date}
+                      value={data?.pteDate}
                       onChange={handleInputChange}
                     />
                   </div>{" "}

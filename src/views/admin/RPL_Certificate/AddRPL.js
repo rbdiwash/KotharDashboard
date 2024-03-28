@@ -101,13 +101,12 @@ const AddRPLCertificate = ({ color = "light" }) => {
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(data);
 
-    // mutate({
-    //   ...data,
-    //   useExistingClientData: true,
-    //   placementRequired: "yes" ? true : false,
-    // });
+    mutate({
+      ...data,
+      useExistingClientData: true,
+      placementRequired: "yes" ? true : false,
+    });
   };
 
   const documents_for_placement = [
