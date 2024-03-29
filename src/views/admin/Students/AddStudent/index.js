@@ -96,10 +96,10 @@ const AddStudent = () => {
   });
   const [workInfo, setWorkInfo] = useState([]);
   const [testInfo, setTestInfo] = useState({
-    testName: null,
-    score: null,
-    uniqueId: null,
-    doe: null,
+    testName1: null,
+    score1: null,
+    uniqueId1: null,
+    doe1: null,
     document1: null,
     speaking: null,
     listening: null,
@@ -152,7 +152,7 @@ const AddStudent = () => {
     workInfo: { ...workInfo },
     testInfo: {
       ...testInfo,
-      testName: testInfo?.testName?.value,
+      testName1: testInfo?.testName1?.value,
       testName2: testInfo?.testName2?.value,
     },
   };

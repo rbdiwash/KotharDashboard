@@ -18,11 +18,11 @@ const TestInfo = ({ testInfo, setTestInfo }) => {
             onChange={(e, value) => {
               setTestInfo((prevState) => ({
                 ...prevState,
-                testName: value,
+                testName1: value,
               }));
             }}
             required
-            value={testInfo?.testName}
+            value={testInfo?.testName1}
             label="Test Type"
             options={[
               { label: "IELTS", value: "ielts" },
@@ -48,10 +48,10 @@ const TestInfo = ({ testInfo, setTestInfo }) => {
             size="small"
             label="Overall Score"
             placeholder="Overall Score"
-            name="score"
+            name="score1"
             required
             type="text"
-            value={testInfo?.score}
+            value={testInfo?.score1}
             onChange={handleInputChange}
           />
         </div>
@@ -62,10 +62,10 @@ const TestInfo = ({ testInfo, setTestInfo }) => {
             size="small"
             label="Unique ID"
             placeholder="Unique ID"
-            name="uniqueId"
+            name="uniqueId1"
             required
             type="text"
-            value={testInfo?.uniqueId}
+            value={testInfo?.uniqueId1}
             onChange={handleInputChange}
           />
         </div>
@@ -74,10 +74,10 @@ const TestInfo = ({ testInfo, setTestInfo }) => {
             fullWidth
             label="Date of Examination"
             placeholder="Date of Examination"
-            name="doe"
+            name="doe1"
             required
             type="date"
-            value={testInfo?.doe}
+            value={testInfo?.doe1}
             onChange={handleInputChange}
           />
         </div>
@@ -90,9 +90,9 @@ const TestInfo = ({ testInfo, setTestInfo }) => {
           }}
         />
       </div>
-      {(testInfo?.testName?.value === "ielts" ||
-        testInfo?.testName?.value === "pte" ||
-        testInfo?.testName?.value === "waiver") && (
+      {(testInfo?.testName1?.value === "ielts" ||
+        testInfo?.testName1?.value === "pte" ||
+        testInfo?.testName1?.value === "waiver") && (
         <>
           <div className="grid grid-cols-4 gap-8 mt-2">
             <div className="relative w-full mb-3">
