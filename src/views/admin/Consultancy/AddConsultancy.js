@@ -59,7 +59,7 @@ const AddConsultancy = ({ color = "light" }) => {
     if (data?.id) {
       await axios.put(`${API_URL}/organization/${payload?.id}`, payload);
     } else {
-      await axios.post(`${API_URL}/organization/`, payload);
+      await axios.post(`${API_URL}/organization`, payload);
     }
   }
   const handleSubmit = (e) => {
