@@ -31,6 +31,7 @@ const AddSkillAssessment = ({ color = "light" }) => {
     academic: [],
     py: [],
     gender: "",
+    passport: [],
   });
   const [{}, { refetchSkillList }] = useKothar();
 
@@ -41,7 +42,6 @@ const AddSkillAssessment = ({ color = "light" }) => {
   };
 
   const { state } = useLocation();
-  console.log("🚀  state:", state);
 
   useEffect(() => {
     if (state) {
@@ -106,7 +106,7 @@ const AddSkillAssessment = ({ color = "light" }) => {
                     onChange={(e) => {
                       setData({ ...data, status: e.target.checked });
                     }}
-                    checked={data?.status}
+                    checked={data?.status === "true" ? true : false}
                   />
                 }
                 label="Approved"
@@ -212,7 +212,7 @@ const AddSkillAssessment = ({ color = "light" }) => {
                       required
                       type="text"
                       value={data?.courseProvider}
-                      // onChange={handleInputChange}
+                      onChange={handleInputChange}
                     />
                   </div>
                   <div className="relative w-full mb-3">
@@ -223,7 +223,7 @@ const AddSkillAssessment = ({ color = "light" }) => {
                       required
                       type="text"
                       value={data?.courseCompleted}
-                      // onChange={handleInputChange}
+                      onChange={handleInputChange}
                     />
                   </div>{" "}
                   <div className="relative w-full mb-3">
@@ -334,6 +334,7 @@ const AddSkillAssessment = ({ color = "light" }) => {
                       setData,
                       label: "Full Passport",
                       imageKey: "passport",
+                      type: "multiple",
                     }}
                   />{" "}
                   <UploadFile
