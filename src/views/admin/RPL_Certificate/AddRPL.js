@@ -25,6 +25,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import ClientDropdown from "components/Dropdowns/ClientDropdown";
 import { rpl_status } from "const/constants";
 import UploadFile from "components/Input/UploadFile";
+import { documents_for_placement } from "const/constants";
 
 const AddRPLCertificate = ({ color = "light" }) => {
   const [data, setData] = useState({
@@ -45,12 +46,23 @@ const AddRPLCertificate = ({ color = "light" }) => {
     passport: "",
     visa: "",
     coe: [],
+    status: "",
+
+    license: false,
+    photocard: false,
+    bankCard: false,
+    rsa: false,
+    insuranceStudentCard: false,
+    bills: false,
+
     licenseFile: "",
     photoCardFile: "",
     bankCardFile: "",
     rsaFile: "",
-    transcriptFile: "",
+    insuranceStudentCardFile: "",
     billsFile: "",
+
+    transcriptFile: "",
     covidFile: "",
     fluFile: "",
     policeCheckFile: "",
@@ -70,11 +82,11 @@ const AddRPLCertificate = ({ color = "light" }) => {
 
   useEffect(() => {
     if (state) {
-      console.log(state.item);
       setData({
         ...state?.item,
         placementRequired:
           state?.item?.placementRequired === true ? "yes" : "no",
+        license: state?.item?.licenseFile ? true : false,
       });
     }
   }, [state]);
@@ -101,34 +113,13 @@ const AddRPLCertificate = ({ color = "light" }) => {
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    if (error) toast.error("Need 100 points ID documents to submit");
     mutate({
       ...data,
       useExistingClientData: true,
       placementRequired: "yes" ? true : false,
     });
   };
-
-  const documents_for_placement = [
-    {
-      label: "Covid Vaccination Certificate (Australian Converted)",
-      value: "covid",
-    },
-    { label: "Flu Vaccination", value: "flu" },
-    { label: "Police Check", value: "police_check" },
-    { label: "NDIS Worker Check(if Asked)", value: "ndis" },
-    { label: "WWVP( For Canberra Client only)", value: "wwvp" },
-    {
-      label:
-        "NHHI Certificate (from the link available on Handbook Provided By Us)",
-      value: "nhhi",
-    },
-    {
-      label:
-        "NDIS Worker orientation (from the link available on Handbook Provided By Us)",
-      value: "ndis",
-    },
-  ];
 
   const handleChange = (event) => {
     setData({
@@ -137,10 +128,10 @@ const AddRPLCertificate = ({ color = "light" }) => {
     });
   };
 
-  const { license, photocard, bank_card, rsa, bills, insurance_student_card } =
+  const { license, photocard, bankCard, rsa, bills, insuranceStudentCard } =
     data;
   const error =
-    [license, photocard, bank_card, rsa, bills, insurance_student_card].filter(
+    [license, photocard, bankCard, rsa, bills, insuranceStudentCard].filter(
       (v) => v
     ).length < 3;
 
@@ -153,50 +144,52 @@ const AddRPLCertificate = ({ color = "light" }) => {
             (color === "light" ? "bg-white" : "bg-sky-900 text-white")
           }
         >
-          <div className="rounded-t mb-0 px-10 py-3 border-0">
-            <div className="flex items-center">
-              <div className="relative w-full  max-w-full flex justify-start gap-4 items-center">
-                <IoArrowBack
-                  className="text-xl cursor-pointer"
-                  onClick={() => navigate(-1)}
+          <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+            <div className="rounded-t mb-0 px-10 py-3 border-0">
+              <div className="flex items-center">
+                <div className="relative w-full  max-w-full flex justify-start gap-4 items-center">
+                  <IoArrowBack
+                    className="text-xl cursor-pointer"
+                    onClick={() => navigate(-1)}
+                  />
+                  <h3
+                    className={
+                      "font-semibold text-xl " +
+                      (color === "light" ? "text-slate-700" : "text-white")
+                    }
+                  >
+                    Add RPL Certificate
+                  </h3>
+                </div>
+
+                <Autocomplete
+                  onChange={(e, value) => {
+                    setData((prevState) => ({
+                      ...prevState,
+                      status: value?.value,
+                    }));
+                  }}
+                  required
+                  value={rpl_status?.find(
+                    (item) => item?.value === data?.status
+                  )}
+                  options={rpl_status}
+                  disablePortal
+                  renderInput={(params) => (
+                    <TextField {...params} label="Select RPL Status" />
+                  )}
+                  ListboxProps={{
+                    style: {
+                      maxHeight: "180px",
+                    },
+                  }}
+                  size="small"
+                  sx={{ width: 300 }}
                 />
-                <h3
-                  className={
-                    "font-semibold text-xl " +
-                    (color === "light" ? "text-slate-700" : "text-white")
-                  }
-                >
-                  Add RPL Certificate
-                </h3>
               </div>
-              <Autocomplete
-                onChange={(e, value) => {
-                  setData((prevState) => ({
-                    ...prevState,
-                    status: value?.value,
-                  }));
-                }}
-                required
-                value={data?.status}
-                placeholder="Select Status"
-                options={rpl_status}
-                disablePortal
-                renderInput={(params) => (
-                  <TextField {...params} label="Select Status" />
-                )}
-                ListboxProps={{
-                  style: {
-                    maxHeight: "180px",
-                  },
-                }}
-                size="small"
-                sx={{ width: 300 }}
-              />
             </div>
-          </div>
-          <div className="block w-full overflow-x-auto mt-8">
-            <div className="flex-auto lg:px-10 py-10 pt-0">
-              <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+            <div className="block w-full overflow-x-auto mt-8">
+              <div className="flex-auto lg:px-10 py-10 pt-0">
                 <p className="text-xl font-semibold tracking-wider bg-orange-500 p-2 text-white">
                   Personal Details
                 </p>
@@ -536,20 +529,20 @@ const AddRPLCertificate = ({ color = "light" }) => {
                       <FormControlLabel
                         control={
                           <Checkbox
-                            checked={data?.bank_card}
+                            checked={data?.bankCard}
                             onChange={handleChange}
-                            name="bank_card"
+                            name="bankCard"
                           />
                         }
                         label="Bank Card"
                       />
-                      {data?.bank_card && (
+                      {data?.bankCard && (
                         <UploadFile
                           {...{
                             data,
                             setData,
                             label: "Bank Card Document",
-                            imageKey: "bank_card_file",
+                            imageKey: "bankCardFile",
                             // required: true,
                           }}
                         />
@@ -562,7 +555,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                             name="rsa"
                           />
                         }
-                        label="RSA/ Whitecard"
+                        label="RSA/Whitecard"
                       />
                       {data?.rsa && (
                         <UploadFile
@@ -578,20 +571,20 @@ const AddRPLCertificate = ({ color = "light" }) => {
                       <FormControlLabel
                         control={
                           <Checkbox
-                            checked={data?.insurance_student_card}
+                            checked={data?.insuranceStudentCard}
                             onChange={handleChange}
-                            name="insurance_student_card"
+                            name="insuranceStudentCard"
                           />
                         }
                         label=" Insurance/Student Card"
                       />
-                      {data?.insurance_student_card && (
+                      {data?.insuranceStudentCard && (
                         <UploadFile
                           {...{
                             data,
                             setData,
                             label: "Insurance Card/Student Card",
-                            imageKey: "insurance_student_card_file",
+                            imageKey: "insuranceStudentCardFile",
                             required: true,
                           }}
                         />
@@ -612,7 +605,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                             data,
                             setData,
                             label: "Bills",
-                            imageKey: "bills_file",
+                            imageKey: "billsFile",
                             required: true,
                           }}
                         />
@@ -664,9 +657,9 @@ const AddRPLCertificate = ({ color = "light" }) => {
                     Submit
                   </Button>
                 </div>
-              </form>
+              </div>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>

@@ -30,10 +30,8 @@ const AddUsers = () => {
     username: null,
     type: "",
   });
-  console.log("🚀  data:", data);
 
   const [{ consultancyList }, {}] = useKothar();
-  console.log("🚀  consultancyList:", consultancyList);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setData((prevState) => ({ ...prevState, [name]: value }));

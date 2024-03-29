@@ -46,7 +46,7 @@ const University = ({ color = "light" }) => {
         Cell: ({ renderedCellValue }) => (
           <Tooltip title={renderedCellValue}>
             <div className="flex items-center">
-              <div className="h-10 mr-2">{renderedCellValue}</div>
+              <div className=" mr-2">{renderedCellValue}</div>
             </div>
           </Tooltip>
         ),

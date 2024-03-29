@@ -97,14 +97,56 @@ export const student_status = [
   { label: "Admission SUccessful", value: "admission Successful" },
 ];
 export const rpl_status = [
-  { label: "Incomplete Application", value: "incomplete_application" },
-  { label: "Application Ready", value: "application_ready" },
-  { label: "Placement Waiting", value: "placement_waiting" },
-  { label: "Placement Processing", value: "placement_processing" },
-  { label: "Ready To Apply", value: "ready_to_apply" },
-  { label: "Certificate Processing", value: "certificate_processing" },
-  { label: "Certificate Ready", value: "certificate_ready" },
-  { label: "Payment Completed", value: "payment_completed" },
-  { label: "Softcopy sent", value: "softcopy_sent" },
-  { label: "Hardcopy sent", value: "hardcopy_sent" },
+  {
+    label: "Incomplete Application",
+    value: "Incomplete Application",
+  },
+  {
+    label: "Application Ready",
+    value: "Application Ready",
+  },
+  {
+    label: "Placement Waiting",
+    value: "Placement Waiting",
+  },
+  {
+    label: "Placement Processing",
+    value: "Placement Processing",
+  },
+  { label: "Ready To Apply", value: "Ready To Apply" },
+  {
+    label: "Certificate Processing",
+    value: "Certificate Processing",
+  },
+  {
+    label: "Certificate Ready",
+    value: "Certificate Ready",
+  },
+  {
+    label: "Payment Completed",
+    value: "Payment Completed",
+  },
+  { label: "Softcopy sent", value: "Softcopy sent" },
+  { label: "Hardcopy sent", value: "Hardcopy sent" },
+];
+
+export const documents_for_placement = [
+  {
+    label: "Covid Vaccination Certificate (Australian Converted)",
+    value: "covid",
+  },
+  { label: "Flu Vaccination", value: "flu" },
+  { label: "Police Check", value: "police_check" },
+  { label: "NDIS Worker Check(if Asked)", value: "ndis" },
+  { label: "WWVP( For Canberra Client only)", value: "wwvp" },
+  {
+    label:
+      "NHHI Certificate (from the link available on Handbook Provided By Us)",
+    value: "nhhi",
+  },
+  {
+    label:
+      "NDIS Worker orientation (from the link available on Handbook Provided By Us)",
+    value: "ndis",
+  },
 ];

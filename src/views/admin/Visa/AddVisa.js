@@ -33,8 +33,8 @@ const AddVisaDetails = ({ color = "light" }) => {
     email: null,
     number: null,
     usiNumber: null,
-    visa_status: null,
-    visa_expiry: "",
+    visaStatus: null,
+    visaExpiry: "",
     certificate: "",
     currentlyEnrolledCourse: "",
     currentlyEnrolledUniversity: "",
@@ -49,11 +49,11 @@ const AddVisaDetails = ({ color = "light" }) => {
     birthCertificate: "",
     currentVisa: "",
     insuranceDoc: "",
-    allAcademic: "",
-    coe: "",
-    completionLetter: "",
-    graduationCertificate: "",
-    ieltsPte: "",
+    allAcademic: [],
+    coe: [],
+    completionLetter: [],
+    graduationCertificate: [],
+    ieltsPte: [],
     policeReport: "",
     relationshipCertificate: "",
     marriageCertificate: "",
@@ -312,10 +312,10 @@ const AddVisaDetails = ({ color = "light" }) => {
                   <div className="relative w-full mb-3">
                     <InputField
                       label="Date of Issue"
-                      name="dataOfIssue"
+                      name="dateOfIssue"
                       required
                       type="date"
-                      value={data?.dataOfIssue}
+                      value={data?.dateOfIssue}
                       disabled
                     />
                   </div>
@@ -334,10 +334,10 @@ const AddVisaDetails = ({ color = "light" }) => {
                     <InputField
                       label="Visa Status"
                       placeholder="Visa Status"
-                      name="visa_status"
+                      name="visaStatus"
                       required
                       type="text"
-                      value={data?.visa_status}
+                      value={data?.visaStatus}
                       disabled
                     />
                   </div>
@@ -345,10 +345,10 @@ const AddVisaDetails = ({ color = "light" }) => {
                   <div className="relative w-full mb-3">
                     <InputField
                       label="Visa Expiry"
-                      name="visa_expiry"
+                      name="visaExpiry"
                       required
                       type="date"
-                      value={data?.visa_expiry}
+                      value={data?.visaExpiry}
                       disabled
                     />
                   </div>
@@ -577,7 +577,6 @@ const AddVisaDetails = ({ color = "light" }) => {
                       setData,
                       label: "Police Report (National Police Certificate)",
                       imageKey: "policeReport",
-                      type: "multiple",
                     }}
                   />
 
@@ -610,6 +609,7 @@ const AddVisaDetails = ({ color = "light" }) => {
                       type="text"
                       className="border px-3 py-3 placeholder-slate-300 text-slate-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       rows="4"
+                      name="note"
                       value={data?.note}
                       onChange={(e) => handleInputChange(e, "note")}
                     ></textarea>
@@ -634,16 +634,3 @@ const AddVisaDetails = ({ color = "light" }) => {
 };
 
 export default AddVisaDetails;
-
-const certificates = [
-  "Certificate IV in Ageing Support with First Aid And CPR",
-  "Certificate IV in Disability Support with First Aid And CPR",
-  "Certificate III in Individual Support with First Aid And CPR",
-  "Certificate IV in Ageing Support",
-  "Certificate IV in Disability Support",
-  "Certificate III in Individual Support",
-  "Certificate III in Childcare",
-  "Diploma in Childcare",
-  "Certificate Iii in Comercial Cookary",
-  "Certificate IV in Comercial Cookary",
-];

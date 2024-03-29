@@ -19,8 +19,8 @@ const ClientDropdown = ({ data, setData }) => {
             email: value?.email,
             number: value?.number,
             passportNumber: value?.passportNumber,
-            visa_expiry: value?.visa_expiry,
-            visa_status: value?.visa_status,
+            visaExpiry: value?.visaExpiry,
+            visaStatus: value?.visaStatus,
             passportExpiry: value?.passportExpiry,
             dateOfIssue: value?.dateOfIssue,
           }));

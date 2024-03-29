@@ -50,7 +50,7 @@ const UploadFile = ({
   const handleDeletePdf = (name, i) => {
     setData({
       ...data,
-      [imageKey]: [...data?.[imageKey].filter((item, index) => i !== index)],
+      [imageKey]: [...data?.[imageKey]?.filter((item, index) => i !== index)],
     });
   };
 

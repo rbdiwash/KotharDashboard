@@ -45,7 +45,7 @@ const Clients = ({ color = "light" }) => {
         (client) =>
           client?.name?.toLowerCase().includes(searchText?.toLowerCase()) ||
           client?.email?.toLowerCase().includes(searchText?.toLowerCase()) ||
-          client?.visa_status?.toLowerCase().includes(searchText?.toLowerCase())
+          client?.visaStatus?.toLowerCase().includes(searchText?.toLowerCase())
       );
       setFilteredData(filtered);
     } else {
@@ -176,12 +176,12 @@ const Clients = ({ color = "light" }) => {
                       </td>
                       <td className="table-data">
                         <div className="flex items-center">
-                          {item?.visa_status || "-"}
+                          {item?.visaStatus || "-"}
                         </div>
                       </td>
                       <td className="table-data">
                         <div className="flex items-center">
-                          {item?.visa_expiry || "-"}
+                          {item?.visaExpiry || "-"}
                         </div>
                       </td>
 

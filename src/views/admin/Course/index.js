@@ -122,7 +122,7 @@ const Course = ({ color = "light" }) => {
                       <td className="table-data  ">
                         {item?.universities
                           ?.map((item) => item?.university)
-                          .join("/") || "-"}
+                          .join(", ") || "-"}
                       </td>
                       <td className="table-data ">{item?.intake || "-"}</td>{" "}
                       <td className="table-data">
@@ -132,11 +132,6 @@ const Course = ({ color = "light" }) => {
                       </td>
                       <td className="table-data text-right">
                         <div className="flex items-center">
-                          {/* <Tooltip title="View" arrow>
-                            <IconButton>
-                              <AiFillEye className="text-sky-600 cursor-pointer" />
-                            </IconButton>
-                          </Tooltip> */}
                           <Tooltip title="Edit Course" arrow>
                             <IconButton
                               onClick={() =>

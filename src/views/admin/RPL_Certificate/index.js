@@ -79,7 +79,8 @@ const RPLCertificate = ({ color = "light" }) => {
 
   const handleChange = (event, newValue, val) => {
     setValue(newValue);
-    const status = event.target.innerText.toLowerCase().split(" ").join("_");
+    // const status = event.target.innerText.toLowerCase().split(" ").join("_");
+    const status = event.target.innerText;
     setLoading(true);
     getRPLList(`status=${status}`);
   };
@@ -268,7 +269,7 @@ const TabContent = ({
 
                     <td className="table-data">
                       <div className="flex items-center">
-                        {item?.caseOfficer || "-"}
+                        {item?.certificate || "-"}
                       </div>
                     </td>
                     <td className="table-data">
@@ -278,7 +279,7 @@ const TabContent = ({
                     </td>
                     <td className="table-data">
                       <div className="flex items-center">
-                        {item?.certificate || "-"}
+                        {item?.caseOfficer || "-"}
                       </div>
                     </td>
                     <td className="table-data">
