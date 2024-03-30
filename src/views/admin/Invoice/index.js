@@ -67,16 +67,13 @@ const Invoice = ({ color = "dark" }) => {
         const blob = new Blob([res.data], {
           type: "application/pdf; charset=utf-8",
         });
-        console.log("RESPONSE BLOB: ", blob);
 
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = "invoice.pdf"; // Specify the filename for the downloaded file
+        link.download = item?.title;
         document.body.appendChild(link);
         link.click();
-
-        // Clean up: remove the link and revoke the URL
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
       })
