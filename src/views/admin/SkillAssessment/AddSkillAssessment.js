@@ -106,7 +106,7 @@ const AddSkillAssessment = ({ color = "light" }) => {
                     onChange={(e) => {
                       setData({ ...data, status: e.target.checked });
                     }}
-                    checked={data?.status === "true" ? true : false}
+                    checked={data?.status}
                   />
                 }
                 label="Approved"

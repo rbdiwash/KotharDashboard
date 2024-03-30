@@ -43,19 +43,20 @@ export default function InsuranceModal({
     paymentType: "",
     startingDate: new Date().toISOString().split("T")[0],
     type: "",
-    childrens: 0,
+    children: 0,
     child: childName,
+    coverType: null,
   };
   const [data, setData] = React.useState(initalState);
   useEffect(() => {
     if (openInsuranceForm?.id) {
-      console.log(openInsuranceForm.id);
       setData(openInsuranceForm?.id);
       setChildName(openInsuranceForm?.id?.child);
     } else {
       setData(initalState);
     }
   }, [openInsuranceForm]);
+
   const { mutate } = useMutation(postData, {
     onSuccess(suc) {
       toast.success(
@@ -80,9 +81,6 @@ export default function InsuranceModal({
     mutate({
       ...data,
       firstName: data?.name,
-      coverType: data?.coverType?.value,
-      type: data?.type?.value,
-      insuranceCompany: data?.insuranceCompany?.value,
       child: childName,
       cost: Number(data?.cost),
     });
@@ -90,9 +88,9 @@ export default function InsuranceModal({
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setData((prevState) => ({ ...prevState, [name]: value }));
-    if (name === "childrens") {
+    if (name === "children") {
       const arr = [];
-      for (let i = 0; i < data?.childrens; i++) {
+      for (let i = 0; i < data?.children; i++) {
         arr.push(i + 1);
         childName.push(i + 1);
       }
@@ -101,11 +99,11 @@ export default function InsuranceModal({
 
   const arrayForChildrens = useMemo(() => {
     const arr = [];
-    for (let i = 0; i < data?.childrens; i++) {
+    for (let i = 0; i < data?.children; i++) {
       arr.push({ index: i + 1, name: "" });
     }
     return arr;
-  }, [data?.childrens]);
+  }, [data?.children]);
 
   const handleChildInputChange = (value, name, i) => {
     const foundChild = childName.find((arg, index) => i === index);
@@ -115,6 +113,11 @@ export default function InsuranceModal({
       ...prevState?.slice(i + 1, childName.length),
     ]);
   };
+
+  const insuranceTypeOptions = [
+    { label: "OSHC", value: "OSHC" },
+    { label: "OVHC", value: "OVHC" },
+  ];
 
   return (
     <div>
@@ -161,11 +164,15 @@ export default function InsuranceModal({
                   onChange={(e, value) => {
                     setData((prevState) => ({
                       ...prevState,
-                      insuranceCompany: value,
+                      insuranceCompany: value.value,
                     }));
                   }}
                   required
-                  value={data?.insuranceCompany}
+                  value={
+                    insurance_companies?.find(
+                      (item) => item?.value === data?.insuranceCompany
+                    ) || null
+                  }
                   options={insurance_companies}
                   disablePortal
                   renderInput={(params) => (
@@ -178,6 +185,11 @@ export default function InsuranceModal({
                   }}
                 />
               </div>
+              {console.log(
+                insurance_companies?.find(
+                  (item) => item?.value === data?.insuranceCompany
+                )
+              )}
               <div className="relative w-full mb-3">
                 <InputField
                   type="date"
@@ -229,16 +241,16 @@ export default function InsuranceModal({
                   onChange={(e, value) => {
                     setData((prevState) => ({
                       ...prevState,
-                      type: value,
+                      type: value?.value,
                     }));
                   }}
                   required
-                  freeSolo
-                  value={data?.type}
-                  options={[
-                    { label: "OSHC", value: "OSHC" },
-                    { label: "OVHC", value: "OVHC" },
-                  ]}
+                  value={
+                    insuranceTypeOptions?.find(
+                      (item) => item?.value === data?.type
+                    ) || null
+                  }
+                  options={insuranceTypeOptions}
                   disablePortal
                   renderInput={(params) => (
                     <TextField {...params} label="Select Insurance Type" />
@@ -285,7 +297,11 @@ export default function InsuranceModal({
                   }}
                   required
                   freeSolo
-                  value={data?.coverType}
+                  value={
+                    insurance_cover_type?.find(
+                      (item) => item?.value === data?.coverType
+                    ) || null
+                  }
                   options={insurance_cover_type}
                   disablePortal
                   renderInput={(params) => (
@@ -301,8 +317,8 @@ export default function InsuranceModal({
                   }}
                 />
               </div>
-              {(data?.coverType?.value === "Couple" ||
-                data?.coverType?.value === "Family") && (
+              {(data?.coverType === "Couple" ||
+                data?.coverType === "Family") && (
                 <>
                   <div className="relative w-full mb-3">
                     <InputField
@@ -310,7 +326,7 @@ export default function InsuranceModal({
                       placeholder="Spouse Name"
                       name="spouseName"
                       label="Spouse Name"
-                      required={data?.coverType?.value === "couple"}
+                      required={data?.coverType === "couple"}
                       value={data?.spouseName}
                       onChange={handleInputChange}
                     />
@@ -321,7 +337,7 @@ export default function InsuranceModal({
                       placeholder="Spouse Address"
                       name="spouseAddress"
                       label="Spouse Address"
-                      required={data?.coverType?.value === "couple"}
+                      required={data?.coverType === "couple"}
                       value={data?.spouseAddress}
                       onChange={handleInputChange}
                     />
@@ -332,24 +348,24 @@ export default function InsuranceModal({
                       placeholder="Spouse Phone Number"
                       name="spousePhoneNumber"
                       label="Spouse Phone Number"
-                      required={data?.coverType?.value === "couple"}
+                      required={data?.coverType === "couple"}
                       value={data?.spousePhoneNumber}
                       onChange={handleInputChange}
                     />
                   </div>
                 </>
               )}
-              {(data?.coverType?.value === "Family" ||
-                data?.coverType?.value === "Single Parent") && (
+              {(data?.coverType === "Family" ||
+                data?.coverType === "Single Parent") && (
                 <>
                   <div className="relative w-full mb-0">
                     <InputField
                       type="text"
                       placeholder="Number of Childrens"
-                      name="childrens"
+                      name="children"
                       label="Number of Childrens"
-                      required={data?.coverType?.value === "couple"}
-                      value={data?.childrens}
+                      required={data?.coverType === "couple"}
+                      value={data?.children}
                       onChange={handleInputChange}
                     />
                   </div>
@@ -363,8 +379,8 @@ export default function InsuranceModal({
                       placeholder={`Children Name ${item?.index}`}
                       name={`child${item?.index}`}
                       label={`Children Name ${item?.index}`}
-                      required={data?.coverType?.value === "couple"}
-                      value={childName[item]}
+                      required={data?.coverType === "couple"}
+                      value={childName[i]}
                       onChange={(e) =>
                         handleChildInputChange(
                           e.target.value,
@@ -382,7 +398,7 @@ export default function InsuranceModal({
               Cancel
             </Button>
             <Button variant="contained" autoFocus onClick={handleSubmit}>
-              Save
+              {openInsuranceForm?.id ? "Update" : "Save"}
             </Button>
           </DialogActions>
         </form>
@@ -423,8 +439,3 @@ function BootstrapDialogTitle(props) {
     </DialogTitle>
   );
 }
-
-BootstrapDialogTitle.propTypes = {
-  children: PropTypes.node,
-  onClose: PropTypes.func.isRequired,
-};

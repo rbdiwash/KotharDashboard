@@ -25,7 +25,6 @@ const ClientDropdown = ({ data, setData }) => {
             dateOfIssue: value?.dateOfIssue,
           }));
         }}
-        required
         value={{ name: data?.name, id: data?.id }}
         options={clientList || []}
         getOptionLabel={(option) => option?.name || ""}
@@ -34,7 +33,7 @@ const ClientDropdown = ({ data, setData }) => {
         disablePortal
         size="small"
         renderInput={(params) => (
-          <TextField {...params} label="Select Client" />
+          <TextField {...params} label="Select Client" required />
         )}
         ListboxProps={{
           style: {

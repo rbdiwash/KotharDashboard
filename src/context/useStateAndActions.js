@@ -10,6 +10,10 @@ const useStateAndActions = () => {
   const [token, setToken] = useState(localStorage.getItem("token"));
 
   const [wholeLoading, setWholeLoading] = useState(false);
+  const [selectedVisaTab, setSelectedVisaTab] = useState({
+    label: "All",
+    value: "all",
+  });
   const [rplList, setRPLList] = useState([]);
   const getData = async () => {
     const res = await axios.get(`organization`);
@@ -252,6 +256,7 @@ const useStateAndActions = () => {
     rplList,
     archivedClientList,
     accountsList,
+    selectedVisaTab,
   };
   const actions = {
     refetchClient,
@@ -274,6 +279,7 @@ const useStateAndActions = () => {
     getArchivedClient,
     refetchArchivedClient,
     setRPLList,
+    setSelectedVisaTab,
   };
 
   return [state, actions];

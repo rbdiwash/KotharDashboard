@@ -9,6 +9,14 @@
 // export const API_URL = "https://kothar.samyakluitel.com/api/v1";
 export const API_URL = "https://kothar.samyakluitel.com/api/v1";
 
+export const visaTabs = [
+  { label: "All", value: "All" },
+  { label: "TR Visa", value: "TR" },
+  { label: "Student Visa", value: "Student" },
+  { label: "Dependent Visa", value: "Dependent" },
+  { label: "Visitor/Tourist Visa", value: "Visitor/Tourist" },
+];
+
 export const insurance_companies = [
   { label: "Medibank", value: "Medibank" },
   { label: "Allianz Care", value: "Allianz Care" },

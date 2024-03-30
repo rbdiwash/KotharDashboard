@@ -34,7 +34,7 @@ const AddStudent = () => {
   });
   const [addressInfo, setAddressInfo] = useState({
     permanent: { country: null, state: null, city: null, zip: null },
-    temo: { country: null, state: null, city: null, zip: null },
+    temp: { country: null, state: null, city: null, zip: null },
     passport: { country: null, placeOfBirth: null },
     passportFile: null,
     moreThanOneCitizen: null,
@@ -269,13 +269,16 @@ const AddStudent = () => {
                     status: value,
                   }));
                 }}
-                required
                 value={data?.status}
                 placeholder="Select Student Status"
                 options={student_status}
                 disablePortal
                 renderInput={(params) => (
-                  <TextField {...params} label="Select Student Status" />
+                  <TextField
+                    {...params}
+                    label="Select Student Status"
+                    required
+                  />
                 )}
                 ListboxProps={{
                   style: {

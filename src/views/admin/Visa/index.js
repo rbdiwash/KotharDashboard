@@ -16,13 +16,7 @@ import Box from "@mui/material/Box";
 import SearchField from "components/SearchField";
 import { useEffect } from "react";
 import DiscussionModal from "components/Modals/DiscussionModal";
-const tabs = [
-  { label: "All", value: "all" },
-  { label: "TR Visa", value: "tr" },
-  { label: "Student Visa", value: "student" },
-  { label: "Dependent Visa", value: "dependent" },
-  { label: "Visitor/Tourist Visa", value: "visitor" },
-];
+import { visaTabs } from "const/constants";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -50,17 +44,21 @@ const Visa = ({ color = "light" }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [searchText, setSearchText] = useState("");
 
-  const [{ visaList }, { refetchVisaList, getVisaList }] = useKothar();
+  const [
+    { visaList, selectedVisaTab },
+    { refetchVisaList, getVisaList, setSelectedVisaTab },
+  ] = useKothar();
+
   const [value, setValue] = useState(0);
   const [filteredData, setFilteredData] = useState(visaList);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-    const status = tabs.find((item, i) => {
+    const status = visaTabs.find((item, i) => {
       return i === newValue;
-    })?.value;
-
-    getVisaList(`status=${status}`);
+    });
+    setSelectedVisaTab(status);
+    getVisaList(`status=${status?.value}`);
   };
 
   const deleteData = () => {
@@ -146,7 +144,7 @@ const Visa = ({ color = "light" }) => {
             scrollButtons
             allowScrollButtonsMobile
           >
-            {tabs?.map((arg) => (
+            {visaTabs?.map((arg) => (
               <Tab
                 label={arg?.label}
                 key={arg?.label}
@@ -208,6 +206,7 @@ const TabContent = ({
 
             <th className={"table-head " + tableHeadClass}>Course Provider</th>
             <th className={"table-head " + tableHeadClass}>Reference</th>
+            <th className={"table-head " + tableHeadClass}>Visa Type</th>
             <th className={"table-head " + tableHeadClass}>Status</th>
 
             <th className={"table-head " + tableHeadClass}>Action</th>
@@ -237,6 +236,7 @@ const TabContent = ({
                     {item?.reeference || "-"}
                   </div>
                 </td>
+                <td className="table-data">{item?.type || "-"}</td>
 
                 <td className="table-data">
                   <div className="flex items-center">

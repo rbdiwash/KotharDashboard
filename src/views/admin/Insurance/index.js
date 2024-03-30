@@ -174,7 +174,7 @@ const Insurance = ({ color = "light" }) => {
                       </td>
                       <td className="table-data">
                         <div className="flex items-center">
-                          {item?.cover_type || "-"}
+                          {item?.coverType || "-"}
                         </div>
                       </td>
 
@@ -220,7 +220,7 @@ const Insurance = ({ color = "light" }) => {
                   ))
                 ) : (
                   <tr key={1}>
-                    <td colSpan={15}>
+                    <td colSpan={10}>
                       <div className="text-lg text-center my-10">
                         No Results Found
                       </div>

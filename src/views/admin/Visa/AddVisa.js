@@ -1,5 +1,6 @@
 import { Delete } from "@mui/icons-material";
 import {
+  Autocomplete,
   Button,
   FormControl,
   FormControlLabel,
@@ -7,6 +8,7 @@ import {
   Radio,
   RadioGroup,
   Switch,
+  TextField,
   Tooltip,
 } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
@@ -23,6 +25,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import DownloadIcon from "@mui/icons-material/Download";
 import ClientDropdown from "components/Dropdowns/ClientDropdown";
 import UploadFile from "components/Input/UploadFile";
+import { visaTabs } from "const/constants";
 
 const AddVisaDetails = ({ color = "light" }) => {
   const [data, setData] = useState({
@@ -58,14 +61,8 @@ const AddVisaDetails = ({ color = "light" }) => {
     relationshipCertificate: "",
     marriageCertificate: "",
   });
-  const tabs = [
-    { label: "All", value: "all" },
-    { label: "TR Visa", value: "tr" },
-    { label: "Student Visa", value: "student" },
-    { label: "Dependent Visa", value: "dependent" },
-    { label: "Visitor/Tourist Visa", value: "visitor" },
-  ];
-  const [{}, { refetchVisaList }] = useKothar();
+
+  const [{ selectedVisaTab }, { refetchVisaList }] = useKothar();
 
   const [tenYearAddress, setTenYearAddress] = useState([
     {
@@ -111,15 +108,13 @@ const AddVisaDetails = ({ color = "light" }) => {
       await axios.post(`${API_URL}/visa-applications`, payload);
     }
   }
+
   const handleSubmit = (e) => {
     e.preventDefault();
     mutate({
       ...data,
       tenYearAddress: tenYearAddress,
-      type: "student_visa",
-      type: tabs.find((item, i) => {
-        return i === state.value;
-      })?.value,
+      type: selectedVisaTab?.value,
     });
   };
 
@@ -171,18 +166,53 @@ const AddVisaDetails = ({ color = "light" }) => {
                   {data?.id ? "Edit" : "Add"} Visa Details
                 </h3>
               </div>
-              <FormControlLabel
-                control={
-                  <Switch
-                    sx={{ m: 1 }}
-                    onChange={(e) => {
-                      setData({ ...data, status: e.target.checked });
+              {console.log(selectedVisaTab)}
+
+              <div className="flex items-center gap-2">
+                {selectedVisaTab?.value === "All" && (
+                  <Autocomplete
+                    onChange={(e, value) => {
+                      setData((prevState) => ({
+                        ...prevState,
+                        type: value?.value,
+                      }));
                     }}
-                    checked={data?.status}
+                    value={
+                      visaTabs?.find((item) => item?.value === data?.type) ||
+                      null
+                    }
+                    placeholder="Select Student Status"
+                    options={visaTabs}
+                    disablePortal
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Select Visa Type"
+                        required
+                      />
+                    )}
+                    ListboxProps={{
+                      style: {
+                        maxHeight: "180px",
+                      },
+                    }}
+                    size="small"
+                    sx={{ width: 300 }}
                   />
-                }
-                label="Approved"
-              />
+                )}
+                <FormControlLabel
+                  control={
+                    <Switch
+                      sx={{ m: 1 }}
+                      onChange={(e) => {
+                        setData({ ...data, status: e.target.checked });
+                      }}
+                      checked={data?.status}
+                    />
+                  }
+                  label="Approved"
+                />
+              </div>
             </div>
           </div>
           <div className="block w-full overflow-x-auto mt-0">
