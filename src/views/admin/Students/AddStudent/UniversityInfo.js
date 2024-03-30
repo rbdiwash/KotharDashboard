@@ -19,7 +19,6 @@ const UniversityInfo = ({ generalInfo, setGeneralInfo }) => {
       setGeneralInfo((prevState) => ({ ...prevState, [name]: value }));
     }
   };
-  console.log(generalInfo);
 
   return (
     <div className="grid grid-cols-3 gap-8 mt-6 items-end">

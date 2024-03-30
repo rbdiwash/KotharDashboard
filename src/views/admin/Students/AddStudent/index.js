@@ -149,7 +149,7 @@ const AddStudent = () => {
         gradingSystem: academicInfo?.bachelor?.gradingSystem?.value,
       },
     },
-    workInfo: { ...workInfo },
+    // workInfo: { ...workInfo },
     testInfo: {
       ...testInfo,
       testName1: testInfo?.testName1?.value,
