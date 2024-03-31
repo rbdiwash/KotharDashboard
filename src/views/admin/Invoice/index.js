@@ -60,66 +60,29 @@ const Invoice = ({ color = "dark" }) => {
   };
 
   const handleDownloadInvoice = (item) => {
-    axios
-      .post(`${API_URL}/invoice/download/${item?.invoiceId}`)
+    console.log("🚀  item:", item);
+    axios({
+      method: "POST",
+      url: `${API_URL}/invoice/download/${item?.invoiceId}`,
+      headers: {
+        "Content-Type": "application/pdf",
+        Authorization: `Bearer ${token}`,
+      },
+      responseType: "arraybuffer",
+    })
       .then((res) => {
         toast.success("Downloading started, please wait");
-        const blob = new Blob([res.data], {
-          type: "application/pdf; charset=utf-8",
-        });
-
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = item?.title;
-        document.body.appendChild(link);
+        var blob = new Blob([res.data], { type: "application/pdf" });
+        var link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        var fileName = item?.title;
+        link.download = fileName;
         link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
       })
       .catch((err) => {
         toast.error("Failed to start download, check network tab");
       });
   };
-
-  function downloadInvoicePdf(invoiceId) {
-    fetch(`/api/v1/download/${invoiceId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/pdf", // Set the content type to indicate that you expect a PDF response
-      },
-      responseType: "arraybuffer", // Set the responseType to 'arraybuffer' to handle binary data
-    })
-      .then((response) => {
-        // Check if the response is successful
-        if (!response.ok) {
-          throw new Error("Failed to download PDF");
-        }
-
-        // Convert the response body to a blob
-        return response.blob();
-      })
-      .then((blob) => {
-        // Create a URL for the blob
-        const url = window.URL.createObjectURL(blob);
-
-        // Create a link element
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = "invoice.pdf"; // Specify the filename for the downloaded file
-
-        // Append the link to the document body and trigger the download
-        document.body.appendChild(link);
-        link.click();
-
-        // Clean up: remove the link and revoke the URL
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      })
-      .catch((error) => {
-        console.error("Error downloading PDF:", error);
-      });
-  }
 
   const deleteData = () => {
     delete_data(`${API_URL}/invoice/${openConfirmationModal?.id}`, () => {

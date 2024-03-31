@@ -19,6 +19,7 @@ const AddInvoice = () => {
       bankDetails: "",
     },
     invoices: [],
+    invoiceId: null,
   });
   const { state } = useLocation();
   const [{ invoiceList, token }, { refetchInvoiceList }] = useKothar();
@@ -56,8 +57,8 @@ const AddInvoice = () => {
     },
   });
   async function postData(payload) {
-    if (data?.id) {
-      await axios.put(`${API_URL}/invoice/${payload?.id}`, payload);
+    if (data?.invoiceId) {
+      await axios.put(`${API_URL}/invoice/${payload?.invoiceId}`, payload);
     } else {
       await axios.post(`${API_URL}/invoice`, payload);
     }
@@ -229,7 +230,7 @@ const AddInvoice = () => {
                       <InputField
                         fullWidth
                         label="Total"
-                        name="Total"
+                        name="total"
                         placeholder="Total"
                         required
                         type="number"
