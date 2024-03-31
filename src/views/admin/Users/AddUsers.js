@@ -16,26 +16,30 @@ import InputField from "components/Input/InputField";
 import SelectField from "components/Input/SelectField";
 import { API_URL } from "const/constants";
 import useKothar from "context/useKothar";
+import { useEffect } from "react";
 import { useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const AddUsers = () => {
   const [data, setData] = useState({
-    name: null,
-    password: null,
-    mobileNumber: null,
-    email: null,
-    username: null,
+    name: "",
+    password: "",
+    mobileNumber: "",
+    email: "",
+    username: "",
     type: "",
+    accessToDiscussion: "Yes",
   });
 
-  const [{ consultancyList }, {}] = useKothar();
+  const [{ consultancyList }, { refetchUsers }] = useKothar();
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setData((prevState) => ({ ...prevState, [name]: value }));
   };
+
+  const { state } = useLocation();
 
   const navigate = useNavigate();
   const { isLoading, isError, error, mutate } = useMutation(postData, {
@@ -43,6 +47,8 @@ const AddUsers = () => {
       toast.success(
         data?.id ? "Data updated Successfully" : "Data added Successfully"
       );
+      navigate("/admin/user");
+      refetchUsers();
     },
     onError() {
       toast.error(data?.id ? "Error Updating Data" : "Error Submitting Data");
@@ -64,6 +70,24 @@ const AddUsers = () => {
       orgId: data?.orgId?.id,
     });
   };
+
+  useEffect(() => {
+    if (state?.item) {
+      const value = state.item;
+      setData({
+        name: value?.name,
+        orgId: value?.organization?.id,
+        username: value?.username,
+        mobileNumber: value?.mobileNumber,
+        email: value?.email,
+        password: value?.password,
+        type: value?.type,
+        accessToDiscussion: value?.accessToDiscussion || null,
+        mfa: value?.mfa,
+      });
+    }
+  }, [state]);
+
   return (
     <div className="flex flex-wrap mt-4 dashBody">
       <div className="w-full mb-12 px-4">
@@ -114,7 +138,7 @@ const AddUsers = () => {
                   <div className="relative w-full mb-3">
                     <InputField
                       type="email"
-                      placeholder="University Email"
+                      placeholder="Email"
                       name="email"
                       label="Email"
                       required
@@ -140,7 +164,12 @@ const AddUsers = () => {
                       name="password"
                       label="Password"
                       required
-                      value={data?.password}
+                      value={
+                        state?.item
+                          ? "You cannot edit from here"
+                          : data?.password
+                      }
+                      disabled={state?.item}
                       onChange={handleInputChange}
                     />
                   </div>
@@ -149,19 +178,25 @@ const AddUsers = () => {
                       className="block uppercase text-slate-600 text-xs font-bold mb-2"
                       htmlFor="grid-password"
                     >
-                      Select Consultancy *
+                      Select Consultancy
                     </label>
                     <Autocomplete
                       disablePortal
                       size="small"
-                      value={data?.orgId}
-                      required
+                      value={
+                        consultancyList?.find(
+                          (item) => item?.id === data?.orgId
+                        ) || null
+                      }
                       options={consultancyList || []}
                       renderInput={(params) => (
-                        <TextField {...params} label="Select Consultancy" />
+                        <TextField
+                          {...params}
+                          label="Select Consultancy"
+                          required
+                        />
                       )}
                       getOptionLabel={(option) => option?.name || ""}
-                      getOptionValue={(option) => option?.id}
                       isOptionEqualToValue={(options, value) =>
                         options.id === value.id
                       }
@@ -178,18 +213,22 @@ const AddUsers = () => {
                       className="block uppercase text-slate-600 text-xs font-bold mb-2"
                       htmlFor="grid-password"
                     >
-                      User Type *
+                      User Type
                     </label>
                     <Autocomplete
                       disablePortal
                       size="small"
                       required
                       options={[
-                        { label: "Admin", value: "admin" },
-                        { label: "User", value: "user" },
+                        { label: "Admin", value: "Admin" },
+                        { label: "User", value: "User" },
                       ]}
+                      value={[
+                        { label: "Admin", value: "Admin" },
+                        { label: "User", value: "User" },
+                      ]?.find((item) => item?.value === data?.type)}
                       renderInput={(params) => (
-                        <TextField {...params} label="User Type" />
+                        <TextField {...params} label="User Type" required />
                       )}
                       isOptionEqualToValue={(options, value) =>
                         options.value === value.value
@@ -210,9 +249,10 @@ const AddUsers = () => {
                       <RadioGroup
                         row
                         required
-                        defaultValue="yes"
-                        name="access_to_discussion"
-                        value={data?.access_to_discussion}
+                        defaultValue="Yes"
+                        name="accessToDiscussion"
+                        value={data?.accessToDiscussion}
+                        onChange={handleInputChange}
                       >
                         <FormControlLabel
                           value="Yes"
@@ -234,7 +274,11 @@ const AddUsers = () => {
                   <Button variant="outlined" onClick={() => navigate(-1)} to="">
                     Go Back
                   </Button>{" "}
-                  <Button variant="contained" type="submit">
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    disabled={isLoading}
+                  >
                     Submit
                   </Button>
                 </div>

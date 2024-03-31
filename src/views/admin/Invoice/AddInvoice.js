@@ -18,7 +18,15 @@ const AddInvoice = () => {
       accountName: "",
       bankDetails: "",
     },
-    invoices: [],
+    invoices: [
+      {
+        description: null,
+        price: null,
+        quantity: null,
+        total: null,
+        uid: crypto.randomUUID(),
+      },
+    ],
     invoiceId: null,
   });
   const { state } = useLocation();
@@ -191,7 +199,6 @@ const AddInvoice = () => {
                   >
                     <div className="col-span-5 relative w-full">
                       <InputField
-                        fullWidth
                         label="Description"
                         placeholder="Description"
                         name="description"
@@ -228,7 +235,6 @@ const AddInvoice = () => {
                     </div>
                     <div className="col-span-2 relative w-full">
                       <InputField
-                        fullWidth
                         label="Total"
                         name="total"
                         placeholder="Total"

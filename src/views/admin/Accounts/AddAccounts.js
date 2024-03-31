@@ -459,10 +459,9 @@ const AddAccounts = ({ color = "light" }) => {
                         </h2>
                         <div className="flex gap-2 items-center ">
                           Total Amount: $
-                          {installments.reduce(
-                            (a, b) => a + (Number(b.amount) || 0),
-                            0
-                          )}
+                          {installments
+                            .reduce((a, b) => a + (Number(b.amount) || 0), 0)
+                            .toFixed(2)}
                         </div>
                         <div className="flex gap-2 items-center">
                           Discount:

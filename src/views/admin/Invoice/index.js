@@ -34,14 +34,6 @@ const Invoice = ({ color = "dark" }) => {
   const [{ invoiceList, token }, { refetchInvoiceList }] = useKothar();
   const [filteredData, setFilteredData] = useState(invoiceList);
 
-  const imageName = (text) => {
-    const splittedText = text?.split(" ");
-    return splittedText
-      ?.map((word) => word.charAt(0))
-      .join("")
-      .slice(0, 3);
-  };
-
   const { isLoading: loadingVerify, mutate } = useMutation(postData, {
     onSuccess() {
       toast.success("Email sent successfully, check your email.");
@@ -60,7 +52,6 @@ const Invoice = ({ color = "dark" }) => {
   };
 
   const handleDownloadInvoice = (item) => {
-    console.log("🚀  item:", item);
     axios({
       method: "POST",
       url: `${API_URL}/invoice/download/${item?.invoiceId}`,
@@ -85,10 +76,14 @@ const Invoice = ({ color = "dark" }) => {
   };
 
   const deleteData = () => {
-    delete_data(`${API_URL}/invoice/${openConfirmationModal?.id}`, () => {
-      setOpenConfirmationModal({ state: false, id: null });
-      refetchInvoiceList();
-    });
+    delete_data(
+      `${API_URL}/invoice/${openConfirmationModal?.id}`,
+      () => {
+        setOpenConfirmationModal({ state: false, id: null });
+        refetchInvoiceList();
+      },
+      token
+    );
   };
 
   useEffect(() => {
