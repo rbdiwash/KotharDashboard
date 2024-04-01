@@ -1,9 +1,5 @@
-import { SpaRounded } from "@mui/icons-material";
 import { Button, IconButton, Tooltip } from "@mui/material";
-import axios from "axios";
 import DeleteModal from "components/Modals/DeleteModal";
-import SearchField from "components/SearchField";
-import { ImageName } from "components/helper";
 import { delete_data } from "const/axios";
 import { API_URL } from "const/constants";
 import useKothar from "context/useKothar";
@@ -11,13 +7,10 @@ import {
   MaterialReactTable,
   useMaterialReactTable,
 } from "material-react-table";
-import { useMemo } from "react";
-import { useEffect } from "react";
-import { useState } from "react";
-import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
+import { useEffect, useMemo, useState } from "react";
+import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { FaPlusCircle } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 
 const University = ({ color = "light" }) => {
   const navigate = useNavigate();

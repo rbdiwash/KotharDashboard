@@ -1,6 +1,14 @@
-import { Autocomplete, Button, TextField } from "@mui/material";
+import {
+  Autocomplete,
+  Button,
+  IconButton,
+  TextField,
+  Tooltip,
+} from "@mui/material";
+
 import axios from "axios";
 import DeleteModal from "components/Modals/DeleteModal";
+import DiscussionModal from "components/Modals/DiscussionModal";
 import { API_URL } from "const/constants";
 import useKothar from "context/useKothar";
 import {
@@ -8,11 +16,10 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { FaRocketchat } from "react-icons/fa";
-import DiscussionModal from "components/Modals/DiscussionModal";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Accounts = ({ color = "light" }) => {
   const navigate = useNavigate();
@@ -24,7 +31,6 @@ const Accounts = ({ color = "light" }) => {
     { insuranceList, rplList, studentList, visaList, skillList, accountsList },
     { refetchAccountList },
   ] = useKothar();
-  console.log("🚀  accountsList:", accountsList);
 
   const deleteData = () => {
     axios
@@ -78,17 +84,22 @@ const Accounts = ({ color = "light" }) => {
     () => [
       {
         accessorKey: "name", //access nested data with dot notation
-        header: "Full Name",
+        header: "Name",
         size: 150,
       },
       {
         accessorKey: "amount",
-        header: "Total Amount",
+        header: "Amount",
         size: 150,
       },
       {
         accessorKey: "discount", //normal accessorKey
         header: "Discount",
+        size: 200,
+      },
+      {
+        accessorKey: "amountAfterDiscount", //normal accessorKey
+        header: "After Discount",
         size: 200,
       },
       {
@@ -100,6 +111,36 @@ const Accounts = ({ color = "light" }) => {
         accessorKey: "Action",
         header: "Action",
         size: 150,
+        Cell: ({ row, renderedCellValue }) => {
+          const item = row.original;
+          return (
+            <div className="flex items-center">
+              <Tooltip title="Edit Course" arrow>
+                <IconButton
+                  onClick={() =>
+                    navigate("/admin/account/add", {
+                      state: { item },
+                    })
+                  }
+                >
+                  <AiFillEdit className="text-sky-600 cursor-pointer" />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Delete Course" arrow>
+                <IconButton
+                  onClick={() =>
+                    setOpenConfirmationModal({
+                      state: true,
+                      id: row?.original?.id,
+                    })
+                  }
+                >
+                  <AiFillDelete className="text-red-600 cursor-pointer" />
+                </IconButton>
+              </Tooltip>
+            </div>
+          );
+        },
       },
     ],
     []

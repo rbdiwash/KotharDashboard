@@ -33,7 +33,6 @@ export default function ResetPassword() {
   };
 
   const { token } = useParams();
-  console.log("🚀  token:", token);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -41,6 +40,7 @@ export default function ResetPassword() {
       .post(`${API_URL}/api/reset-password`, {
         password: data?.password,
         token,
+        email: data?.email,
       })
       .then((res) => {
         navigate("/");
@@ -77,7 +77,20 @@ export default function ResetPassword() {
               <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
                 <form onSubmit={handleSubmit}>
                   <div className="grid grid-cols-1 mb-6 gap-8">
-                    <FormControl variant="outlined" size="small">
+                    <FormControl variant="outlined" size="small" required>
+                      <InputLabel htmlFor="outlined-adornment-password">
+                        Email
+                      </InputLabel>
+                      <OutlinedInput
+                        id="outlined-adornment-password"
+                        type="email"
+                        name="email"
+                        onChange={handleInputChange}
+                        label="Email"
+                        required
+                      />
+                    </FormControl>
+                    <FormControl variant="outlined" size="small" required>
                       <InputLabel htmlFor="outlined-adornment-password">
                         Password
                       </InputLabel>
@@ -104,6 +117,7 @@ export default function ResetPassword() {
                           </InputAdornment>
                         }
                         label="Password"
+                        required
                       />
                     </FormControl>
 
@@ -111,6 +125,7 @@ export default function ResetPassword() {
                       variant="outlined"
                       size="small"
                       error={errorMessage}
+                      required
                     >
                       <InputLabel htmlFor="outlined-adornment-password">
                         Confirm Password
@@ -137,6 +152,7 @@ export default function ResetPassword() {
                           </InputAdornment>
                         }
                         label="Confirm Password"
+                        required
                       />{" "}
                       {errorMessage && (
                         <FormHelperText id="component-error-text">

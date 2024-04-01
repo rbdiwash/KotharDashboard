@@ -30,7 +30,7 @@ const AddUsers = () => {
     email: "",
     username: "",
     type: "",
-    accessToDiscussion: "Yes",
+    accessToDiscussion: true,
   });
 
   const [{ consultancyList }, { refetchUsers }] = useKothar();
@@ -55,8 +55,8 @@ const AddUsers = () => {
     },
   });
   async function postData(payload) {
-    if (data?.id) {
-      await axios.put(`${API_URL}/users/`, payload);
+    if (payload?.id) {
+      await axios.put(`${API_URL}/users/${payload?.id}`, payload);
     } else {
       await axios.post(`${API_URL}/register/user`, payload);
     }
@@ -84,9 +84,12 @@ const AddUsers = () => {
         type: value?.type,
         accessToDiscussion: value?.accessToDiscussion || null,
         mfa: value?.mfa,
+        id: value?.id,
       });
     }
   }, [state]);
+
+  console.log(data);
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">
@@ -203,7 +206,7 @@ const AddUsers = () => {
                       onChange={(e, value) => {
                         setData((prevState) => ({
                           ...prevState,
-                          orgId: value,
+                          orgId: value?.id,
                         }));
                       }}
                     />
@@ -240,7 +243,7 @@ const AddUsers = () => {
                         }));
                       }}
                     />
-                  </div>{" "}
+                  </div>
                   <div className="relative w-full mb-1">
                     <FormControl>
                       <FormLabel className="text-slate-600 uppercase text-xs font-bold mb-2">
@@ -249,19 +252,24 @@ const AddUsers = () => {
                       <RadioGroup
                         row
                         required
-                        defaultValue="Yes"
+                        defaultValue={true}
                         name="accessToDiscussion"
                         value={data?.accessToDiscussion}
-                        onChange={handleInputChange}
+                        onChange={(e, value) => {
+                          setData((prevState) => ({
+                            ...prevState,
+                            accessToDiscussion: Boolean(value),
+                          }));
+                        }}
                       >
                         <FormControlLabel
-                          value="Yes"
+                          value={true}
                           control={<Radio />}
                           label="Yes"
                         />
 
                         <FormControlLabel
-                          value="No"
+                          value={false}
                           control={<Radio />}
                           label="No"
                         />
@@ -273,7 +281,7 @@ const AddUsers = () => {
                   {/* <Button variant="outlined" component={Link} to=""> */}
                   <Button variant="outlined" onClick={() => navigate(-1)} to="">
                     Go Back
-                  </Button>{" "}
+                  </Button>
                   <Button
                     variant="contained"
                     type="submit"
