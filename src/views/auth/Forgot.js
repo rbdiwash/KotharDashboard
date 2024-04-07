@@ -6,33 +6,43 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "const/constants";
 import { toast } from "react-toastify";
+import { useMutation } from "@tanstack/react-query";
 
 export default function Forgot() {
   const navigate = useNavigate();
+
   const [data, setData] = useState({});
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setData((prevState) => ({ ...prevState, [name]: value }));
   };
   const [message, setMessage] = useState();
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setMessage();
-    axios
-      .post(`${API_URL}/forgot-password`, data)
-      .then((res) => {
-        setMessage(res?.data?.message);
-        setData({
-          email: "",
-        });
-        toast.success(res?.data?.message);
-      })
-      .catch((err) => {
-        // console.log(err?.data?.message);
-        // setMessage({ error: err?.data?.message || "Error" });
-        // navigate("/admin/dashboard");
-      });
+    mutate(data);
   };
+
+  const postData = async (payload) => {
+    await axios.post(`${API_URL}/forgot-password`, payload);
+  };
+
+  const { mutate, isLoading } = useMutation(postData, {
+    onSuccess: async (res) => {
+      setMessage(res?.data?.message);
+      setData({
+        email: "",
+      });
+      toast.success(res?.data?.message);
+    },
+    onError(err) {
+      toast.error(err?.response?.data?.errorMessage ?? "Error");
+      console.log(err);
+    },
+  });
+  console.log("🚀  isLoading:", isLoading);
+
   return (
     <>
       <div className="container mx-auto px-4 h-full">
@@ -71,6 +81,7 @@ export default function Forgot() {
                       variant="contained"
                       className="w-full"
                       type="submit"
+                      disabled={isLoading}
                     >
                       Reset Password
                     </Button>

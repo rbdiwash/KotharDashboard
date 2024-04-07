@@ -23,7 +23,6 @@ const AddAccounts = ({ color = "light" }) => {
   const [installments, setInstallments] = useState([{ index: 1 }]);
   const [selectedType, setSelectedType] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
-  console.log("🚀  selectedStudent:", selectedStudent);
   const [data, setData] = useState({});
   const [
     { rplList, studentList, visaList, skillList, insuranceList },

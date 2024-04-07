@@ -105,8 +105,7 @@ const Users = ({ color = "dark" }) => {
                 {usersList?.length > 0 ? (
                   usersList?.map((item, index) => (
                     <tr key={item?.id || index}>
-                      <th className="table-data text-left flex items-center">
-                        {item?.name && imageName(item?.name || "Anand Pandey")}
+                      <th className="table-data">
                         <span
                           className={
                             "ml-3 font-bold " +

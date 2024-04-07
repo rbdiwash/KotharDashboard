@@ -31,6 +31,7 @@ const AddUsers = () => {
     username: "",
     type: "",
     accessToDiscussion: true,
+    orgId: null,
   });
 
   const [{ consultancyList }, { refetchUsers }] = useKothar();
@@ -63,11 +64,12 @@ const AddUsers = () => {
   }
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(data);
+
     mutate({
       ...data,
       mfa: true,
       type: data?.type?.value,
-      orgId: data?.orgId?.id,
     });
   };
 
@@ -245,14 +247,14 @@ const AddUsers = () => {
                     />
                   </div>
                   <div className="relative w-full mb-1">
-                    <FormControl>
+                    <FormControl required>
                       <FormLabel className="text-slate-600 uppercase text-xs font-bold mb-2">
-                        Access to Discussion *
+                        Access to Discussion
                       </FormLabel>
                       <RadioGroup
                         row
                         required
-                        defaultValue={true}
+                        defaultValue={"Yes"}
                         name="accessToDiscussion"
                         value={data?.accessToDiscussion}
                         onChange={(e, value) => {
@@ -278,7 +280,6 @@ const AddUsers = () => {
                   </div>
                 </div>
                 <div className="w-full flex justify-end mt-6 gap-4">
-                  {/* <Button variant="outlined" component={Link} to=""> */}
                   <Button variant="outlined" onClick={() => navigate(-1)} to="">
                     Go Back
                   </Button>
