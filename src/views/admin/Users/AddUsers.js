@@ -84,7 +84,7 @@ const AddUsers = () => {
         email: value?.email,
         password: value?.password,
         type: value?.type,
-        accessToDiscussion: value?.accessToDiscussion || null,
+        accessToDiscussion: value?.accessToDiscussion ?? false,
         mfa: value?.mfa,
         id: value?.id,
       });
@@ -225,12 +225,12 @@ const AddUsers = () => {
                       size="small"
                       required
                       options={[
-                        { label: "Admin", value: "Admin" },
-                        { label: "User", value: "User" },
+                        { label: "ADMIN", value: "ADMIN" },
+                        { label: "USER", value: "USER" },
                       ]}
                       value={[
-                        { label: "Admin", value: "Admin" },
-                        { label: "User", value: "User" },
+                        { label: "ADMIN", value: "ADMIN" },
+                        { label: "USER", value: "USER" },
                       ]?.find((item) => item?.value === data?.type)}
                       renderInput={(params) => (
                         <TextField {...params} label="User Type" required />
@@ -254,7 +254,6 @@ const AddUsers = () => {
                       <RadioGroup
                         row
                         required
-                        defaultValue={"Yes"}
                         name="accessToDiscussion"
                         value={data?.accessToDiscussion}
                         onChange={(e, value) => {

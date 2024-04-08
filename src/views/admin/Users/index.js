@@ -1,15 +1,15 @@
 import { Button, CircularProgress, IconButton, Tooltip } from "@mui/material";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { useMutation } from "@tanstack/react-query";
 import DeleteModal from "components/Modals/DeleteModal";
+import OTPModal from "components/Modals/OTPModal";
 import SearchField from "components/SearchField";
 import { delete_data } from "const/axios";
 import { API_URL } from "const/constants";
 import useKothar from "context/useKothar";
-import { tr } from "date-fns/locale";
 import { useState } from "react";
-import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
+import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { FaPlusCircle } from "react-icons/fa";
+import OtpInput from "react-otp-input";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -19,6 +19,9 @@ const Users = ({ color = "dark" }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [searchText, setSearchText] = useState("");
   const navigate = useNavigate();
+  const [otp, setOtp] = useState("");
+
+  const [openEmailModal, setOpenEmailModal] = useState(false);
 
   const imageName = (text) => {
     const splittedText = text?.split(" ");
@@ -30,19 +33,21 @@ const Users = ({ color = "dark" }) => {
 
   const { isLoading: loadingVerify, mutate } = useMutation(postData, {
     onSuccess() {
-      toast.success("Email sent successfully, check your email.");
+      toast.success("OPT has been sent successfully, check your Email.");
+      setOpenEmailModal(true);
     },
     onError() {
       toast.error("Error");
     },
   });
   async function postData(payload) {
-    await axios.post(`${API_URL}/email/send-varification-code`, payload);
+    // await axios.post(`${API_URL}/email/send-verification-code`, payload);
+    setOpenEmailModal(true);
   }
 
-  const handleVerifyEmail = (e, id) => {
+  const handleVerifyEmail = (e, email) => {
     e.preventDefault();
-    mutate({ userId: id });
+    mutate({ email: email });
   };
 
   const deleteUser = () => {
@@ -95,6 +100,7 @@ const Users = ({ color = "dark" }) => {
                   <th className={"table-head " + tableHeadClass}>Username</th>
                   <th className={"table-head " + tableHeadClass}>Email</th>
                   <th className={"table-head " + tableHeadClass}>Contact</th>
+                  <th className={"table-head " + tableHeadClass}>Role</th>
                   <th className={"table-head " + tableHeadClass}>
                     Email Verified
                   </th>
@@ -123,13 +129,12 @@ const Users = ({ color = "dark" }) => {
                         </div>
                       </td>
                       <td className="table-data">{item?.email}</td>
-                      <td className="table-data">
-                        <div className="flex">{item?.mobileNumber}</div>
-                      </td>
+                      <td className="table-data">{item?.mobileNumber}</td>
+                      <td className="table-data">{item?.type}</td>
 
                       <td className="table-data">
                         <div className="flex items-center">
-                          {item?.emailVerified || "No"}
+                          {item?.emailVerified === "Y" ? "Yes" : "No" || "No"}
                         </div>
                       </td>
 
@@ -137,7 +142,7 @@ const Users = ({ color = "dark" }) => {
                         <div className="flex items-center gap-4">
                           <Button
                             variant="contained"
-                            onClick={(e) => handleVerifyEmail(e, item?.id)}
+                            onClick={(e) => handleVerifyEmail(e, item?.email)}
                             endIcon={
                               loadingVerify && <CircularProgress size={10} />
                             }
@@ -193,6 +198,14 @@ const Users = ({ color = "dark" }) => {
             setOpenConfirmationModal({ state: false, id: null })
           }
           handleDelete={deleteUser}
+        />
+      )}
+      {openEmailModal && (
+        <OTPModal
+          open={openEmailModal}
+          setOpen={setOpenEmailModal}
+          otp={otp}
+          setOtp={setOtp}
         />
       )}
     </div>
