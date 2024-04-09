@@ -21,7 +21,10 @@ const Users = ({ color = "dark" }) => {
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
 
-  const [openEmailModal, setOpenEmailModal] = useState(false);
+  const [openEmailModal, setOpenEmailModal] = useState({
+    data: null,
+    state: false,
+  });
 
   const imageName = (text) => {
     const splittedText = text?.split(" ");
@@ -34,7 +37,7 @@ const Users = ({ color = "dark" }) => {
   const { isLoading: loadingVerify, mutate } = useMutation(postData, {
     onSuccess() {
       toast.success("OPT has been sent successfully, check your Email.");
-      setOpenEmailModal(true);
+      setOpenEmailModal((prev) => ({ data: prev.data, state: true }));
     },
     onError() {
       toast.error("Error");
@@ -42,12 +45,13 @@ const Users = ({ color = "dark" }) => {
   });
   async function postData(payload) {
     // await axios.post(`${API_URL}/email/send-verification-code`, payload);
-    setOpenEmailModal(true);
+    setOpenEmailModal((prev) => ({ data: prev.data, state: true }));
   }
 
-  const handleVerifyEmail = (e, email) => {
+  const handleVerifyEmail = (e, data) => {
     e.preventDefault();
-    mutate({ email: email });
+    mutate({ email: data?.email });
+    setOpenEmailModal({ data: data, state: false });
   };
 
   const deleteUser = () => {
@@ -142,7 +146,7 @@ const Users = ({ color = "dark" }) => {
                         <div className="flex items-center gap-4">
                           <Button
                             variant="contained"
-                            onClick={(e) => handleVerifyEmail(e, item?.email)}
+                            onClick={(e) => handleVerifyEmail(e, item)}
                             endIcon={
                               loadingVerify && <CircularProgress size={10} />
                             }
@@ -200,12 +204,13 @@ const Users = ({ color = "dark" }) => {
           handleDelete={deleteUser}
         />
       )}
-      {openEmailModal && (
+      {openEmailModal?.state && (
         <OTPModal
-          open={openEmailModal}
+          open={openEmailModal?.state}
           setOpen={setOpenEmailModal}
           otp={otp}
           setOtp={setOtp}
+          data={openEmailModal?.data}
         />
       )}
     </div>

@@ -41,7 +41,6 @@ export default function Forgot() {
       console.log(err);
     },
   });
-  console.log("🚀  isLoading:", isLoading);
 
   return (
     <>

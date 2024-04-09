@@ -7,12 +7,41 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import OtpInput from "react-otp-input";
+import axios from "axios";
+import { API_URL } from "const/constants";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function OTPModal({ open, handleDelete, otp, setOtp, setOpen }) {
+export default function OTPModal({ open, data, otp, setOtp, setOpen }) {
+  const handleVerify = (e) => {
+    e.preventDefault();
+
+    const payload = {
+      email: data?.email,
+      otp: otp,
+    };
+    mutate(payload);
+  };
+
+  const postData = async (payload) => {
+    await axios.post(`${API_URL}/email/otp/verify`, payload);
+  };
+
+  const { mutate, isLoading } = useMutation(postData, {
+    onSuccess: async (res) => {
+      toast.success(res?.data?.message || "Email Verified Successfully");
+      setOpen(!open);
+    },
+    onError(err) {
+      toast.error(err?.response?.data?.errorMessage ?? "Error");
+      console.log(err);
+    },
+  });
+
   return (
     <div>
       <Dialog
@@ -30,7 +59,7 @@ export default function OTPModal({ open, handleDelete, otp, setOtp, setOpen }) {
             numInputs={6}
             renderSeparator={<span>-</span>}
             renderInput={(props) => <input {...props} />}
-            inputStyle={"p-4 text-black"}
+            inputStyle={"otpClass"}
           />
         </DialogContent>
         <hr />
@@ -42,8 +71,8 @@ export default function OTPModal({ open, handleDelete, otp, setOtp, setOpen }) {
           >
             Cancel
           </Button>
-          <Button onClick={handleDelete} variant="contained" color="error">
-            Delete
+          <Button onClick={handleVerify} variant="contained" color="success">
+            Verify
           </Button>
         </DialogActions>
       </Dialog>
