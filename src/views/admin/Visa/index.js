@@ -58,7 +58,7 @@ const Visa = ({ color = "light" }) => {
       return i === newValue;
     });
     setSelectedVisaTab(status);
-    getVisaList(`status=${status?.value}`);
+    getVisaList(`type=${status?.value}`);
   };
 
   const deleteData = () => {

@@ -1,5 +1,6 @@
 import { Button, CircularProgress, IconButton, Tooltip } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 import DeleteModal from "components/Modals/DeleteModal";
 import OTPModal from "components/Modals/OTPModal";
 import SearchField from "components/SearchField";
@@ -44,8 +45,7 @@ const Users = ({ color = "dark" }) => {
     },
   });
   async function postData(payload) {
-    // await axios.post(`${API_URL}/email/send-verification-code`, payload);
-    setOpenEmailModal((prev) => ({ data: prev.data, state: true }));
+    await axios.post(`${API_URL}/email/send-verification-code`, payload);
   }
 
   const handleVerifyEmail = (e, data) => {
@@ -148,7 +148,13 @@ const Users = ({ color = "dark" }) => {
                             variant="contained"
                             onClick={(e) => handleVerifyEmail(e, item)}
                             endIcon={
-                              loadingVerify && <CircularProgress size={10} />
+                              loadingVerify &&
+                              openEmailModal?.data?.id === item?.id && (
+                                <CircularProgress
+                                  size={10}
+                                  sx={{ color: "white" }}
+                                />
+                              )
                             }
                           >
                             Verify Email
