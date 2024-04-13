@@ -13,9 +13,12 @@ import UploadFile from "components/Input/UploadFile";
 import DeleteModal from "components/Modals/DeleteModal";
 import { API_URL } from "const/constants";
 import useKothar from "context/useKothar";
+import { useEffect } from "react";
 import { useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import { FaPlusCircle } from "react-icons/fa";
+import { IoArrowBack } from "react-icons/io5";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const AddAccounts = ({ color = "light" }) => {
@@ -28,6 +31,33 @@ const AddAccounts = ({ color = "light" }) => {
     { rplList, studentList, visaList, skillList, insuranceList },
     { refetchAccountList },
   ] = useKothar();
+  const { state } = useLocation();
+  const navigate = useNavigate();
+  const options = [
+    { label: "RPL", value: "RPL" },
+    { label: "Student", value: "Student" },
+    { label: "Visa", value: "Visa" },
+    { label: "Insurance", value: "Insurance" },
+    {
+      label: "Skill Assessment",
+      value: "Skill Assessment",
+    },
+  ];
+  useEffect(() => {
+    if (state) {
+      setData({ ...state?.item });
+      setSelectedType(
+        options.find((item) => item?.value === state?.item?.type)
+      );
+      setSelectedStudent({
+        clientId: state?.item?.clientId,
+        name: `${state?.item?.clientName}`,
+      });
+      setInstallments(state?.item?.installments);
+    }
+  }, [state]);
+
+  console.log(data);
 
   const deleteData = () => {
     axios
@@ -52,33 +82,23 @@ const AddAccounts = ({ color = "light" }) => {
     ]);
   };
 
-  const options = [
-    { label: "RPL", value: "RPL" },
-    { label: "Student", value: "Student" },
-    { label: "Visa", value: "Visa" },
-    { label: "Insurance", value: "Insurance" },
-    {
-      label: "Skill Assessment",
-      value: "Skill Assessment",
-    },
-  ];
   const getClientOption = () => {
     let secondOption = [];
 
     switch (selectedType?.value) {
-      case "rpl":
+      case "RPL":
         secondOption = rplList;
         break;
-      case "student":
+      case "Student":
         secondOption = studentList;
         break;
-      case "insurance":
+      case "Insurance":
         secondOption = insuranceList;
         break;
-      case "visa":
+      case "Visa":
         secondOption = visaList;
         break;
-      case "skill-assessment":
+      case "Skill Assessment":
         secondOption = skillList;
         break;
     }
@@ -98,6 +118,8 @@ const AddAccounts = ({ color = "light" }) => {
       toast.success(
         data?.id ? "Data updated Successfully" : "Data added Successfully"
       );
+      navigate("/admin/account");
+      refetchAccountList();
     },
     onError() {
       toast.error(data?.id ? "Error Updating Data" : "Error Submitting Data");
@@ -125,8 +147,6 @@ const AddAccounts = ({ color = "light" }) => {
     });
   };
 
-  console.log(selectedStudent);
-
   const totalAmountAfterDiscount = () => {
     let totalAmount = 0;
     let priceAfterDiscount = 0;
@@ -137,6 +157,9 @@ const AddAccounts = ({ color = "light" }) => {
       totalAmount - (Number(data?.discount) / 100) * totalAmount;
     return priceAfterDiscount;
   };
+
+  console.log(selectedStudent);
+
   return (
     <div className="flex flex-wrap mt-4 dashBody">
       <div className="w-full mb-12 px-4">
@@ -147,8 +170,12 @@ const AddAccounts = ({ color = "light" }) => {
           }
         >
           <div className="rounded-t mb-0 px-4 py-3 border-0">
-            <div className="flex flex-wrap items-center justify-between">
-              <form className="flex items-between justify-center gap-2 w-full  rounded mr-3">
+            <div className="flex items-center justify-between">
+              <IoArrowBack
+                className="text-xl cursor-pointer"
+                onClick={() => navigate(-1)}
+              />
+              <form className="flex items-center justify-center gap-2 w-full  rounded mr-3">
                 <Autocomplete
                   size="small"
                   disablePortal
@@ -164,7 +191,7 @@ const AddAccounts = ({ color = "light" }) => {
                   )}
                   value={selectedType}
                   isOptionEqualToValue={(options, value) =>
-                    options.value === value.value
+                    options?.value === value?.value
                   }
                 />
                 <Autocomplete
@@ -172,8 +199,8 @@ const AddAccounts = ({ color = "light" }) => {
                   disablePortal
                   options={getClientOption()}
                   sx={{ width: 500 }}
-                  getOptionLabel={(option) => option.name}
-                  getOptionKey={(option) => option.id}
+                  getOptionLabel={(option) => `${option.name}`}
+                  getOptionKey={(option) => option.clientId}
                   renderInput={(params) => (
                     <TextField {...params} placeholder="Search using Name" />
                   )}
@@ -187,7 +214,7 @@ const AddAccounts = ({ color = "light" }) => {
               </form>
             </div>
           </div>
-          {selectedStudent?.id ? (
+          {selectedStudent?.clientId ? (
             <div className="block w-full overflow-x-auto">
               <div className="px-4">
                 <div className="container mx-auto px-2 py-1">
@@ -296,7 +323,7 @@ const AddAccounts = ({ color = "light" }) => {
                                   name="method"
                                   placeholder="Payment Method"
                                   onChange={(e) => handleInputChange(e, index)}
-                                  value={item?.paymentMethod}
+                                  value={item?.method}
                                   className="min-w-[150px]"
                                 />
                               </td>
@@ -307,7 +334,7 @@ const AddAccounts = ({ color = "light" }) => {
                                   placeholder="Enter Remarks"
                                   size="small"
                                   onChange={(e) => handleInputChange(e, index)}
-                                  value={item?.remark}
+                                  value={item?.remarks}
                                 />
                               </td>
                               <td
@@ -343,9 +370,9 @@ const AddAccounts = ({ color = "light" }) => {
                                     options={[
                                       {
                                         label: "Yes",
-                                        value: "yes",
+                                        value: "Yes",
                                       },
-                                      { label: "No", value: "no" },
+                                      { label: "No", value: "No" },
                                     ]}
                                     disablePortal
                                     renderInput={(params) => (
@@ -488,6 +515,7 @@ const AddAccounts = ({ color = "light" }) => {
                             onChange={(e) =>
                               setData({ ...data, dueDate: e.target.value })
                             }
+                            value={data?.dueDate}
                           />
                         </div>
                         <div className=" flex items-center gap-2">

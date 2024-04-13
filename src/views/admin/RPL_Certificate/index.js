@@ -11,7 +11,7 @@ import DeleteModal from "components/Modals/DeleteModal";
 import { useState } from "react";
 import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
 import { FaPlusCircle, FaRocketchat } from "react-icons/fa";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { API_URL } from "const/constants";
 import axios from "axios";
@@ -245,10 +245,7 @@ const TabContent = ({
             <th
               className={"table-head flex items-center gap-2 " + tableHeadClass}
             >
-              Status{" "}
-              <Tooltip title="Double Click on Status to Edit" arrow>
-                <InfoOutlined sx={{ color: "orange" }} />
-              </Tooltip>
+              Status
             </th>
 
             <th className={"table-head " + tableHeadClass}>Action </th>
@@ -295,6 +292,28 @@ const TableRow = ({
   setOpenConfirmationModal,
 }) => {
   const [isStautusEditable, setIsStatusEditable] = useState(false);
+
+  const { mutate, isLoading } = useMutation(postData, {
+    onSuccess() {
+      toast.success("Data updated Successfully");
+    },
+    onError() {
+      toast.error("Error Updating Data");
+    },
+  });
+
+  async function postData(payload) {
+    await axios.put(`${API_URL}/rpl/${payload?.id}`, payload);
+  }
+
+  const updateData = () => {
+    mutate({
+      ...data,
+      useExistingClientData: true,
+      placementRequired: "yes" ? true : false,
+    });
+  };
+
   return (
     <tr key={item?.id || index} onClick={() => setData(item)}>
       <td className="table-data text-left flex items-center">
@@ -322,7 +341,7 @@ const TableRow = ({
       </td>
       <td className="table-data">
         <div className="flex items-center">
-          {isStautusEditable && item?.id === data?.id ? (
+          {isStautusEditable ? (
             <Autocomplete
               onChange={(e, value) => {
                 setData((prevState) => ({
@@ -343,7 +362,8 @@ const TableRow = ({
                 },
               }}
               size="small"
-              sx={{ width: 200 }}
+              sx={{ width: 250 }}
+              onBlur={updateData}
             />
           ) : (
             <Tooltip title="Double Click  to Edit" arrow>
@@ -358,7 +378,7 @@ const TableRow = ({
           <Tooltip title="Edit Status only" arrow>
             <IconButton
               onClick={() => {
-                setIsStatusEditable(true);
+                setIsStatusEditable(!isStautusEditable);
               }}
             >
               <DriveFileRenameOutlineIcon className="text-yellow-600 cursor-pointer" />

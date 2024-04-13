@@ -10,7 +10,6 @@ export default function Sidebar() {
   const [collapseShow, setCollapseShow] = React.useState("hidden");
   const location = useLocation();
   const userDetail = JSON.parse(localStorage.getItem("userDetail"));
-  console.log("🚀  userDetail:", userDetail);
   const options = [
     {
       label: "Dashboard",
