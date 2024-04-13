@@ -83,20 +83,28 @@ const Accounts = ({ color = "light" }) => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: "name", //access nested data with dot notation
         header: "Name",
         size: 150,
-      },
-      {
-        accessorKey: "amount",
-        header: "Amount",
-        size: 150,
+        accessorKey: "clientName",
+        Cell: ({ row, renderedCellValue }) => {
+          return <div>{row.original.clientName || "N/A"}</div>;
+        },
       },
       {
         accessorKey: "discount", //normal accessorKey
         header: "Discount",
         size: 200,
+        Cell: ({ row, renderedCellValue }) => {
+          return <div>{row.original.discount || 0}</div>;
+        },
       },
+
+      {
+        accessorKey: "amount" || 0,
+        header: "Amount",
+        size: 150,
+      },
+
       {
         accessorKey: "amountAfterDiscount", //normal accessorKey
         header: "After Discount",
@@ -105,6 +113,11 @@ const Accounts = ({ color = "light" }) => {
       {
         accessorKey: "dueDate",
         header: "Due Date",
+        size: 150,
+      },
+      {
+        accessorKey: "type",
+        header: "Type",
         size: 150,
       },
       {
@@ -225,7 +238,7 @@ const Accounts = ({ color = "light" }) => {
       {openConfirmationModal.state && (
         <DeleteModal
           open={openConfirmationModal.state}
-          item="Course"
+          item="Account Details"
           handleCancel={() =>
             setOpenConfirmationModal({ state: false, id: null })
           }

@@ -53,13 +53,13 @@ const AddAccounts = ({ color = "light" }) => {
   };
 
   const options = [
-    { label: "RPL", value: "rpl" },
-    { label: "Student", value: "student" },
-    { label: "Visa", value: "visa" },
-    { label: "Insurance", value: "insurance" },
+    { label: "RPL", value: "RPL" },
+    { label: "Student", value: "Student" },
+    { label: "Visa", value: "Visa" },
+    { label: "Insurance", value: "Insurance" },
     {
       label: "Skill Assessment",
-      value: "skill-assessment",
+      value: "Skill Assessment",
     },
   ];
   const getClientOption = () => {
@@ -121,9 +121,11 @@ const AddAccounts = ({ color = "light" }) => {
       type: selectedType?.value,
       paymentType: "",
       amount: installments.reduce((a, b) => a + (Number(b.amount) || 0), 0),
-      amountAfterDiscount: 0,
+      amountAfterDiscount: totalAmountAfterDiscount(),
     });
   };
+
+  console.log(selectedStudent);
 
   const totalAmountAfterDiscount = () => {
     let totalAmount = 0;

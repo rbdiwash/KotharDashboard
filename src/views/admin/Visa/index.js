@@ -4,7 +4,12 @@ import { useState } from "react";
 import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
 import { FaPlusCircle, FaRocketchat } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
-import { Link, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import { API_URL } from "const/constants";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -43,11 +48,14 @@ const Visa = ({ color = "light" }) => {
   const navigate = useNavigate();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [searchText, setSearchText] = useState("");
+  const location = useLocation();
 
   const [
     { visaList, selectedVisaTab },
     { refetchVisaList, getVisaList, setSelectedVisaTab },
   ] = useKothar();
+
+  let [searchParams, setSearchParams] = useSearchParams();
 
   const [value, setValue] = useState(0);
   const [filteredData, setFilteredData] = useState(visaList);
@@ -58,8 +66,27 @@ const Visa = ({ color = "light" }) => {
       return i === newValue;
     });
     setSelectedVisaTab(status);
+
+    setSearchParams({ type: status?.value });
     getVisaList(`type=${status?.value}`);
   };
+
+  useEffect(() => {
+    if (searchParams.get("type")) {
+      const status = visaTabs.find((item, i) => {
+        return item?.value === searchParams.get("type");
+      });
+      const newVal = visaTabs.findIndex(
+        (value) => value?.value === status?.value
+      );
+      setValue(newVal);
+      setSelectedVisaTab(status);
+      getVisaList(`type=${status?.value}`);
+    } else {
+      setSelectedVisaTab(visaTabs[0]);
+      getVisaList(`type=${visaTabs[0]?.value}`);
+    }
+  }, [value]);
 
   const deleteData = () => {
     axios
@@ -143,6 +170,7 @@ const Visa = ({ color = "light" }) => {
             variant="scrollable"
             scrollButtons
             allowScrollButtonsMobile
+            role="navigation"
           >
             {visaTabs?.map((arg) => (
               <Tab

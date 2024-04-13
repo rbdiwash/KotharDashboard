@@ -24,6 +24,7 @@ const AddClient = ({ color = "light" }) => {
     email: null,
     image: null,
     gender: null,
+    usiNumber: null,
   });
 
   const [{}, { refetchClient }] = useKothar();
@@ -233,6 +234,16 @@ const AddClient = ({ color = "light" }) => {
                       required
                       type="date"
                       value={data?.visaExpiry}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="relative w-full mb-3">
+                    <InputField
+                      label="USI Number"
+                      name="usiNumber"
+                      required
+                      type="number"
+                      value={data?.usiNumber}
                       onChange={handleInputChange}
                     />
                   </div>

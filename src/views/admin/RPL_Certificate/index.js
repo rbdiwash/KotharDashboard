@@ -1,7 +1,9 @@
 import {
+  Autocomplete,
   Button,
   CircularProgress,
   IconButton,
+  TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -23,6 +25,9 @@ import SearchField from "components/SearchField";
 import DiscussionModal from "components/Modals/DiscussionModal";
 import { useEffect } from "react";
 import { delete_data } from "const/axios";
+import { rpl_status } from "const/constants";
+import { InfoOutlined } from "@mui/icons-material";
+import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 
 const RPLCertificate = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
@@ -32,6 +37,7 @@ const RPLCertificate = ({ color = "light" }) => {
   const [loading, setLoading] = useState(false);
   const [{ rplList }, { setRPLList }] = useKothar();
   const [filteredData, setFilteredData] = useState(rplList);
+  const [data, setData] = useState();
 
   const [value, setValue] = useState(0);
   const [openDiscussion, setOpenDiscussion] = useState(false);
@@ -180,6 +186,8 @@ const RPLCertificate = ({ color = "light" }) => {
                 setOpenConfirmationModal,
                 color,
                 loading,
+                setData,
+                data,
               }}
             />
           </TabPanel>
@@ -215,6 +223,8 @@ const TabContent = ({
   filteredData,
   setOpenConfirmationModal,
   loading,
+  data,
+  setData,
 }) => {
   return (
     <div className="block w-full overflow-x-auto mt-0">
@@ -232,7 +242,14 @@ const TabContent = ({
             <th className={"table-head " + tableHeadClass}>Case Officer</th>
             <th className={"table-head " + tableHeadClass}>Reeference</th>
 
-            <th className={"table-head " + tableHeadClass}>Status </th>
+            <th
+              className={"table-head flex items-center gap-2 " + tableHeadClass}
+            >
+              Status{" "}
+              <Tooltip title="Double Click on Status to Edit" arrow>
+                <InfoOutlined sx={{ color: "orange" }} />
+              </Tooltip>
+            </th>
 
             <th className={"table-head " + tableHeadClass}>Action </th>
           </tr>
@@ -250,77 +267,7 @@ const TabContent = ({
             <>
               {filteredData?.length > 0 ? (
                 filteredData?.map((item, index) => (
-                  <tr key={item?.id || index}>
-                    <td className="table-data text-left flex items-center">
-                      {ImageName(item?.name)}
-                      <span className={"ml-3 font-bold text-slate-600"}>
-                        {item?.name || "-"}
-                      </span>
-                    </td>
-                    <td className="table-data">{item?.email || "-"}</td>
-                    <td className="table-data">
-                      <div className="flex">{item?.usiNumber || "-"}</div>
-                    </td>
-                    <td className="table-data">
-                      <div className="flex items-center gap-2">
-                        {item?.visaStatus || "-"}
-                      </div>
-                    </td>
-
-                    <td className="table-data">
-                      <div className="flex items-center">
-                        {item?.certificate || "-"}
-                      </div>
-                    </td>
-                    <td className="table-data">
-                      <div className="flex items-center">
-                        {item?.reference || "-"}
-                      </div>
-                    </td>
-                    <td className="table-data">
-                      <div className="flex items-center">
-                        {item?.caseOfficer || "-"}
-                      </div>
-                    </td>
-                    <td className="table-data">
-                      <div className="flex items-center">
-                        {item?.status || "-"}
-                      </div>
-                    </td>
-
-                    <td className="table-data text-right">
-                      <div className="flex items-center">
-                        <Tooltip title="View" arrow>
-                          <IconButton>
-                            <AiFillEye className="text-sky-600 cursor-pointer" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Edit RPL Details" arrow>
-                          <IconButton
-                            onClick={() =>
-                              navigate("/admin/rpl-certificate/add", {
-                                state: { item },
-                              })
-                            }
-                          >
-                            <AiFillEdit className="text-sky-600 cursor-pointer" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Delete RPL Details" arrow>
-                          <IconButton
-                            onClick={() =>
-                              setOpenConfirmationModal({
-                                state: true,
-                                id: item?.id,
-                              })
-                            }
-                          >
-                            <AiFillDelete className="text-red-600 cursor-pointer" />
-                          </IconButton>
-                        </Tooltip>
-                      </div>
-                    </td>
-                  </tr>
+                  <TableRow {...{ item, index, data, setData, navigate }} />
                 ))
               ) : (
                 <tr key={1}>
@@ -336,5 +283,117 @@ const TabContent = ({
         </tbody>
       </table>
     </div>
+  );
+};
+
+const TableRow = ({
+  item,
+  index,
+  data,
+  setData,
+  navigate,
+  setOpenConfirmationModal,
+}) => {
+  const [isStautusEditable, setIsStatusEditable] = useState(false);
+  return (
+    <tr key={item?.id || index} onClick={() => setData(item)}>
+      <td className="table-data text-left flex items-center">
+        {ImageName(item?.name)}
+        <span className={"ml-3 font-bold text-slate-600"}>
+          {item?.name || "-"}
+        </span>
+      </td>
+      <td className="table-data">{item?.email || "-"}</td>
+      <td className="table-data">
+        <div className="flex">{item?.usiNumber || "-"}</div>
+      </td>
+      <td className="table-data">
+        <div className="flex items-center gap-2">{item?.visaStatus || "-"}</div>
+      </td>
+
+      <td className="table-data">
+        <div className="flex items-center">{item?.certificate || "-"}</div>
+      </td>
+      <td className="table-data">
+        <div className="flex items-center">{item?.reference || "-"}</div>
+      </td>
+      <td className="table-data">
+        <div className="flex items-center">{item?.caseOfficer || "-"}</div>
+      </td>
+      <td className="table-data">
+        <div className="flex items-center">
+          {isStautusEditable && item?.id === data?.id ? (
+            <Autocomplete
+              onChange={(e, value) => {
+                setData((prevState) => ({
+                  ...prevState,
+                  status: value?.value,
+                }));
+              }}
+              required
+              value={rpl_status?.find((item) => item?.value === data?.status)}
+              options={rpl_status}
+              disablePortal
+              renderInput={(params) => (
+                <TextField {...params} label="Select RPL Status" />
+              )}
+              ListboxProps={{
+                style: {
+                  maxHeight: "180px",
+                },
+              }}
+              size="small"
+              sx={{ width: 200 }}
+            />
+          ) : (
+            <Tooltip title="Double Click  to Edit" arrow>
+              <span className="cursor-pointer">{item?.status || "-"}</span>
+            </Tooltip>
+          )}
+        </div>
+      </td>
+
+      <td className="table-data text-right">
+        <div className="flex items-center">
+          <Tooltip title="Edit Status only" arrow>
+            <IconButton
+              onClick={() => {
+                setIsStatusEditable(true);
+              }}
+            >
+              <DriveFileRenameOutlineIcon className="text-yellow-600 cursor-pointer" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="View" arrow>
+            <IconButton>
+              <AiFillEye className="text-sky-600 cursor-pointer" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Edit RPL Details" arrow>
+            <IconButton
+              onClick={() =>
+                navigate("/admin/rpl-certificate/add", {
+                  state: { item },
+                })
+              }
+            >
+              <AiFillEdit className="text-sky-600 cursor-pointer" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Delete RPL Details" arrow>
+            <IconButton
+              onClick={() =>
+                setOpenConfirmationModal({
+                  state: true,
+                  id: item?.id,
+                })
+              }
+            >
+              <AiFillDelete className="text-red-600 cursor-pointer" />
+            </IconButton>
+          </Tooltip>
+        </div>
+      </td>
+    </tr>
   );
 };

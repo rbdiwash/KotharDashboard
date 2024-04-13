@@ -9,42 +9,87 @@ import UserDropdown from "components/Dropdowns/UserDropdown.js";
 export default function Sidebar() {
   const [collapseShow, setCollapseShow] = React.useState("hidden");
   const location = useLocation();
+  const userDetail = JSON.parse(localStorage.getItem("userDetail"));
+  console.log("🚀  userDetail:", userDetail);
   const options = [
-    { label: "Dashboard", value: "dashboard", icon: "fas fa-tv" },
-    { label: "Client", value: "client", icon: "fas fa-user" },
-    { label: "University", value: "university", icon: "fas fa-school" },
-    { label: "course", value: "course", icon: "fas fa-briefcase" },
+    {
+      label: "Dashboard",
+      value: "dashboard",
+      icon: "fas fa-tv",
+      role: ["SUPER_ADMIN", "ADMIN", "USER"],
+    },
+    {
+      label: "Client",
+      value: "client",
+      icon: "fas fa-user",
+      role: ["SUPER_ADMIN", "ADMIN", "USER"],
+    },
+    {
+      label: "University",
+      value: "university",
+      icon: "fas fa-school",
+      role: ["SUPER_ADMIN", "ADMIN", "USER"],
+    },
+    {
+      label: "course",
+      value: "course",
+      icon: "fas fa-briefcase",
+      role: ["SUPER_ADMIN", "ADMIN", "USER"],
+    },
     {
       label: "RPL Certificate",
       value: "rpl-certificate",
       icon: "fas fa-briefcase",
+      role: ["SUPER_ADMIN", "ADMIN", "USER"],
     },
-    { label: "Student", value: "student", icon: "fas fa-graduation-cap" },
+    {
+      label: "Student",
+      value: "student",
+      icon: "fas fa-graduation-cap",
+      role: ["SUPER_ADMIN", "ADMIN", "USER"],
+    },
     {
       label: "Visa",
       value: "visa",
       icon: "fas fa-x-ray",
+      role: ["SUPER_ADMIN", "ADMIN", "USER"],
     },
     {
       label: "Insurance",
       value: "insurance",
       icon: "fas fa-x-ray",
+      role: ["SUPER_ADMIN", "ADMIN", "USER"],
     },
     {
       label: "Skill Assessment",
       value: "skill-assessment",
       icon: "fas fa-x-ray",
+      role: ["SUPER_ADMIN", "ADMIN", "USER"],
     },
-    { label: "consultancy", value: "consultancy", icon: "fas fa-briefcase" },
-    { label: "Invoice", value: "invoice", icon: "fas fa-file-invoice-dollar" },
-    { label: "User", value: "user", icon: "fas fa-user" },
+    {
+      label: "consultancy",
+      value: "consultancy",
+      icon: "fas fa-briefcase",
+      role: ["SUPER_ADMIN"],
+    },
+    {
+      label: "Invoice",
+      value: "invoice",
+      icon: "fas fa-file-invoice-dollar",
+      role: ["SUPER_ADMIN", "ADMIN", "USER"],
+    },
+    {
+      label: "User",
+      value: "user",
+      icon: "fas fa-user",
+      role: ["SUPER_ADMIN"],
+    },
     {
       label: "Account",
       value: "account",
       icon: "fas fa-file-invoice-dollar",
+      role: ["SUPER_ADMIN"],
     },
-    // { label: "Settings", value: "setting", icon: "fas fa-tools" },
-    // { label: "Map", value: "map", icon: "fas fa-map-marked" },
   ];
 
   const authOptions = [
@@ -122,31 +167,33 @@ export default function Sidebar() {
               Admin Panel
             </h6> */}
             <ul className="md:flex-col md:min-w-full flex flex-col list-none">
-              {options.map((item) => (
-                <li className="items-center" key={item?.value}>
-                  <Link
-                    className={
-                      "text-xs uppercase py-3 font-bold block " +
-                      (location.pathname.includes(`/admin/${item?.value}`)
-                        ? "text-sky-500 hover:text-sky-600"
-                        : "text-slate-700 hover:text-slate-500")
-                    }
-                    to={`/admin/${item?.value}`}
-                  >
-                    <i
+              {options
+                .filter((option) => option.role.includes(userDetail?.type))
+                .map((item) => (
+                  <li className="items-center" key={item?.value}>
+                    <Link
                       className={
-                        `${item?.icon} mr-2 text-sm ` +
-                        (window.location.href.indexOf(
-                          `/admin/${item?.value}`
-                        ) !== -1
-                          ? "opacity-75"
-                          : "text-slate-300")
+                        "text-xs uppercase py-3 font-bold block " +
+                        (location.pathname.includes(`/admin/${item?.value}`)
+                          ? "text-sky-500 hover:text-sky-600"
+                          : "text-slate-700 hover:text-slate-500")
                       }
-                    ></i>
-                    {item?.label}
-                  </Link>
-                </li>
-              ))}
+                      to={`/admin/${item?.value}`}
+                    >
+                      <i
+                        className={
+                          `${item?.icon} mr-2 text-sm ` +
+                          (window.location.href.indexOf(
+                            `/admin/${item?.value}`
+                          ) !== -1
+                            ? "opacity-75"
+                            : "text-slate-300")
+                        }
+                      ></i>
+                      {item?.label}
+                    </Link>
+                  </li>
+                ))}
             </ul>
             <hr className="my-4 md:min-w-full" />
             {/* <h6 className="md:min-w-full text-slate-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">

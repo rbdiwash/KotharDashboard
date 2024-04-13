@@ -23,6 +23,7 @@ const ClientDropdown = ({ data, setData }) => {
             visaStatus: value?.visaStatus,
             passportExpiry: value?.passportExpiry,
             dateOfIssue: value?.dateOfIssue,
+            usiNumber: value?.usiNumber,
           }));
         }}
         value={{ name: data?.name, id: data?.id }}

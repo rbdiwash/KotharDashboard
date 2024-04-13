@@ -166,7 +166,6 @@ const AddVisaDetails = ({ color = "light" }) => {
                   {data?.id ? "Edit" : "Add"} Visa Details
                 </h3>
               </div>
-              {console.log(selectedVisaTab)}
 
               <div className="flex items-center gap-2">
                 {selectedVisaTab?.value === "All" && (

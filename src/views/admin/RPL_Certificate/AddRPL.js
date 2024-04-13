@@ -276,6 +276,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                       type="text"
                       value={data?.usiNumber}
                       onChange={handleInputChange}
+                      disabled
                     />
                   </div>
                 </div>

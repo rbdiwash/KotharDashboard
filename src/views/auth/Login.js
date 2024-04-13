@@ -55,7 +55,8 @@ export default function Login() {
         password: "",
       });
       localStorage.setItem("token", res?.data?.token);
-      localStorage.setItem('userEmail',data?.username)
+      localStorage.setItem("userEmail", data?.username);
+      localStorage.setItem("userDetail", JSON.stringify(res?.data?.userDetail));
       setToken(res?.data?.token);
       res?.data?.data?.mfa
         ? navigate("/email/verify")
@@ -66,7 +67,7 @@ export default function Login() {
     },
     onError(err) {
       console.log("🚀  err:", err);
-      toast.error(err?.response?.data?.message ?? "Error");
+      toast.error(err?.response?.data?.errorMessage ?? "Error");
     },
   });
 

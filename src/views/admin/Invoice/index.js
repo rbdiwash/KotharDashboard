@@ -192,11 +192,11 @@ const Invoice = ({ color = "dark" }) => {
                       </td>
                       <td className="table-data">
                         <div className="flex items-center gap-4">
-                          <Tooltip title="View Invoice" arrow>
+                          {/* <Tooltip title="View Invoice" arrow>
                             <IconButton onClick={() => setOpenInvoice(true)}>
                               <AiFillEye className="text-white cursor-pointer" />
                             </IconButton>
-                          </Tooltip>
+                          </Tooltip> */}
                           {/* <Tooltip title="Print Invoice" arrow>
                             <IconButton onClick={() => window.print()}>
                               <AiFillPrinter className="text-white" />
