@@ -35,7 +35,7 @@ const Comments = () => {
           </div>
           <form class="mb-6 flex flex-col " onSubmit={submitPost}>
             <div class="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200">
-              <label for="comment" class="sr-only">
+              <label htmlFor="comment" class="sr-only">
                 Your comment
               </label>
               <textarea

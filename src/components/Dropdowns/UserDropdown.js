@@ -5,6 +5,8 @@ import { useState } from "react";
 import axios from "axios";
 import { API_URL } from "const/constants";
 import useKothar from "context/useKothar";
+import { FaUserAlt } from "react-icons/fa";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 const UserDropdown = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -56,13 +58,7 @@ const UserDropdown = () => {
         aria-describedby={id}
       >
         <div className="items-center flex">
-          <span className="w-12 h-12 text-sm text-white bg-slate-200 inline-flex items-center justify-center rounded-full">
-            <img
-              alt="..."
-              className="w-full rounded-full align-middle border-none shadow-lg"
-              src={require("assets/img/user.png")}
-            />
-          </span>
+          <AccountCircleIcon className="w-12 h-12 rounded-full text-2xl bg-sky-600 text-white" />
         </div>
       </a>
 

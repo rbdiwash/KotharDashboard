@@ -177,7 +177,7 @@ export default function DiscussionModal({ open, setOpen, studentList, type }) {
           </DialogContent>
           <DialogActions className="py-2 flex flex-col">
             <div class="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 w-full">
-              <label for="comment" class="sr-only">
+              <label htmlFor="comment" class="sr-only">
                 Your comment
               </label>
               <textarea

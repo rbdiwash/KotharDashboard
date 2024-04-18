@@ -55,6 +55,8 @@ const AddAccounts = ({ color = "light" }) => {
       setSelectedStudent({
         clientId: state?.item?.clientId,
         name: `${state?.item?.clientName}`,
+        address: state?.item?.clientData?.address,
+        number: state?.item?.clientData?.number,
       });
       setInstallments(state?.item?.installments);
     }
@@ -74,6 +76,8 @@ const AddAccounts = ({ color = "light" }) => {
         toast.error("Error Deleting Data");
       });
   };
+
+  console.log(selectedType);
 
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
@@ -147,6 +151,7 @@ const AddAccounts = ({ color = "light" }) => {
       paymentType: "",
       amount: installments.reduce((a, b) => a + (Number(b.amount) || 0), 0),
       amountAfterDiscount: totalAmountAfterDiscount(),
+      discount: Number(data?.discount),
     });
   };
 
@@ -160,9 +165,6 @@ const AddAccounts = ({ color = "light" }) => {
       totalAmount - (Number(data?.discount) / 100) * totalAmount;
     return priceAfterDiscount;
   };
-
-  console.log(selectedStudent);
-  console.log(selectedType);
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">
@@ -267,7 +269,7 @@ const AddAccounts = ({ color = "light" }) => {
                                   Type:
                                 </dt>
                                 <dd className="mt-0 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                  {selectedType?.title}
+                                  {selectedType?.label}
                                 </dd>
                               </div>
                             </dl>
@@ -367,7 +369,17 @@ const AddAccounts = ({ color = "light" }) => {
                                     isOptionEqualToValue={(options, value) =>
                                       options.value === value.value
                                     }
-                                    value={item?.claimed}
+                                    value={[
+                                      {
+                                        label: "Yes",
+                                        value: "Yes",
+                                      },
+                                      { label: "No", value: "No" },
+                                    ]?.find(
+                                      (arg) =>
+                                        arg?.value?.toLowerCase() ===
+                                        item?.claimed?.toLowerCase()
+                                    )}
                                     name="claimed"
                                     size="small"
                                     required

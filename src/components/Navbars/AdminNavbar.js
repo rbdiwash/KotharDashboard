@@ -1,8 +1,23 @@
 import React from "react";
 
 import UserDropdown from "components/Dropdowns/UserDropdown.js";
+import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
+import { Popover } from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 export default function Navbar() {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
   return (
     <>
       {/* Navbar */}
@@ -30,8 +45,58 @@ export default function Navbar() {
             </div>
           </form> */}
           {/* User */}
-          <ul className="flex-col md:flex-row list-none items-center hidden md:flex">
+          <ul className="flex-col md:flex-row md:gap-4 list-none items-center hidden md:flex">
+            <CircleNotificationsIcon
+              className="w-12 h-12 text-white cursor-pointer"
+              onClick={handleClick}
+              aria-describedby={id}
+            />
             <UserDropdown />
+
+            <Popover
+              id={id}
+              open={open}
+              anchorEl={anchorEl}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "left",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+            >
+              <div
+                className={
+                  "max-w-[400px] bg-white text-base z-50 float-left list-none text-left rounded shadow-lg min-w-48"
+                }
+              >
+                <ul className="">
+                  <li className="flex items-start border-b px-4 py-2">
+                    <span>
+                      Divash has sent a new message. This is the first
+                      notification.
+                    </span>
+                    <MoreVertIcon />
+                  </li>
+                  <li className="flex items-start border-b px-4 py-2">
+                    <span>
+                      Divash has sent a new message. This is the first
+                      notification.
+                    </span>
+                    <MoreVertIcon />
+                  </li>
+                  <li className="flex items-start border-b px-4 py-2">
+                    <span>
+                      Divash has sent a new message. This is the first
+                      notification.
+                    </span>
+                    <MoreVertIcon />
+                  </li>
+                </ul>
+              </div>
+            </Popover>
           </ul>
         </div>
       </nav>

@@ -121,6 +121,11 @@ const Visa = ({ color = "light" }) => {
       setFilteredData(visaList);
     }
   }, [searchText, visaList]);
+  const modifiedVisaList = visaList.map((item) => ({
+    name: `${item?.name} (${item?.passportNumber})`,
+    id: item?.id,
+  }));
+  console.log("🚀  modifiedVisaList:", modifiedVisaList);
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">
@@ -206,7 +211,7 @@ const Visa = ({ color = "light" }) => {
         <DiscussionModal
           open={openDiscussion}
           setOpen={setOpenDiscussion}
-          studentList={visaList}
+          studentList={modifiedVisaList}
           type="visa"
         />
       )}
@@ -260,7 +265,7 @@ const TabContent = ({
                 </td>
                 <td className="table-data">
                   <div className="flex items-center">
-                    {item?.reeference || "-"}
+                    {item?.reference || "-"}
                   </div>
                 </td>
                 <td className="table-data">{item?.type || "-"}</td>

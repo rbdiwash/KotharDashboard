@@ -143,22 +143,24 @@ const Users = ({ color = "dark" }) => {
                       </td>
 
                       <td className="table-data text-right">
-                        <div className="flex items-center gap-4">
-                          <Button
-                            variant="contained"
-                            onClick={(e) => handleVerifyEmail(e, item)}
-                            endIcon={
-                              loadingVerify &&
-                              openEmailModal?.data?.id === item?.id && (
-                                <CircularProgress
-                                  size={10}
-                                  sx={{ color: "white" }}
-                                />
-                              )
-                            }
-                          >
-                            Verify Email
-                          </Button>{" "}
+                        <div className="flex items-center justify-center gap-4">
+                          {item?.emailVerified !== "Y" && (
+                            <Button
+                              variant="contained"
+                              onClick={(e) => handleVerifyEmail(e, item)}
+                              endIcon={
+                                loadingVerify &&
+                                openEmailModal?.data?.id === item?.id && (
+                                  <CircularProgress
+                                    size={10}
+                                    sx={{ color: "white" }}
+                                  />
+                                )
+                              }
+                            >
+                              Verify Email
+                            </Button>
+                          )}
                           <Tooltip title="Edit User" arrow>
                             <IconButton
                               onClick={() =>
