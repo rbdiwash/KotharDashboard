@@ -47,7 +47,10 @@ const AddAccounts = ({ color = "light" }) => {
     if (state) {
       setData({ ...state?.item });
       setSelectedType(
-        options.find((item) => item?.value === state?.item?.type)
+        options.find(
+          (item) =>
+            item?.value.toLowerCase() === state?.item?.type?.toLowerCase()
+        )
       );
       setSelectedStudent({
         clientId: state?.item?.clientId,
@@ -159,6 +162,7 @@ const AddAccounts = ({ color = "light" }) => {
   };
 
   console.log(selectedStudent);
+  console.log(selectedType);
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">

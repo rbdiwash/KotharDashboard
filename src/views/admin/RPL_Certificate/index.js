@@ -183,81 +183,20 @@ const RPLCertificate = ({ color = "light" }) => {
             ))}
           </Tabs>
           <TabPanel value={value} index={value}>
-            <div className="block w-full overflow-x-auto mt-0">
-              <table className="items-center w-full bg-transparent border-collapse">
-                <thead>
-                  <tr>
-                    <th className={"table-head " + tableHeadClass}>Name</th>
-                    <th className={"table-head " + tableHeadClass}>Email</th>
-                    <th className={"table-head " + tableHeadClass}>
-                      USI Number
-                    </th>
-                    <th className={"table-head " + tableHeadClass}>
-                      Visa Status
-                    </th>
-
-                    <th className={"table-head " + tableHeadClass}>
-                      Certification Type
-                    </th>
-                    <th className={"table-head " + tableHeadClass}>
-                      Case Officer
-                    </th>
-                    <th className={"table-head " + tableHeadClass}>
-                      Reeference
-                    </th>
-
-                    <th
-                      className={
-                        "table-head flex items-center gap-2 " + tableHeadClass
-                      }
-                    >
-                      Status
-                    </th>
-
-                    <th className={"table-head " + tableHeadClass}>Action </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {loading ? (
-                    <tr>
-                      <td colSpan={12}>
-                        <div className="w-full h-[50vh] flex items-center justify-center text-center">
-                          <CircularProgress />
-                        </div>
-                      </td>
-                    </tr>
-                  ) : (
-                    <>
-                      {filteredData?.length > 0 ? (
-                        filteredData?.map((item, index) => (
-                          <TableRow
-                            {...{
-                              item,
-                              index,
-                              data,
-                              setData,
-                              navigate,
-                              setOpenConfirmationModal,
-                              isStautusEditable,
-                              setIsStatusEditable,
-                              key: index,
-                            }}
-                          />
-                        ))
-                      ) : (
-                        <tr key={1}>
-                          <td colSpan={14}>
-                            <div className="text-lg text-center my-10">
-                              No Results Found
-                            </div>
-                          </td>
-                        </tr>
-                      )}
-                    </>
-                  )}
-                </tbody>
-              </table>
-            </div>
+            <TabContent
+              {...{
+                tableHeadClass,
+                loading,
+                filteredData,
+                data,
+                setData,
+                navigate,
+                isStautusEditable,
+                setIsStatusEditable,
+                getRPLList,
+                setOpenConfirmationModal,
+              }}
+            />
           </TabPanel>
         </div>
       </div>
@@ -285,37 +224,127 @@ const RPLCertificate = ({ color = "light" }) => {
 
 export default RPLCertificate;
 
+const TabContent = ({
+  tableHeadClass,
+  loading,
+  filteredData,
+  data,
+  setData,
+  navigate,
+  isStautusEditable,
+  setIsStatusEditable,
+  setOpenConfirmationModal,
+  getRPLList,
+}) => {
+  return (
+    <div className="block w-full overflow-x-auto mt-0">
+      <table className="items-center w-full bg-transparent border-collapse">
+        <thead>
+          <tr>
+            <th className={"table-head " + tableHeadClass}>Name</th>
+            <th className={"table-head " + tableHeadClass}>Email</th>
+            <th className={"table-head " + tableHeadClass}>USI Number</th>
+            <th className={"table-head " + tableHeadClass}>Visa Status</th>
+
+            <th className={"table-head " + tableHeadClass}>
+              Certification Type
+            </th>
+            <th className={"table-head " + tableHeadClass}>Case Officer</th>
+            <th className={"table-head " + tableHeadClass}>Reeference</th>
+
+            <th
+              className={"table-head flex items-center gap-2 " + tableHeadClass}
+            >
+              Status
+            </th>
+
+            <th className={"table-head " + tableHeadClass}>Action </th>
+          </tr>
+        </thead>
+        <tbody>
+          {loading ? (
+            <tr>
+              <td colSpan={12}>
+                <div className="w-full h-[50vh] flex items-center justify-center text-center">
+                  <CircularProgress />
+                </div>
+              </td>
+            </tr>
+          ) : (
+            <>
+              {filteredData?.length > 0 ? (
+                filteredData?.map((item, index) => (
+                  <TableRow
+                    {...{
+                      item,
+                      index,
+                      data,
+                      setData,
+                      navigate,
+                      setOpenConfirmationModal,
+                      isStautusEditable,
+                      setIsStatusEditable,
+                      key: index,
+                      getRPLList,
+                      rpl_status,
+                    }}
+                  />
+                ))
+              ) : (
+                <tr key={1}>
+                  <td colSpan={14}>
+                    <div className="text-lg text-center my-10">
+                      No Results Found
+                    </div>
+                  </td>
+                </tr>
+              )}
+            </>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+};
 const TableRow = ({
   item,
   index,
-  data,
-  setData,
+  // data,
+  // setData,
   navigate,
   setOpenConfirmationModal,
   setIsStatusEditable,
   isStautusEditable,
+  getRPLList,
+  rpl_status,
 }) => {
+  const [data, setData] = useState(item);
+
   const { mutate, isLoading } = useMutation(postData, {
     onSuccess() {
       toast.success("Data updated Successfully");
       setIsStatusEditable(false);
+      getRPLList();
     },
     onError() {
       toast.error("Error Updating Data");
     },
   });
 
-  console.log(isStautusEditable);
-
   async function postData(payload) {
     await axios.put(`${API_URL}/rpl/${payload?.id}`, payload);
   }
 
-  const updateData = () => {
+  const updateData = (value) => {
+    if (!data?.status) {
+      toast.error("Status is required to update the data");
+    }
+
     mutate({
       ...data,
       useExistingClientData: true,
       placementRequired: "yes" ? true : false,
+      status: value || data?.status,
     });
   };
 
@@ -345,37 +374,34 @@ const TableRow = ({
         <div className="flex items-center">{item?.caseOfficer || "-"}</div>
       </td>
       <td className="table-data">
-        <div className="flex items-center">
-          {isStautusEditable ? (
-            <Autocomplete
-              onChange={(e, value) => {
-                setData((prevState) => ({
-                  ...prevState,
-                  status: value?.value,
-                }));
-              }}
-              required
-              value={rpl_status?.find((item) => item?.value === data?.status)}
-              options={rpl_status}
-              disablePortal
-              renderInput={(params) => (
-                <TextField {...params} label="Select RPL Status" />
-              )}
-              ListboxProps={{
-                style: {
-                  maxHeight: "180px",
-                },
-              }}
-              size="small"
-              sx={{ width: 250 }}
-              onBlur={updateData}
-            />
-          ) : (
-            <Tooltip title="Double Click  to Edit" arrow>
-              <span className="cursor-pointer">{item?.status || "-"}</span>
-            </Tooltip>
-          )}
-        </div>
+        {isStautusEditable ? (
+          <Autocomplete
+            onChange={(e, value) => {
+              setData((prevState) => ({
+                ...prevState,
+                status: value?.value,
+              }));
+              updateData(value?.value);
+            }}
+            required
+            value={rpl_status?.find((item) => item?.value === data?.status)}
+            options={rpl_status}
+            disablePortal
+            renderInput={(params) => (
+              <TextField {...params} label="Select RPL Status" />
+            )}
+            ListboxProps={{
+              style: {
+                maxHeight: "180px",
+              },
+            }}
+            size="small"
+            sx={{ width: 250 }}
+            // onBlur={updateData}
+          />
+        ) : (
+          <span className="cursor-pointer">{item?.status || "-"}</span>
+        )}
       </td>
 
       <td className="table-data text-right">
