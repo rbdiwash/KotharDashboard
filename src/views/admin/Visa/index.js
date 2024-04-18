@@ -50,13 +50,10 @@ const Visa = ({ color = "light" }) => {
   const [searchText, setSearchText] = useState("");
   const location = useLocation();
 
-  const [
-    { visaList, selectedVisaTab },
-    { refetchVisaList, getVisaList, setSelectedVisaTab },
-  ] = useKothar();
+  const [{ visaList, selectedVisaTab }, { getVisaList, setSelectedVisaTab }] =
+    useKothar();
 
   let [searchParams, setSearchParams] = useSearchParams();
-
   const [value, setValue] = useState(0);
   const [filteredData, setFilteredData] = useState(visaList);
 
@@ -68,8 +65,10 @@ const Visa = ({ color = "light" }) => {
     setSelectedVisaTab(status);
 
     setSearchParams({ type: status?.value });
-    getVisaList(`type=${status?.value}`);
+    // getVisaList(`type=${status?.value}`);
   };
+
+  console.log(visaList);
 
   useEffect(() => {
     if (searchParams.get("type")) {
@@ -94,7 +93,7 @@ const Visa = ({ color = "light" }) => {
       .then((res) => {
         toast.success(res?.data?.message || "Data Deleted Successfully");
         setOpenConfirmationModal({ state: false, id: null });
-        refetchVisaList();
+        getVisaList();
       })
       .catch((err) => {
         toast.error("Error Deleting Data");

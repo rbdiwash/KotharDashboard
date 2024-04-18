@@ -135,6 +135,8 @@ const AddRPLCertificate = ({ color = "light" }) => {
       (v) => v
     ).length < 3;
 
+  console.log(data);
+
   return (
     <div className="flex flex-wrap mt-4 dashBody">
       <div className="w-full mb-12 px-4">
@@ -144,7 +146,10 @@ const AddRPLCertificate = ({ color = "light" }) => {
             (color === "light" ? "bg-white" : "bg-sky-900 text-white")
           }
         >
-          <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+          <form
+            className="flex flex-col space-y-4 md:space-y-6"
+            onSubmit={handleSubmit}
+          >
             <div className="rounded-t mb-0 px-10 py-3 border-0">
               <div className="flex items-center">
                 <div className="relative w-full  max-w-full flex justify-start gap-4 items-center">
@@ -161,6 +166,9 @@ const AddRPLCertificate = ({ color = "light" }) => {
                     Add RPL Certificate
                   </h3>
                 </div>
+                {console.log(
+                  rpl_status?.find((item) => item?.value === data?.status)
+                )}
 
                 <Autocomplete
                   onChange={(e, value) => {
@@ -176,7 +184,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                   options={rpl_status}
                   disablePortal
                   renderInput={(params) => (
-                    <TextField {...params} label="Select RPL Status" />
+                    <TextField {...params} label="Select RPL Status" required />
                   )}
                   ListboxProps={{
                     style: {
@@ -189,7 +197,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
               </div>
             </div>
             <div className="block w-full overflow-x-auto mt-8">
-              <div className="flex-auto lg:px-10 py-10 pt-0">
+              <div className="flex flex-col gap-4 lg:px-10 py-10 pt-0">
                 <p className="text-xl font-semibold tracking-wider bg-orange-500 p-2 text-white">
                   Personal Details
                 </p>
@@ -484,6 +492,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                     >
                       100 Points ID (Any 3 Form of ID)
                     </FormLabel>
+                    {console.log(data?.license)}
                     <FormGroup>
                       <FormControlLabel
                         control={

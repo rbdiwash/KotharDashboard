@@ -15,6 +15,7 @@ const useStateAndActions = () => {
     value: "all",
   });
   const [rplList, setRPLList] = useState([]);
+  const [visaList, setVisaList] = useState([]);
   const getData = async () => {
     const res = await axios.get(`organization`);
     return res?.data?.data;
@@ -25,6 +26,8 @@ const useStateAndActions = () => {
     getData,
     {
       refetchOnWindowFocus: false,
+      enabled: false,
+
       // onError: () => {
       //   toast.error("Error Fetching Data");
       // },
@@ -39,6 +42,8 @@ const useStateAndActions = () => {
     getClientData,
     {
       refetchOnWindowFocus: false,
+      enabled: false,
+
       // onError: () => {
       //   toast.error("Error Fetching Data");
       // },
@@ -53,6 +58,7 @@ const useStateAndActions = () => {
     getArchivedClient,
     {
       refetchOnWindowFocus: false,
+      enabled: false,
     }
   );
   const getUniData = async () => {
@@ -66,6 +72,8 @@ const useStateAndActions = () => {
     getUniData,
     {
       refetchOnWindowFocus: false,
+      enabled: false,
+
       retry: false,
 
       // onError: () => {
@@ -83,6 +91,8 @@ const useStateAndActions = () => {
     getCourseData,
     {
       refetchOnWindowFocus: false,
+      enabled: false,
+
       retry: false,
 
       //   onError: () => {
@@ -100,6 +110,7 @@ const useStateAndActions = () => {
     {
       refetchOnWindowFocus: false,
       retry: false,
+      enabled: false,
 
       //   onError: () => {
       //     toast.error("Error Fetching Data");
@@ -116,6 +127,7 @@ const useStateAndActions = () => {
     {
       refetchOnWindowFocus: false,
       retry: false,
+      enabled: false,
 
       //   onError: () => {
       //     toast.error("Error Fetching Data");
@@ -134,42 +146,9 @@ const useStateAndActions = () => {
     getInvoiceList,
     {
       refetchOnWindowFocus: false,
+      enabled: false,
     }
   );
-  const getVisaList = async (params) => {
-    let url =
-      typeof params === "string"
-        ? `${API_URL}/visa-applications/?${params}`
-        : `${API_URL}/visa-applications`;
-    const res = await axios.get(url, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
-    return res?.data?.data;
-  };
-  const { data: visaList, refetch: refetchVisaList } = useQuery(
-    ["visaList"],
-    getVisaList,
-    {
-      refetchOnWindowFocus: false,
-    }
-  );
-  // const getRPLList = async (params) => {
-  //   let url =
-  //     typeof params === "string"
-  //       ? `${API_URL}/rpl/?${params}`
-  //       : `${API_URL}/rpl`;
-  //   const res = await axios.get(url, {
-  //     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-  //   });
-  //   return res?.data?.data;
-  // };
-  // const { data: rplList, refetch: refetchRPLList } = useQuery(
-  //   ["rplList"],
-  //   getRPLList,
-  //   {
-  //     refetchOnWindowFocus: false,
-  //   }
-  // );
 
   const getRPLList = (params) => {
     let url =
@@ -182,6 +161,19 @@ const useStateAndActions = () => {
       })
       .then((res) => setRPLList(res?.data?.data));
   };
+
+  const getVisaList = (params) => {
+    let url =
+      typeof params === "string"
+        ? `${API_URL}/visa-applications/?${params}`
+        : `${API_URL}/visa-applications`;
+    axios
+      .get(url, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      })
+      .then((res) => setVisaList(res?.data?.data));
+  };
+
   const getSkillAssessmentList = async () => {
     const res = await axios.get(`${API_URL}/skill-assessment`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -193,6 +185,7 @@ const useStateAndActions = () => {
     getSkillAssessmentList,
     {
       refetchOnWindowFocus: false,
+      enabled: false,
     }
   );
   const getInsuranceList = async () => {
@@ -206,6 +199,7 @@ const useStateAndActions = () => {
     getInsuranceList,
     {
       refetchOnWindowFocus: false,
+      enabled: false,
     }
   );
   const getAccountsList = async () => {
@@ -219,6 +213,7 @@ const useStateAndActions = () => {
     getAccountsList,
     {
       refetchOnWindowFocus: false,
+      enabled: false,
     }
   );
   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -231,7 +226,7 @@ const useStateAndActions = () => {
       refetchUsers();
       refetchClient();
       refetchInvoiceList();
-      refetchVisaList();
+      getVisaList();
       refetchSkillList();
       refetchInsuranceList();
       getRPLList();
@@ -266,7 +261,7 @@ const useStateAndActions = () => {
     refetchStudent,
     refetchUsers,
     refetchInvoiceList,
-    refetchVisaList,
+    getVisaList,
     refetchSkillList,
     // refetchRPLList,
     refetchInsuranceList,

@@ -2,7 +2,7 @@ import { Button, IconButton, Popover, Tooltip } from "@mui/material";
 import DeleteModal from "components/Modals/DeleteModal";
 import { useState } from "react";
 import { AiFillDelete, AiFillEdit, AiFillEye } from "react-icons/ai";
-import { FaPlusCircle } from "react-icons/fa";
+import { FaDownload, FaPlusCircle } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { API_URL } from "const/constants";
@@ -56,6 +56,38 @@ const Clients = ({ color = "light" }) => {
     setAnchorEl(null);
   };
 
+  const handleDownloadData = () => {
+    axios
+      .get(`/clients/report`)
+      .then((response) => {
+        console.log(response);
+
+        // const url = window.URL.createObjectURL(
+        //   new Blob([response.data], {
+        //     type: "application/octet-stream",
+        //   })
+        // );
+        // const link = document.createElement("a");
+        // link.href = url;
+        // link.setAttribute("download", "Clients_Data.csv");
+        // document.body.appendChild(link);
+        // link.click();
+        const a = document.createElement("a");
+
+        const blobFile = new Blob([response?.data], {
+          type: "application/octet-stream",
+        });
+        const url = window.URL.createObjectURL(blobFile);
+        a.href = url;
+        a.download = "jhjj.csv";
+        a.click();
+        window.URL.revokeObjectURL(url);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
   return (
@@ -79,6 +111,13 @@ const Clients = ({ color = "light" }) => {
               </h3>
               <SearchField {...{ type: "Client", searchText, setSearchText }} />
               <div className="flex items-center gap-4">
+                <Button
+                  variant="contained"
+                  startIcon={<FaDownload />}
+                  onClick={handleDownloadData}
+                >
+                  Download Data
+                </Button>
                 <Button
                   variant="contained"
                   startIcon={<FaPlusCircle />}

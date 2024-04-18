@@ -26,8 +26,9 @@ import DiscussionModal from "components/Modals/DiscussionModal";
 import { useEffect } from "react";
 import { delete_data } from "const/axios";
 import { rpl_status } from "const/constants";
-import { InfoOutlined } from "@mui/icons-material";
+import { Check, InfoOutlined } from "@mui/icons-material";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
+import { TimePicker } from "@mui/x-date-pickers";
 
 const RPLCertificate = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
@@ -35,7 +36,7 @@ const RPLCertificate = ({ color = "light" }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(false);
-  const [{ rplList }, { setRPLList }] = useKothar();
+  const [{ rplList, token }, { setRPLList }] = useKothar();
   const [filteredData, setFilteredData] = useState(rplList);
   const [data, setData] = useState();
 
@@ -60,10 +61,14 @@ const RPLCertificate = ({ color = "light" }) => {
       });
   };
   const deleteData = () => {
-    delete_data(`${API_URL}/rpl/${openConfirmationModal?.id}`, () => {
-      setOpenConfirmationModal({ state: false, id: null });
-      getRPLList();
-    });
+    delete_data(
+      `${API_URL}/rpl/${openConfirmationModal?.id}`,
+      () => {
+        setOpenConfirmationModal({ state: false, id: null });
+        getRPLList();
+      },
+      token
+    );
   };
   useEffect(() => {
     if (searchText.length > 0) {
@@ -124,7 +129,7 @@ const RPLCertificate = ({ color = "light" }) => {
       </div>
     );
   }
-
+  const [isStautusEditable, setIsStatusEditable] = useState(false);
   return (
     <div className="flex flex-wrap mt-4 dashBody">
       <div className="w-full mb-12 px-4">
@@ -178,18 +183,81 @@ const RPLCertificate = ({ color = "light" }) => {
             ))}
           </Tabs>
           <TabPanel value={value} index={value}>
-            <TabContent
-              {...{
-                tableHeadClass,
-                navigate,
-                filteredData,
-                setOpenConfirmationModal,
-                color,
-                loading,
-                setData,
-                data,
-              }}
-            />
+            <div className="block w-full overflow-x-auto mt-0">
+              <table className="items-center w-full bg-transparent border-collapse">
+                <thead>
+                  <tr>
+                    <th className={"table-head " + tableHeadClass}>Name</th>
+                    <th className={"table-head " + tableHeadClass}>Email</th>
+                    <th className={"table-head " + tableHeadClass}>
+                      USI Number
+                    </th>
+                    <th className={"table-head " + tableHeadClass}>
+                      Visa Status
+                    </th>
+
+                    <th className={"table-head " + tableHeadClass}>
+                      Certification Type
+                    </th>
+                    <th className={"table-head " + tableHeadClass}>
+                      Case Officer
+                    </th>
+                    <th className={"table-head " + tableHeadClass}>
+                      Reeference
+                    </th>
+
+                    <th
+                      className={
+                        "table-head flex items-center gap-2 " + tableHeadClass
+                      }
+                    >
+                      Status
+                    </th>
+
+                    <th className={"table-head " + tableHeadClass}>Action </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {loading ? (
+                    <tr>
+                      <td colSpan={12}>
+                        <div className="w-full h-[50vh] flex items-center justify-center text-center">
+                          <CircularProgress />
+                        </div>
+                      </td>
+                    </tr>
+                  ) : (
+                    <>
+                      {filteredData?.length > 0 ? (
+                        filteredData?.map((item, index) => (
+                          <TableRow
+                            {...{
+                              item,
+                              index,
+                              data,
+                              setData,
+                              navigate,
+                              setOpenConfirmationModal,
+                              isStautusEditable,
+                              setIsStatusEditable,
+                              key: index,
+                            }}
+                          />
+                        ))
+                      ) : (
+                        <tr key={1}>
+                          <td colSpan={14}>
+                            <div className="text-lg text-center my-10">
+                              No Results Found
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </TabPanel>
         </div>
       </div>
@@ -217,72 +285,6 @@ const RPLCertificate = ({ color = "light" }) => {
 
 export default RPLCertificate;
 
-const TabContent = ({
-  tableHeadClass,
-  navigate,
-  filteredData,
-  setOpenConfirmationModal,
-  loading,
-  data,
-  setData,
-}) => {
-  return (
-    <div className="block w-full overflow-x-auto mt-0">
-      <table className="items-center w-full bg-transparent border-collapse">
-        <thead>
-          <tr>
-            <th className={"table-head " + tableHeadClass}>Name</th>
-            <th className={"table-head " + tableHeadClass}>Email</th>
-            <th className={"table-head " + tableHeadClass}>USI Number</th>
-            <th className={"table-head " + tableHeadClass}>Visa Status</th>
-
-            <th className={"table-head " + tableHeadClass}>
-              Certification Type
-            </th>
-            <th className={"table-head " + tableHeadClass}>Case Officer</th>
-            <th className={"table-head " + tableHeadClass}>Reeference</th>
-
-            <th
-              className={"table-head flex items-center gap-2 " + tableHeadClass}
-            >
-              Status
-            </th>
-
-            <th className={"table-head " + tableHeadClass}>Action </th>
-          </tr>
-        </thead>
-        <tbody>
-          {loading ? (
-            <tr>
-              <td colSpan={12}>
-                <div className="w-full h-[50vh] flex items-center justify-center text-center">
-                  <CircularProgress />
-                </div>
-              </td>
-            </tr>
-          ) : (
-            <>
-              {filteredData?.length > 0 ? (
-                filteredData?.map((item, index) => (
-                  <TableRow {...{ item, index, data, setData, navigate }} />
-                ))
-              ) : (
-                <tr key={1}>
-                  <td colSpan={14}>
-                    <div className="text-lg text-center my-10">
-                      No Results Found
-                    </div>
-                  </td>
-                </tr>
-              )}
-            </>
-          )}
-        </tbody>
-      </table>
-    </div>
-  );
-};
-
 const TableRow = ({
   item,
   index,
@@ -290,17 +292,20 @@ const TableRow = ({
   setData,
   navigate,
   setOpenConfirmationModal,
+  setIsStatusEditable,
+  isStautusEditable,
 }) => {
-  const [isStautusEditable, setIsStatusEditable] = useState(false);
-
   const { mutate, isLoading } = useMutation(postData, {
     onSuccess() {
       toast.success("Data updated Successfully");
+      setIsStatusEditable(false);
     },
     onError() {
       toast.error("Error Updating Data");
     },
   });
+
+  console.log(isStautusEditable);
 
   async function postData(payload) {
     await axios.put(`${API_URL}/rpl/${payload?.id}`, payload);
@@ -315,7 +320,7 @@ const TableRow = ({
   };
 
   return (
-    <tr key={item?.id || index} onClick={() => setData(item)}>
+    <tr key={item?.id} onClick={() => setData(item)}>
       <td className="table-data text-left flex items-center">
         {ImageName(item?.name)}
         <span className={"ml-3 font-bold text-slate-600"}>
@@ -375,15 +380,27 @@ const TableRow = ({
 
       <td className="table-data text-right">
         <div className="flex items-center">
-          <Tooltip title="Edit Status only" arrow>
-            <IconButton
-              onClick={() => {
-                setIsStatusEditable(!isStautusEditable);
-              }}
-            >
-              <DriveFileRenameOutlineIcon className="text-yellow-600 cursor-pointer" />
-            </IconButton>
-          </Tooltip>
+          {!isStautusEditable ? (
+            <Tooltip title="Edit Status only" arrow>
+              <IconButton
+                onClick={() => {
+                  setIsStatusEditable(true);
+                }}
+              >
+                <DriveFileRenameOutlineIcon className="text-yellow-600 cursor-pointer" />
+              </IconButton>
+            </Tooltip>
+          ) : (
+            <Tooltip title="Save Data" arrow>
+              <IconButton
+                onClick={() => {
+                  updateData();
+                }}
+              >
+                <Check className="text-yellow-600 cursor-pointer" />
+              </IconButton>
+            </Tooltip>
+          )}
           <Tooltip title="View" arrow>
             <IconButton>
               <AiFillEye className="text-sky-600 cursor-pointer" />
