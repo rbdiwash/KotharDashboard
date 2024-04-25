@@ -60,9 +60,10 @@ const AddVisaDetails = ({ color = "light" }) => {
     policeReport: "",
     relationshipCertificate: "",
     marriageCertificate: "",
+    importantNote: "",
   });
 
-  const [{ selectedVisaTab }, { refetchVisaList }] = useKothar();
+  const [{ selectedVisaTab }, { getVisaList }] = useKothar();
 
   const [tenYearAddress, setTenYearAddress] = useState([
     {
@@ -94,7 +95,7 @@ const AddVisaDetails = ({ color = "light" }) => {
         data?.id ? "Data updated Successfully" : "Data added Successfully"
       );
       navigate("/admin/visa");
-      refetchVisaList();
+      getVisaList();
     },
     onError() {
       toast.error(data?.id ? "Error Updating Data" : "Error Submitting Data");
@@ -108,13 +109,12 @@ const AddVisaDetails = ({ color = "light" }) => {
       await axios.post(`${API_URL}/visa-applications`, payload);
     }
   }
-
   const handleSubmit = (e) => {
     e.preventDefault();
     mutate({
       ...data,
       tenYearAddress: tenYearAddress,
-      type: selectedVisaTab?.value,
+      type: data?.type,
     });
   };
 
@@ -443,7 +443,7 @@ const AddVisaDetails = ({ color = "light" }) => {
                       placeholder="Desired OVSC Insurance"
                       name="desiredInsurance"
                       required
-                      type="number"
+                      type="text"
                       value={data?.desiredInsurance}
                       onChange={handleInputChange}
                     />
@@ -638,9 +638,9 @@ const AddVisaDetails = ({ color = "light" }) => {
                       type="text"
                       className="border px-3 py-3 placeholder-slate-300 text-slate-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       rows="4"
-                      name="note"
-                      value={data?.note}
-                      onChange={(e) => handleInputChange(e, "note")}
+                      name="importantNote"
+                      value={data?.importantNote}
+                      onChange={(e) => handleInputChange(e, "importantNote")}
                     ></textarea>
                   </div>
                 </div>

@@ -29,6 +29,7 @@ import { rpl_status } from "const/constants";
 import { Check, InfoOutlined } from "@mui/icons-material";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import { TimePicker } from "@mui/x-date-pickers";
+import TableRow from "./TableRow";
 
 const RPLCertificate = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
@@ -129,7 +130,10 @@ const RPLCertificate = ({ color = "light" }) => {
       </div>
     );
   }
-  const [isStautusEditable, setIsStatusEditable] = useState(false);
+  const [isStautusEditable, setIsStatusEditable] = useState({
+    state: false,
+    id: null,
+  });
   return (
     <div className="flex flex-wrap mt-4 dashBody">
       <div className="w-full mb-12 px-4">
@@ -195,6 +199,8 @@ const RPLCertificate = ({ color = "light" }) => {
                 setIsStatusEditable,
                 getRPLList,
                 setOpenConfirmationModal,
+                setValue,
+                value,
               }}
             />
           </TabPanel>
@@ -235,6 +241,8 @@ const TabContent = ({
   setIsStatusEditable,
   setOpenConfirmationModal,
   getRPLList,
+  value,
+  setValue,
 }) => {
   return (
     <div className="block w-full overflow-x-auto mt-0">
@@ -245,19 +253,16 @@ const TabContent = ({
             <th className={"table-head " + tableHeadClass}>Email</th>
             <th className={"table-head " + tableHeadClass}>USI Number</th>
             <th className={"table-head " + tableHeadClass}>Visa Status</th>
-
             <th className={"table-head " + tableHeadClass}>
               Certification Type
             </th>
             <th className={"table-head " + tableHeadClass}>Case Officer</th>
             <th className={"table-head " + tableHeadClass}>Reeference</th>
-
             <th
               className={"table-head flex items-center gap-2 " + tableHeadClass}
             >
               Status
             </th>
-
             <th className={"table-head " + tableHeadClass}>Action </th>
           </tr>
         </thead>
@@ -287,6 +292,8 @@ const TabContent = ({
                       key: index,
                       getRPLList,
                       rpl_status,
+                      value,
+                      setValue,
                     }}
                   />
                 ))
@@ -304,159 +311,5 @@ const TabContent = ({
         </tbody>
       </table>
     </div>
-  );
-};
-const TableRow = ({
-  item,
-  index,
-  // data,
-  // setData,
-  navigate,
-  setOpenConfirmationModal,
-  setIsStatusEditable,
-  isStautusEditable,
-  getRPLList,
-  rpl_status,
-}) => {
-  const [data, setData] = useState(item);
-
-  const { mutate, isLoading } = useMutation(postData, {
-    onSuccess() {
-      toast.success("Data updated Successfully");
-      setIsStatusEditable(false);
-      getRPLList();
-    },
-    onError() {
-      toast.error("Error Updating Data");
-    },
-  });
-
-  async function postData(payload) {
-    await axios.put(`${API_URL}/rpl/${payload?.id}`, payload);
-  }
-
-  const updateData = (value) => {
-    if (!data?.status) {
-      toast.error("Status is required to update the data");
-    }
-
-    mutate({
-      ...data,
-      useExistingClientData: true,
-      placementRequired: "yes" ? true : false,
-      status: value || data?.status,
-    });
-  };
-
-  return (
-    <tr key={item?.id} onClick={() => setData(item)}>
-      <td className="table-data text-left flex items-center">
-        {ImageName(item?.name)}
-        <span className={"ml-3 font-bold text-slate-600"}>
-          {item?.name || "-"}
-        </span>
-      </td>
-      <td className="table-data">{item?.email || "-"}</td>
-      <td className="table-data">
-        <div className="flex">{item?.usiNumber || "-"}</div>
-      </td>
-      <td className="table-data">
-        <div className="flex items-center gap-2">{item?.visaStatus || "-"}</div>
-      </td>
-
-      <td className="table-data">
-        <div className="flex items-center">{item?.certificate || "-"}</div>
-      </td>
-      <td className="table-data">
-        <div className="flex items-center">{item?.reference || "-"}</div>
-      </td>
-      <td className="table-data">
-        <div className="flex items-center">{item?.caseOfficer || "-"}</div>
-      </td>
-      <td className="table-data">
-        {isStautusEditable ? (
-          <Autocomplete
-            onChange={(e, value) => {
-              setData((prevState) => ({
-                ...prevState,
-                status: value?.value,
-              }));
-              updateData(value?.value);
-            }}
-            required
-            value={rpl_status?.find((item) => item?.value === data?.status)}
-            options={rpl_status}
-            disablePortal
-            renderInput={(params) => (
-              <TextField {...params} label="Select RPL Status" />
-            )}
-            ListboxProps={{
-              style: {
-                maxHeight: "180px",
-              },
-            }}
-            size="small"
-            sx={{ width: 250 }}
-            // onBlur={updateData}
-          />
-        ) : (
-          <span className="cursor-pointer">{item?.status || "-"}</span>
-        )}
-      </td>
-
-      <td className="table-data text-right">
-        <div className="flex items-center">
-          {!isStautusEditable ? (
-            <Tooltip title="Edit Status only" arrow>
-              <IconButton
-                onClick={() => {
-                  setIsStatusEditable(true);
-                }}
-              >
-                <DriveFileRenameOutlineIcon className="text-yellow-600 cursor-pointer" />
-              </IconButton>
-            </Tooltip>
-          ) : (
-            <Tooltip title="Save Data" arrow>
-              <IconButton
-                onClick={() => {
-                  updateData();
-                }}
-              >
-                <Check className="text-yellow-600 cursor-pointer" />
-              </IconButton>
-            </Tooltip>
-          )}
-          <Tooltip title="View" arrow>
-            <IconButton>
-              <AiFillEye className="text-sky-600 cursor-pointer" />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Edit RPL Details" arrow>
-            <IconButton
-              onClick={() =>
-                navigate("/admin/rpl-certificate/add", {
-                  state: { item },
-                })
-              }
-            >
-              <AiFillEdit className="text-sky-600 cursor-pointer" />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Delete RPL Details" arrow>
-            <IconButton
-              onClick={() =>
-                setOpenConfirmationModal({
-                  state: true,
-                  id: item?.id,
-                })
-              }
-            >
-              <AiFillDelete className="text-red-600 cursor-pointer" />
-            </IconButton>
-          </Tooltip>
-        </div>
-      </td>
-    </tr>
   );
 };

@@ -46,7 +46,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
     passport: "",
     visa: "",
     coe: [],
-    status: "",
+    status: null,
 
     license: false,
     photocard: false,
@@ -86,7 +86,6 @@ const AddRPLCertificate = ({ color = "light" }) => {
         ...state?.item,
         placementRequired:
           state?.item?.placementRequired === true ? "yes" : "no",
-        license: state?.item?.licenseFile ? true : false,
       });
     }
   }, [state]);
@@ -113,12 +112,15 @@ const AddRPLCertificate = ({ color = "light" }) => {
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (error) toast.error("Need 100 points ID documents to submit");
-    mutate({
-      ...data,
-      useExistingClientData: true,
-      placementRequired: "yes" ? true : false,
-    });
+    if (error) {
+      toast.error("Need 100 points ID documents to submit");
+    } else {
+      mutate({
+        ...data,
+        useExistingClientData: true,
+        placementRequired: "yes" ? true : false,
+      });
+    }
   };
 
   const handleChange = (event) => {
@@ -166,21 +168,15 @@ const AddRPLCertificate = ({ color = "light" }) => {
                     Add RPL Certificate
                   </h3>
                 </div>
-                {console.log(
-                  rpl_status?.find((item) => item?.value === data?.status)
-                )}
 
                 <Autocomplete
-                  onChange={(e, value) => {
-                    setData((prevState) => ({
-                      ...prevState,
-                      status: value?.value,
-                    }));
-                  }}
+                  size="small"
+                  sx={{ width: 300 }}
                   required
-                  value={rpl_status?.find(
-                    (item) => item?.value === data?.status
-                  )}
+                  value={
+                    rpl_status?.find((item) => item?.value === data?.status) ||
+                    null
+                  }
                   options={rpl_status}
                   disablePortal
                   renderInput={(params) => (
@@ -191,8 +187,12 @@ const AddRPLCertificate = ({ color = "light" }) => {
                       maxHeight: "180px",
                     },
                   }}
-                  size="small"
-                  sx={{ width: 300 }}
+                  onChange={(e, value) => {
+                    setData((prevState) => ({
+                      ...prevState,
+                      status: value?.value,
+                    }));
+                  }}
                 />
               </div>
             </div>

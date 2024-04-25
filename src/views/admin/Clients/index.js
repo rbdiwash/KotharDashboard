@@ -58,7 +58,7 @@ const Clients = ({ color = "light" }) => {
 
   const handleDownloadData = () => {
     axios
-      .get(`/clients/report`)
+      .get(`/clients/report/url`)
       .then((response) => {
         console.log(response);
 
@@ -77,9 +77,9 @@ const Clients = ({ color = "light" }) => {
         const blobFile = new Blob([response?.data], {
           type: "application/octet-stream",
         });
-        const url = window.URL.createObjectURL(blobFile);
+        const url = response.data.url;
         a.href = url;
-        a.download = "jhjj.csv";
+        a.download = "Clients_Data.csv";
         a.click();
         window.URL.revokeObjectURL(url);
       })

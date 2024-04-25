@@ -217,6 +217,7 @@ const useStateAndActions = () => {
     }
   );
   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
   useEffect(() => {
     if (token) {
       refetchConsultancy();
@@ -267,7 +268,6 @@ const useStateAndActions = () => {
     refetchInsuranceList,
     refetchAccountList,
     getRPLList,
-    getVisaList,
     getClientData,
     setToken,
     setWholeLoading,

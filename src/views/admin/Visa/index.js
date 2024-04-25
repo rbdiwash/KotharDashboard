@@ -68,8 +68,6 @@ const Visa = ({ color = "light" }) => {
     // getVisaList(`type=${status?.value}`);
   };
 
-  console.log(visaList);
-
   useEffect(() => {
     if (searchParams.get("type")) {
       const status = visaTabs.find((item, i) => {
@@ -125,7 +123,6 @@ const Visa = ({ color = "light" }) => {
     name: `${item?.name} (${item?.passportNumber})`,
     id: item?.id,
   }));
-  console.log("🚀  modifiedVisaList:", modifiedVisaList);
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">
