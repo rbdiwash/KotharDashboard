@@ -15,6 +15,7 @@ import { delete_data } from "const/axios";
 import { useEffect } from "react";
 import React from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import DownloadFile from "components/DownloadFile";
 
 const Clients = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
@@ -56,38 +57,6 @@ const Clients = ({ color = "light" }) => {
     setAnchorEl(null);
   };
 
-  const handleDownloadData = () => {
-    axios
-      .get(`/clients/report/url`)
-      .then((response) => {
-        console.log(response);
-
-        // const url = window.URL.createObjectURL(
-        //   new Blob([response.data], {
-        //     type: "application/octet-stream",
-        //   })
-        // );
-        // const link = document.createElement("a");
-        // link.href = url;
-        // link.setAttribute("download", "Clients_Data.csv");
-        // document.body.appendChild(link);
-        // link.click();
-        const a = document.createElement("a");
-
-        const blobFile = new Blob([response?.data], {
-          type: "application/octet-stream",
-        });
-        const url = response.data.url;
-        a.href = url;
-        a.download = "Clients_Data.csv";
-        a.click();
-        window.URL.revokeObjectURL(url);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
   return (
@@ -111,13 +80,7 @@ const Clients = ({ color = "light" }) => {
               </h3>
               <SearchField {...{ type: "Client", searchText, setSearchText }} />
               <div className="flex items-center gap-4">
-                <Button
-                  variant="contained"
-                  startIcon={<FaDownload />}
-                  onClick={handleDownloadData}
-                >
-                  Download Data
-                </Button>
+                <DownloadFile type="client" />
                 <Button
                   variant="contained"
                   startIcon={<FaPlusCircle />}

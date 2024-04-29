@@ -30,6 +30,7 @@ import { Check, InfoOutlined } from "@mui/icons-material";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import { TimePicker } from "@mui/x-date-pickers";
 import TableRow from "./TableRow";
+import DownloadFile from "components/DownloadFile";
 
 const RPLCertificate = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
@@ -160,6 +161,7 @@ const RPLCertificate = ({ color = "light" }) => {
                   className="text-blue-500 text-3xl cursor-pointer"
                   onClick={handleDiscussion}
                 />
+                <DownloadFile type="rpl" />
                 <Button
                   variant="contained"
                   startIcon={<FaPlusCircle />}

@@ -1,4 +1,5 @@
 import { Button, IconButton, Tooltip } from "@mui/material";
+import DownloadFile from "components/DownloadFile";
 import DeleteModal from "components/Modals/DeleteModal";
 import DiscussionModal from "components/Modals/DiscussionModal";
 import SearchField from "components/SearchField";
@@ -77,6 +78,7 @@ const Students = ({ color = "light" }) => {
                   className="text-blue-500 text-3xl cursor-pointer"
                   onClick={handleDiscussion}
                 />{" "}
+                <DownloadFile type="student" />
                 <Button
                   variant="contained"
                   startIcon={<FaPlusCircle />}

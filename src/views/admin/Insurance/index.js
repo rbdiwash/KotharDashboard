@@ -11,6 +11,7 @@ import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { FaPlusCircle, FaRocketchat } from "react-icons/fa";
 import { toast } from "react-toastify";
 import InsuranceModal from "./InsuranceModal";
+import DownloadFile from "components/DownloadFile";
 
 const Insurance = ({ color = "light" }) => {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
@@ -85,6 +86,7 @@ const Insurance = ({ color = "light" }) => {
                   className="text-blue-500 text-3xl cursor-pointer"
                   onClick={handleDiscussion}
                 />{" "}
+                <DownloadFile type="rpl" />
                 <Button
                   variant="contained"
                   startIcon={<FaPlusCircle />}

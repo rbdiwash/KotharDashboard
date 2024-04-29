@@ -1,5 +1,6 @@
 import { Button, IconButton, Tooltip } from "@mui/material";
 import axios from "axios";
+import DownloadFile from "components/DownloadFile";
 import DeleteModal from "components/Modals/DeleteModal";
 import DiscussionModal from "components/Modals/DiscussionModal";
 import SearchField from "components/SearchField";
@@ -82,7 +83,8 @@ const SkillAssessment = ({ color = "light" }) => {
                 <FaRocketchat
                   className="text-blue-500 text-3xl cursor-pointer"
                   onClick={handleDiscussion}
-                />
+                />{" "}
+                <DownloadFile type="skill" />
                 <Button
                   variant="contained"
                   startIcon={<FaPlusCircle />}

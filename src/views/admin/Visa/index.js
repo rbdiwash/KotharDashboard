@@ -22,6 +22,7 @@ import SearchField from "components/SearchField";
 import { useEffect } from "react";
 import DiscussionModal from "components/Modals/DiscussionModal";
 import { visaTabs } from "const/constants";
+import DownloadFile from "components/DownloadFile";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -148,7 +149,8 @@ const Visa = ({ color = "light" }) => {
                 <FaRocketchat
                   className="text-blue-500 text-3xl cursor-pointer"
                   onClick={handleDiscussion}
-                />
+                />{" "}
+                <DownloadFile type="rpl" />
                 <Button
                   variant="contained"
                   startIcon={<FaPlusCircle />}
