@@ -163,7 +163,7 @@ const AddAccounts = ({ color = "light" }) => {
     });
     priceAfterDiscount =
       totalAmount - (Number(data?.discount) / 100) * totalAmount;
-    return priceAfterDiscount;
+    return priceAfterDiscount.toFixed(3);
   };
 
   return (
@@ -252,7 +252,7 @@ const AddAccounts = ({ color = "light" }) => {
                                   Total Due:
                                 </dt>
                                 <dd className="mt-0 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                  $0
+                                  ${totalAmountAfterDiscount()}
                                 </dd>
                               </div>
 
@@ -516,6 +516,7 @@ const AddAccounts = ({ color = "light" }) => {
                             sx={{ width: "50%" }}
                             size="small"
                             endAdornment={"%"}
+                            value={data?.discount}
                             onChange={(e) =>
                               setData({ ...data, discount: e.target.value })
                             }
