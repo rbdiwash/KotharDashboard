@@ -108,17 +108,19 @@ const Users = ({ color = "dark" }) => {
                   <th className={"table-head " + tableHeadClass}>
                     Email Verified
                   </th>
-                  <th className={"table-head " + tableHeadClass}>Action</th>
+                  <th className={"table-head text-center " + tableHeadClass}>
+                    Action
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {usersList?.length > 0 ? (
                   usersList?.map((item, index) => (
                     <tr key={item?.id || index}>
-                      <th className="table-data">
+                      <th className="table-data text-left">
                         <span
                           className={
-                            "ml-3 font-bold " +
+                            "ml-3 font-bold text-left " +
                             +(color === "light"
                               ? "text-slate-600"
                               : "text-white")

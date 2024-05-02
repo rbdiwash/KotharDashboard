@@ -1,139 +1,15 @@
-General Info
-Name 
-Email
-Contact
-Age
-Gender
-Marital status
-Dob
-Emergency contact (manxe ko naam)
-Emergency email, contact
-Relation with applicant
-Documents and address
-
-Address
-Permanent address : - 
-Address
-Country
-State/Province
-Zip Code
-
-Checkbox for same as permanent for mailing address
+Total amount to be paid to agent : 
+Totall amount asked to student : 
 
 
-Passport information
-Number
-Issue date, country, expiry date
-Birth city, country 
-
-Nationality
-Country - dropdown
-Citizenship - (country dropdown)
-Is the applicant citizen of more than 1 country
-If yes - input field for that country
-Is the applicant living or studying in any other country
-If yes - input field for that country
-
-Background Information
-Does the student have any refusal from any other country?
-yes/no
-If yes mention country name
-
-Does the student have any serious medical condition?
-yes/no
-If yes mention cause
-
-Has the applicant ever been convicted of a criminal offense?
-If yes mention the cause
-
-Has the applicant applied into immigration into any other country
-If yes mention the names of the country
+case officer on account to be removed
 
 
 
-Academic Qualification
+Total lagne cost : 800
+Total leko cost: 1250
+Total referal cost: 250 
 
-Board
-NAME OF THE INSTITUTION *
-Primary medium of instruction
-Country of study
-State of study
-GRADING SYSTEM
-SCORE *
-Out of 
-Passout year
-Degree
-Degree title
-
-Work Experience/Gap explanation letters
-
-Can add multiple
-Name of org
-From
-To
-Upload documents
-
-test
-
-Type - ielts/pte/toefl/oet/duo lingo/ielts waiver
-Score - 
-Individual in case of ielts, pte and overall
-Unique id - 
-Date of examination
-
-Type - gre/gte/gmat
-Score - 
-Individual in case of ielts, pte and overall
-Unique id - 
-Date of examination
-
-courses form 
-    private String name;
-    private String level;
-private String duration;
-    private String university;
-    private Long universityId;
-    private String intake;
-    private String country;
-    private String tuition;
-    private String fee;
-course
-
-
-
-Auth
-
-Login --> mfa true for super admin, --> auth controller vitra email/verify 
-Forgot password
-Reset password
-email verification  - email/verify
-
-
-{
-  "sNo": 1,
-  "date": "2023-06-01",
-  "firstName": "John",
-  "lastName": "Doe",
-  "email": "johndoe@example.com",
-  "mobile": "1234567890",
-  "address": "123 Main Street",
-  "dob": "1990-01-01",
-  
-  "caseOfficer": "Jane Smith",
-  "usiNumber": "ABCD1234",
-  
-  "qualification": "Bachelor's Degree",
-  "placement": "Internship","visaStatus": "Student Visa",
-  "visaExpiry": "2025-12-31",
-  
-  "reference": "REF123",
-  "status": "Active",
- 
-  "hardCopy": "Yes",
-  "postalDate": "2023-06-02",
-  "passport":{
-      "number":1
-  }
-}
-
-onshore details
+Ranjit le tireko paisa
+1.⁠ ⁠aaja tiryo 625
+2.⁠ ⁠document paxi 625

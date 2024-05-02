@@ -163,8 +163,9 @@ const AddAccounts = ({ color = "light" }) => {
     });
     priceAfterDiscount =
       totalAmount - (Number(data?.discount) / 100) * totalAmount;
-    return priceAfterDiscount.toFixed(3);
+    return Number(priceAfterDiscount.toFixed(3)) || 0;
   };
+  console.log(data);
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">
@@ -230,54 +231,169 @@ const AddAccounts = ({ color = "light" }) => {
                         Account Details
                       </h1>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                      <div className="md:col-span-2">
-                        <h2 className="text-2xl font-semibold mb-5">
-                          {selectedStudent?.name}
+                    <div className="grid grid-cols-1 md:grid-cols-3 justify-between gap-5">
+                      <div className="flex flex-col gap-2 col-span-2">
+                        <h2 className="text-xl font-semibold mb-5 underline">
+                          Payment Details
                         </h2>
-                        <p className="mb-2"> {selectedStudent?.address}</p>
-                        <p className="mb-2"> {selectedStudent?.number}</p>
+                        <div className="flex gap-2 items-center ">
+                          Total Amount for Student:
+                          <OutlinedInput
+                            name="studentCost"
+                            className="col-span-2"
+                            placeholder="Amount in AUD"
+                            type="number"
+                            size="small"
+                            endAdornment={"AUD"}
+                            value={data?.studentCost}
+                            onChange={(e) =>
+                              setData({ ...data, studentCost: e.target.value })
+                            }
+                          />
+                          {/* $
+                        {installments
+                          .reduce((a, b) => a + (Number(b.amount) || 0), 0)
+                          .toFixed(2)} */}
+                        </div>{" "}
+                        <div className="flex gap-2 items-center ">
+                          Total amount paid to Provider:
+                          <OutlinedInput
+                            name="providerCost"
+                            placeholder="Amount in AUD"
+                            type="number"
+                            size="small"
+                            endAdornment={"AUD"}
+                            value={data?.providerCost}
+                            onChange={(e) =>
+                              setData({ ...data, providerCost: e.target.value })
+                            }
+                          />
+                        </div>{" "}
+                        <div className="flex gap-2 items-center ">
+                          Total Agent Cost:
+                          <OutlinedInput
+                            name="agentCost"
+                            placeholder="Agent Cost in AUD"
+                            type="number"
+                            size="small"
+                            endAdornment={"AUD"}
+                            value={data?.agentCost}
+                            onChange={(e) =>
+                              setData({ ...data, agentCost: e.target.value })
+                            }
+                          />
+                        </div>{" "}
+                        <div className="flex gap-2 items-center ">
+                          Case Officer:
+                          <OutlinedInput
+                            name="caseOfficer"
+                            placeholder="Case Officer Name"
+                            type="text"
+                            size="small"
+                            value={data?.caseOfficer}
+                            onChange={(e) =>
+                              setData({ ...data, caseOfficer: e.target.value })
+                            }
+                          />
+                        </div>
+                        <div className="flex items-center gap-4">
+                          Commission Claimed:
+                          <Autocomplete
+                            onChange={(e, value) =>
+                              setData({ ...data, isClaimed: value?.value })
+                            }
+                            isOptionEqualToValue={(options, value) =>
+                              options?.value === value?.value
+                            }
+                            value={[
+                              {
+                                label: "Yes",
+                                value: "Yes",
+                              },
+                              { label: "No", value: "No" },
+                            ]?.find((arg) => arg?.value === data?.isClaimed)}
+                            name="claimed"
+                            size="small"
+                            required
+                            options={[
+                              {
+                                label: "Yes",
+                                value: "Yes",
+                              },
+                              { label: "No", value: "No" },
+                            ]}
+                            disablePortal
+                            renderInput={(params) => (
+                              <TextField {...params} label="Yes/No" />
+                            )}
+                            className="min-w-[100px]"
+                            ListboxProps={{
+                              style: {
+                                maxHeight: "180px",
+                              },
+                            }}
+                          />
+                          {data?.isClaimed === "Yes" && (
+                            <InputField
+                              type="text"
+                              name="commission"
+                              placeholder="Enter Commission"
+                              onChange={(e) =>
+                                setData({ ...data, commission: e.target.value })
+                              }
+                              value={data?.commission}
+                              className="w-[200px]"
+                            />
+                          )}
+                        </div>
+                        {/* <div className="flex gap-2 items-center">
+                          Discount:
+                          <OutlinedInput
+                            name="discount"
+                            placeholder="In percentage"
+                            type="number"
+                            sx={{ width: "50%" }}
+                            size="small"
+                            endAdornment={"%"}
+                            value={data?.discount}
+                            onChange={(e) =>
+                              setData({ ...data, discount: e.target.value })
+                            }
+                          />
+                        </div> */}
+                        {/* <div className=" flex items-center gap-2">
+                          <span> Due Date: </span>
+                          <OutlinedInput
+                            type="date"
+                            size="small"
+                            sx={{ width: "50%" }}
+                            name="dueDate"
+                            onChange={(e) =>
+                              setData({ ...data, dueDate: e.target.value })
+                            }
+                            value={data?.dueDate}
+                          />
+                        </div> */}
                       </div>
                       <div className="max-w-7xl mx-auto  lg:px-8">
-                        <div className="bg-white overflow-hidden">
-                          <div className="px-2 pb-2">
-                            <h3 className="text-lg leading-6 font-medium text-gray-900">
-                              Bill To
-                            </h3>
-                          </div>
-                          <div className="border-gray-200">
-                            <dl>
-                              <div className="px-2 py-1 sm:grid sm:grid-cols-3 sm:gap-4 ">
-                                <dt className="text-sm font-medium text-gray-500">
-                                  Total Due:
-                                </dt>
-                                <dd className="mt-0 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                  ${totalAmountAfterDiscount()}
-                                </dd>
-                              </div>
-
-                              <div className="px-2 py-1 sm:grid sm:grid-cols-3 sm:gap-4 ">
-                                <dt className="text-sm font-medium text-gray-500">
-                                  Country:
-                                </dt>
-                                <dd className="mt-0 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                  Australia
-                                </dd>
-                              </div>
-                              <div className=" px-2 py-1 sm:grid sm:grid-cols-3 sm:gap-4 ">
-                                <dt className="text-sm font-medium text-gray-500">
-                                  Type:
-                                </dt>
-                                <dd className="mt-0 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                  {selectedType?.label}
-                                </dd>
-                              </div>
-                            </dl>
-                          </div>
+                        <div className="md:col-span-2">
+                          <h2 className="text-2xl font-semibold mb-5">
+                            Client: {selectedStudent?.name}
+                          </h2>
+                          <p className="mb-2">
+                            Address: {selectedStudent?.address}
+                          </p>
+                          <p className="mb-2">
+                            Contact: {selectedStudent?.number}
+                          </p>
+                          <dt className="text-sm font-medium ">
+                            Type: {selectedType?.label}
+                          </dt>
                         </div>
                       </div>
                     </div>
-                    <h1 className="text-lg text-gray-600 font-semibold">
+
+                    <h1 className="text-lg text-gray-600 font-semibold underline">
                       Payment Installlments
                     </h1>
                     <div className="overflow-x-auto">
@@ -289,12 +405,9 @@ const AddAccounts = ({ color = "light" }) => {
                             <th className="border px-4 py-2">Amount</th>
                             <th className="border px-4 py-2">Payment Method</th>
                             <th className="border px-4 py-2">Remarks</th>
-                            <th className="border px-4 py-2">
+                            {/* <th className="border px-4 py-2">
                               Commission Claimed
-                            </th>
-                            <th className="border px-4 py-2">Case Officer </th>
-                            <th className="border px-4 py-2">Agent Cost </th>
-                            <th className="border px-4 py-2">Status </th>
+                            </th> */}
                             <th className="border px-4 py-2">Attachment</th>
                             <th className="border px-4 py-2">Action</th>
                           </tr>
@@ -343,7 +456,7 @@ const AddAccounts = ({ color = "light" }) => {
                                   value={item?.remarks}
                                 />
                               </td>
-                              <td
+                              {/* <td
                                 className={
                                   `border text-center px-4 py-2 ` +
                                   (installments[index]?.claimed?.value === "yes"
@@ -376,9 +489,7 @@ const AddAccounts = ({ color = "light" }) => {
                                       },
                                       { label: "No", value: "No" },
                                     ]?.find(
-                                      (arg) =>
-                                        arg?.value?.toLowerCase() ===
-                                        item?.claimed?.toLowerCase()
+                                      (arg) => arg?.value === item?.claimed
                                     )}
                                     name="claimed"
                                     size="small"
@@ -413,8 +524,8 @@ const AddAccounts = ({ color = "light" }) => {
                                     />
                                   )}
                                 </div>
-                              </td>
-                              <td className="border text-center px-4 py-2 min-w-[200px]">
+                              </td> */}
+                              {/* <td className="border text-center px-4 py-2 min-w-[200px]">
                                 <InputField
                                   type="text"
                                   name="caseOfficer"
@@ -423,8 +534,8 @@ const AddAccounts = ({ color = "light" }) => {
                                   onChange={(e) => handleInputChange(e, index)}
                                   value={item?.caseOfficer}
                                 />
-                              </td>
-                              <td className="border text-center px-4 py-2 min-w-[200px]">
+                              </td> */}
+                              {/* <td className="border text-center px-4 py-2 min-w-[200px]">
                                 <InputField
                                   type="number"
                                   name="agentCost"
@@ -444,14 +555,14 @@ const AddAccounts = ({ color = "light" }) => {
                                   value={item?.status}
                                   className="min-w-[150px]"
                                 />
-                              </td>
+                              </td> */}
                               <td className="border text-center px-4 py-2 min-w-[250px]">
                                 <UploadFile
                                   {...{
                                     data: installments,
                                     setData: setInstallments,
                                     imageKey: "document",
-                                    label: "Document",
+                                    // label: "Document",
                                   }}
                                 />
                               </td>
@@ -496,51 +607,7 @@ const AddAccounts = ({ color = "light" }) => {
                         </tbody>
                       </table>
                     </div>
-                    <div className="grid grid-cols-3  gap-5 py-10">
-                      <div className="flex flex-col gap-2">
-                        <h2 className="text-xl font-semibold mb-5">
-                          Payment Details
-                        </h2>
-                        <div className="flex gap-2 items-center ">
-                          Total Amount: $
-                          {installments
-                            .reduce((a, b) => a + (Number(b.amount) || 0), 0)
-                            .toFixed(2)}
-                        </div>
-                        <div className="flex gap-2 items-center">
-                          Discount:
-                          <OutlinedInput
-                            name="discount"
-                            placeholder="In percentage"
-                            type="number"
-                            sx={{ width: "50%" }}
-                            size="small"
-                            endAdornment={"%"}
-                            value={data?.discount}
-                            onChange={(e) =>
-                              setData({ ...data, discount: e.target.value })
-                            }
-                          />
-                        </div>
-                        <div className=" flex items-center gap-2">
-                          <span> Due Date: </span>
-                          <OutlinedInput
-                            type="date"
-                            size="small"
-                            sx={{ width: "50%" }}
-                            name="dueDate"
-                            onChange={(e) =>
-                              setData({ ...data, dueDate: e.target.value })
-                            }
-                            value={data?.dueDate}
-                          />
-                        </div>
-                        <div className=" flex items-center gap-2">
-                          Total Amount after Discount: $
-                          {totalAmountAfterDiscount() || 0}
-                        </div>
-                      </div>
-                      <div className="col-span-1"></div>
+                    <div className="grid  gap-5 py-10">
                       <div className="col-span-1 ml-auto mt-auto">
                         <Button variant="contained" onClick={handleSubmit}>
                           Submit
