@@ -333,7 +333,7 @@ const AddAccounts = ({ color = "light" }) => {
                               },
                             }}
                           />
-                          {data?.isClaimed === "Yes" && (
+                          {/* {data?.isClaimed === "Yes" && (
                             <InputField
                               type="text"
                               name="commission"
@@ -344,7 +344,24 @@ const AddAccounts = ({ color = "light" }) => {
                               value={data?.commission}
                               className="w-[200px]"
                             />
-                          )}
+                          )} */}
+                        </div>
+                        <div className="flex gap-2 items-center ">
+                          Total amount paid by Student:
+                          <OutlinedInput
+                            name="amountPaidByStudent"
+                            placeholder="Amount in AUD"
+                            type="number"
+                            size="small"
+                            endAdornment={"AUD"}
+                            value={data?.amountPaidByStudent}
+                            onChange={(e) =>
+                              setData({
+                                ...data,
+                                amountPaidByStudent: e.target.value,
+                              })
+                            }
+                          />
                         </div>
                         {/* <div className="flex gap-2 items-center">
                           Discount:
