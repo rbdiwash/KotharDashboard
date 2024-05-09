@@ -163,21 +163,7 @@ const ProfitLoss = ({ color = "light" }) => {
                       options.value === value.value
                     }
                   />
-                  <Autocomplete
-                    size="small"
-                    disablePortal
-                    options={getClientOption()}
-                    sx={{ width: 500 }}
-                    getOptionLabel={(option) => option.name}
-                    getOptionKey={(option) => option.id}
-                    renderInput={(params) => (
-                      <TextField {...params} placeholder="Search using Name" />
-                    )}
-                    onChange={(e, value) => {
-                      setSelectedStudent(value);
-                    }}
-                    value={selectedStudent}
-                  />
+                 
                 </div>
               </form>
             </div>

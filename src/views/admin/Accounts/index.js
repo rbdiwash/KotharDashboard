@@ -91,33 +91,44 @@ const Accounts = ({ color = "light" }) => {
         },
       },
       {
-        accessorKey: "discount", //normal accessorKey
-        header: "Discount",
-        size: 200,
+        header: "Type",
+        size: 150,
+        accessorKey: "type",
+        
+      },
+      {
+        accessorKey: "studentCost", //normal accessorKey
+        header: "Student cost",
+        size: 100,
         Cell: ({ row, renderedCellValue }) => {
           return <div>{row.original.discount || 0}</div>;
         },
       },
 
       {
-        accessorKey: "amount" || 0,
-        header: "Amount",
+        accessorKey: "costForKothar" || 0,
+        header: "Cost For Us",
         size: 150,
       },
 
       {
-        accessorKey: "amountAfterDiscount", //normal accessorKey
-        header: "After Discount",
-        size: 200,
-      },
-      {
-        accessorKey: "dueDate",
-        header: "Due Date",
+        accessorKey: "caseOfficer", //normal accessorKey
+        header: "Case Officer",
         size: 150,
       },
       {
-        accessorKey: "type",
-        header: "Type",
+        accessorKey: "claimed", //normal accessorKey
+        header: "Commission Claimed/Reminder Date",
+        size: 200,
+      },
+      {
+        accessorKey: "commission",
+        header: "Commission",
+        size: 150,
+      },
+      {
+        accessorKey: "amountPaidByStudent",
+        header: "Amount Paid By Student",
         size: 150,
       },
       {
