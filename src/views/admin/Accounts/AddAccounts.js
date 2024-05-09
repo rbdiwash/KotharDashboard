@@ -26,7 +26,10 @@ const AddAccounts = ({ color = "light" }) => {
   const [installments, setInstallments] = useState([{ index: 1 }]);
   const [selectedType, setSelectedType] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
-  const [data, setData] = useState({});
+  const [data, setData] = useState({
+    studentCost: null,
+    costForKothar: null,
+    caseOfficer:null,isClaimed:'No', commission:null, reminderDate: new Date(),amountPaidByStudent:null});
   const [
     { rplList, studentList, visaList, skillList, insuranceList },
     { refetchAccountList },
@@ -62,7 +65,6 @@ const AddAccounts = ({ color = "light" }) => {
     }
   }, [state]);
 
-  console.log(data);
 
   const deleteData = () => {
     axios
@@ -77,7 +79,6 @@ const AddAccounts = ({ color = "light" }) => {
       });
   };
 
-  console.log(selectedType);
 
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
@@ -143,15 +144,11 @@ const AddAccounts = ({ color = "light" }) => {
       ...data,
       installments: installments.map((item) => ({
         ...item,
-        claimed: item?.claimed?.value,
+        document:''
       })),
       clientId: Number(selectedStudent?.clientId),
-      document: [],
       type: selectedType?.value,
-      paymentType: "",
       amount: installments.reduce((a, b) => a + (Number(b.amount) || 0), 0),
-      amountAfterDiscount: totalAmountAfterDiscount(),
-      discount: Number(data?.discount),
     });
   };
 
@@ -237,7 +234,7 @@ const AddAccounts = ({ color = "light" }) => {
                           Payment Details
                         </h2>
                         <div className="flex gap-2 items-center ">
-                          Total Amount for Student:
+                          Total Amount agreed by Student:
                           <OutlinedInput
                             name="studentCost"
                             className="col-span-2"
@@ -256,33 +253,22 @@ const AddAccounts = ({ color = "light" }) => {
                           .toFixed(2)} */}
                         </div>{" "}
                         <div className="flex gap-2 items-center ">
-                          Total amount paid to Provider:
+                          Total Cost for Kothar
                           <OutlinedInput
-                            name="providerCost"
+                            name="costForKothar"
                             placeholder="Amount in AUD"
                             type="number"
                             size="small"
                             endAdornment={"AUD"}
-                            value={data?.providerCost}
+                            value={data?.costForKothar}
                             onChange={(e) =>
-                              setData({ ...data, providerCost: e.target.value })
+                              setData({
+                                ...data,
+                                costForKothar: e.target.value,
+                              })
                             }
                           />
-                        </div>{" "}
-                        <div className="flex gap-2 items-center ">
-                          Total Agent Cost:
-                          <OutlinedInput
-                            name="agentCost"
-                            placeholder="Agent Cost in AUD"
-                            type="number"
-                            size="small"
-                            endAdornment={"AUD"}
-                            value={data?.agentCost}
-                            onChange={(e) =>
-                              setData({ ...data, agentCost: e.target.value })
-                            }
-                          />
-                        </div>{" "}
+                        </div>
                         <div className="flex gap-2 items-center ">
                           Case Officer:
                           <OutlinedInput
@@ -296,6 +282,20 @@ const AddAccounts = ({ color = "light" }) => {
                             }
                           />
                         </div>
+                        {/* <div className="flex gap-2 items-center ">
+                          Total Agent Cost:
+                          <OutlinedInput
+                            name="agentCost"
+                            placeholder="Agent Cost in AUD"
+                            type="number"
+                            size="small"
+                            endAdornment={"AUD"}
+                            value={data?.agentCost}
+                            onChange={(e) =>
+                              setData({ ...data, agentCost: e.target.value })
+                            }
+                          />
+                        </div> */}
                         <div className="flex items-center gap-4">
                           Commission Claimed:
                           <Autocomplete
@@ -333,18 +333,37 @@ const AddAccounts = ({ color = "light" }) => {
                               },
                             }}
                           />
-                          {/* {data?.isClaimed === "Yes" && (
-                            <InputField
-                              type="text"
+                          {data?.isClaimed === "Yes" && (
+                            <OutlinedInput
                               name="commission"
-                              placeholder="Enter Commission"
-                              onChange={(e) =>
-                                setData({ ...data, commission: e.target.value })
-                              }
+                              placeholder="Amount in AUD"
+                              type="number"
+                              size="small"
+                              endAdornment={"AUD"}
                               value={data?.commission}
-                              className="w-[200px]"
+                              onChange={(e) =>
+                                setData({
+                                  ...data,
+                                  commission: e.target.value,
+                                })
+                              }
                             />
-                          )} */}
+                          )}
+                          {data?.isClaimed === "No" && (
+                            <OutlinedInput
+                              name="reminderDate"
+                              placeholder="Amount in AUD"
+                              type="date"
+                              size="small"
+                              value={data?.reminderDate}
+                              onChange={(e) =>
+                                setData({
+                                  ...data,
+                                  reminderDate: e.target.value,
+                                })
+                              }
+                            />
+                          )}
                         </div>
                         <div className="flex gap-2 items-center ">
                           Total amount paid by Student:

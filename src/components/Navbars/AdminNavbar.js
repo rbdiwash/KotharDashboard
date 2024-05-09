@@ -4,10 +4,14 @@ import UserDropdown from "components/Dropdowns/UserDropdown.js";
 import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
 import { Popover } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import axios from "axios";
+import { useEffect } from "react";
+import { useState } from "react";
 
 export default function Navbar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
-
+  const [notificationsList, setNotificationsList] = React.useState([]);
+  const [refresh, setRefresh] = useState(false);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -18,6 +22,20 @@ export default function Navbar() {
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
+
+  const getNotificationsData = () => {
+    axios
+      .get("/notification")
+      .then((response) => {
+        setNotificationsList(response?.data);
+      })
+      .catch((err) => console.log(err));
+  };
+  useEffect(() => {
+    if (open) {
+      getNotificationsData();
+    }
+  }, [open]);
   return (
     <>
       {/* Navbar */}
@@ -73,27 +91,15 @@ export default function Navbar() {
                 }
               >
                 <ul className="">
-                  <li className="flex items-start border-b px-4 py-2">
-                    <span>
-                      Divash has sent a new message. This is the first
-                      notification.
-                    </span>
-                    <MoreVertIcon />
-                  </li>
-                  <li className="flex items-start border-b px-4 py-2">
-                    <span>
-                      Divash has sent a new message. This is the first
-                      notification.
-                    </span>
-                    <MoreVertIcon />
-                  </li>
-                  <li className="flex items-start border-b px-4 py-2">
-                    <span>
-                      Divash has sent a new message. This is the first
-                      notification.
-                    </span>
-                    <MoreVertIcon />
-                  </li>
+                  {notificationsList?.map((item) => (
+                    <li
+                      className="flex items-start border-b px-4 py-2"
+                      key={item?.id}
+                    >
+                      <span>{item?.content}</span>
+                      <MoreVertIcon />
+                    </li>
+                  ))}
                 </ul>
               </div>
             </Popover>

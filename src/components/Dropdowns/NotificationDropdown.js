@@ -1,5 +1,7 @@
 import React from "react";
 import { createPopper } from "@popperjs/core";
+import { useEffect } from "react";
+import axios from "axios";
 
 const NotificationDropdown = () => {
   // dropdown props
@@ -7,7 +9,6 @@ const NotificationDropdown = () => {
   const btnDropdownRef = React.createRef();
   const popoverDropdownRef = React.createRef();
   const openDropdownPopover = () => {
-    console.log("hey");
     createPopper(btnDropdownRef.current, popoverDropdownRef.current, {
       placement: "bottom-start",
     });
@@ -16,6 +17,7 @@ const NotificationDropdown = () => {
   const closeDropdownPopover = () => {
     setDropdownPopoverShow(false);
   };
+
   return (
     <>
       <a

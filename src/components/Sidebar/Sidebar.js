@@ -89,6 +89,12 @@ export default function Sidebar() {
       icon: "fas fa-file-invoice-dollar",
       role: ["SUPER_ADMIN"],
     },
+    {
+      label: "Profit/Loss",
+      value: "profit-loss",
+      icon: "fas fa-dollar-sign",
+      role: ["SUPER_ADMIN"],
+    },
   ];
 
   const authOptions = [
