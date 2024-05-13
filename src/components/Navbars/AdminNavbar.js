@@ -49,21 +49,10 @@ export default function Navbar() {
           >
             Kothar Dashboard
           </a>
-          {/* Form */}
-          {/* <form className="md:flex hidden flex-row flex-wrap items-center lg:ml-auto mr-3">
-            <div className="relative flex w-full flex-wrap items-stretch">
-              <span className="z-10 h-full leading-snug font-normal absolute text-center text-slate-300  bg-transparent rounded text-base items-center justify-center w-8 pl-3 py-3">
-                <i className="fas fa-search"></i>
-              </span>
-              <input
-                type="text"
-                placeholder="Search here..."
-                className="border-0 px-3 py-3 placeholder-slate-300 text-slate-600 relative bg-white  rounded text-sm shadow outline-none focus:outline-none focus:ring w-full pl-10"
-              />
-            </div>
-          </form> */}
-          {/* User */}
-          <ul className="flex-col md:flex-row md:gap-4 list-none items-center hidden md:flex">
+          
+              <ul className="flex-col md:flex-row md:gap-4 list-none items-center hidden md:flex">
+              
+            
             <CircleNotificationsIcon
               className="w-12 h-12 text-white cursor-pointer"
               onClick={handleClick}
@@ -87,13 +76,18 @@ export default function Navbar() {
             >
               <div
                 className={
-                  "max-w-[400px] bg-white text-base z-50 float-left list-none text-left rounded shadow-lg min-w-48"
+                  "max-w-[400px] bg-white text-base z-50 float-left list-none text-left rounded shadow-lg min-w-[300px] max-h-[500px] overflow-y-auto"
                 }
               >
+                <div className="bg-gray-200 px-4 py-3 flex items-center justify-between">
+                  <span>Notifications</span>
+                  <span className="text-blue-400 text-sm">Mark all as read</span>
+              </div>
+              
                 <ul className="">
                   {notificationsList?.map((item) => (
                     <li
-                      className="flex items-start border-b px-4 py-2"
+                      className="flex items-start justify-between border-b px-4 py-4"
                       key={item?.id}
                     >
                       <span>{item?.content}</span>

@@ -118,12 +118,12 @@ const Accounts = ({ color = "light" }) => {
       },
       {
         accessorKey: "claimed", //normal accessorKey
-        header: "Commission Claimed/Reminder Date",
+        header: "Commission Claimed",
         size: 200,
       },
       {
         accessorKey: "commission",
-        header: "Commission",
+        header: "Commission/Reminder Date",
         size: 150,
       },
       {

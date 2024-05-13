@@ -82,42 +82,43 @@ const ProfitLoss = ({ color = "light" }) => {
 
   const columns = useMemo(
     () => [
+    
       {
-        header: "Name",
-        size: 150,
-        accessorKey: "clientName",
-        Cell: ({ row, renderedCellValue }) => {
-          return <div>{row.original.clientName || "N/A"}</div>;
-        },
-      },
-      {
-        accessorKey: "discount", //normal accessorKey
-        header: "Discount",
+        accessorKey: "date", //normal accessorKey
+        header: "Date",
         size: 200,
         Cell: ({ row, renderedCellValue }) => {
-          return <div>{row.original.discount || 0}</div>;
+          return <div>{row.date}</div>;
         },
       },
 
       {
-        accessorKey: "amount" || 0,
-        header: "Amount",
+        accessorKey: "category" || 0,
+        header: "Category",
         size: 150,
       },
 
       {
-        accessorKey: "amountAfterDiscount", //normal accessorKey
-        header: "After Discount",
+        accessorKey: "totalAmount", //normal accessorKey
+        header: "Total Amount",
         size: 200,
       },
       {
-        accessorKey: "dueDate",
-        header: "Due Date",
+        accessorKey: "paidAmount",
+        header: "Paid Amount",
         size: 150,
       },
       {
-        accessorKey: "type",
-        header: "Type",
+        accessorKey: "costAmount",
+        header: "Cost Amount",
+        size: 150,
+      },{
+        accessorKey: "profileAmount",
+        header: "Profit/Loss Amount",
+        size: 150,
+      },{
+        accessorKey: "receipt",
+        header: "Receipt",
         size: 150,
       },
     ],
@@ -126,7 +127,8 @@ const ProfitLoss = ({ color = "light" }) => {
 
   const table = useMaterialReactTable({
     columns,
-    data: accountsList,
+    data: accountsList,    enableRowNumbers: true,
+
   });
   const [openDiscussion, setOpenDiscussion] = useState(false);
   const handleDiscussion = () => {
