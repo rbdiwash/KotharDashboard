@@ -1,5 +1,14 @@
 import React from "react";
-import { Autocomplete, TextField } from "@mui/material";
+import {
+  Autocomplete,
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
 
 import axios from "axios";
 import { API_URL } from "const/constants";
@@ -11,17 +20,18 @@ import {
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { monthsForFilter } from "const/constants";
 
 const ProfitLossTable = () => {
   const [{ accountsList }, {}] = useKothar();
 
   const columns = useMemo(
     () => [
-      {
-        accessorKey: "date", //normal accessorKey
-        header: "Date",
-        size: 100,
-      },
+      // {
+      //   accessorKey: "date", //normal accessorKey
+      //   header: "Date",
+      //   size: 100,
+      // },
 
       {
         accessorKey: "clientName" || 0,
@@ -53,17 +63,66 @@ const ProfitLossTable = () => {
     []
   );
 
+  const yearsForFilter = Array.from(
+    { length: 10 },
+    (_, i) => new Date().getFullYear() - i
+  );
+
   const table = useMaterialReactTable({
     columns,
     data: accountsList,
     enableStickyHeader: true,
     muiTableContainerProps: { sx: { maxHeight: "300px" } },
     // enableDensityToggle: true,
-    initialState: { density: "compact", enableGlobalFilter: true },
-    muiSearchTextFieldProps: {
-      size: "small",
-      variant: "outlined",
+    initialState: {
+      density: "compact",
+      enableGlobalFilter: true,
+      showGlobalFilter: true,
     },
+
+    renderTopToolbarCustomActions: ({ table }) => (
+      <Box
+        sx={{
+          display: "flex",
+          gap: "16px",
+          alignItems: "center",
+          flexWrap: "wrap",
+        }}
+      >
+        <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+          <InputLabel id="demo-simple-select-standard-label">
+            Select Year
+          </InputLabel>
+          <Select
+            labelId="year-filter-label"
+            id="year-filter"
+            // value={age}
+            // onChange={handleChange}
+            label="Select Year"
+          >
+            {yearsForFilter?.map((value, i) => (
+              <MenuItem value={value}>{value}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+          <InputLabel id="demo-simple-select-standard-label">
+            Select Month
+          </InputLabel>
+          <Select
+            labelId="month-filter-label"
+            id="month-filter"
+            // value={age}
+            // onChange={handleChange}
+            label="Select Month"
+          >
+            {monthsForFilter?.map(({ label, value }, i) => (
+              <MenuItem value={value}>{label}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
+    ),
   });
 
   return (
