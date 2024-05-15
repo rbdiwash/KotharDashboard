@@ -2,11 +2,12 @@ import React from "react";
 
 import UserDropdown from "components/Dropdowns/UserDropdown.js";
 import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
-import { Popover } from "@mui/material";
+import { Popover, Typography } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 
 export default function Navbar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -22,6 +23,18 @@ export default function Navbar() {
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
+
+  const [anchorE2, setAnchorE2] = React.useState(null);
+  const openEach = Boolean(anchorE2);
+  const id_2 = openEach ? "simple-popover_2" : undefined;
+
+  const handlePopoverOpen = (event) => {
+    setAnchorE2(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorE2(null);
+  };
 
   const getNotificationsData = () => {
     axios
@@ -49,10 +62,8 @@ export default function Navbar() {
           >
             Kothar Dashboard
           </a>
-          
-              <ul className="flex-col md:flex-row md:gap-4 list-none items-center hidden md:flex">
-              
-            
+
+          <ul className="flex-col md:flex-row md:gap-4 list-none items-center hidden md:flex">
             <CircleNotificationsIcon
               className="w-12 h-12 text-white cursor-pointer"
               onClick={handleClick}
@@ -76,26 +87,63 @@ export default function Navbar() {
             >
               <div
                 className={
-                  "max-w-[400px] bg-white text-base z-50 float-left list-none text-left rounded shadow-lg min-w-[300px] max-h-[500px] overflow-y-auto"
+                  "max-w-[400px] bg-white text-base z-50 float-left list-none text-left rounded shadow-lg min-w-[350px] max-h-[400px] overflow-y-auto relative"
                 }
               >
-                <div className="bg-gray-200 px-4 py-3 flex items-center justify-between">
-                  <span>Notifications</span>
-                  <span className="text-blue-400 text-sm">Mark all as read</span>
-              </div>
-              
+                <div className="bg-gray-200 px-4 py-4 flex items-center justify-between sticky top-0">
+                  <span className="text-blue-400">
+                    <NotificationsActiveIcon /> Notifications
+                  </span>
+                  <span className="text-blue-400 text-sm cursor-pointer">
+                    Mark all as read
+                  </span>
+                </div>
+
                 <ul className="">
-                  {notificationsList?.map((item) => (
-                    <li
-                      className="flex items-start justify-between border-b px-4 py-4"
-                      key={item?.id}
-                    >
-                      <span>{item?.content}</span>
+                  {notificationsList?.length > 0 ? (
+                    notificationsList?.map((item) => (
+                      <li
+                        className="flex items-start justify-between border-b px-4 py-4"
+                        key={item?.id}
+                      >
+                        <div>
+                          <p>{item?.content}</p>
+                          <p className="text-gray-400 text-sm">
+                            {item?.time || new Date().toLocaleString()}
+                          </p>
+                        </div>
+                        <MoreVertIcon
+                          onClick={handlePopoverOpen}
+                          aria-describedby={id_2}
+                        />
+                      </li>
+                    ))
+                  ) : (
+                    <li className="flex items-start justify-between border-b px-4 py-4">
+                      <span>No Notifications Available</span>
                       <MoreVertIcon />
                     </li>
-                  ))}
+                  )}
                 </ul>
               </div>
+            </Popover>
+            <Popover
+              id={id_2}
+              open={openEach}
+              onClose={handlePopoverClose}
+              anchorEl={anchorE2}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "left",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+            >
+              <Typography sx={{ p: 1, px: 2, cursor: "pointer" }}>
+                Mark as Read.
+              </Typography>
             </Popover>
           </ul>
         </div>

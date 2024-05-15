@@ -29,7 +29,12 @@ const AddAccounts = ({ color = "light" }) => {
   const [data, setData] = useState({
     studentCost: null,
     costForKothar: null,
-    caseOfficer:null,isClaimed:'No', commission:null, reminderDate: new Date(),amountPaidByStudent:null});
+    caseOfficer: null,
+    isClaimed: "No",
+    commission: null,
+    reminderDate: new Date(),
+    amountPaidByStudent: null,
+  });
   const [
     { rplList, studentList, visaList, skillList, insuranceList },
     { refetchAccountList },
@@ -65,7 +70,6 @@ const AddAccounts = ({ color = "light" }) => {
     }
   }, [state]);
 
-
   const deleteData = () => {
     axios
       .delete(`${API_URL}/organization/delete/${openConfirmationModal?.id}`)
@@ -78,7 +82,6 @@ const AddAccounts = ({ color = "light" }) => {
         toast.error("Error Deleting Data");
       });
   };
-
 
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
@@ -144,7 +147,7 @@ const AddAccounts = ({ color = "light" }) => {
       ...data,
       installments: installments.map((item) => ({
         ...item,
-        document:''
+        document: "",
       })),
       clientId: Number(selectedStudent?.clientId),
       type: selectedType?.value,

@@ -1,25 +1,12 @@
-import {
-  Autocomplete,
-  Button,
-  IconButton,
-  TextField,
-  Tooltip,
-} from "@mui/material";
+import { Autocomplete, TextField } from "@mui/material";
 
-import axios from "axios";
-import DeleteModal from "components/Modals/DeleteModal";
-import DiscussionModal from "components/Modals/DiscussionModal";
-import { API_URL } from "const/constants";
 import useKothar from "context/useKothar";
 import {
   MaterialReactTable,
   useMaterialReactTable,
 } from "material-react-table";
 import { useMemo, useState } from "react";
-import { AiFillDelete, AiFillEdit } from "react-icons/ai";
-import { FaRocketchat } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const ProfitLoss = ({ color = "light" }) => {
   const navigate = useNavigate();
@@ -27,24 +14,7 @@ const ProfitLoss = ({ color = "light" }) => {
   const [selectedType, setSelectedType] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
 
-  const [
-    { insuranceList, rplList, studentList, visaList, skillList, accountsList },
-    { refetchAccountList },
-  ] = useKothar();
-
-  const deleteData = () => {
-    axios
-      .delete(`${API_URL}/accounts/${openConfirmationModal?.id}`)
-      .then((res) => {
-        console.log(res);
-        toast.success(res?.data?.message || "Data Deleted Successfully");
-        setOpenConfirmationModal({ state: false, id: null });
-        refetchAccountList();
-      })
-      .catch((err) => {
-        toast.error("Error Deleting Data");
-      });
-  };
+  const [{ accountsList }, {}] = useKothar();
 
   const options = [
     { label: "RPL", value: "rpl" },
@@ -57,32 +27,8 @@ const ProfitLoss = ({ color = "light" }) => {
     },
   ];
 
-  const getClientOption = () => {
-    let secondOption = [];
-
-    switch (selectedType?.value) {
-      case "rpl":
-        secondOption = rplList;
-        break;
-      case "student":
-        secondOption = studentList;
-        break;
-      case "insurance":
-        secondOption = insuranceList;
-        break;
-      case "visa":
-        secondOption = visaList;
-        break;
-      case "skill-assessment":
-        secondOption = skillList;
-        break;
-    }
-    return secondOption ?? [];
-  };
-
   const columns = useMemo(
     () => [
-    
       {
         accessorKey: "date", //normal accessorKey
         header: "Date",
@@ -93,8 +39,8 @@ const ProfitLoss = ({ color = "light" }) => {
       },
 
       {
-        accessorKey: "category" || 0,
-        header: "Category",
+        accessorKey: "clientName" || 0,
+        header: "Client Name",
         size: 150,
       },
 
@@ -112,13 +58,10 @@ const ProfitLoss = ({ color = "light" }) => {
         accessorKey: "costAmount",
         header: "Cost Amount",
         size: 150,
-      },{
+      },
+      {
         accessorKey: "profileAmount",
         header: "Profit/Loss Amount",
-        size: 150,
-      },{
-        accessorKey: "receipt",
-        header: "Receipt",
         size: 150,
       },
     ],
@@ -127,8 +70,12 @@ const ProfitLoss = ({ color = "light" }) => {
 
   const table = useMaterialReactTable({
     columns,
-    data: accountsList,    enableRowNumbers: true,
-
+    data: accountsList,
+    enableRowNumbers: true,
+    enableStickyHeader: true,
+    muiTableContainerProps: { sx: { maxHeight: "500px" } },
+    enableColumnPinning: true,
+    enableRowPinning: true,
   });
   const [openDiscussion, setOpenDiscussion] = useState(false);
   const handleDiscussion = () => {
@@ -165,7 +112,6 @@ const ProfitLoss = ({ color = "light" }) => {
                       options.value === value.value
                     }
                   />
-                 
                 </div>
               </form>
             </div>
