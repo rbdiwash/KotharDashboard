@@ -32,7 +32,7 @@ const AddAccounts = ({ color = "light" }) => {
     caseOfficer: null,
     isClaimed: "No",
     commission: null,
-    reminderDate: new Date(),
+    reminderDate: null,
     amountPaidByStudent: null,
   });
   const [
@@ -66,7 +66,12 @@ const AddAccounts = ({ color = "light" }) => {
         address: state?.item?.clientData?.address,
         number: state?.item?.clientData?.number,
       });
-      setInstallments(state?.item?.installments);
+      setInstallments([
+        ...state?.item?.installments.map((item) => ({
+          ...item,
+          date: item?.date?.split("T")[0],
+        })),
+      ]);
     }
   }, [state]);
 
@@ -138,7 +143,11 @@ const AddAccounts = ({ color = "light" }) => {
   });
 
   async function postData(payload) {
-    await axios.post(`${API_URL}/accounts`, payload);
+    if (data?.id) {
+      await axios.put(`${API_URL}/accounts/${payload?.id}`, payload);
+    } else {
+      await axios.post(`${API_URL}/accounts`, payload);
+    }
   }
 
   const handleSubmit = (e) => {
@@ -165,7 +174,6 @@ const AddAccounts = ({ color = "light" }) => {
       totalAmount - (Number(data?.discount) / 100) * totalAmount;
     return Number(priceAfterDiscount.toFixed(3)) || 0;
   };
-  console.log(data);
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">
@@ -237,7 +245,9 @@ const AddAccounts = ({ color = "light" }) => {
                           Payment Details
                         </h2>
                         <div className="flex gap-2 items-center ">
-                          Total Amount agreed by Student:
+                          <span className="w-[250px]">
+                            Total Amount agreed by Student:
+                          </span>
                           <OutlinedInput
                             name="studentCost"
                             className="col-span-2"
@@ -254,9 +264,11 @@ const AddAccounts = ({ color = "light" }) => {
                         {installments
                           .reduce((a, b) => a + (Number(b.amount) || 0), 0)
                           .toFixed(2)} */}
-                        </div>{" "}
+                        </div>
                         <div className="flex gap-2 items-center ">
-                          Total Cost for Kothar
+                          <span className="w-[250px]">
+                            Total Cost for Kothar
+                          </span>
                           <OutlinedInput
                             name="costForKothar"
                             placeholder="Amount in AUD"
@@ -273,12 +285,13 @@ const AddAccounts = ({ color = "light" }) => {
                           />
                         </div>
                         <div className="flex gap-2 items-center ">
-                          Case Officer:
+                          <span className="w-[250px]">Case Officer:</span>
                           <OutlinedInput
                             name="caseOfficer"
                             placeholder="Case Officer Name"
                             type="text"
                             size="small"
+                            endAdornment={""}
                             value={data?.caseOfficer}
                             onChange={(e) =>
                               setData({ ...data, caseOfficer: e.target.value })
@@ -299,8 +312,9 @@ const AddAccounts = ({ color = "light" }) => {
                             }
                           />
                         </div> */}
-                        <div className="flex items-center gap-4">
-                          Commission Claimed:
+                        <div className="flex items-center gap-2">
+                          <span className="w-[250px]">Commission Claimed:</span>
+
                           <Autocomplete
                             onChange={(e, value) =>
                               setData({ ...data, isClaimed: value?.value })
@@ -369,7 +383,9 @@ const AddAccounts = ({ color = "light" }) => {
                           )}
                         </div>
                         <div className="flex gap-2 items-center ">
-                          Total amount paid by Student:
+                          <span className="w-[250px]">
+                            Total amount paid by Student:
+                          </span>
                           <OutlinedInput
                             name="amountPaidByStudent"
                             placeholder="Amount in AUD"
@@ -472,7 +488,7 @@ const AddAccounts = ({ color = "light" }) => {
                                   placeholder="Amount"
                                   onChange={(e) => handleInputChange(e, index)}
                                   value={item?.amount}
-                                  className="min-w-[150px]"
+                                  className="min-w-[250px]"
                                 />
                               </td>
                               <td className="border text-center  px-4 py-2 min-w-[200px]">
@@ -482,7 +498,7 @@ const AddAccounts = ({ color = "light" }) => {
                                   placeholder="Payment Method"
                                   onChange={(e) => handleInputChange(e, index)}
                                   value={item?.method}
-                                  className="min-w-[150px]"
+                                  className="min-w-[250px]"
                                 />
                               </td>
                               <td className="border text-center px-4 py-2 min-w-[200px]">
@@ -592,7 +608,7 @@ const AddAccounts = ({ color = "light" }) => {
                                   size="small"
                                   onChange={(e) => handleInputChange(e, index)}
                                   value={item?.status}
-                                  className="min-w-[150px]"
+                                  className="min-w-[250px]"
                                 />
                               </td> */}
                               <td className="border text-center px-4 py-2 min-w-[250px]">

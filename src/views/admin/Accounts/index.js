@@ -94,14 +94,13 @@ const Accounts = ({ color = "light" }) => {
         header: "Type",
         size: 150,
         accessorKey: "type",
-        
       },
       {
         accessorKey: "studentCost", //normal accessorKey
-        header: "Student cost",
+        header: "Student Agreed cost",
         size: 100,
         Cell: ({ row, renderedCellValue }) => {
-          return <div>{row.original.discount || 0}</div>;
+          return <div>{row.original.studentCost || 0}</div>;
         },
       },
 
@@ -117,7 +116,7 @@ const Accounts = ({ color = "light" }) => {
         size: 150,
       },
       {
-        accessorKey: "claimed", //normal accessorKey
+        accessorKey: "isClaimed", //normal accessorKey
         header: "Commission Claimed",
         size: 200,
       },

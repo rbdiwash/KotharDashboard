@@ -16,6 +16,34 @@ const useStateAndActions = () => {
   });
   const [rplList, setRPLList] = useState([]);
   const [visaList, setVisaList] = useState([]);
+  const [profitLossList, setProfitLossList] = useState([]);
+
+  const getProfitLossData = (params) => {
+    let url = `${API_URL}/profit-loss/type?module=${params ?? "rpl"}`;
+
+    axios
+      .get(url, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      })
+      .then((res) => setProfitLossList(res?.data?.data))
+      .catch((err) =>
+        toast.error(err || "Server Error loading Profit Loss List")
+      );
+  };
+
+  const getOverallProfitLossData = async () => {
+    const res = await axios.get(`profit-loss/type`);
+    return res?.data?.data;
+  };
+
+  const {
+    data: overallProfitLossList = [],
+    refetch: refetchOverallProfitLoss,
+  } = useQuery(["overall-profit/loss"], getOverallProfitLossData, {
+    refetchOnWindowFocus: false,
+    enabled: false,
+  });
+
   const getData = async () => {
     const res = await axios.get(`organization`);
     return res?.data?.data;
@@ -232,7 +260,9 @@ const useStateAndActions = () => {
       refetchInsuranceList();
       getRPLList();
       refetchAccountList();
+      getProfitLossData();
       // refetchRPLList();
+      refetchOverallProfitLoss();
     }
   }, [token]);
 
@@ -253,6 +283,8 @@ const useStateAndActions = () => {
     archivedClientList,
     accountsList,
     selectedVisaTab,
+    profitLossList,
+    overallProfitLossList,
   };
   const actions = {
     refetchClient,
@@ -275,6 +307,8 @@ const useStateAndActions = () => {
     refetchArchivedClient,
     setRPLList,
     setSelectedVisaTab,
+    getProfitLossData,
+    refetchOverallProfitLoss,
   };
 
   return [state, actions];
