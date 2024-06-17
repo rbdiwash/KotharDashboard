@@ -25,15 +25,33 @@ const useStateAndActions = () => {
       .get(url, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
-      .then((res) => setProfitLossList(res?.data?.data))
+      .then((res) => setProfitLossList(res?.data?.data?.plData))
       .catch((err) =>
         toast.error(err || "Server Error loading Profit Loss List")
       );
   };
 
   const getOverallProfitLossData = async () => {
-    const res = await axios.get(`profit-loss/type`);
-    return res?.data?.data;
+    const res = await axios.get(`profit-loss`);
+    const finalData = res.data.data.moduleProfit;
+    const total = {
+      module: "Total",
+      totalAmount: finalData?.reduce(
+        (initial, sum) => initial + sum?.totalAmount,
+        0
+      ),
+      paidAmount: finalData?.reduce(
+        (initial, sum) => initial + sum?.paidAmount,
+        0
+      ),
+      costAmount: finalData?.reduce(
+        (initial, sum) => initial + sum?.costAmount,
+        0
+      ),
+      profit: finalData?.reduce((initial, sum) => initial + sum?.profit, 0),
+    };
+
+    return [...finalData, total];
   };
 
   const {

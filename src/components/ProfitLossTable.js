@@ -34,7 +34,7 @@ const ProfitLossTable = () => {
       // },
 
       {
-        accessorKey: "clientName" || 0,
+        accessorKey: "module",
         header: "Category",
         size: 150,
       },
@@ -55,18 +55,17 @@ const ProfitLossTable = () => {
         size: 150,
       },
       {
-        accessorKey: "profitLossAmount",
+        accessorKey: "profit",
         header: "Profit/Loss Amount",
         size: 150,
         Cell: ({ row, renderedCellValue }) => {
           return (
             <div
               style={{
-                color:
-                  Number(row?.original?.profitLossAmount) > 0 ? "green" : "red",
+                color: Number(row?.original?.profit) > 0 ? "green" : "red",
               }}
             >
-              {row?.original?.profitLossAmount}
+              {row?.original?.profit}
             </div>
           );
         },
@@ -91,12 +90,24 @@ const ProfitLossTable = () => {
       enableGlobalFilter: true,
       showGlobalFilter: true,
     },
+    enablePagination: false,
+
+    muiTableBodyProps: {
+      sx: {
+        "& tr:last-of-type": {
+          backgroundColor: "#f5f5f5",
+        },
+        "& tr:nth-child(4)": {
+          backgroundColor: "#f5f5f5",
+        },
+      },
+    },
 
     renderTopToolbarCustomActions: ({ table }) => (
       <Box
         sx={{
           display: "flex",
-          gap: "16px",
+          gap: "6px",
           alignItems: "center",
           flexWrap: "wrap",
         }}
