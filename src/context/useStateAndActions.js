@@ -17,6 +17,7 @@ const useStateAndActions = () => {
   const [rplList, setRPLList] = useState([]);
   const [visaList, setVisaList] = useState([]);
   const [profitLossList, setProfitLossList] = useState([]);
+  const [moduleWiseProfitLossList, setModuleWiseProfitLossList] = useState([]);
 
   const getProfitLossData = (params) => {
     let url = `${API_URL}/profit-loss/type?module=${params ?? "rpl"}`;
@@ -31,36 +32,45 @@ const useStateAndActions = () => {
       );
   };
 
-  const getOverallProfitLossData = async () => {
-    const res = await axios.get(`profit-loss`);
-    const finalData = res.data.data.moduleProfit;
-    const total = {
-      module: "Total",
-      totalAmount: finalData?.reduce(
-        (initial, sum) => initial + sum?.totalAmount,
-        0
-      ),
-      paidAmount: finalData?.reduce(
-        (initial, sum) => initial + sum?.paidAmount,
-        0
-      ),
-      costAmount: finalData?.reduce(
-        (initial, sum) => initial + sum?.costAmount,
-        0
-      ),
-      profit: finalData?.reduce((initial, sum) => initial + sum?.profit, 0),
-    };
+  const getModuleWiseProfitLoss = async (params) => {
+    const year = params?.year || new Date().getFullYear();
+    const month =
+      params?.month || new Date().toLocaleString("en-US", { month: "long" });
 
-    return [...finalData, total];
+    const res = await axios.get(`profit-loss/all`, {
+      params: { year, month },
+    });
+
+    if (res?.data?.data?.plData) {
+      const finalData = res?.data?.data?.plData;
+      const total = {
+        clientName: "Total",
+        totalAmount: finalData?.reduce(
+          (initial, sum) => initial + sum?.totalAmount,
+          0
+        ),
+        paidAmount: finalData?.reduce(
+          (initial, sum) => initial + sum?.paidAmount,
+          0
+        ),
+        costAmount: finalData?.reduce(
+          (initial, sum) => initial + sum?.costAmount,
+          0
+        ),
+        profitLossAmount: finalData?.reduce(
+          (initial, sum) => initial + sum?.profitLossAmount,
+          0
+        ),
+      };
+      if (finalData?.length > 0) {
+        setModuleWiseProfitLossList([...finalData, total]);
+      } else {
+        setModuleWiseProfitLossList([...finalData]);
+      }
+    } else {
+      console.log("Error loading data");
+    }
   };
-
-  const {
-    data: overallProfitLossList = [],
-    refetch: refetchOverallProfitLoss,
-  } = useQuery(["overall-profit/loss"], getOverallProfitLossData, {
-    refetchOnWindowFocus: false,
-    enabled: false,
-  });
 
   const getData = async () => {
     const res = await axios.get(`organization`);
@@ -217,7 +227,8 @@ const useStateAndActions = () => {
       .get(url, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
-      .then((res) => setVisaList(res?.data?.data));
+      .then((res) => setVisaList(res?.data?.data))
+      .catch((err) => console.log(err));
   };
 
   const getSkillAssessmentList = async () => {
@@ -280,7 +291,7 @@ const useStateAndActions = () => {
       refetchAccountList();
       getProfitLossData();
       // refetchRPLList();
-      refetchOverallProfitLoss();
+      getModuleWiseProfitLoss();
     }
   }, [token]);
 
@@ -302,7 +313,7 @@ const useStateAndActions = () => {
     accountsList,
     selectedVisaTab,
     profitLossList,
-    overallProfitLossList,
+    moduleWiseProfitLossList,
   };
   const actions = {
     refetchClient,
@@ -326,7 +337,7 @@ const useStateAndActions = () => {
     setRPLList,
     setSelectedVisaTab,
     getProfitLossData,
-    refetchOverallProfitLoss,
+    getModuleWiseProfitLoss,
   };
 
   return [state, actions];

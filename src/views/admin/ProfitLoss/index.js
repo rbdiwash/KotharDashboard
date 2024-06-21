@@ -1,35 +1,36 @@
-import React from "react";
-import {
-  Autocomplete,
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-} from "@mui/material";
+import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { monthsForFilter } from "const/constants";
 import useKothar from "context/useKothar";
 import {
   MaterialReactTable,
   useMaterialReactTable,
 } from "material-react-table";
+import { useEffect } from "react";
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { monthsForFilter } from "const/constants";
 
 const ProfitLoss = ({ color = "light" }) => {
-  const navigate = useNavigate();
-  const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [selectedType, setSelectedType] = useState("rpl");
+  const [year, setYear] = useState(new Date().getFullYear());
+  const [month, setMonth] = useState(
+    new Date().toLocaleString("en-US", { month: "long" })
+  );
 
-  const [selectedStudent, setSelectedStudent] = useState(null);
-
-  const [{ profitLossList }, { getProfitLossData }] = useKothar();
+  const [{ moduleWiseProfitLossList }, { getModuleWiseProfitLoss }] =
+    useKothar();
   const yearsForFilter = Array.from(
     { length: 10 },
     (_, i) => new Date().getFullYear() - i
   );
+
+  const handleYearChange = (selectedYear) => {
+    getModuleWiseProfitLoss({ year: selectedYear, month });
+    setYear(selectedYear);
+  };
+
+  const handleMonthChange = (selectedMonth) => {
+    getModuleWiseProfitLoss({ year, month: selectedMonth });
+    setMonth(selectedMonth);
+  };
 
   const options = [
     { label: "RPL", value: "rpl" },
@@ -88,13 +89,28 @@ const ProfitLoss = ({ color = "light" }) => {
 
   const table = useMaterialReactTable({
     columns,
-    data: profitLossList,
+    data: moduleWiseProfitLossList,
     enableRowNumbers: true,
     enableStickyHeader: true,
     muiTableContainerProps: { sx: { maxHeight: "500px" } },
     enableColumnPinning: true,
     enableRowPinning: true,
     enablePagination: false,
+    initialState: {
+      rowPinning: {
+        top: ["total", "egarcia@yopmail.com"],
+        bottom: [],
+      },
+    },
+    muiTableBodyRowProps: ({ row }) => {
+      console.log(row);
+      return {
+        //conditionally style selected rows
+        sx: {
+          backgroundColor: row.getIsPinned() ? "#f5f5f5" : "inherit",
+        },
+      };
+    },
     renderTopToolbarCustomActions: ({ table }) => (
       <Box
         sx={{
@@ -116,7 +132,7 @@ const ProfitLoss = ({ color = "light" }) => {
             value={selectedType}
             onChange={(e) => {
               setSelectedType(e.target.value);
-              getProfitLossData(e.target.value);
+              getModuleWiseProfitLoss(e.target.value);
             }}
           >
             {options?.map((arg) => (
@@ -131,8 +147,8 @@ const ProfitLoss = ({ color = "light" }) => {
           <Select
             labelId="year-filter-label"
             id="year-filter"
-            // value={age}
-            // onChange={handleChange}
+            value={year}
+            onChange={(e) => handleYearChange(e.target.value)}
             label="Select Year"
           >
             {yearsForFilter?.map((value, i) => (
@@ -147,8 +163,8 @@ const ProfitLoss = ({ color = "light" }) => {
           <Select
             labelId="month-filter-label"
             id="month-filter"
-            // value={age}
-            // onChange={handleChange}
+            value={month}
+            onChange={(e) => handleMonthChange(e.target.value)}
             label="Select Month"
           >
             {monthsForFilter?.map(({ label, value }, i) => (
@@ -173,30 +189,6 @@ const ProfitLoss = ({ color = "light" }) => {
           }
         >
           <div className="rounded-t mb-0 px-4 py-3 border-0 text-center text-xl font-bold">
-            {/* <div className="flex flex-wrap items-center  justify-between">
-              <form className="flex items-center justify-between w-full  rounded mr-3">
-                <div className="relative flex mx-auto  items-center">
-                  <Autocomplete
-                    size="small"
-                    disablePortal
-                    options={options}
-                    sx={{ width: 300 }}
-                    onChange={(e, value) => {
-                      setSelectedType(value);
-                      setSelectedStudent(null);
-                    }}
-                    getOptionLabel={(option) => option.label}
-                    renderInput={(params) => (
-                      <TextField {...params} placeholder="Select Type" />
-                    )}
-                    value={selectedType}
-                    isOptionEqualToValue={(options, value) =>
-                      options.value === value.value
-                    }
-                  />
-                </div>
-              </form>
-            </div> */}
             Profit/Loss Data
           </div>
           <div className="block w-full overflow-x-auto">
