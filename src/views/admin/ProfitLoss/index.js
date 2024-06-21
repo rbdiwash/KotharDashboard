@@ -96,21 +96,21 @@ const ProfitLoss = ({ color = "light" }) => {
     enableColumnPinning: true,
     enableRowPinning: true,
     enablePagination: false,
-    initialState: {
-      rowPinning: {
-        top: ["total", "egarcia@yopmail.com"],
-        bottom: [],
-      },
-    },
+
     muiTableBodyRowProps: ({ row }) => {
-      console.log(row);
       return {
-        //conditionally style selected rows
         sx: {
-          backgroundColor: row.getIsPinned() ? "#f5f5f5" : "inherit",
+          backgroundColor:
+            row.original.clientName === "Total" ? "#eee" : "inherit",
         },
       };
     },
+    muiTableBodyCellProps: ({ row }) => ({
+      sx: {
+        fontWeight: row.original.clientName === "Total" && "bold",
+        fontSize: row.original.clientName === "Total" && 16,
+      },
+    }),
     renderTopToolbarCustomActions: ({ table }) => (
       <Box
         sx={{

@@ -23,7 +23,7 @@ import { toast } from "react-toastify";
 import { monthsForFilter } from "const/constants";
 
 const ProfitLossTable = () => {
-  const [{ overallProfitLossList }, {}] = useKothar();
+  const [{ profitLossList }, {}] = useKothar();
 
   const columns = useMemo(
     () => [
@@ -81,7 +81,7 @@ const ProfitLossTable = () => {
 
   const table = useMaterialReactTable({
     columns,
-    data: overallProfitLossList,
+    data: profitLossList,
     enableStickyHeader: true,
     muiTableContainerProps: { sx: { maxHeight: "300px" } },
     // enableDensityToggle: true,
@@ -91,7 +91,6 @@ const ProfitLossTable = () => {
       showGlobalFilter: true,
     },
     enablePagination: false,
-
     muiTableBodyProps: {
       sx: {
         "& tr:last-of-type": {
