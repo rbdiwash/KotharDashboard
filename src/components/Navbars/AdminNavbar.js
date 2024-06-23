@@ -2,17 +2,29 @@ import React from "react";
 
 import UserDropdown from "components/Dropdowns/UserDropdown.js";
 import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
-import { Popover, Typography } from "@mui/material";
+import { Popover, Tooltip, Typography } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+import useKothar from "context/useKothar";
+import { IoRefreshCircle } from "react-icons/io5";
+import { Refresh } from "@mui/icons-material";
+import { toast } from "react-toastify";
 
 export default function Navbar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [notificationsList, setNotificationsList] = React.useState([]);
+  const [
+    { notificationsList },
+    { setNotificationsList, getNotificationsData },
+  ] = useKothar();
+  const unreadMessages = notificationsList.filter(
+    (notification) => notification.read === false
+  )?.length;
+
   const [refresh, setRefresh] = useState(false);
+  const [activeItem, setActiveItem] = useState(null);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -28,27 +40,45 @@ export default function Navbar() {
   const openEach = Boolean(anchorE2);
   const id_2 = openEach ? "simple-popover_2" : undefined;
 
-  const handlePopoverOpen = (event) => {
+  const handlePopoverOpen = (event, item) => {
     setAnchorE2(event.currentTarget);
+    setActiveItem(item?.id);
   };
 
   const handlePopoverClose = () => {
     setAnchorE2(null);
   };
 
-  const getNotificationsData = () => {
+  const handleRefresh = () => {
+    setRefresh(!refresh);
+    getNotificationsData();
+  };
+
+  const handleMarkAsRead = (type) => {
+    let itemArray = [];
+    console.log(activeItem);
+    itemArray =
+      type === "single"
+        ? [activeItem]
+        : (itemArray = notificationsList?.map((item) => item?.id));
+    console.log(itemArray);
+    const payload = { notificationIds: [...itemArray] };
     axios
-      .get("/notification")
+      .put("/notification/mark-as-read", payload)
       .then((response) => {
-        setNotificationsList(response?.data);
+        toast.success(response?.data?.message);
+        setNotificationsList(
+          notificationsList?.map((notification) => ({
+            ...notification,
+            read: true,
+          }))
+        );
+        type === "single" && setAnchorE2(null);
+        type !== "single" && setAnchorEl(null);
       })
       .catch((err) => console.log(err));
   };
-  useEffect(() => {
-    if (open) {
-      getNotificationsData();
-    }
-  }, [open]);
+
   return (
     <>
       {/* Navbar */}
@@ -63,14 +93,20 @@ export default function Navbar() {
             Kothar Dashboard
           </a>
 
-          <ul className="flex-col md:flex-row md:gap-4 list-none items-center hidden md:flex">
-            <CircleNotificationsIcon
-              className="w-12 h-12 text-white cursor-pointer"
-              onClick={handleClick}
-              aria-describedby={id}
-            />
+          <ul className="flex-col md:flex-row md:gap-4 list-none items-center hidden md:flex ">
+            <div className="relative">
+              <CircleNotificationsIcon
+                className="w-12 h-12 text-white cursor-pointer"
+                onClick={handleClick}
+                aria-describedby={id}
+              />
+              {unreadMessages > 0 && (
+                <span className="bg-red-400 rounded-full h-6 w-6 text-center text-white fixed top-3 right-[80px] ">
+                  {unreadMessages}
+                </span>
+              )}
+            </div>
             <UserDropdown />
-
             <Popover
               id={id}
               open={open}
@@ -90,12 +126,28 @@ export default function Navbar() {
                   "max-w-[400px] bg-white text-base z-50 float-left list-none text-left rounded shadow-lg min-w-[350px] max-h-[400px] overflow-y-auto relative"
                 }
               >
-                <div className="bg-gray-200 px-4 py-4 flex items-center justify-between sticky top-0">
-                  <span className="text-blue-400">
+                <div className="text-white font-bold bg-orange-400 px-4 py-4 flex items-center justify-between sticky top-0">
+                  <span className="">
                     <NotificationsActiveIcon /> Notifications
                   </span>
-                  <span className="text-blue-400 text-sm cursor-pointer">
-                    Mark all as read
+                  <span className=" text-sm cursor-pointer flex gap-2 items-center">
+                    <Tooltip
+                      title="Refresh for new Notifications"
+                      onClick={handleRefresh}
+                    >
+                      <Refresh
+                        sx={{
+                          transform: refresh
+                            ? `rotate(360deg)`
+                            : `rotate(0deg)`,
+                          transition: "transform 0.5s ease 0s",
+                        }}
+                      />
+                    </Tooltip>
+                    <div onClick={() => handleMarkAsRead("all")}>
+                      {" "}
+                      Mark all as read{" "}
+                    </div>
                   </span>
                 </div>
 
@@ -103,25 +155,29 @@ export default function Navbar() {
                   {notificationsList?.length > 0 ? (
                     notificationsList?.map((item) => (
                       <li
-                        className="flex items-start justify-between border-b px-4 py-4"
+                        className={
+                          "flex justify-between border-b border-black px-4 py-4 items-center " +
+                          (!item?.read && "bg-gray-200 border-white border-b-2")
+                        }
                         key={item?.id}
                       >
                         <div>
                           <p>{item?.content}</p>
                           <p className="text-gray-400 text-sm">
-                            {item?.time || new Date().toLocaleString()}
+                            {item?.date || new Date().toLocaleString()}
                           </p>
                         </div>
-                        <MoreVertIcon
-                          onClick={handlePopoverOpen}
-                          aria-describedby={id_2}
-                        />
+                        {!item?.read && (
+                          <MoreVertIcon
+                            onClick={(e) => handlePopoverOpen(e, item)}
+                            aria-describedby={id_2}
+                          />
+                        )}
                       </li>
                     ))
                   ) : (
                     <li className="flex items-start justify-between border-b px-4 py-4">
                       <span>No Notifications Available</span>
-                      <MoreVertIcon />
                     </li>
                   )}
                 </ul>
@@ -141,7 +197,10 @@ export default function Navbar() {
                 horizontal: "right",
               }}
             >
-              <Typography sx={{ p: 1, px: 2, cursor: "pointer" }}>
+              <Typography
+                sx={{ p: 1, px: 2, cursor: "pointer" }}
+                onClick={() => handleMarkAsRead("single")}
+              >
                 Mark as Read.
               </Typography>
             </Popover>

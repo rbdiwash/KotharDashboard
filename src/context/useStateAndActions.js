@@ -18,6 +18,16 @@ const useStateAndActions = () => {
   const [visaList, setVisaList] = useState([]);
   const [profitLossList, setProfitLossList] = useState([]);
   const [moduleWiseProfitLossList, setModuleWiseProfitLossList] = useState([]);
+  const [notificationsList, setNotificationsList] = useState([]);
+
+  const getNotificationsData = () => {
+    axios
+      .get("/notification")
+      .then((response) => {
+        setNotificationsList(response?.data);
+      })
+      .catch((err) => console.log(err));
+  };
 
   const getProfitLossData = (params) => {
     let url = `${API_URL}/profit-loss/type?module=${params ?? "rpl"}`;
@@ -292,6 +302,7 @@ const useStateAndActions = () => {
       getProfitLossData();
       // refetchRPLList();
       getModuleWiseProfitLoss();
+      getNotificationsData();
     }
   }, [token]);
 
@@ -314,6 +325,7 @@ const useStateAndActions = () => {
     selectedVisaTab,
     profitLossList,
     moduleWiseProfitLossList,
+    notificationsList,
   };
   const actions = {
     refetchClient,
@@ -338,6 +350,8 @@ const useStateAndActions = () => {
     setSelectedVisaTab,
     getProfitLossData,
     getModuleWiseProfitLoss,
+    getNotificationsData,
+    setNotificationsList,
   };
 
   return [state, actions];
