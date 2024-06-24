@@ -7,6 +7,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Stack,
   TextField,
 } from "@mui/material";
 
@@ -23,8 +24,12 @@ import { toast } from "react-toastify";
 import { monthsForFilter } from "const/constants";
 
 const ProfitLossTable = () => {
-  const [{ profitLossList }, {}] = useKothar();
-
+  const [{ profitLossList }, { getProfitLossData }] = useKothar();
+  console.log("🚀  profitLossList:", profitLossList);
+  const [year, setYear] = useState(new Date().getFullYear());
+  const [month, setMonth] = useState(
+    new Date().toLocaleString("en-US", { month: "long" })
+  );
   const columns = useMemo(
     () => [
       // {
@@ -43,6 +48,14 @@ const ProfitLossTable = () => {
         accessorKey: "totalAmount", //normal accessorKey
         header: "Total Amount",
         size: 200,
+        aggregationFn: "sum",
+
+        AggregatedCell: ({ cell }) => <div>Total Score: {cell.getValue()}</div>,
+        Footer: () => (
+          <Stack>
+            <Box color="warning.main">{Math.round(200)}</Box>
+          </Stack>
+        ),
       },
       {
         accessorKey: "paidAmount",
@@ -74,6 +87,16 @@ const ProfitLossTable = () => {
     []
   );
 
+  const handleYearChange = (selectedYear) => {
+    getProfitLossData({ year: selectedYear, month });
+    setYear(selectedYear);
+  };
+
+  const handleMonthChange = (selectedMonth) => {
+    getProfitLossData({ year, month: selectedMonth });
+    setMonth(selectedMonth);
+  };
+
   const yearsForFilter = Array.from(
     { length: 10 },
     (_, i) => new Date().getFullYear() - i
@@ -91,17 +114,19 @@ const ProfitLossTable = () => {
       showGlobalFilter: true,
     },
     enablePagination: false,
-    muiTableBodyProps: {
-      sx: {
-        "& tr:last-of-type": {
-          backgroundColor: "#f5f5f5",
+    muiTableBodyRowProps: ({ row }) => {
+      return {
+        sx: {
+          backgroundColor: row.original.module === "Total" ? "#eee" : "inherit",
         },
-        "& tr:nth-child(4)": {
-          backgroundColor: "#f5f5f5",
-        },
-      },
+      };
     },
-
+    muiTableBodyCellProps: ({ row }) => ({
+      sx: {
+        fontWeight: row.original.module === "Total" && "bold",
+        fontSize: row.original.module === "Total" && 16,
+      },
+    }),
     renderTopToolbarCustomActions: ({ table }) => (
       <Box
         sx={{
@@ -118,8 +143,8 @@ const ProfitLossTable = () => {
           <Select
             labelId="year-filter-label"
             id="year-filter"
-            // value={age}
-            // onChange={handleChange}
+            value={year}
+            onChange={(e) => handleYearChange(e.target.value)}
             label="Select Year"
           >
             {yearsForFilter?.map((value, i) => (
@@ -134,8 +159,8 @@ const ProfitLossTable = () => {
           <Select
             labelId="month-filter-label"
             id="month-filter"
-            // value={age}
-            // onChange={handleChange}
+            value={month}
+            onChange={(e) => handleMonthChange(e.target.value)}
             label="Select Month"
           >
             {monthsForFilter?.map(({ label, value }, i) => (

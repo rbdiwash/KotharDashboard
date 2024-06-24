@@ -132,7 +132,7 @@ const ProfitLoss = ({ color = "light" }) => {
             value={selectedType}
             onChange={(e) => {
               setSelectedType(e.target.value);
-              getModuleWiseProfitLoss(e.target.value);
+              getModuleWiseProfitLoss({ year, month, module: e.target.value });
             }}
           >
             {options?.map((arg) => (

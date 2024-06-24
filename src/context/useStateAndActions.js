@@ -30,25 +30,42 @@ const useStateAndActions = () => {
   };
 
   const getProfitLossData = (params) => {
-    let url = `${API_URL}/profit-loss/type?module=${params ?? "rpl"}`;
+    const year = params?.year || new Date().getFullYear();
+    const month =
+      params?.month || new Date().toLocaleString("en-US", { month: "long" });
+
+    let url = `${API_URL}/profit-loss`;
 
     axios
       .get(url, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        params: { year, month },
       })
-      .then((res) => setProfitLossList(res?.data?.data?.plData))
+      .then((res) => {
+        const finalData = res?.data?.data;
+
+        const total = {
+          module: "Total",
+          totalAmount: finalData?.totalAmount,
+          paidAmount: finalData?.totalPaid,
+          costAmount: finalData?.totalCost,
+          profit: finalData?.totalProfit,
+        };
+        setProfitLossList([...finalData?.moduleProfit]);
+      })
       .catch((err) =>
         toast.error(err || "Server Error loading Profit Loss List")
       );
   };
 
   const getModuleWiseProfitLoss = async (params) => {
+    const module = params?.module || "rpl";
     const year = params?.year || new Date().getFullYear();
     const month =
       params?.month || new Date().toLocaleString("en-US", { month: "long" });
 
-    const res = await axios.get(`profit-loss/all`, {
-      params: { year, month },
+    const res = await axios.get(`profit-loss/type`, {
+      params: { year, month, module },
     });
 
     if (res?.data?.data?.plData) {
