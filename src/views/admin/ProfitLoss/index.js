@@ -49,17 +49,32 @@ const ProfitLoss = ({ color = "light" }) => {
         accessorKey: "clientName" || 0,
         header: "Client Name",
         size: 150,
+        enableGrouping: false, //do not let this column be grouped
       },
 
       {
         accessorKey: "totalAmount", //normal accessorKey
         header: "Total Amount",
         size: 200,
+        aggregationFn: "sum", //calc total points for each team by adding up all the points for each player on the team
+        AggregatedCell: ({ cell }) => {
+          console.log("agg cell");
+          return <div>Team Score: {cell.getValue()}</div>;
+        },
       },
       {
         accessorKey: "paidAmount",
         header: "Paid Amount",
         size: 150,
+        aggregationFn: ["count", "mean"], //multiple aggregation functions
+        AggregatedCell: ({ cell, table }) => (
+          <div>
+            {/*get the count from the first aggregation*/}
+            <div>Count: {cell.getValue()[0]}</div>
+            {/*get the average from the second aggregation*/}
+            <div>Average Salary: {cell.getValue()[1]}</div>
+          </div>
+        ),
       },
       {
         accessorKey: "costAmount",
@@ -136,7 +151,9 @@ const ProfitLoss = ({ color = "light" }) => {
             }}
           >
             {options?.map((arg) => (
-              <MenuItem value={arg?.value}>{arg?.label}</MenuItem>
+              <MenuItem value={arg?.value} key={arg?.value}>
+                {arg?.label}
+              </MenuItem>
             ))}
           </Select>
         </FormControl>
@@ -152,7 +169,9 @@ const ProfitLoss = ({ color = "light" }) => {
             label="Select Year"
           >
             {yearsForFilter?.map((value, i) => (
-              <MenuItem value={value}>{value}</MenuItem>
+              <MenuItem value={value} key={value}>
+                {value}
+              </MenuItem>
             ))}
           </Select>
         </FormControl>
@@ -168,7 +187,9 @@ const ProfitLoss = ({ color = "light" }) => {
             label="Select Month"
           >
             {monthsForFilter?.map(({ label, value }, i) => (
-              <MenuItem value={value}>{label}</MenuItem>
+              <MenuItem value={value} key={value}>
+                {label}
+              </MenuItem>
             ))}
           </Select>
         </FormControl>{" "}

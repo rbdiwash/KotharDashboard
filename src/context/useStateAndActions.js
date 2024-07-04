@@ -19,6 +19,7 @@ const useStateAndActions = () => {
   const [profitLossList, setProfitLossList] = useState([]);
   const [moduleWiseProfitLossList, setModuleWiseProfitLossList] = useState([]);
   const [notificationsList, setNotificationsList] = useState([]);
+  const [notificationClicked, setNotificationClicked] = useState(false);
 
   const getNotificationsData = () => {
     axios
@@ -70,27 +71,27 @@ const useStateAndActions = () => {
 
     if (res?.data?.data?.plData) {
       const finalData = res?.data?.data?.plData;
-      const total = {
-        clientName: "Total",
-        totalAmount: finalData?.reduce(
-          (initial, sum) => initial + sum?.totalAmount,
-          0
-        ),
-        paidAmount: finalData?.reduce(
-          (initial, sum) => initial + sum?.paidAmount,
-          0
-        ),
-        costAmount: finalData?.reduce(
-          (initial, sum) => initial + sum?.costAmount,
-          0
-        ),
-        profitLossAmount: finalData?.reduce(
-          (initial, sum) => initial + sum?.profitLossAmount,
-          0
-        ),
-      };
+      // const total = {
+      //   clientName: "Total",
+      //   totalAmount: finalData?.reduce(
+      //     (initial, sum) => initial + sum?.totalAmount,
+      //     0
+      //   ),
+      //   paidAmount: finalData?.reduce(
+      //     (initial, sum) => initial + sum?.paidAmount,
+      //     0
+      //   ),
+      //   costAmount: finalData?.reduce(
+      //     (initial, sum) => initial + sum?.costAmount,
+      //     0
+      //   ),
+      //   profitLossAmount: finalData?.reduce(
+      //     (initial, sum) => initial + sum?.profitLossAmount,
+      //     0
+      //   ),
+      // };
       if (finalData?.length > 0) {
-        setModuleWiseProfitLossList([...finalData, total]);
+        setModuleWiseProfitLossList([...finalData]);
       } else {
         setModuleWiseProfitLossList([...finalData]);
       }
@@ -343,6 +344,7 @@ const useStateAndActions = () => {
     profitLossList,
     moduleWiseProfitLossList,
     notificationsList,
+    notificationClicked,
   };
   const actions = {
     refetchClient,
@@ -369,6 +371,7 @@ const useStateAndActions = () => {
     getModuleWiseProfitLoss,
     getNotificationsData,
     setNotificationsList,
+    setNotificationClicked,
   };
 
   return [state, actions];

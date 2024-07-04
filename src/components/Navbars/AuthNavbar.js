@@ -27,7 +27,7 @@ export default function Navbar(props) {
               <i className="text-white fas fa-bars"></i>
             </button>
           </div>
-          <div
+          {/* <div
             className={
               "lg:flex flex-grow items-center bg-white lg:bg-opacity-0 lg:shadow-none" +
               (navbarOpen ? " block rounded shadow-lg" : " hidden")
@@ -39,7 +39,7 @@ export default function Navbar(props) {
                 <PagesDropdown />
               </li>
             </ul>
-          </div>
+          </div> */}
         </div>
       </nav>
     </>

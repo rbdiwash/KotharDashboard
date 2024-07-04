@@ -10,7 +10,7 @@ import useKothar from "context/useKothar";
 import { useEffect, useState } from "react";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { FaPlusCircle, FaRocketchat } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const SkillAssessment = ({ color = "light" }) => {
@@ -18,8 +18,12 @@ const SkillAssessment = ({ color = "light" }) => {
   const navigate = useNavigate();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [searchText, setSearchText] = useState("");
+  const [openDiscussion, setOpenDiscussion] = useState(false);
 
-  const [{ skillList }, { refetchSkillList }] = useKothar();
+  const [
+    { skillList, notificationClicked },
+    { refetchSkillList, setNotificationClicked },
+  ] = useKothar();
   const [filteredData, setFilteredData] = useState(skillList);
 
   const deleteData = () => {
@@ -35,10 +39,24 @@ const SkillAssessment = ({ color = "light" }) => {
         toast.error("Error Deleting Data");
       });
   };
-  const [openDiscussion, setOpenDiscussion] = useState(false);
   const handleDiscussion = () => {
     setOpenDiscussion(!openDiscussion);
   };
+
+  const location = useLocation();
+
+  console.log(notificationClicked);
+  useEffect(() => {
+    if (notificationClicked) {
+      setOpenDiscussion(true);
+    }
+  }, [notificationClicked]);
+
+  useEffect(() => {
+    if (openDiscussion) {
+      setNotificationClicked(!notificationClicked);
+    }
+  }, [openDiscussion]);
 
   useEffect(() => {
     if (searchText.length > 0) {

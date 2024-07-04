@@ -28,6 +28,7 @@ import Clients from "views/admin/Clients";
 import AddClient from "views/admin/Clients/AddClient";
 import ArchivedClients from "views/admin/Clients/ArchivedClient";
 import ProfitLoss from "views/admin/ProfitLoss";
+import NotFound from "views/NotFound";
 
 // render - dashboard
 const Admin = Loadable(lazy(() => import("layouts/Admin")));
@@ -40,6 +41,7 @@ const AdminRoutes = {
   path: "/admin",
   element: <Admin />,
   children: [
+    { path: "*", element: <NotFound /> },
     {
       path: "",
       element: <Dashboard />,

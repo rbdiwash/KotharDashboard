@@ -18,6 +18,7 @@ import { useState } from "react";
 import { useRef } from "react";
 import { useEffect } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useLocation } from "react-router-dom";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -48,6 +49,13 @@ export default function DiscussionModal({ open, setOpen, studentList, type }) {
       toast.error("Error Submitting Comment");
     },
   });
+  const location = useLocation();
+  useEffect(() => {
+    if (location.state.fromNotification?.id) {
+      fetchDiscussions(location.state.fromNotification?.clientId);
+      setStudentId(location.state.fromNotification?.clientId);
+    }
+  }, [studentId]);
 
   async function postData(payload) {
     await axios.post(`${API_URL}/discussion/${studentId}`, payload);
@@ -130,7 +138,7 @@ export default function DiscussionModal({ open, setOpen, studentList, type }) {
                 <div className="max-h-[400px] overflow-y-auto" ref={buttonRef}>
                   {commentsList?.length > 0 ? (
                     commentsList?.map((arg) => (
-                      <div id="chatbox" class="p-4">
+                      <div id="chatbox" class="p-4" key={arg?.id}>
                         {userEmail === arg?.commentedBy ? (
                           <div class="mb-2 text-right">
                             <p className="text-sm mb-2 text-gray-400">

@@ -22,26 +22,32 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { monthsForFilter } from "const/constants";
+import { useCallback } from "react";
 
 const ProfitLossTable = () => {
   const [{ profitLossList }, { getProfitLossData }] = useKothar();
-  console.log("🚀  profitLossList:", profitLossList);
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(
     new Date().toLocaleString("en-US", { month: "long" })
   );
+
+  const colorName = useCallback(
+    (data) => (Math.sign(data) !== -1 ? "success.main" : "error.main"),
+    []
+  );
+
+  const totalValue = useCallback(
+    (key) => profitLossList?.reduce((sum, acc) => sum + acc?.[key], 0) || 0,
+    [profitLossList]
+  );
+
   const columns = useMemo(
     () => [
-      // {
-      //   accessorKey: "date", //normal accessorKey
-      //   header: "Date",
-      //   size: 100,
-      // },
-
       {
         accessorKey: "module",
         header: "Category",
         size: 150,
+        Footer: () => <Stack>Total</Stack>,
       },
 
       {
@@ -49,11 +55,11 @@ const ProfitLossTable = () => {
         header: "Total Amount",
         size: 200,
         aggregationFn: "sum",
-
-        AggregatedCell: ({ cell }) => <div>Total Score: {cell.getValue()}</div>,
         Footer: () => (
           <Stack>
-            <Box color="warning.main">{Math.round(200)}</Box>
+            <Box color={colorName(totalValue("totalAmount"))}>
+              {Math.round(totalValue("totalAmount"))}
+            </Box>
           </Stack>
         ),
       },
@@ -61,11 +67,25 @@ const ProfitLossTable = () => {
         accessorKey: "paidAmount",
         header: "Paid Amount",
         size: 150,
+        Footer: () => (
+          <Stack>
+            <Box color={colorName(totalValue("paidAmount"))}>
+              {Math.round(totalValue("paidAmount"))}
+            </Box>
+          </Stack>
+        ),
       },
       {
         accessorKey: "costAmount",
         header: "Cost Amount",
         size: 150,
+        Footer: () => (
+          <Stack>
+            <Box color={colorName(totalValue("costAmount"))}>
+              {Math.round(totalValue("costAmount"))}
+            </Box>
+          </Stack>
+        ),
       },
       {
         accessorKey: "profit",
@@ -82,6 +102,13 @@ const ProfitLossTable = () => {
             </div>
           );
         },
+        Footer: () => (
+          <Stack>
+            <Box color={colorName(totalValue("profit"))}>
+              {Math.round(totalValue("profit"))}
+            </Box>
+          </Stack>
+        ),
       },
     ],
     []
@@ -148,7 +175,9 @@ const ProfitLossTable = () => {
             label="Select Year"
           >
             {yearsForFilter?.map((value, i) => (
-              <MenuItem value={value}>{value}</MenuItem>
+              <MenuItem value={value} key={value}>
+                {value}
+              </MenuItem>
             ))}
           </Select>
         </FormControl>
@@ -164,7 +193,9 @@ const ProfitLossTable = () => {
             label="Select Month"
           >
             {monthsForFilter?.map(({ label, value }, i) => (
-              <MenuItem value={value}>{label}</MenuItem>
+              <MenuItem value={value} key={label}>
+                {label}
+              </MenuItem>
             ))}
           </Select>
         </FormControl>
@@ -175,7 +206,7 @@ const ProfitLossTable = () => {
   return (
     <div className="block w-full overflow-x-auto bg-white shadow rounded">
       <p className="p-4 px-4 font-semibold">Profit/Loss Table</p>
-      <MaterialReactTable table={table} />
+      <MaterialReactTable table={table} enableStickyFooter />
     </div>
   );
 };

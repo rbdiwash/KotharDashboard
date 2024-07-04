@@ -14,7 +14,7 @@ export default function Dashboard() {
   return (
     <>
       <HeaderStats />
-      <div className="px-4 md:px-10 mx-auto w-full -m-24 dashBody h-screen">
+      <div className="px-4 md:px-10 mx-auto w-full -m-24 dashBody  md:min-h-screen mb-24 lg:mb-0">
         <div className="flex flex-wrap">
           <div className="w-full xl:w-8/12 mb-12 xl:mb-0 px-4">
             <CardLineChart />

@@ -12,17 +12,18 @@ import useKothar from "context/useKothar";
 import { IoRefreshCircle } from "react-icons/io5";
 import { Refresh } from "@mui/icons-material";
 import { toast } from "react-toastify";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [
-    { notificationsList },
-    { setNotificationsList, getNotificationsData },
+    { notificationsList, notificationClicked },
+    { setNotificationsList, getNotificationsData, setNotificationClicked },
   ] = useKothar();
   const unreadMessages = notificationsList.filter(
     (notification) => notification.read === false
   )?.length;
-
+  const navigate = useNavigate();
   const [refresh, setRefresh] = useState(false);
   const [activeItem, setActiveItem] = useState(null);
   const handleClick = (event) => {
@@ -31,6 +32,7 @@ export default function Navbar() {
 
   const handleClose = () => {
     setAnchorEl(null);
+    setNotificationClicked(!notificationClicked);
   };
 
   const open = Boolean(anchorEl);
@@ -56,23 +58,16 @@ export default function Navbar() {
 
   const handleMarkAsRead = (type) => {
     let itemArray = [];
-    console.log(activeItem);
     itemArray =
       type === "single"
         ? [activeItem]
         : (itemArray = notificationsList?.map((item) => item?.id));
-    console.log(itemArray);
     const payload = { notificationIds: [...itemArray] };
     axios
       .put("/notification/mark-as-read", payload)
       .then((response) => {
         toast.success(response?.data?.message);
-        setNotificationsList(
-          notificationsList?.map((notification) => ({
-            ...notification,
-            read: true,
-          }))
-        );
+        getNotificationsData();
         type === "single" && setAnchorE2(null);
         type !== "single" && setAnchorEl(null);
       })
@@ -145,8 +140,7 @@ export default function Navbar() {
                       />
                     </Tooltip>
                     <div onClick={() => handleMarkAsRead("all")}>
-                      {" "}
-                      Mark all as read{" "}
+                      Mark all as read
                     </div>
                   </span>
                 </div>
@@ -161,12 +155,19 @@ export default function Navbar() {
                         }
                         key={item?.id}
                       >
-                        <div>
+                        <Link
+                          className="cursor-pointer"
+                          to={{
+                            pathname: `${item?.module ?? "/"}`,
+                          }}
+                          state={{ fromNotification: item }}
+                          onClick={handleClose}
+                        >
                           <p>{item?.content}</p>
                           <p className="text-gray-400 text-sm">
                             {item?.date || new Date().toLocaleString()}
                           </p>
-                        </div>
+                        </Link>
                         {!item?.read && (
                           <MoreVertIcon
                             onClick={(e) => handlePopoverOpen(e, item)}
