@@ -1,28 +1,19 @@
-import React from "react";
 import {
-  Autocomplete,
   Box,
-  Button,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
   Stack,
-  TextField,
 } from "@mui/material";
 
-import axios from "axios";
-import { API_URL } from "const/constants";
+import { monthsForFilter } from "const/constants";
 import useKothar from "context/useKothar";
 import {
   MaterialReactTable,
   useMaterialReactTable,
 } from "material-react-table";
-import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { monthsForFilter } from "const/constants";
-import { useCallback } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 const ProfitLossTable = () => {
   const [{ profitLossList }, { getProfitLossData }] = useKothar();
@@ -38,7 +29,7 @@ const ProfitLossTable = () => {
 
   const totalValue = useCallback(
     (key) => profitLossList?.reduce((sum, acc) => sum + acc?.[key], 0) || 0,
-    [profitLossList]
+    [profitLossList, year, month]
   );
 
   const columns = useMemo(
@@ -111,7 +102,7 @@ const ProfitLossTable = () => {
         ),
       },
     ],
-    []
+    [profitLossList]
   );
 
   const handleYearChange = (selectedYear) => {

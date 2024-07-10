@@ -3,7 +3,6 @@ import React, { useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import logo from "../../assets/img/logo.png";
 
-import NotificationDropdown from "components/Dropdowns/NotificationDropdown.js";
 import UserDropdown from "components/Dropdowns/UserDropdown.js";
 
 export default function Sidebar() {
@@ -124,9 +123,6 @@ export default function Sidebar() {
             <img src={logo} className="h-16" />
           </Link>
           <ul className="md:hidden items-center flex flex-wrap list-none">
-            <li className="inline-block relative">
-              <NotificationDropdown />
-            </li>
             <li className="inline-block relative">
               <UserDropdown />
             </li>

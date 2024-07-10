@@ -646,55 +646,55 @@ const StudentDetails = ({ color = "light" }) => {
 };
 
 export default StudentDetails;
-  <table class="table table-bordered">
-    <tr>
-      <th className="w-1/3">Name</th>
-      <td width="2%">:</td>
-      <td>125</td>
-    </tr>
-    <tr>
-      <th className="w-1/3">Email Address </th>
-      <td width="2%">:</td>
-      <td>2020</td>
-    </tr>
-    <tr>
-      <th className="w-1/3">Mobile Number</th>
-      <td width="2%">:</td>
-      <td>Male</td>
-    </tr>
-    <tr>
-      <th className="w-1/3">Gender</th>
-      <td width="2%">:</td>
-      <td>Group</td>
-    </tr>
-    <tr>
-      <th className="w-1/3">Date of Birth</th>
-      <td width="2%">:</td>
-      <td>B+</td>
-    </tr>
-    <tr>
-      <th className="w-1/3">Marital Status</th>
-      <td width="2%">:</td>
-      <td>B+</td>
-    </tr>
-    <tr>
-      <th className="w-1/3">Emergency Contact Name</th>
-      <td width="2%">:</td>
-      <td>B+</td>
-    </tr>
-    <tr>
-      <th className="w-1/3">Emergency Email</th>
-      <td width="2%">:</td>
-      <td>B+</td>
-    </tr>
-    <tr>
-      <th className="w-1/3">Emergency Contact Number</th>
-      <td width="2%">:</td>
-      <td>B+</td>
-    </tr>
-    <tr>
-      <th className="w-1/3">Relation With Applicant</th>
-      <td width="2%">:</td>
-      <td>B+</td>
-    </tr>
-  </table>;
+<table className="table table-bordered">
+  <tr>
+    <th className="w-1/3">Name</th>
+    <td width="2%">:</td>
+    <td>125</td>
+  </tr>
+  <tr>
+    <th className="w-1/3">Email Address </th>
+    <td width="2%">:</td>
+    <td>2020</td>
+  </tr>
+  <tr>
+    <th className="w-1/3">Mobile Number</th>
+    <td width="2%">:</td>
+    <td>Male</td>
+  </tr>
+  <tr>
+    <th className="w-1/3">Gender</th>
+    <td width="2%">:</td>
+    <td>Group</td>
+  </tr>
+  <tr>
+    <th className="w-1/3">Date of Birth</th>
+    <td width="2%">:</td>
+    <td>B+</td>
+  </tr>
+  <tr>
+    <th className="w-1/3">Marital Status</th>
+    <td width="2%">:</td>
+    <td>B+</td>
+  </tr>
+  <tr>
+    <th className="w-1/3">Emergency Contact Name</th>
+    <td width="2%">:</td>
+    <td>B+</td>
+  </tr>
+  <tr>
+    <th className="w-1/3">Emergency Email</th>
+    <td width="2%">:</td>
+    <td>B+</td>
+  </tr>
+  <tr>
+    <th className="w-1/3">Emergency Contact Number</th>
+    <td width="2%">:</td>
+    <td>B+</td>
+  </tr>
+  <tr>
+    <th className="w-1/3">Relation With Applicant</th>
+    <td width="2%">:</td>
+    <td>B+</td>
+  </tr>
+</table>;

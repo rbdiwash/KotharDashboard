@@ -43,20 +43,11 @@ const SkillAssessment = ({ color = "light" }) => {
     setOpenDiscussion(!openDiscussion);
   };
 
-  const location = useLocation();
-
-  console.log(notificationClicked);
   useEffect(() => {
-    if (notificationClicked) {
+    if (notificationClicked?.id) {
       setOpenDiscussion(true);
     }
-  }, [notificationClicked]);
-
-  useEffect(() => {
-    if (openDiscussion) {
-      setNotificationClicked(!notificationClicked);
-    }
-  }, [openDiscussion]);
+  }, [notificationClicked?.id]);
 
   useEffect(() => {
     if (searchText.length > 0) {
@@ -93,15 +84,15 @@ const SkillAssessment = ({ color = "light" }) => {
                 }
               >
                 Skill Assessment
-              </h3>{" "}
+              </h3>
               <SearchField
                 {...{ type: "Skill Assessment", searchText, setSearchText }}
-              />{" "}
+              />
               <div className="flex items-center gap-4">
                 <FaRocketchat
                   className="text-blue-500 text-3xl cursor-pointer"
                   onClick={handleDiscussion}
-                />{" "}
+                />
                 <DownloadFile type="skill" />
                 <Button
                   variant="contained"
@@ -154,7 +145,7 @@ const SkillAssessment = ({ color = "light" }) => {
                         <div className="flex items-center">
                           {item?.reference || "-"}
                         </div>
-                      </td>{" "}
+                      </td>
                       <td className="table-data">
                         <div className="flex items-center">
                           {item?.status === "true"
@@ -207,7 +198,7 @@ const SkillAssessment = ({ color = "light" }) => {
             </table>
           </div>
         </div>
-      </div>{" "}
+      </div>
       {openDiscussion && (
         <DiscussionModal
           open={openDiscussion}

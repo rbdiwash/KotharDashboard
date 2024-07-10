@@ -1,4 +1,11 @@
-import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+} from "@mui/material";
 import { monthsForFilter } from "const/constants";
 import useKothar from "context/useKothar";
 import {
@@ -7,6 +14,7 @@ import {
 } from "material-react-table";
 import { useEffect } from "react";
 import { useMemo, useState } from "react";
+import { useCallback } from "react";
 
 const ProfitLoss = ({ color = "light" }) => {
   const [selectedType, setSelectedType] = useState("rpl");
@@ -17,6 +25,8 @@ const ProfitLoss = ({ color = "light" }) => {
 
   const [{ moduleWiseProfitLossList }, { getModuleWiseProfitLoss }] =
     useKothar();
+  console.log("🚀  moduleWiseProfitLossList:", moduleWiseProfitLossList);
+
   const yearsForFilter = Array.from(
     { length: 10 },
     (_, i) => new Date().getFullYear() - i
@@ -43,43 +53,69 @@ const ProfitLoss = ({ color = "light" }) => {
     },
   ];
 
+  const colorName = useCallback(
+    (data) => (Math.sign(data) !== -1 ? "success.main" : "error.main"),
+    []
+  );
+
+  const totalValue = useCallback(
+    (key) =>
+      moduleWiseProfitLossList?.reduce((sum, acc) => sum + acc?.[key], 0) || 0,
+    [moduleWiseProfitLossList, year, month]
+  );
+
   const columns = useMemo(
     () => [
       {
         accessorKey: "clientName" || 0,
         header: "Client Name",
         size: 150,
-        enableGrouping: false, //do not let this column be grouped
+        Footer: () => (
+          <Stack> {moduleWiseProfitLossList?.length > 0 && "Total"}</Stack>
+        ),
       },
 
       {
         accessorKey: "totalAmount", //normal accessorKey
         header: "Total Amount",
         size: 200,
-        aggregationFn: "sum", //calc total points for each team by adding up all the points for each player on the team
-        AggregatedCell: ({ cell }) => {
-          console.log("agg cell");
-          return <div>Team Score: {cell.getValue()}</div>;
-        },
+        Footer: () => (
+          <Stack>
+            {moduleWiseProfitLossList?.length > 0 && (
+              <Box color={colorName(totalValue("totalAmount"))}>
+                {Math.round(totalValue("totalAmount"))}
+              </Box>
+            )}
+          </Stack>
+        ),
       },
       {
         accessorKey: "paidAmount",
         header: "Paid Amount",
         size: 150,
-        aggregationFn: ["count", "mean"], //multiple aggregation functions
-        AggregatedCell: ({ cell, table }) => (
-          <div>
-            {/*get the count from the first aggregation*/}
-            <div>Count: {cell.getValue()[0]}</div>
-            {/*get the average from the second aggregation*/}
-            <div>Average Salary: {cell.getValue()[1]}</div>
-          </div>
+        Footer: () => (
+          <Stack>
+            {moduleWiseProfitLossList?.length > 0 && (
+              <Box color={colorName(totalValue("paidAmount"))}>
+                {Math.round(totalValue("paidAmount"))}
+              </Box>
+            )}
+          </Stack>
         ),
       },
       {
         accessorKey: "costAmount",
         header: "Cost Amount",
         size: 150,
+        Footer: () => (
+          <Stack>
+            {moduleWiseProfitLossList?.length > 0 && (
+              <Box color={colorName(totalValue("costAmount"))}>
+                {Math.round(totalValue("costAmount"))}
+              </Box>
+            )}
+          </Stack>
+        ),
       },
       {
         accessorKey: "profitLossAmount",
@@ -97,9 +133,18 @@ const ProfitLoss = ({ color = "light" }) => {
             </div>
           );
         },
+        Footer: () => (
+          <Stack>
+            {moduleWiseProfitLossList?.length > 0 && (
+              <Box color={colorName(totalValue("profitLossAmount"))}>
+                {Math.round(totalValue("profitLossAmount"))}
+              </Box>
+            )}
+          </Stack>
+        ),
       },
     ],
-    []
+    [moduleWiseProfitLossList]
   );
 
   const table = useMaterialReactTable({
@@ -107,10 +152,13 @@ const ProfitLoss = ({ color = "light" }) => {
     data: moduleWiseProfitLossList,
     enableRowNumbers: true,
     enableStickyHeader: true,
-    muiTableContainerProps: { sx: { maxHeight: "500px" } },
+    muiTableContainerProps: {
+      sx: { height: "max-content", maxHeight: "800px" },
+    },
     enableColumnPinning: true,
     enableRowPinning: true,
     enablePagination: false,
+    enableStickyFooter: true,
 
     muiTableBodyRowProps: ({ row }) => {
       return {
@@ -205,7 +253,7 @@ const ProfitLoss = ({ color = "light" }) => {
       <div className="w-full mb-12 px-4">
         <div
           className={
-            "relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded min-h-[70vh] " +
+            "relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded" +
             (color === "light" ? "bg-white" : "bg-sky-900 text-white")
           }
         >

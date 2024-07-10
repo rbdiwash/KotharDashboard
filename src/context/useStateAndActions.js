@@ -25,7 +25,7 @@ const useStateAndActions = () => {
     axios
       .get("/notification")
       .then((response) => {
-        setNotificationsList(response?.data);
+        setNotificationsList(response?.data?.reverse());
       })
       .catch((err) => console.log(err));
   };

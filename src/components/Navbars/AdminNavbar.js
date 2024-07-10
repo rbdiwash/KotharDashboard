@@ -12,7 +12,7 @@ import useKothar from "context/useKothar";
 import { IoRefreshCircle } from "react-icons/io5";
 import { Refresh } from "@mui/icons-material";
 import { toast } from "react-toastify";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 export default function Navbar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -24,6 +24,7 @@ export default function Navbar() {
     (notification) => notification.read === false
   )?.length;
   const navigate = useNavigate();
+  const location = useLocation();
   const [refresh, setRefresh] = useState(false);
   const [activeItem, setActiveItem] = useState(null);
   const handleClick = (event) => {
@@ -32,7 +33,14 @@ export default function Navbar() {
 
   const handleClose = () => {
     setAnchorEl(null);
-    setNotificationClicked(!notificationClicked);
+  };
+
+  const handleClickNotification = (item) => {
+    item?.module && setNotificationClicked({ state: true, id: item.clientId });
+    handleClose();
+    setActiveItem(item?.id);
+
+    !item?.read && handleMarkAsRead("single", item);
   };
 
   const open = Boolean(anchorEl);
@@ -56,11 +64,11 @@ export default function Navbar() {
     getNotificationsData();
   };
 
-  const handleMarkAsRead = (type) => {
+  const handleMarkAsRead = (type, item) => {
     let itemArray = [];
     itemArray =
       type === "single"
-        ? [activeItem]
+        ? [activeItem || item?.id]
         : (itemArray = notificationsList?.map((item) => item?.id));
     const payload = { notificationIds: [...itemArray] };
     axios
@@ -73,6 +81,8 @@ export default function Navbar() {
       })
       .catch((err) => console.log(err));
   };
+
+  const unreadMessage = notificationsList?.filter((message) => !message?.read);
 
   return (
     <>
@@ -96,7 +106,7 @@ export default function Navbar() {
                 aria-describedby={id}
               />
               {unreadMessages > 0 && (
-                <span className="bg-red-400 rounded-full h-6 w-6 text-center text-white fixed top-3 right-[80px] ">
+                <span className="bg-red-400 rounded-full h-6 w-6 text-center text-white absolute -top-1 right-0 ">
                   {unreadMessages}
                 </span>
               )}
@@ -139,7 +149,12 @@ export default function Navbar() {
                         }}
                       />
                     </Tooltip>
-                    <div onClick={() => handleMarkAsRead("all")}>
+                    <div
+                      onClick={() =>
+                        unreadMessage?.length > 0 && handleMarkAsRead("all")
+                      }
+                      className={""}
+                    >
                       Mark all as read
                     </div>
                   </span>
@@ -147,7 +162,7 @@ export default function Navbar() {
 
                 <ul className="">
                   {notificationsList?.length > 0 ? (
-                    notificationsList?.map((item) => (
+                    notificationsList?.reverse()?.map((item) => (
                       <li
                         className={
                           "flex justify-between border-b border-black px-4 py-4 items-center " +
@@ -158,14 +173,16 @@ export default function Navbar() {
                         <Link
                           className="cursor-pointer"
                           to={{
-                            pathname: `${item?.module ?? "/"}`,
+                            pathname: `${item?.module ?? location.pathname}`,
                           }}
                           state={{ fromNotification: item }}
-                          onClick={handleClose}
+                          onClick={() => handleClickNotification(item)}
                         >
                           <p>{item?.content}</p>
                           <p className="text-gray-400 text-sm">
-                            {item?.date || new Date().toLocaleString()}
+                            {new Date(
+                              item?.date || new Date()
+                            )?.toLocaleString()}
                           </p>
                         </Link>
                         {!item?.read && (
