@@ -22,7 +22,7 @@ const InputField = ({
       <input
         type={type || "text"}
         className={
-          "p-2 placeholder-slate-300 text-slate-600 bg-white rounded border border-1 text-sm focus:outline-none focus:ring w-full ease-linear transition-all duration-150 disabled:text-red-600 " +
+          "p-2 placeholder-slate-300 text-slate-600 bg-white rounded border border-1 text-sm focus:outline-none focus:ring w-full ease-linear transition-all duration-150 disabled:text-gray-400 " +
           className
         }
         placeholder={placeholder || label}

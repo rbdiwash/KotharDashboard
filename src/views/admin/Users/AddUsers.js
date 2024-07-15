@@ -1,3 +1,4 @@
+import { Edit } from "@mui/icons-material";
 import {
   Button,
   FormControl,
@@ -21,8 +22,11 @@ import { useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import PermissionDrawer from "./PermissionDrawer";
 
 const AddUsers = () => {
+  const [openDrawer, setOpenDrawer] = useState(false);
+
   const [data, setData] = useState({
     name: "",
     password: "",
@@ -64,8 +68,6 @@ const AddUsers = () => {
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(data);
-
     mutate({
       ...data,
       mfa: true,
@@ -91,8 +93,9 @@ const AddUsers = () => {
     }
   }, [state]);
 
-  console.log(data);
-
+  const handleOpenPermissionModule = () => {
+    setOpenDrawer(true);
+  };
   return (
     <div className="flex flex-wrap mt-4 dashBody">
       <div className="w-full mb-12 px-4">
@@ -277,6 +280,20 @@ const AddUsers = () => {
                       </RadioGroup>
                     </FormControl>
                   </div>
+                  <div className="relative w-full mb-3">
+                    <div className="flex justify-between">
+                      <label
+                        className="block uppercase text-slate-600 text-xs font-bold mb-2"
+                        htmlFor="grid-password"
+                      >
+                        Permitted Modules
+                      </label>{" "}
+                      <Edit
+                        className="pointer"
+                        onClick={handleOpenPermissionModule}
+                      />
+                    </div>
+                  </div>
                 </div>
                 <div className="w-full flex justify-end mt-6 gap-4">
                   <Button variant="outlined" onClick={() => navigate(-1)} to="">
@@ -295,6 +312,9 @@ const AddUsers = () => {
           </div>
         </div>
       </div>
+      {openDrawer && (
+        <PermissionDrawer {...{ open: openDrawer, setOpen: setOpenDrawer }} />
+      )}
     </div>
   );
 };

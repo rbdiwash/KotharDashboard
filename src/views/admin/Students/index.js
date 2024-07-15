@@ -1,7 +1,10 @@
+import { Note } from "@mui/icons-material";
+import StickyNote2Icon from "@mui/icons-material/StickyNote2";
 import { Button, IconButton, Tooltip } from "@mui/material";
 import DownloadFile from "components/DownloadFile";
 import DeleteModal from "components/Modals/DeleteModal";
 import DiscussionModal from "components/Modals/DiscussionModal";
+import NotesModal from "components/Modals/NotesModal";
 import SearchField from "components/SearchField";
 import { delete_data } from "const/axios";
 import { API_URL } from "const/constants";
@@ -13,15 +16,31 @@ import { FaPlusCircle, FaRocketchat } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 
 const Students = ({ color = "light" }) => {
-  const [{ studentList, token }, { refetchStudent }] = useKothar();
+  const [{ studentList, token, notificationClicked }, { refetchStudent }] =
+    useKothar();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const navigate = useNavigate();
   const [searchText, setSearchText] = useState("");
   const [openDiscussion, setOpenDiscussion] = useState(false);
+  const [openNotesModal, setOpenNotesModal] = useState({
+    state: false,
+    id: null,
+  });
+  const [filteredData, setFilteredData] = useState(studentList);
+  console.log(openNotesModal);
   const handleDiscussion = () => {
     setOpenDiscussion(!openDiscussion);
   };
-  const [filteredData, setFilteredData] = useState(studentList);
+
+  const handleToggleNotes = (item) => {
+    setOpenNotesModal({ state: !openNotesModal?.state, id: item?.id });
+  };
+
+  useEffect(() => {
+    if (notificationClicked?.id) {
+      setOpenDiscussion(true);
+    }
+  }, [notificationClicked?.id]);
 
   useEffect(() => {
     if (searchText.length > 0) {
@@ -138,13 +157,18 @@ const Students = ({ color = "light" }) => {
                       </td>
                       <td className="table-data text-right">
                         <div className="flex items-center">
-                          <Tooltip title="View Student Details" arrow>
+                          <Tooltip title="View Notes" arrow>
+                            <IconButton onClick={() => handleToggleNotes(item)}>
+                              <StickyNote2Icon className="text-orange-400 cursor-pointer" />
+                            </IconButton>
+                          </Tooltip>
+                          {/* <Tooltip title="View Student Details" arrow>
                             <Link to="/admin/student/view">
                               <IconButton>
                                 <AiFillEye className="text-sky-600 cursor-pointer" />
                               </IconButton>
                             </Link>
-                          </Tooltip>
+                          </Tooltip> */}
                           <Tooltip title="Edit Student Details" arrow>
                             <IconButton
                               onClick={() =>
@@ -191,6 +215,14 @@ const Students = ({ color = "light" }) => {
           open={openDiscussion}
           setOpen={setOpenDiscussion}
           studentList={studentList}
+          type="student"
+        />
+      )}{" "}
+      {openNotesModal?.state && (
+        <NotesModal
+          open={openNotesModal?.state}
+          setOpen={setOpenNotesModal}
+          studentId={openNotesModal?.id}
           type="student"
         />
       )}

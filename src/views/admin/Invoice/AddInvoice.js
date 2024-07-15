@@ -14,9 +14,9 @@ const AddInvoice = () => {
     title: null,
     invoiceTo: null,
     paymentInfo: {
-      accountNumber: "",
-      accountName: "",
-      bankDetails: "",
+      accountNumber: "429702582",
+      accountName: "Kothar Educational Services",
+      bankDetails: "BSB: 012401",
     },
     invoices: [
       {
@@ -30,13 +30,14 @@ const AddInvoice = () => {
     invoiceId: null,
   });
   const { state } = useLocation();
-  const [{ invoiceList, token }, { refetchInvoiceList }] = useKothar();
+  const [{}, { refetchInvoiceList }] = useKothar();
 
   useEffect(() => {
     if (state) {
       setData({ ...state?.item });
     }
   }, [state]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name?.split(".")?.length > 1) {
@@ -52,7 +53,7 @@ const AddInvoice = () => {
   };
 
   const navigate = useNavigate();
-  const { isLoading, isError, error, mutate } = useMutation(postData, {
+  const { mutate } = useMutation(postData, {
     onSuccess() {
       toast.success(
         data?.id ? "Data updated Successfully" : "Data added Successfully"
@@ -73,7 +74,22 @@ const AddInvoice = () => {
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    mutate({ ...data });
+    // mutate({
+    //   ...data?.map((item) => ({
+    //     ...item,
+    //     invoices: item?.invoices?.map((arg) => ({
+    //       ...arg,
+    //       total: item?.price * item?.quantity,
+    //     })),
+    //   })),
+    // });
+    mutate({
+      ...data,
+      invoices: data?.invoices?.map((arg) => ({
+        ...arg,
+        total: Number(arg?.price * arg?.quantity),
+      })),
+    });
   };
   const handleAddMore = () => {
     setData({
@@ -135,6 +151,15 @@ const AddInvoice = () => {
             <div className="flex-auto lg:px-10 py-10 pt-0">
               <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
                 <div className="grid grid-cols-2 gap-8">
+                  <div className="relative w-full">
+                    <span className="uppercase font-bold"> Bank Details: </span>
+                    <br />
+                    <span>Name: Kothar Educational Services </span> <br />
+                    <span> Account Number: 429702582 </span> <br />
+                    <span>BSB: 012401</span>
+                  </div>
+                  <div className="relative w-full mb-3"></div>
+
                   <div className="relative w-full mb-3">
                     <InputField
                       label="Title"
@@ -156,10 +181,7 @@ const AddInvoice = () => {
                       value={data?.invoiceTo}
                       onChange={handleInputChange}
                     />
-                  </div>
-
-                  <div className="relative w-full mb-3">
-                    <InputField
+                    {/* <InputField
                       type="text"
                       placeholder="Account Number"
                       name="paymentInfo.accountNumber"
@@ -167,9 +189,9 @@ const AddInvoice = () => {
                       required
                       value={data?.paymentInfo?.accountNumber}
                       onChange={handleInputChange}
-                    />
+                    /> */}
                   </div>
-                  <div className="relative w-full mb-3">
+                  {/* <div className="relative w-full mb-3">
                     <InputField
                       type="text"
                       placeholder="Account Name"
@@ -179,8 +201,8 @@ const AddInvoice = () => {
                       value={data?.paymentInfo?.accountName}
                       onChange={handleInputChange}
                     />
-                  </div>
-                  <div className="relative w-full mb-3">
+                  </div> */}
+                  {/* <div className="relative w-full mb-3">
                     <InputField
                       type="text"
                       placeholder="Bank Details"
@@ -190,7 +212,7 @@ const AddInvoice = () => {
                       value={data?.paymentInfo?.bankDetails}
                       onChange={handleInputChange}
                     />
-                  </div>
+                  </div> */}
                 </div>
                 {data?.invoices?.map((item, index) => (
                   <div
@@ -240,8 +262,9 @@ const AddInvoice = () => {
                         placeholder="Total"
                         required
                         type="number"
-                        value={item?.total}
+                        value={item?.price * item?.quantity}
                         onChange={(e) => handleInvoiceInput(e, index)}
+                        disabled
                       />
                     </div>
                     <Tooltip title="Delete this detail">

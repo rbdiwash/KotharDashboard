@@ -12,7 +12,6 @@ import UploadFile from "components/Input/UploadFile";
 import { useState } from "react";
 
 const DocumentsAndAddress = ({ addressInfo, setAddressInfo, generalInfo }) => {
-  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name?.split(".")?.length > 1) {
@@ -74,7 +73,6 @@ const DocumentsAndAddress = ({ addressInfo, setAddressInfo, generalInfo }) => {
             fullWidth
             size="small"
             type="text"
-            placeholder="Issue Date"
             name="permanent.state"
             label="State/Province"
             required

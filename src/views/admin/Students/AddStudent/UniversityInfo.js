@@ -34,8 +34,7 @@ const UniversityInfo = ({ generalInfo, setGeneralInfo }) => {
           required
           value={generalInfo?.course}
           options={courseList || []}
-          getOptionLabel={(option) => option?.name ?? option}
-          getOptionValue={(option) => option?.id}
+          getOptionLabel={(option) => option?.name ?? ""}
           isOptionEqualToValue={(options, value) => options.id === value.id}
           disablePortal
           renderInput={(params) => (
@@ -62,7 +61,6 @@ const UniversityInfo = ({ generalInfo, setGeneralInfo }) => {
           value={generalInfo?.university}
           options={uniData || []}
           getOptionLabel={(option) => option?.name || ""}
-          getOptionValue={(option) => option?.id}
           isOptionEqualToValue={(options, value) => options.id === value.id}
           disablePortal
           renderInput={(params) => (
@@ -92,6 +90,7 @@ const UniversityInfo = ({ generalInfo, setGeneralInfo }) => {
           isOptionEqualToValue={(options, value) =>
             options.value === value.value
           }
+          getOptionLabel={(option) => option?.label || ""}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -123,6 +122,7 @@ const UniversityInfo = ({ generalInfo, setGeneralInfo }) => {
           required
           value={generalInfo?.intake}
           placeholder="Select Intake"
+          getOptionLabel={(option) => option?.label || ""}
           options={months}
           disablePortal
           renderInput={(params) => (

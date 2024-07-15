@@ -17,30 +17,11 @@ const UserDropdown = () => {
 
   const navigate = useNavigate();
 
+  const userDetail = JSON.parse(localStorage.getItem("userDetail"));
+
   const logOut = () => {
     localStorage.clear();
     navigate("/");
-  };
-
-  const [{ token }, { setToken }] = useKothar();
-  const fetchToken = () => {
-    fetch(`${API_URL}/auth/register`, {
-      method: "POST",
-
-      body: JSON.stringify({
-        firstName: "Divash",
-        lastName: "Ranabhat",
-        email: `test@gmail.com`,
-        password: "123456789",
-      }),
-
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
-      .then((response) => response.json())
-
-      .then((json) => setToken(json?.token));
   };
 
   const handleClose = () => {
@@ -87,7 +68,7 @@ const UserDropdown = () => {
               "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-slate-700"
             }
           >
-            Divash Ranabhat
+            {userDetail?.name || "User"}
           </Link>
           <Link
             to="/"
@@ -105,14 +86,14 @@ const UserDropdown = () => {
           >
             Reset Password
           </Link>
-          <button
+          {/* <button
             className={
               "text-sm py-2 px-4 font-normal w-full whitespace-nowrap bg-transparent text-slate-700 text-left"
             }
             onClick={fetchToken}
           >
             Fetch Token
-          </button>
+          </button> */}
           <div className="h-0 my-2 border border-solid border-slate-100" />
           <p
             onClick={logOut}

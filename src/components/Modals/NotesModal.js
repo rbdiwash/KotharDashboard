@@ -27,17 +27,15 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-export default function DiscussionModal({ open, setOpen, studentList, type }) {
-  const [studentId, setStudentId] = useState(null);
+export default function NotesModal({ open, setOpen, studentId, type }) {
+  console.log("🚀  studentId:", studentId);
   const [commentsList, setCommentsList] = useState([]);
   const [text, setText] = useState("");
   const buttonRef = useRef(null);
   const [{ token }, {}] = useKothar();
 
-  const [{ notificationClicked }, { setNotificationClicked }] = useKothar();
   const handleClose = () => {
     setOpen(false);
-    setNotificationClicked({ state: false, id: null });
   };
   const userDetail = JSON.parse(localStorage.getItem("userDetail"));
 
@@ -50,13 +48,6 @@ export default function DiscussionModal({ open, setOpen, studentList, type }) {
       toast.error("Error Submitting Comment");
     },
   });
-
-  useEffect(() => {
-    if (notificationClicked?.id) {
-      fetchDiscussions(notificationClicked?.id);
-      setStudentId(notificationClicked?.id);
-    }
-  }, [notificationClicked]);
 
   async function postData(payload) {
     await axios.post(`${API_URL}/discussion/${studentId}`, payload);
@@ -72,10 +63,15 @@ export default function DiscussionModal({ open, setOpen, studentList, type }) {
       .then((res) => {
         setCommentsList(res?.data?.comments);
         buttonRef.current.scrollIntoView();
-        // setNotificationClicked({ state: false, id: null });
       })
       .catch((err) => console.log(err));
   };
+
+  useEffect(() => {
+    if (studentId) {
+      fetchDiscussions(studentId);
+    }
+  }, [studentId]);
 
   const deleteIndividualComment = (commentId) => {
     axios({
@@ -87,11 +83,11 @@ export default function DiscussionModal({ open, setOpen, studentList, type }) {
       },
     })
       .then(() => {
-        toast.success("Data Deleted Successfully");
+        toast.success("Note Deleted Successfully");
         fetchDiscussions(studentId);
       })
       .catch(() => {
-        toast.error("Error Deleting Data");
+        toast.error("Error Deleting Comment");
       });
   };
 
@@ -100,12 +96,12 @@ export default function DiscussionModal({ open, setOpen, studentList, type }) {
       <BootstrapDialog
         // onClose={handleClose}
         open={open}
-        maxWidth={"md"}
+        maxWidth={"sm"}
         fullWidth
       >
         <form className="m flex flex-col w-full" onSubmit={submitPost}>
           <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-            Discussion Forum
+            Notes
           </DialogTitle>
           <IconButton
             aria-label="close"
@@ -120,39 +116,17 @@ export default function DiscussionModal({ open, setOpen, studentList, type }) {
             <CloseIcon />
           </IconButton>
           <DialogContent dividers>
-            <div className="min-h-[400px] flex flex-col h-full">
-              <Autocomplete
-                disablePortal
-                options={studentList || []}
-                sx={{ width: 500, mx: "auto" }}
-                getOptionLabel={(option) => option.name}
-                renderInput={(params) => (
-                  <TextField {...params} placeholder="Search using Name" />
-                )}
-                renderOption={(props, option) => {
-                  return (
-                    <li {...props} key={option.id}>
-                      {option.name}
-                    </li>
-                  );
-                }}
-                size="small"
-                onChange={(e, value) => {
-                  fetchDiscussions(value?.clientId);
-                  setStudentId(value?.clientId);
-                }}
-                value={
-                  studentList?.find((student) => student?.id === studentId) ||
-                  null
-                }
-              />
+            <div className="min-h-[300px] flex flex-col h-full">
               <div className="flex flex-col justify-between h-full">
-                <div className="max-h-[400px] overflow-y-auto" ref={buttonRef}>
+                <div
+                  className="max-h-[400px] h-full overflow-y-auto"
+                  ref={buttonRef}
+                >
                   {commentsList?.length > 0 ? (
                     commentsList?.map((arg) => (
-                      <div id="chatbox" className="p-4" key={arg?.id}>
+                      <div id="chatbox" className="p-1 pr-3" key={arg?.id}>
                         {userDetail?.email === arg?.commentedBy ? (
-                          <div className="mb-2 text-right">
+                          <div className="mb-1 text-right">
                             <p className="text-sm mb-2 text-gray-400">
                               {arg?.postedBy}{" "}
                               {new Date(arg?.date)?.toLocaleString()}
@@ -161,14 +135,14 @@ export default function DiscussionModal({ open, setOpen, studentList, type }) {
                               {userDetail?.type === "SUPER_ADMIN" && (
                                 <Tooltip title="Delete this comment">
                                   <DeleteIcon
-                                    sx={{ color: "grey" }}
+                                    sx={{ color: "grey", fontSize: 16 }}
                                     onClick={() =>
                                       deleteIndividualComment(arg?.id)
                                     }
                                   />
                                 </Tooltip>
                               )}
-                              <p className="bg-blue-500 text-white rounded-lg py-2 px-4 inline-block">
+                              <p className="bg-blue-500 text-white rounded-lg py-1 px-3 inline-block">
                                 {arg?.text}
                               </p>
                             </div>
@@ -189,8 +163,7 @@ export default function DiscussionModal({ open, setOpen, studentList, type }) {
                     ))
                   ) : (
                     <article className="p-6 mb-6 text-base bg-white text-center py-12">
-                      No Conversations found. You can start conversation any
-                      time.
+                      No Notes found.
                     </article>
                   )}
                 </div>
@@ -199,14 +172,14 @@ export default function DiscussionModal({ open, setOpen, studentList, type }) {
           </DialogContent>
           <DialogActions className="py-2 flex flex-col">
             <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 w-full">
-              <label htmlFor="comment" className="sr-only">
-                Your comment
+              <label htmlFor="note" className="sr-only">
+                Your note
               </label>
               <textarea
-                id="comment"
+                id="note"
                 rows="2"
                 className="px-0 text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none w-full"
-                placeholder="Write a comment..."
+                placeholder="Write a note..."
                 onChange={(e) => setText(e.target.value)}
                 value={text}
               ></textarea>
@@ -218,7 +191,7 @@ export default function DiscussionModal({ open, setOpen, studentList, type }) {
               className="ml-auto"
               disabled={!text}
             >
-              Post comment
+              Submit
             </Button>
           </DialogActions>
         </form>

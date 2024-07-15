@@ -98,7 +98,7 @@ const Accounts = ({ color = "light" }) => {
       {
         accessorKey: "studentCost", //normal accessorKey
         header: "Student Agreed cost",
-        size: 100,
+        size: 50,
         Cell: ({ row, renderedCellValue }) => {
           return <div>{row.original.studentCost || 0}</div>;
         },
@@ -118,12 +118,20 @@ const Accounts = ({ color = "light" }) => {
       {
         accessorKey: "isClaimed", //normal accessorKey
         header: "Commission Claimed",
-        size: 200,
+        size: 150,
       },
       {
         accessorKey: "commission",
         header: "Commission/Reminder Date",
         size: 150,
+        Cell: ({ row, renderedCellValue }) => {
+          return (
+            <div>
+              {row.original.commission ||
+                new Date(row?.original?.reminderDate)?.toLocaleDateString()}
+            </div>
+          );
+        },
       },
       {
         accessorKey: "amountPaidByStudent",
@@ -172,6 +180,14 @@ const Accounts = ({ color = "light" }) => {
   const table = useMaterialReactTable({
     columns,
     data: accountsList,
+    enablePagination: false,
+    enableRowNumbers: true,
+    initialState: {
+      density: "compact",
+      enableGlobalFilter: true,
+      showGlobalFilter: true,
+    },
+    enableColumnPinning: true,
   });
   const [openDiscussion, setOpenDiscussion] = useState(false);
   const handleDiscussion = () => {

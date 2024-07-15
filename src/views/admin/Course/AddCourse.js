@@ -159,7 +159,6 @@ const AddCourse = ({ color = "light" }) => {
                       value={data?.universities}
                       options={uniData || []}
                       getOptionLabel={(option) => option?.name || ""}
-                      getOptionValue={(option) => option?.id}
                       disablePortal
                       renderInput={(params) => (
                         <TextField {...params} label="Select University" />

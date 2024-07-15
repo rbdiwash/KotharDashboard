@@ -60,6 +60,7 @@ const useStateAndActions = () => {
   };
 
   const getModuleWiseProfitLoss = async (params) => {
+    setWholeLoading(true);
     const module = params?.module || "rpl";
     const year = params?.year || new Date().getFullYear();
     const month =
@@ -71,25 +72,7 @@ const useStateAndActions = () => {
 
     if (res?.data?.data?.plData) {
       const finalData = res?.data?.data?.plData;
-      // const total = {
-      //   clientName: "Total",
-      //   totalAmount: finalData?.reduce(
-      //     (initial, sum) => initial + sum?.totalAmount,
-      //     0
-      //   ),
-      //   paidAmount: finalData?.reduce(
-      //     (initial, sum) => initial + sum?.paidAmount,
-      //     0
-      //   ),
-      //   costAmount: finalData?.reduce(
-      //     (initial, sum) => initial + sum?.costAmount,
-      //     0
-      //   ),
-      //   profitLossAmount: finalData?.reduce(
-      //     (initial, sum) => initial + sum?.profitLossAmount,
-      //     0
-      //   ),
-      // };
+      setWholeLoading(false);
       if (finalData?.length > 0) {
         setModuleWiseProfitLossList([...finalData]);
       } else {
@@ -97,6 +80,7 @@ const useStateAndActions = () => {
       }
     } else {
       console.log("Error loading data");
+      setWholeLoading(false);
     }
   };
 

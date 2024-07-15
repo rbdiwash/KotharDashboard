@@ -29,7 +29,6 @@ const ClientDropdown = ({ data, setData }) => {
         value={{ name: data?.name, id: data?.id }}
         options={clientList || []}
         getOptionLabel={(option) => option?.name || ""}
-        getOptionValue={(option) => option?.id}
         isOptionEqualToValue={(options, value) => options.name === value.name}
         disablePortal
         size="small"

@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ScrollTop from "components/ScrollTop";
-import { ToastContainer } from "react-toastify";
+import { Bounce, ToastContainer } from "react-toastify";
 import Routes from "routes";
 import "react-toastify/dist/ReactToastify.css";
 import KotharProvider from "context/provider";
@@ -16,7 +16,7 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <KotharProvider>
-        <ToastContainer />
+        <ToastContainer position="bottom-center" autoClose={2000} />
         <ScrollTop>
           <Routes />
         </ScrollTop>

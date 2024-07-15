@@ -17,7 +17,6 @@ import { useEffect, useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import pdf from "../../../assets/img/pdf.png";
 import ClientDropdown from "components/Dropdowns/ClientDropdown";
 import UploadFile from "components/Input/UploadFile";
 
@@ -99,18 +98,36 @@ const AddSkillAssessment = ({ color = "light" }) => {
                   Add Skill Assessment Details
                 </h3>
               </div>
-              <FormControlLabel
-                control={
-                  <Switch
-                    sx={{ m: 1 }}
-                    onChange={(e) => {
-                      setData({ ...data, status: e.target.checked });
-                    }}
-                    checked={data?.status}
-                  />
-                }
-                label="Approved"
-              />
+
+              <div className="flex items-center">
+                <FormControlLabel
+                  control={
+                    <Switch
+                      sx={{ m: 0 }}
+                      onChange={(e) => {
+                        setData({
+                          ...data,
+                          state: e.target.checked,
+                        });
+                      }}
+                      checked={data?.state}
+                    />
+                  }
+                  label="Complete"
+                />{" "}
+                <FormControlLabel
+                  control={
+                    <Switch
+                      sx={{ m: 1 }}
+                      onChange={(e) => {
+                        setData({ ...data, status: e.target.checked });
+                      }}
+                      checked={data?.status}
+                    />
+                  }
+                  label="Approved"
+                />
+              </div>
             </div>
           </div>
           <div className="block w-full overflow-x-auto">

@@ -1,4 +1,10 @@
-import { Autocomplete, Button, TextField } from "@mui/material";
+import {
+  Autocomplete,
+  Button,
+  FormControlLabel,
+  Switch,
+  TextField,
+} from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { API_URL, student_status } from "const/constants";
@@ -38,7 +44,7 @@ const AddStudent = () => {
     passport: { country: null, placeOfBirth: null },
     passportFile: null,
     moreThanOneCitizen: null,
-    secondCountryName: null,
+    secondCountryName: "",
     livingInAnotherCountry: null,
     secondLivingCountryName: null,
     refusedFromAnyCountry: null,
@@ -262,32 +268,50 @@ const AddStudent = () => {
                   Add Student
                 </h3>
               </div>
-              <Autocomplete
-                onChange={(e, value) => {
-                  setGeneralInfo((prevState) => ({
-                    ...prevState,
-                    status: value,
-                  }));
-                }}
-                value={data?.status}
-                placeholder="Select Student Status"
-                options={student_status}
-                disablePortal
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Select Student Status"
-                    required
-                  />
-                )}
-                ListboxProps={{
-                  style: {
-                    maxHeight: "180px",
-                  },
-                }}
-                size="small"
-                sx={{ width: 300 }}
-              />
+
+              <div className="flex items-center">
+                <FormControlLabel
+                  control={
+                    <Switch
+                      sx={{ m: 0 }}
+                      onChange={(e) => {
+                        setGeneralInfo({
+                          ...generalInfo,
+                          status: e.target.checked,
+                        });
+                      }}
+                      checked={data?.status}
+                    />
+                  }
+                  label="Complete"
+                />
+                <Autocomplete
+                  onChange={(e, value) => {
+                    setGeneralInfo((prevState) => ({
+                      ...prevState,
+                      status: value,
+                    }));
+                  }}
+                  value={data?.status}
+                  placeholder="Select Student Status"
+                  options={student_status}
+                  disablePortal
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Select Student Status"
+                      required
+                    />
+                  )}
+                  ListboxProps={{
+                    style: {
+                      maxHeight: "180px",
+                    },
+                  }}
+                  size="small"
+                  sx={{ width: 300 }}
+                />
+              </div>
             </div>
           </div>
           <div className="block w-full overflow-x-auto mt-4 studentForm">

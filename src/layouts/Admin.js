@@ -28,13 +28,13 @@ export default function Admin() {
         <Sidebar />
         <div className="relative md:ml-64 bg-slate-100">
           <AdminNavbar />
-          {wholeLoading ? (
+          {/* {wholeLoading ? (
             <div className="flex items-center justify-center w-full h-[80vh]">
               <CircularProgress color="inherit" />
             </div>
-          ) : (
-            <Outlet />
-          )}
+          ) : ( */}
+          <Outlet />
+          {/* )} */}
           <FooterAdmin />
         </div>
       </>

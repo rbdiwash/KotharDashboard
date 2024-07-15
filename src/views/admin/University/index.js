@@ -59,11 +59,11 @@ const University = ({ color = "light" }) => {
         header: "Contact Person",
         size: 150,
       },
-      {
-        accessorKey: "country", //access nested data with dot notation
-        header: "Country",
-        size: 150,
-      },
+      // {
+      //   accessorKey: "country", //access nested data with dot notation
+      //   header: "Country",
+      //   size: 150,
+      // },
       {
         accessorKey: "state", //access nested data with dot notation
         header: "State",

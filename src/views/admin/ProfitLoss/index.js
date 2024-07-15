@@ -1,5 +1,6 @@
 import {
   Box,
+  CircularProgress,
   FormControl,
   InputLabel,
   MenuItem,
@@ -23,9 +24,10 @@ const ProfitLoss = ({ color = "light" }) => {
     new Date().toLocaleString("en-US", { month: "long" })
   );
 
-  const [{ moduleWiseProfitLossList }, { getModuleWiseProfitLoss }] =
-    useKothar();
-  console.log("🚀  moduleWiseProfitLossList:", moduleWiseProfitLossList);
+  const [
+    { moduleWiseProfitLossList, wholeLoading },
+    { getModuleWiseProfitLoss },
+  ] = useKothar();
 
   const yearsForFilter = Array.from(
     { length: 10 },
@@ -260,9 +262,15 @@ const ProfitLoss = ({ color = "light" }) => {
           <div className="rounded-t mb-0 px-4 py-3 border-0 text-center text-xl font-bold">
             Profit/Loss Data
           </div>
-          <div className="block w-full overflow-x-auto">
-            <MaterialReactTable table={table} />
-          </div>
+          {wholeLoading ? (
+            <div className="flex items-center justify-center w-full h-[80vh]">
+              <CircularProgress color="inherit" />
+            </div>
+          ) : (
+            <div className="block w-full overflow-x-auto">
+              <MaterialReactTable table={table} />
+            </div>
+          )}
         </div>
       </div>
     </div>

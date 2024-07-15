@@ -157,7 +157,6 @@ const TestInfo = ({ testInfo, setTestInfo }) => {
                 testName2: value,
               }));
             }}
-            required
             disablePortal
             value={testInfo?.testName2}
             id="testName2"
@@ -184,7 +183,6 @@ const TestInfo = ({ testInfo, setTestInfo }) => {
             label="Overall Score"
             placeholder="Overall Score"
             name="score2"
-            required
             type="text"
             value={testInfo?.score2}
             onChange={handleInputChange}
@@ -197,7 +195,6 @@ const TestInfo = ({ testInfo, setTestInfo }) => {
             label="Unique ID"
             placeholder="Unique ID"
             name="uniqueId2"
-            required
             type="text"
             value={testInfo?.uniqueId2}
             onChange={handleInputChange}
@@ -209,7 +206,6 @@ const TestInfo = ({ testInfo, setTestInfo }) => {
             label="Date of Examination"
             placeholder="Date of Examination"
             name="doe2"
-            required
             type="date"
             value={testInfo?.doe2}
             onChange={handleInputChange}

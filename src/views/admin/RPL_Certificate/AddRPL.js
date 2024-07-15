@@ -10,6 +10,7 @@ import {
   IconButton,
   Radio,
   RadioGroup,
+  Switch,
   TextField,
 } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
@@ -169,31 +170,53 @@ const AddRPLCertificate = ({ color = "light" }) => {
                   </h3>
                 </div>
 
-                <Autocomplete
-                  size="small"
-                  sx={{ width: 300 }}
-                  required
-                  value={
-                    rpl_status?.find((item) => item?.value === data?.status) ||
-                    null
-                  }
-                  options={rpl_status}
-                  disablePortal
-                  renderInput={(params) => (
-                    <TextField {...params} label="Select RPL Status" required />
-                  )}
-                  ListboxProps={{
-                    style: {
-                      maxHeight: "180px",
-                    },
-                  }}
-                  onChange={(e, value) => {
-                    setData((prevState) => ({
-                      ...prevState,
-                      status: value?.value,
-                    }));
-                  }}
-                />
+                <div className="flex items-center">
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        sx={{ m: 0 }}
+                        onChange={(e) => {
+                          setData({
+                            ...data,
+                            status: e.target.checked,
+                          });
+                        }}
+                        checked={data?.status}
+                      />
+                    }
+                    label="Complete"
+                  />{" "}
+                  <Autocomplete
+                    size="small"
+                    sx={{ width: 300 }}
+                    required
+                    value={
+                      rpl_status?.find(
+                        (item) => item?.value === data?.status
+                      ) || null
+                    }
+                    options={rpl_status}
+                    disablePortal
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Select RPL Status"
+                        required
+                      />
+                    )}
+                    ListboxProps={{
+                      style: {
+                        maxHeight: "180px",
+                      },
+                    }}
+                    onChange={(e, value) => {
+                      setData((prevState) => ({
+                        ...prevState,
+                        status: value?.value,
+                      }));
+                    }}
+                  />
+                </div>
               </div>
             </div>
             <div className="block w-full overflow-x-auto mt-8">
@@ -332,7 +355,6 @@ const AddRPLCertificate = ({ color = "light" }) => {
                       value={data?.certificate}
                       options={certificates}
                       getOptionLabel={(option) => option || ""}
-                      getOptionValue={(option) => option}
                       disablePortal
                       renderInput={(params) => (
                         <TextField {...params} label="Select Certificate" />
