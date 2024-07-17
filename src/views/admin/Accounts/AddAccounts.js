@@ -1,3 +1,4 @@
+import { KeyboardArrowDown, Visibility } from "@mui/icons-material";
 import {
   Autocomplete,
   Button,
@@ -20,6 +21,7 @@ import { FaPlusCircle } from "react-icons/fa";
 import { IoArrowBack } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import EyeDrawer from "./EyeDrawer";
 
 const AddAccounts = ({ color = "light" }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
@@ -39,6 +41,7 @@ const AddAccounts = ({ color = "light" }) => {
     { rplList, studentList, visaList, skillList, insuranceList },
     { refetchAccountList },
   ] = useKothar();
+  const [openEyeModal, setOpenEyeModal] = useState(false);
   const { state } = useLocation();
   const navigate = useNavigate();
   const options = [
@@ -164,6 +167,10 @@ const AddAccounts = ({ color = "light" }) => {
     });
   };
 
+  const handleOpenEyeModal = () => {
+    setOpenEyeModal(!openEyeModal);
+  };
+
   const totalAmountAfterDiscount = () => {
     let totalAmount = 0;
     let priceAfterDiscount = 0;
@@ -184,13 +191,16 @@ const AddAccounts = ({ color = "light" }) => {
             (color === "light" ? "bg-white" : "bg-sky-900 text-white")
           }
         >
-          <div className="rounded-t mb-0 px-4 py-3 border-0">
+          <div className="rounded-t mb-0 px-4 py-3 border-b">
             <div className="flex items-center justify-between">
               <IoArrowBack
                 className="text-xl cursor-pointer"
                 onClick={() => navigate(-1)}
               />
-              <form className="flex items-center justify-center gap-2 w-full  rounded mr-3">
+              <h1 className="text-2xl uppercase font-bold mb-2 flex-1 text-center">
+                Account Details
+              </h1>
+              {/* <form className="flex items-center justify-center gap-2 w-full  rounded mr-3">
                 <Autocomplete
                   size="small"
                   disablePortal
@@ -226,83 +236,62 @@ const AddAccounts = ({ color = "light" }) => {
                 />
 
                 <Button variant="contained">Search </Button>
-              </form>
+              </form> */}
             </div>
           </div>
           {selectedStudent?.clientId ? (
-            <div className="block w-full overflow-x-auto">
+            <div className="block w-full overflow-x-auto mt-2">
               <div className="px-4">
                 <div className="container mx-auto px-2 py-1">
                   <div className="flex flex-col space-y-5">
-                    <div className="text-center">
-                      <h1 className="text-4xl font-bold mb-10">
-                        Account Details
-                      </h1>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 justify-between gap-5">
-                      <div className="flex flex-col gap-2 col-span-2">
-                        <h2 className="text-xl font-semibold mb-5 underline">
+                    <div className="grid grid-cols-1 md:grid-cols-2 justify-between gap-5">
+                      <div className="lg:px-2">
+                        <div className="md:col-span-2">
+                          <h2 className="text-2xl font-semibold mb-2">
+                            Client: {selectedStudent?.name}
+                          </h2>
+                          <p className="mb-2">
+                            Address: {selectedStudent?.address}
+                          </p>
+                          <p className="mb-2">
+                            Contact: {selectedStudent?.number}
+                          </p>{" "}
+                          <p className="mb-2">
+                            Case Officer: {selectedStudent?.caseOfficer}
+                          </p>{" "}
+                          <p className="mb-2">
+                            Referral: {selectedStudent?.referral}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <h2 className="text-xl font-semibold mb-2 underline">
                           Payment Details
                         </h2>
                         <div className="flex gap-2 items-center ">
-                          <span className="w-[250px]">
-                            Total Amount agreed by Student:
-                          </span>
+                          <span className="w-[250px]">Total amount paid:</span>
                           <OutlinedInput
-                            name="studentCost"
-                            className="col-span-2"
+                            name="amountPaidByStudent"
                             placeholder="Amount in AUD"
                             type="number"
                             size="small"
                             endAdornment={"AUD"}
-                            value={data?.studentCost}
-                            onChange={(e) =>
-                              setData({ ...data, studentCost: e.target.value })
-                            }
-                          />
-                          {/* $
-                        {installments
-                          .reduce((a, b) => a + (Number(b.amount) || 0), 0)
-                          .toFixed(2)} */}
-                        </div>
-                        <div className="flex gap-2 items-center ">
-                          <span className="w-[250px]">
-                            Total Cost for Kothar
-                          </span>
-                          <OutlinedInput
-                            name="costForKothar"
-                            placeholder="Amount in AUD"
-                            type="number"
-                            size="small"
-                            endAdornment={"AUD"}
-                            value={data?.costForKothar}
+                            value={data?.amountPaidByStudent}
                             onChange={(e) =>
                               setData({
                                 ...data,
-                                costForKothar: e.target.value,
+                                amountPaidByStudent: e.target.value,
                               })
                             }
+                            variant="standard"
                           />
                         </div>
-                        <div className="flex gap-2 items-center ">
-                          <span className="w-[250px]">Case Officer:</span>
-                          <OutlinedInput
-                            name="caseOfficer"
-                            placeholder="Case Officer Name"
-                            type="text"
-                            size="small"
-                            endAdornment={""}
-                            value={data?.caseOfficer}
-                            onChange={(e) =>
-                              setData({ ...data, caseOfficer: e.target.value })
-                            }
-                          />
-                        </div>
-                        {/* <div className="flex gap-2 items-center ">
-                          Total Agent Cost:
+                        <div className="flex gap-2 items-center">
+                          <span className="w-[250px]">Agent Cost:</span>
                           <OutlinedInput
                             name="agentCost"
-                            placeholder="Agent Cost in AUD"
+                            className="col-span-2"
+                            placeholder="Amount in AUD"
                             type="number"
                             size="small"
                             endAdornment={"AUD"}
@@ -311,8 +300,47 @@ const AddAccounts = ({ color = "light" }) => {
                               setData({ ...data, agentCost: e.target.value })
                             }
                           />
-                        </div> */}
-                        <div className="flex items-center gap-2">
+                          {/* $
+                        {installments
+                          .reduce((a, b) => a + (Number(b.amount) || 0), 0)
+                          .toFixed(2)} */}
+                        </div>
+                        <div className="flex gap-2 items-center ">
+                          <span className="w-[250px]">Due Amount:</span>
+                          <OutlinedInput
+                            name="dueAmount"
+                            placeholder="Amount in AUD"
+                            type="number"
+                            size="small"
+                            endAdornment={"AUD"}
+                            value={data?.dueAmount}
+                            onChange={(e) =>
+                              setData({
+                                ...data,
+                                dueAmount: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+                        <div className="flex gap-2 items-center ">
+                          <span className="w-[250px]">Total Profit/Loss:</span>
+                          <OutlinedInput
+                            name="profitLoss"
+                            placeholder="Amount in AUD"
+                            type="number"
+                            size="small"
+                            endAdornment={"AUD"}
+                            value={data?.profitLoss}
+                            onChange={(e) =>
+                              setData({
+                                ...data,
+                                profitLoss: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+
+                        {/* <div className="flex items-center gap-2">
                           <span className="w-[250px]">Commission Claimed:</span>
 
                           <Autocomplete
@@ -381,41 +409,8 @@ const AddAccounts = ({ color = "light" }) => {
                               }
                             />
                           )}
-                        </div>
-                        <div className="flex gap-2 items-center ">
-                          <span className="w-[250px]">
-                            Total amount paid by Student:
-                          </span>
-                          <OutlinedInput
-                            name="amountPaidByStudent"
-                            placeholder="Amount in AUD"
-                            type="number"
-                            size="small"
-                            endAdornment={"AUD"}
-                            value={data?.amountPaidByStudent}
-                            onChange={(e) =>
-                              setData({
-                                ...data,
-                                amountPaidByStudent: e.target.value,
-                              })
-                            }
-                          />
-                        </div>
-                        {/* <div className="flex gap-2 items-center">
-                          Discount:
-                          <OutlinedInput
-                            name="discount"
-                            placeholder="In percentage"
-                            type="number"
-                            sx={{ width: "50%" }}
-                            size="small"
-                            endAdornment={"%"}
-                            value={data?.discount}
-                            onChange={(e) =>
-                              setData({ ...data, discount: e.target.value })
-                            }
-                          />
                         </div> */}
+
                         {/* <div className=" flex items-center gap-2">
                           <span> Due Date: </span>
                           <OutlinedInput
@@ -430,40 +425,23 @@ const AddAccounts = ({ color = "light" }) => {
                           />
                         </div> */}
                       </div>
-                      <div className="max-w-7xl mx-auto  lg:px-8">
-                        <div className="md:col-span-2">
-                          <h2 className="text-2xl font-semibold mb-5">
-                            Client: {selectedStudent?.name}
-                          </h2>
-                          <p className="mb-2">
-                            Address: {selectedStudent?.address}
-                          </p>
-                          <p className="mb-2">
-                            Contact: {selectedStudent?.number}
-                          </p>
-                          <dt className="text-sm font-medium ">
-                            Type: {selectedType?.label}
-                          </dt>
-                        </div>
-                      </div>
                     </div>
 
-                    <h1 className="text-lg text-gray-600 font-semibold underline">
+                    {/* <h1 className="text-lg text-gray-600 font-semibold underline">
                       Payment Installlments
-                    </h1>
+                    </h1> */}
                     <div className="overflow-x-auto">
                       <table className="table-auto w-full">
                         <thead>
                           <tr className="bg-gray-200">
                             <th className="border px-4 py-2">SN</th>
-                            <th className="border px-4 py-2">Date</th>
-                            <th className="border px-4 py-2">Amount</th>
-                            <th className="border px-4 py-2">Payment Method</th>
-                            <th className="border px-4 py-2">Remarks</th>
-                            {/* <th className="border px-4 py-2">
-                              Commission Claimed
-                            </th> */}
-                            <th className="border px-4 py-2">Attachment</th>
+                            <th className="border px-4 py-2">Module</th>
+                            <th className="border px-4 py-2">Agreed</th>
+                            <th className="border px-4 py-2">Cost</th>
+                            <th className="border px-4 py-2">Paid</th>
+                            <th className="border px-4 py-2">Due</th>
+                            <th className="border px-4 py-2">Referral</th>
+                            <th className="border px-4 py-2">Profit/Loss</th>
                             <th className="border px-4 py-2">Action</th>
                           </tr>
                         </thead>
@@ -473,42 +451,98 @@ const AddAccounts = ({ color = "light" }) => {
                               <td className="border text-center px-4 py-2">
                                 {index + 1}
                               </td>
-                              <td className="border text-center px-4 py-2">
-                                <InputField
-                                  type="date"
-                                  name="date"
-                                  onChange={(e) => handleInputChange(e, index)}
-                                  value={item?.date}
+                              <td className="border flex items-center gap-2 text-left px-4 py-2">
+                                {selectedType?.value === "Student" && (
+                                  <KeyboardArrowDown className="cursor-pointer" />
+                                )}
+                                <Visibility
+                                  className="cursor-pointer"
+                                  onClick={handleOpenEyeModal}
+                                />
+                                <Autocomplete
+                                  size="small"
+                                  disablePortal
+                                  options={options}
+                                  sx={{ width: 200 }}
+                                  onChange={(e, value) => {
+                                    setSelectedType(value);
+                                    // setSelectedStudent(null);
+                                  }}
+                                  getOptionLabel={(option) => option.label}
+                                  renderInput={(params) => (
+                                    <TextField
+                                      {...params}
+                                      placeholder="Select Type"
+                                    />
+                                  )}
+                                  value={selectedType}
+                                  isOptionEqualToValue={(options, value) =>
+                                    options?.value === value?.value
+                                  }
                                 />
                               </td>
-                              <td className="border text-center px-4 py-2 min-w-[200px]">
+                              <td className="border text-center px-4 py-2 min-w-[150px]">
                                 <InputField
                                   type="number"
-                                  name="amount"
-                                  placeholder="Amount"
+                                  name="agreedAmount"
+                                  placeholder="Agreed Amount"
                                   onChange={(e) => handleInputChange(e, index)}
-                                  value={item?.amount}
-                                  className="min-w-[250px]"
+                                  value={item?.agreedAmount}
+                                  className="min-w-[100px]"
                                 />
                               </td>
-                              <td className="border text-center  px-4 py-2 min-w-[200px]">
+                              <td className="border text-center  px-4 py-2 min-w-[150px]">
                                 <InputField
-                                  type="text"
-                                  name="method"
-                                  placeholder="Payment Method"
+                                  type="number"
+                                  name="cost"
+                                  placeholder="Kothar Cost"
                                   onChange={(e) => handleInputChange(e, index)}
                                   value={item?.method}
-                                  className="min-w-[250px]"
+                                  className="min-w-[100px]"
                                 />
                               </td>
-                              <td className="border text-center px-4 py-2 min-w-[200px]">
+                              <td className="border text-center px-4 py-2 min-w-[150px]">
                                 <InputField
-                                  type="text"
-                                  name="remarks"
-                                  placeholder="Enter Remarks"
+                                  type="number"
+                                  name="paidAmount"
+                                  placeholder="Paid Amount"
                                   size="small"
                                   onChange={(e) => handleInputChange(e, index)}
-                                  value={item?.remarks}
+                                  value={item?.paidAmount}
+                                  className="min-w-[100px]"
+                                />
+                              </td>
+                              <td className="border text-center px-4 py-2 min-w-[150px]">
+                                <InputField
+                                  type="number"
+                                  name="dueAmount"
+                                  placeholder="Due Amount"
+                                  size="small"
+                                  onChange={(e) => handleInputChange(e, index)}
+                                  value={item?.dueAmount}
+                                  className="min-w-[100px]"
+                                />
+                              </td>
+                              <td className="border text-center px-4 py-2 min-w-[150px]">
+                                <InputField
+                                  type="text"
+                                  name="referral"
+                                  placeholder="Referral"
+                                  size="small"
+                                  onChange={(e) => handleInputChange(e, index)}
+                                  value={item?.referral}
+                                  className="min-w-[100px]"
+                                />
+                              </td>{" "}
+                              <td className="border text-center px-4 py-2 min-w-[150px]">
+                                <InputField
+                                  type="number"
+                                  name="profitLoss"
+                                  placeholder="Profit/Loss"
+                                  size="small"
+                                  onChange={(e) => handleInputChange(e, index)}
+                                  value={item?.profitLoss}
+                                  className="min-w-[100px]"
                                 />
                               </td>
                               {/* <td
@@ -516,7 +550,7 @@ const AddAccounts = ({ color = "light" }) => {
                                   `border text-center px-4 py-2 ` +
                                   (installments[index]?.claimed?.value === "yes"
                                     ? "min-w-[300px]"
-                                    : `min-w-[200px]`)
+                                    : `min-w-[150px]`)
                                 }
                               >
                                 <div className="flex items-center gap-4">
@@ -580,7 +614,7 @@ const AddAccounts = ({ color = "light" }) => {
                                   )}
                                 </div>
                               </td> */}
-                              {/* <td className="border text-center px-4 py-2 min-w-[200px]">
+                              {/* <td className="border text-center px-4 py-2 min-w-[150px]">
                                 <InputField
                                   type="text"
                                   name="caseOfficer"
@@ -590,7 +624,7 @@ const AddAccounts = ({ color = "light" }) => {
                                   value={item?.caseOfficer}
                                 />
                               </td> */}
-                              {/* <td className="border text-center px-4 py-2 min-w-[200px]">
+                              {/* <td className="border text-center px-4 py-2 min-w-[150px]">
                                 <InputField
                                   type="number"
                                   name="agentCost"
@@ -600,7 +634,7 @@ const AddAccounts = ({ color = "light" }) => {
                                   value={item?.agentCost}
                                 />
                               </td>
-                              <td className="border text-center px-4 py-2 min-w-[200px]">
+                              <td className="border text-center px-4 py-2 min-w-[150px]">
                                 <InputField
                                   type="text"
                                   name="status"
@@ -611,16 +645,6 @@ const AddAccounts = ({ color = "light" }) => {
                                   className="min-w-[250px]"
                                 />
                               </td> */}
-                              <td className="border text-center px-4 py-2 min-w-[250px]">
-                                <UploadFile
-                                  {...{
-                                    data: installments,
-                                    setData: setInstallments,
-                                    imageKey: "document",
-                                    // label: "Document",
-                                  }}
-                                />
-                              </td>
                               <td className="border text-center px-4 py-2">
                                 <div className="flex items-center">
                                   {/* <Tooltip title="Edit Course" arrow>
@@ -655,7 +679,7 @@ const AddAccounts = ({ color = "light" }) => {
                                 startIcon={<FaPlusCircle />}
                                 onClick={addInstallments}
                               >
-                                Add More Installments
+                                Add More Entries
                               </Button>
                             </td>
                           </tr>
@@ -689,6 +713,9 @@ const AddAccounts = ({ color = "light" }) => {
           }
           handleDelete={() => deleteData()}
         />
+      )}
+      {openEyeModal && (
+        <EyeDrawer {...{ open: openEyeModal, setOpen: setOpenEyeModal }} />
       )}
     </div>
   );

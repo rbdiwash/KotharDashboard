@@ -90,14 +90,14 @@ const Accounts = ({ color = "light" }) => {
           return <div>{row.original.clientName || "N/A"}</div>;
         },
       },
-      {
-        header: "Type",
-        size: 150,
-        accessorKey: "type",
-      },
+      // {
+      //   header: "Type",
+      //   size: 150,
+      //   accessorKey: "type",
+      // },
       {
         accessorKey: "studentCost", //normal accessorKey
-        header: "Student Agreed cost",
+        header: "Student Cost",
         size: 50,
         Cell: ({ row, renderedCellValue }) => {
           return <div>{row.original.studentCost || 0}</div>;
@@ -106,8 +106,8 @@ const Accounts = ({ color = "light" }) => {
 
       {
         accessorKey: "costForKothar" || 0,
-        header: "Cost For Us",
-        size: 150,
+        header: "Cost",
+        size: 50,
       },
 
       {
@@ -117,13 +117,13 @@ const Accounts = ({ color = "light" }) => {
       },
       {
         accessorKey: "isClaimed", //normal accessorKey
-        header: "Commission Claimed",
-        size: 150,
+        header: "Commission  Claimed",
+        size: 50,
       },
       {
         accessorKey: "commission",
-        header: "Commission/Reminder Date",
-        size: 150,
+        header: "Commission/ Reminder Date",
+        size: 50,
         Cell: ({ row, renderedCellValue }) => {
           return (
             <div>
@@ -135,7 +135,7 @@ const Accounts = ({ color = "light" }) => {
       },
       {
         accessorKey: "amountPaidByStudent",
-        header: "Amount Paid By Student",
+        header: "Amount Paid",
         size: 150,
       },
       {
@@ -204,8 +204,18 @@ const Accounts = ({ color = "light" }) => {
         >
           <div className="rounded-t mb-0 px-4 py-3 border-0">
             <div className="flex flex-wrap items-center justify-between">
-              <form className="flex items-center justify-between w-full  rounded mr-3">
-                <div className="relative flex mx-auto  items-center">
+              <form className="flex items-center justify-between  w-full  rounded mr-3">
+                <div>
+                  <h3
+                    className={
+                      "font-semibold text-lg " +
+                      (color === "light" ? "text-slate-700" : "text-white")
+                    }
+                  >
+                    Account Details
+                  </h3>
+                </div>
+                {/* <div className="relative flex mx-auto  items-center">
                   <Autocomplete
                     size="small"
                     disablePortal
@@ -239,7 +249,7 @@ const Accounts = ({ color = "light" }) => {
                     }}
                     value={selectedStudent}
                   />
-                </div>
+                </div> */}
                 <div className="flex items-center gap-4">
                   <FaRocketchat
                     className="text-blue-500 text-3xl cursor-pointer"
@@ -270,7 +280,7 @@ const Accounts = ({ color = "light" }) => {
           }
           handleDelete={() => deleteData()}
         />
-      )}{" "}
+      )}
       {openDiscussion && (
         <DiscussionModal open={openDiscussion} setOpen={setOpenDiscussion} />
       )}

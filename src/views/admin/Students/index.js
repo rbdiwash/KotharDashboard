@@ -93,10 +93,10 @@ const Students = ({ color = "light" }) => {
                 {...{ type: "Student", searchText, setSearchText }}
               />
               <div className="flex items-center gap-4">
-                <FaRocketchat
+                {/* <FaRocketchat
                   className="text-blue-500 text-3xl cursor-pointer"
                   onClick={handleDiscussion}
-                />{" "}
+                />{" "} */}
                 <DownloadFile type="student" />
                 <Button
                   variant="contained"
@@ -210,14 +210,14 @@ const Students = ({ color = "light" }) => {
           </div>
         </div>
       </div>{" "}
-      {openDiscussion && (
+      {/* {openDiscussion && (
         <DiscussionModal
           open={openDiscussion}
           setOpen={setOpenDiscussion}
           studentList={studentList}
           type="student"
         />
-      )}{" "}
+      )}{" "} */}
       {openNotesModal?.state && (
         <NotesModal
           open={openNotesModal?.state}
