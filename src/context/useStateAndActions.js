@@ -19,7 +19,10 @@ const useStateAndActions = () => {
   const [profitLossList, setProfitLossList] = useState([]);
   const [moduleWiseProfitLossList, setModuleWiseProfitLossList] = useState([]);
   const [notificationsList, setNotificationsList] = useState([]);
-  const [notificationClicked, setNotificationClicked] = useState(false);
+  const [notificationClicked, setNotificationClicked] = useState({
+    state: false,
+    id: null,
+  });
 
   const getNotificationsData = () => {
     axios

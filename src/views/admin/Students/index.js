@@ -16,8 +16,10 @@ import { FaPlusCircle, FaRocketchat } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 
 const Students = ({ color = "light" }) => {
-  const [{ studentList, token, notificationClicked }, { refetchStudent }] =
-    useKothar();
+  const [
+    { studentList, token, notificationClicked },
+    { refetchStudent, setNotificationClicked },
+  ] = useKothar();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const navigate = useNavigate();
   const [searchText, setSearchText] = useState("");
@@ -27,7 +29,6 @@ const Students = ({ color = "light" }) => {
     id: null,
   });
   const [filteredData, setFilteredData] = useState(studentList);
-  console.log(openNotesModal);
   const handleDiscussion = () => {
     setOpenDiscussion(!openDiscussion);
   };
@@ -39,6 +40,7 @@ const Students = ({ color = "light" }) => {
   useEffect(() => {
     if (notificationClicked?.id) {
       setOpenDiscussion(true);
+      setOpenNotesModal({ state: true, id: notificationClicked?.id });
     }
   }, [notificationClicked?.id]);
 
@@ -68,6 +70,10 @@ const Students = ({ color = "light" }) => {
       },
       token
     );
+  };
+  const handleClose = () => {
+    setOpenNotesModal({ state: !openNotesModal?.state, id: null });
+    setNotificationClicked({ state: !notificationClicked?.state, id: null });
   };
 
   return (
@@ -221,7 +227,7 @@ const Students = ({ color = "light" }) => {
       {openNotesModal?.state && (
         <NotesModal
           open={openNotesModal?.state}
-          setOpen={setOpenNotesModal}
+          handleClose={handleClose}
           studentId={openNotesModal?.id}
           type="student"
         />

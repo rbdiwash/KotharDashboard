@@ -27,16 +27,15 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-export default function NotesModal({ open, setOpen, studentId, type }) {
-  console.log("🚀  studentId:", studentId);
+export default function NotesModal({ open, handleClose, studentId, type }) {
   const [commentsList, setCommentsList] = useState([]);
   const [text, setText] = useState("");
   const buttonRef = useRef(null);
   const [{ token }, {}] = useKothar();
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  // const handleClose = () => {
+  //   setOpen({ state: false, id: null });
+  // };
   const userDetail = JSON.parse(localStorage.getItem("userDetail"));
 
   const { mutate } = useMutation(postData, {

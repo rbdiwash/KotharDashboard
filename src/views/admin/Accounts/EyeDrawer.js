@@ -1,120 +1,204 @@
-import { Close } from "@mui/icons-material";
-import { Button, Radio, Switch } from "@mui/material";
-import Drawer from "@mui/material/Drawer";
-import { useState } from "react";
+import { AddCircle } from "@mui/icons-material";
+import CloseIcon from "@mui/icons-material/Close";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Autocomplete, TextField } from "@mui/material";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import IconButton from "@mui/material/IconButton";
+import { styled } from "@mui/material/styles";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import ClientDropdown from "components/Dropdowns/ClientDropdown";
+import InputField from "components/Input/InputField";
+import {
+  API_URL,
+  insurance_companies,
+  insurance_cover_type,
+} from "const/constants";
+import useKothar from "context/useKothar";
+import PropTypes from "prop-types";
+import * as React from "react";
+import { useEffect } from "react";
+import { useMemo, useState } from "react";
+import { toast } from "react-toastify";
 
-export default function EyeDrawer({ open, setOpen }) {
-  const toggleDrawer = (event) => {
-    setOpen(!open);
+export default function EyeModal({ open, setOpen, studentDetails }) {
+  const handleClose = () => {
+    setOpen({ state: false, id: null });
   };
-  const modules = [
-    {
-      label: "Client",
-      value: "client",
-      icon: "fas fa-user",
-    },
-    {
-      label: "University",
-      value: "university",
-      icon: "fas fa-school",
-    },
-    {
-      label: "Course",
-      value: "course",
-      icon: "fas fa-briefcase",
-    },
-    {
-      label: "RPL Certificate",
-      value: "rpl-certificate",
-      icon: "fas fa-briefcase",
-    },
-    {
-      label: "Student",
-      value: "student",
-      icon: "fas fa-graduation-cap",
-    },
-    {
-      label: "Visa",
-      value: "visa",
-      icon: "fas fa-x-ray",
-    },
-    {
-      label: "Insurance",
-      value: "insurance",
-      icon: "fas fa-x-ray",
-    },
-    {
-      label: "Skill Assessment",
-      value: "skill-assessment",
-      icon: "fas fa-x-ray",
-    },
-    {
-      label: "Consultancy",
-      value: "consultancy",
-      icon: "fas fa-briefcase",
-    },
-    {
-      label: "Invoice",
-      value: "invoice",
-      icon: "fas fa-file-invoice-dollar",
-    },
-
-    {
-      label: "Account",
-      value: "account",
-      icon: "fas fa-file-invoice-dollar",
-    },
-    {
-      label: "Profit/Loss",
-      value: "profit-loss",
-      icon: "fas fa-dollar-sign",
-    },
-  ];
-
-  const [values, setValues] = useState(modules.map((item) => item.value));
-
-  const onChange = (event, value) => {
-    console.log(event.target.checked);
-    if (event.target.checked) {
-      setValues([value, ...values]);
+  const [childName, setChildName] = useState([]);
+  const [{}, { refetchInsuranceList }] = useKothar();
+  const initalState = {
+    caseOfficer: "",
+    cost: 0,
+    date: new Date().toISOString().split("T")[0],
+    endDate: new Date().toISOString().split("T")[0],
+    clientId: null,
+    insuranceCompany: null,
+    paymentType: "",
+    startingDate: new Date().toISOString().split("T")[0],
+    type: "",
+    children: 0,
+    child: childName,
+    coverType: null,
+  };
+  const [bonusEntries, setBonusEntries] = useState([{ index: 1, bonus: 0 }]);
+  console.log("🚀  bonusEntries:", bonusEntries);
+  const [data, setData] = React.useState(initalState);
+  useEffect(() => {
+    if (open?.id) {
+      setData(open?.id);
+      setChildName(open?.id?.child);
     } else {
-      setValues((item) => item?.filter((arg) => arg !== value));
+      setData(initalState);
     }
+  }, [open]);
+
+  const { mutate } = useMutation(postData, {
+    onSuccess(suc) {
+      toast.success(
+        data?.id ? "Data updated Successfully" : "Data added Successfully"
+      );
+      setOpen({ state: false, id: null });
+      refetchInsuranceList();
+    },
+    onError(err) {
+      toast.error(data?.id ? "Error Updating Data" : "Error Submitting Data");
+    },
+  });
+  async function postData(payload) {
+    if (data?.id) {
+      await axios.put(`${API_URL}/insurance/${payload?.id}`, payload);
+    } else {
+      await axios.post(`${API_URL}/insurance`, payload);
+    }
+  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    mutate({
+      ...data,
+      firstName: data?.name,
+      child: childName,
+      cost: Number(data?.cost),
+    });
+  };
+
+  const addMoreBonuses = () => {
+    setBonusEntries([
+      ...bonusEntries,
+      { index: bonusEntries?.length + 1, bonus: 0 },
+    ]);
+  };
+
+  const handleDeleteBonusEntries = (index) => {
+    setBonusEntries([...bonusEntries.filter((b, i) => i !== index)]);
   };
 
   return (
-    <Drawer
-      anchor={"right"}
-      open={open}
-      PaperProps={{ style: { width: "25%" } }}
-    >
-      <div className="flex justify-between p-4 border-b">
-        <h1 className="text-xl font-semibold">Manage Permissions</h1>
-        <Close onClick={toggleDrawer} className="cpointer" />
-      </div>{" "}
-      <div className="mt-4 p-4">
-        <div className="text-base font-semibold uppercase mb-3 underline">
-          Permitted Modules
-        </div>
-        {modules.map((module) => (
-          <div className="flex justify-between items-center mb-2">
-            <div className="flex">
-              <i className={`${module?.icon} mr-2 text-sm text-slate-300`}></i>
-              <span className=""> {module.label} </span>
+    <div>
+      <BootstrapDialog onClose={handleClose} open={open?.state} maxWidth="xl">
+        <form action="" onSubmit={handleSubmit}>
+          <BootstrapDialogTitle onClose={handleClose}>
+            Admission More Information
+          </BootstrapDialogTitle>
+          <DialogContent dividers>
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-3 justify-end items-end min-w-[700px] px-4">
+              <div className="relative w-full mb-3 flex gap-3 items-center justify-start">
+                Commission:
+                <InputField
+                  placeholder="Commission"
+                  name="commission"
+                  required
+                  type="text"
+                  value={data?.commission}
+                  className={"w-[190px]"}
+                />
+              </div>
+
+              {bonusEntries?.length > 1 &&
+                bonusEntries?.map((item, index) => (
+                  <div className="relative w-full mb-3 flex gap-3 items-center justify-start">
+                    {index === 0 ? "Bonus:" : <div className="w-[50px]"></div>}
+                    <span>
+                      <InputField
+                        placeholder="Number"
+                        name="bonus"
+                        required
+                        type="text"
+                        value={data?.bonus}
+                        className={"w-[100px]"}
+                      />
+                    </span>
+                    <InputField
+                      placeholder="Bonus"
+                      name="bonus"
+                      required
+                      type="number"
+                      value={data?.bonus}
+                      className={"w-[190px]"}
+                    />
+                    <DeleteIcon
+                      onClick={() => handleDeleteBonusEntries(index)}
+                    />
+                  </div>
+                ))}
+              <div className="relative">
+                <Button
+                  variant="contained"
+                  startIcon={<AddCircle />}
+                  onClick={addMoreBonuses}
+                >
+                  Add More Bonuses
+                </Button>
+              </div>
             </div>
-            <Switch
-              checked={values.find((item) => item === module?.value) || null}
-              onChange={(event) => onChange(event, module?.value)}
-            />
-          </div>
-        ))}
-      </div>
-      <div className="p-4 absolute bottom-0 w-full border-t">
-        <div className="flex justify-between gap-4 ">
-          <Button variant="outlined">Cancel</Button>
-          <Button variant="contained"> Submit</Button>
-        </div>
-      </div>
-    </Drawer>
+          </DialogContent>
+          <DialogActions>
+            <Button variant="outlined" autoFocus onClick={handleClose}>
+              Cancel
+            </Button>
+            <Button variant="contained" autoFocus onClick={handleSubmit}>
+              {open?.id ? "Submit" : "Save"}
+            </Button>
+          </DialogActions>
+        </form>
+      </BootstrapDialog>
+    </div>
+  );
+}
+
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(2),
+  },
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(1),
+  },
+}));
+
+function BootstrapDialogTitle(props) {
+  const { children, onClose, ...other } = props;
+
+  return (
+    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
+      {children}
+      {onClose ? (
+        <IconButton
+          aria-label="close"
+          onClick={onClose}
+          sx={{
+            position: "absolute",
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </DialogTitle>
   );
 }

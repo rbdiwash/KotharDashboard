@@ -1,11 +1,13 @@
 import { KeyboardArrowDown, Visibility } from "@mui/icons-material";
 import {
   Autocomplete,
+  Box,
   Button,
   IconButton,
   OutlinedInput,
   TextField,
   Tooltip,
+  Typography,
 } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
@@ -22,6 +24,12 @@ import { IoArrowBack } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import EyeDrawer from "./EyeDrawer";
+import { useMemo } from "react";
+import {
+  MaterialReactTable,
+  useMaterialReactTable,
+} from "material-react-table";
+import EyeModal from "./EyeDrawer";
 
 const AddAccounts = ({ color = "light" }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
@@ -41,7 +49,7 @@ const AddAccounts = ({ color = "light" }) => {
     { rplList, studentList, visaList, skillList, insuranceList },
     { refetchAccountList },
   ] = useKothar();
-  const [openEyeModal, setOpenEyeModal] = useState(false);
+  const [openEyeModal, setOpenEyeModal] = useState({ state: false, id: null });
   const { state } = useLocation();
   const navigate = useNavigate();
   const options = [
@@ -54,6 +62,398 @@ const AddAccounts = ({ color = "light" }) => {
       value: "Skill Assessment",
     },
   ];
+  const item = 1;
+
+  const columns = useMemo(
+    () => [
+      {
+        header: "Module",
+        size: 150,
+        accessorKey: "clientName",
+        Cell: ({ row, renderedCellValue }) => {
+          return (
+            <div className="flex items-center gap-2 text-left py-2 z-[999]">
+              {selectedType?.value === "Student" && (
+                <KeyboardArrowDown className="cursor-pointer" />
+              )}
+              <Visibility
+                className="cursor-pointer"
+                onClick={handleOpenEyeModal}
+              />
+              <Autocomplete
+                size="small"
+                disablePortal
+                options={options}
+                sx={{ width: 200, zIndex: 999 }}
+                onChange={(e, value) => {
+                  setSelectedType(value);
+                  // setSelectedStudent(null);
+                }}
+                getOptionLabel={(option) => option.label}
+                renderInput={(params) => (
+                  <TextField {...params} placeholder="Select Type" />
+                )}
+                value={selectedType}
+                isOptionEqualToValue={(options, value) =>
+                  options?.value === value?.value
+                }
+                slotProps={{
+                  popper: {
+                    sx: {
+                      zIndex: 1000,
+                    },
+                  },
+                }}
+                ListboxProps={{ style: { zIndex: 999 } }}
+              />
+            </div>
+          );
+        },
+      },
+
+      {
+        accessorKey: "agreed", //normal accessorKey
+        header: "Agreed",
+        size: 50,
+        Cell: ({ row, renderedCellValue }) => {
+          return (
+            <div>
+              <InputField
+                type="number"
+                name="agreedAmount"
+                placeholder="Agreed Amount"
+                onChange={(e) => handleInputChange(e, row?.index)}
+                value={item?.agreedAmount}
+                className="min-w-[100px]"
+              />
+            </div>
+          );
+        },
+      },
+
+      {
+        accessorKey: "cost" || 0,
+        header: "Cost",
+        size: 50,
+        Cell: ({ row }) => {
+          return (
+            <InputField
+              type="number"
+              name="cost"
+              placeholder="Kothar Cost"
+              onChange={(e) => handleInputChange(e, row?.index)}
+              value={item?.method}
+              className="min-w-[100px]"
+            />
+          );
+        },
+      },
+
+      {
+        accessorKey: "paid", //normal accessorKey
+        header: "Paid",
+        size: 150,
+        Cell: ({ row }) => {
+          return (
+            <InputField
+              type="number"
+              name="paidAmount"
+              placeholder="Paid Amount"
+              size="small"
+              onChange={(e) => handleInputChange(e, row?.index)}
+              value={item?.paidAmount}
+              className="min-w-[100px]"
+            />
+          );
+        },
+      },
+      {
+        accessorKey: "due", //normal accessorKey
+        header: "Due",
+        size: 50,
+        Cell: ({ row }) => {
+          return (
+            <InputField
+              type="number"
+              name="dueAmount"
+              placeholder="Due Amount"
+              size="small"
+              onChange={(e) => handleInputChange(e, row?.index)}
+              value={item?.dueAmount}
+              className="min-w-[100px]"
+            />
+          );
+        },
+      },
+      {
+        accessorKey: "referral",
+        header: "Referral",
+        size: 100,
+        Cell: ({ row, renderedCellValue }) => {
+          return (
+            <InputField
+              type="text"
+              name="referral"
+              placeholder="Referral"
+              size="small"
+              onChange={(e) => handleInputChange(e, row?.index)}
+              value={item?.referral}
+              className="min-w-[100px]"
+            />
+          );
+        },
+      },
+      {
+        accessorKey: "profitLoss",
+        header: "Profit Loss",
+        size: 150,
+        Cell: ({ row, renderedCellValue }) => {
+          return (
+            <InputField
+              type="number"
+              name="profitLoss"
+              placeholder="Profit/Loss"
+              size="small"
+              onChange={(e) => handleInputChange(e, row?.index)}
+              value={item?.profitLoss}
+              className="min-w-[100px]"
+            />
+          );
+        },
+      },
+      {
+        accessorKey: "Action",
+        header: "Action",
+        size: 150,
+        Cell: ({ row, renderedCellValue }) => {
+          const item = row.original;
+          return (
+            <>
+              <div className="flex items-center">
+                <Tooltip title="Delete Course" arrow>
+                  <IconButton
+                    onClick={() => handleDeleteInstallment(row?.index)}
+                  >
+                    <AiFillDelete className="text-red-600 cursor-pointer" />
+                  </IconButton>
+                </Tooltip>
+              </div>
+            </>
+          );
+        },
+      },
+    ],
+    []
+  );
+
+  const subColumns = useMemo(
+    () => [
+      {
+        accessorKey: "invoiceNo", //normal accessorKey
+        header: "Invoice No",
+        size: 50,
+        Cell: ({ row, renderedCellValue }) => {
+          return (
+            <div>
+              <InputField
+                type="number"
+                name="invoiceNo"
+                placeholder="Invoice Number"
+                onChange={(e) => handleInputChange(e, row?.name)}
+                value={item?.invoiceNumber}
+                className="min-w-[100px]"
+              />
+            </div>
+          );
+        },
+      },
+
+      {
+        accessorKey: "noOfStudents" || 0,
+        header: "No of Students",
+        size: 50,
+        Cell: ({ row }) => {
+          return (
+            <InputField
+              type="number"
+              name="noOfStudents"
+              placeholder="Number of Students"
+              onChange={(e) => handleInputChange(e, row?.noOfStudents)}
+              value={item?.noOfStudents}
+              className="min-w-[100px]"
+            />
+          );
+        },
+      },
+
+      {
+        accessorKey: "commission", //normal accessorKey
+        header: "Commission",
+        size: 150,
+        Cell: ({ row }) => {
+          return (
+            <InputField
+              type="number"
+              name="commission"
+              placeholder="Commission"
+              size="small"
+              onChange={(e) => handleInputChange(e, row?.index)}
+              value={item?.commission}
+              className="min-w-[100px]"
+            />
+          );
+        },
+      },
+      {
+        accessorKey: "bonus", //normal accessorKey
+        header: "Bonus",
+        size: 50,
+        Cell: ({ row }) => {
+          return (
+            <InputField
+              type="number"
+              name="Bonus"
+              placeholder="Bonus"
+              size="small"
+              onChange={(e) => handleInputChange(e, row?.index)}
+              value={item?.Bonus}
+              className="min-w-[100px]"
+            />
+          );
+        },
+      },
+      {
+        accessorKey: "totalAmount",
+        header: "Total Amount",
+        size: 50,
+        Cell: ({ row, renderedCellValue }) => {
+          return (
+            <InputField
+              type="text"
+              name="totalAmount"
+              placeholder="Total Amount"
+              size="small"
+              onChange={(e) => handleInputChange(e, row?.index)}
+              value={item?.totalAmount}
+              className="min-w-[100px]"
+            />
+          );
+        },
+      },
+      {
+        accessorKey: "claimedDate",
+        header: "Claimed Date",
+        size: 150,
+        Cell: ({ row, renderedCellValue }) => {
+          return (
+            <InputField
+              type="date"
+              name="claimedDate"
+              placeholder="Claimed Date"
+              size="small"
+              onChange={(e) => handleInputChange(e, row?.index)}
+              value={item?.claimedDate}
+              className="min-w-[100px]"
+            />
+          );
+        },
+      },
+      {
+        accessorKey: "receivedAmount",
+        header: "Received Amount",
+        size: 50,
+        Cell: ({ row, renderedCellValue }) => {
+          return (
+            <InputField
+              type="text"
+              name="receivedAmount"
+              placeholder="Received Amount"
+              size="small"
+              onChange={(e) => handleInputChange(e, row?.index)}
+              value={item?.receivedAmount}
+              className="min-w-[100px]"
+            />
+          );
+        },
+      },
+      {
+        accessorKey: "receivedDate",
+        header: "Received Date",
+        size: 150,
+        Cell: ({ row, renderedCellValue }) => {
+          return (
+            <InputField
+              type="date"
+              name="receivedDate"
+              placeholder="Received Date"
+              size="small"
+              onChange={(e) => handleInputChange(e, row?.index)}
+              value={item?.claimedDate}
+              className="min-w-[100px]"
+            />
+          );
+        },
+      },
+      {
+        accessorKey: "Action",
+        header: "Action",
+        size: 150,
+        Cell: ({ row, renderedCellValue }) => {
+          const item = row.original;
+          return (
+            <>
+              <div className="flex items-center">
+                <Tooltip title="Delete Course" arrow>
+                  <IconButton
+                    onClick={() => handleDeleteInstallment(row?.index)}
+                  >
+                    <AiFillDelete className="text-red-600 cursor-pointer" />
+                  </IconButton>
+                </Tooltip>
+              </div>
+            </>
+          );
+        },
+      },
+    ],
+    []
+  );
+
+  const secondTable = useMaterialReactTable({
+    columns: subColumns,
+    data: installments,
+    enablePagination: false,
+    enableRowNumbers: true,
+    initialState: {
+      density: "compact",
+      enableGlobalFilter: true,
+      showGlobalFilter: true,
+    },
+    enableColumnPinning: true,
+    muiTableContainerProps: {
+      sx: { height: "100px", maxHeight: "800px" },
+    },
+    // enableExpandAll: true,
+  });
+
+  const table = useMaterialReactTable({
+    columns,
+    data: installments,
+    enablePagination: false,
+    enableRowNumbers: true,
+    initialState: {
+      density: "compact",
+    },
+    muiTableContainerProps: {
+      sx: { height: "400px", maxHeight: "800px" },
+    },
+    renderDetailPanel: ({ row }) => (
+      <>
+        <MaterialReactTable table={secondTable} />
+      </>
+    ),
+  });
+
   useEffect(() => {
     if (state) {
       setData({ ...state?.item });
@@ -101,29 +501,6 @@ const AddAccounts = ({ color = "light" }) => {
     ]);
   };
 
-  const getClientOption = () => {
-    let secondOption = [];
-
-    switch (selectedType?.value) {
-      case "RPL":
-        secondOption = rplList;
-        break;
-      case "Student":
-        secondOption = studentList;
-        break;
-      case "Insurance":
-        secondOption = insuranceList;
-        break;
-      case "Visa":
-        secondOption = visaList;
-        break;
-      case "Skill Assessment":
-        secondOption = skillList;
-        break;
-    }
-    return secondOption ?? [];
-  };
-
   const addInstallments = () => {
     setInstallments((prev) => [...prev, { index: prev.length + 1, amount: 0 }]);
   };
@@ -168,7 +545,7 @@ const AddAccounts = ({ color = "light" }) => {
   };
 
   const handleOpenEyeModal = () => {
-    setOpenEyeModal(!openEyeModal);
+    setOpenEyeModal({ state: !openEyeModal?.state, id: 1 });
   };
 
   const totalAmountAfterDiscount = () => {
@@ -200,43 +577,6 @@ const AddAccounts = ({ color = "light" }) => {
               <h1 className="text-2xl uppercase font-bold mb-2 flex-1 text-center">
                 Account Details
               </h1>
-              {/* <form className="flex items-center justify-center gap-2 w-full  rounded mr-3">
-                <Autocomplete
-                  size="small"
-                  disablePortal
-                  options={options}
-                  sx={{ width: 300 }}
-                  onChange={(e, value) => {
-                    setSelectedType(value);
-                    setSelectedStudent(null);
-                  }}
-                  getOptionLabel={(option) => option.label}
-                  renderInput={(params) => (
-                    <TextField {...params} placeholder="Select Type" />
-                  )}
-                  value={selectedType}
-                  isOptionEqualToValue={(options, value) =>
-                    options?.value === value?.value
-                  }
-                />
-                <Autocomplete
-                  size="small"
-                  disablePortal
-                  options={getClientOption()}
-                  sx={{ width: 500 }}
-                  getOptionLabel={(option) => `${option.name}`}
-                  getOptionKey={(option) => option.clientId}
-                  renderInput={(params) => (
-                    <TextField {...params} placeholder="Search using Name" />
-                  )}
-                  onChange={(e, value) => {
-                    setSelectedStudent(value);
-                  }}
-                  value={selectedStudent}
-                />
-
-                <Button variant="contained">Search </Button>
-              </form> */}
             </div>
           </div>
           {selectedStudent?.clientId ? (
@@ -255,10 +595,10 @@ const AddAccounts = ({ color = "light" }) => {
                           </p>
                           <p className="mb-2">
                             Contact: {selectedStudent?.number}
-                          </p>{" "}
+                          </p>
                           <p className="mb-2">
                             Case Officer: {selectedStudent?.caseOfficer}
-                          </p>{" "}
+                          </p>
                           <p className="mb-2">
                             Referral: {selectedStudent?.referral}
                           </p>
@@ -427,11 +767,63 @@ const AddAccounts = ({ color = "light" }) => {
                       </div>
                     </div>
 
-                    {/* <h1 className="text-lg text-gray-600 font-semibold underline">
-                      Payment Installlments
-                    </h1> */}
-                    <div className="overflow-x-auto">
-                      <table className="table-auto w-full">
+                    <div className="overflow-x-auto min-h-[400px]">
+                      <MaterialReactTable table={table} />
+
+                      <tr>
+                        <td
+                          colSpan={"20"}
+                          className="border text-left px-4 py-2"
+                        >
+                          <Button
+                            variant="contained"
+                            startIcon={<FaPlusCircle />}
+                            onClick={addInstallments}
+                          >
+                            Add More Entries
+                          </Button>
+                        </td>
+                      </tr>
+                    </div>
+                    <div className="grid  gap-5 py-10">
+                      <div className="col-span-1 ml-auto mt-auto">
+                        <Button variant="contained" onClick={handleSubmit}>
+                          Submit
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center justify-center w-full h-full min-h-[70vh] ">
+              Selected Student to continue...
+            </div>
+          )}
+        </div>
+      </div>
+      {openConfirmationModal.state && (
+        <DeleteModal
+          open={openConfirmationModal.state}
+          item="Course"
+          handleCancel={() =>
+            setOpenConfirmationModal({ state: false, id: null })
+          }
+          handleDelete={() => deleteData()}
+        />
+      )}
+      {openEyeModal && (
+        <EyeModal {...{ open: openEyeModal, setOpen: setOpenEyeModal }} />
+      )}
+    </div>
+  );
+};
+
+export default AddAccounts;
+
+{
+  /* <table className="table-auto w-full">
                         <thead>
                           <tr className="bg-gray-200">
                             <th className="border px-4 py-2">SN</th>
@@ -533,7 +925,7 @@ const AddAccounts = ({ color = "light" }) => {
                                   value={item?.referral}
                                   className="min-w-[100px]"
                                 />
-                              </td>{" "}
+                              </td>
                               <td className="border text-center px-4 py-2 min-w-[150px]">
                                 <InputField
                                   type="number"
@@ -545,7 +937,80 @@ const AddAccounts = ({ color = "light" }) => {
                                   className="min-w-[100px]"
                                 />
                               </td>
-                              {/* <td
+                              <td className="border text-center px-4 py-2">
+                                <div className="flex items-center">
+                                  <Tooltip title="Delete Course" arrow>
+                                    <IconButton
+                                      onClick={() =>
+                                        handleDeleteInstallment(index)
+                                      }
+                                    >
+                                      <AiFillDelete className="text-red-600 cursor-pointer" />
+                                    </IconButton>
+                                  </Tooltip>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                          <tr>
+                            <td
+                              colSpan={"20"}
+                              className="border text-left px-4 py-2"
+                            >
+                              <Button
+                                variant="contained"
+                                startIcon={<FaPlusCircle />}
+                                onClick={addInstallments}
+                              >
+                                Add More Entries
+                              </Button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table> */
+}
+
+{
+  /* <form className="flex items-center justify-center gap-2 w-full  rounded mr-3">
+                <Autocomplete
+                  size="small"
+                  disablePortal
+                  options={options}
+                  sx={{ width: 300 }}
+                  onChange={(e, value) => {
+                    setSelectedType(value);
+                    setSelectedStudent(null);
+                  }}
+                  getOptionLabel={(option) => option.label}
+                  renderInput={(params) => (
+                    <TextField {...params} placeholder="Select Type" />
+                  )}
+                  value={selectedType}
+                  isOptionEqualToValue={(options, value) =>
+                    options?.value === value?.value
+                  }
+                />
+                <Autocomplete
+                  size="small"
+                  disablePortal
+                  options={getClientOption()}
+                  sx={{ width: 500 }}
+                  getOptionLabel={(option) => `${option.name}`}
+                  getOptionKey={(option) => option.clientId}
+                  renderInput={(params) => (
+                    <TextField {...params} placeholder="Search using Name" />
+                  )}
+                  onChange={(e, value) => {
+                    setSelectedStudent(value);
+                  }}
+                  value={selectedStudent}
+                />
+
+                <Button variant="contained">Search </Button>
+              </form> */
+}
+{
+  /* <td
                                 className={
                                   `border text-center px-4 py-2 ` +
                                   (installments[index]?.claimed?.value === "yes"
@@ -613,8 +1078,10 @@ const AddAccounts = ({ color = "light" }) => {
                                     />
                                   )}
                                 </div>
-                              </td> */}
-                              {/* <td className="border text-center px-4 py-2 min-w-[150px]">
+                              </td> */
+}
+{
+  /* <td className="border text-center px-4 py-2 min-w-[150px]">
                                 <InputField
                                   type="text"
                                   name="caseOfficer"
@@ -623,8 +1090,10 @@ const AddAccounts = ({ color = "light" }) => {
                                   onChange={(e) => handleInputChange(e, index)}
                                   value={item?.caseOfficer}
                                 />
-                              </td> */}
-                              {/* <td className="border text-center px-4 py-2 min-w-[150px]">
+                              </td> */
+}
+{
+  /* <td className="border text-center px-4 py-2 min-w-[150px]">
                                 <InputField
                                   type="number"
                                   name="agentCost"
@@ -644,81 +1113,5 @@ const AddAccounts = ({ color = "light" }) => {
                                   value={item?.status}
                                   className="min-w-[250px]"
                                 />
-                              </td> */}
-                              <td className="border text-center px-4 py-2">
-                                <div className="flex items-center">
-                                  {/* <Tooltip title="Edit Course" arrow>
-                                <IconButton
-                                  onClick={() =>
-                                    navigate("/admin/course/add", {})
-                                  }
-                                >
-                                  <AiFillEdit className="text-sky-600 cursor-pointer" />
-                                </IconButton>
-                              </Tooltip> */}
-                                  <Tooltip title="Delete Course" arrow>
-                                    <IconButton
-                                      onClick={() =>
-                                        handleDeleteInstallment(index)
-                                      }
-                                    >
-                                      <AiFillDelete className="text-red-600 cursor-pointer" />
-                                    </IconButton>
-                                  </Tooltip>
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                          <tr>
-                            <td
-                              colSpan={"20"}
-                              className="border text-left px-4 py-2"
-                            >
-                              <Button
-                                variant="contained"
-                                startIcon={<FaPlusCircle />}
-                                onClick={addInstallments}
-                              >
-                                Add More Entries
-                              </Button>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                    <div className="grid  gap-5 py-10">
-                      <div className="col-span-1 ml-auto mt-auto">
-                        <Button variant="contained" onClick={handleSubmit}>
-                          Submit
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="flex items-center justify-center w-full h-full min-h-[70vh] ">
-              Selected Student to continue...
-            </div>
-          )}
-        </div>
-      </div>
-      {openConfirmationModal.state && (
-        <DeleteModal
-          open={openConfirmationModal.state}
-          item="Course"
-          handleCancel={() =>
-            setOpenConfirmationModal({ state: false, id: null })
-          }
-          handleDelete={() => deleteData()}
-        />
-      )}
-      {openEyeModal && (
-        <EyeDrawer {...{ open: openEyeModal, setOpen: setOpenEyeModal }} />
-      )}
-    </div>
-  );
-};
-
-export default AddAccounts;
+                              </td> */
+}
