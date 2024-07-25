@@ -34,6 +34,7 @@ import EyeModal from "./EyeDrawer";
 const AddAccounts = ({ color = "light" }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [installments, setInstallments] = useState([{ index: 1 }]);
+  const [studentDetails, setStudentDetails] = useState([{ index: 1 }]);
   const [selectedType, setSelectedType] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [data, setData] = useState({
@@ -405,7 +406,7 @@ const AddAccounts = ({ color = "light" }) => {
               <div className="flex items-center">
                 <Tooltip title="Delete Course" arrow>
                   <IconButton
-                    onClick={() => handleDeleteInstallment(row?.index)}
+                    onClick={() => handleDeleteStudentDetails(row?.index)}
                   >
                     <AiFillDelete className="text-red-600 cursor-pointer" />
                   </IconButton>
@@ -421,17 +422,15 @@ const AddAccounts = ({ color = "light" }) => {
 
   const secondTable = useMaterialReactTable({
     columns: subColumns,
-    data: installments,
+    data: studentDetails,
     enablePagination: false,
     enableRowNumbers: true,
     initialState: {
       density: "compact",
-      enableGlobalFilter: true,
-      showGlobalFilter: true,
     },
     enableColumnPinning: true,
     muiTableContainerProps: {
-      sx: { height: "100px", maxHeight: "800px" },
+      sx: { height: "300px", maxHeight: "800px", borderWidth: "0px" },
     },
     // enableExpandAll: true,
   });
@@ -443,13 +442,22 @@ const AddAccounts = ({ color = "light" }) => {
     enableRowNumbers: true,
     initialState: {
       density: "compact",
+      enableGlobalFilter: true,
+      showGlobalFilter: true,
     },
     muiTableContainerProps: {
-      sx: { height: "400px", maxHeight: "800px" },
+      sx: { minHeight: "100px", maxHeight: "800px" },
     },
     renderDetailPanel: ({ row }) => (
       <>
         <MaterialReactTable table={secondTable} />
+        <Button
+          variant="contained"
+          startIcon={<FaPlusCircle />}
+          onClick={addStudentDetails}
+        >
+          Add More Entries
+        </Button>
       </>
     ),
   });
@@ -499,6 +507,17 @@ const AddAccounts = ({ color = "light" }) => {
       { ...row, [name]: value },
       ...prevState?.slice(index + 1, installments.length),
     ]);
+  };
+
+  const addStudentDetails = () => {
+    setStudentDetails((prev) => [
+      ...prev,
+      { index: prev.length + 1, amount: 0 },
+    ]);
+  };
+
+  const handleDeleteStudentDetails = (index) => {
+    setStudentDetails((prev) => [...prev.filter((item, i) => i !== index)]);
   };
 
   const addInstallments = () => {

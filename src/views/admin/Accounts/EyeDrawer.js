@@ -45,8 +45,7 @@ export default function EyeModal({ open, setOpen, studentDetails }) {
     child: childName,
     coverType: null,
   };
-  const [bonusEntries, setBonusEntries] = useState([{ index: 1, bonus: 0 }]);
-  console.log("🚀  bonusEntries:", bonusEntries);
+  const [bonusEntries, setBonusEntries] = useState([]);
   const [data, setData] = React.useState(initalState);
   useEffect(() => {
     if (open?.id) {
@@ -118,33 +117,43 @@ export default function EyeModal({ open, setOpen, studentDetails }) {
                 />
               </div>
 
-              {bonusEntries?.length > 1 &&
-                bonusEntries?.map((item, index) => (
-                  <div className="relative w-full mb-3 flex gap-3 items-center justify-start">
-                    {index === 0 ? "Bonus:" : <div className="w-[50px]"></div>}
-                    <span>
+              {bonusEntries?.length
+                ? bonusEntries?.map((item, index) => (
+                    <div
+                      className="relative w-full mb-3 flex gap-3 items-center justify-start"
+                      key={index}
+                    >
+                      {index === 0 ? (
+                        "Bonus:"
+                      ) : (
+                        <div className="w-[50px]"></div>
+                      )}
+                      <span>
+                        <InputField
+                          placeholder="Number"
+                          name="bonus"
+                          required
+                          type="text"
+                          value={data?.bonus}
+                          className={"w-[100px]"}
+                        />
+                      </span>
                       <InputField
-                        placeholder="Number"
+                        placeholder="Bonus"
                         name="bonus"
                         required
-                        type="text"
+                        type="number"
                         value={data?.bonus}
-                        className={"w-[100px]"}
+                        className={"w-[190px]"}
                       />
-                    </span>
-                    <InputField
-                      placeholder="Bonus"
-                      name="bonus"
-                      required
-                      type="number"
-                      value={data?.bonus}
-                      className={"w-[190px]"}
-                    />
-                    <DeleteIcon
-                      onClick={() => handleDeleteBonusEntries(index)}
-                    />
-                  </div>
-                ))}
+                      {index > 0 && (
+                        <DeleteIcon
+                          onClick={() => handleDeleteBonusEntries(index)}
+                        />
+                      )}
+                    </div>
+                  ))
+                : ""}
               <div className="relative">
                 <Button
                   variant="contained"
