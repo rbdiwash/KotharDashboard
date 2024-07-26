@@ -255,13 +255,13 @@ const Accounts = ({ color = "light" }) => {
                     className="text-blue-500 text-3xl cursor-pointer"
                     onClick={handleDiscussion}
                   />
-                  <Button
+                  {/* <Button
                     variant="contained"
                     component={Link}
                     to="/admin/account/add"
                   >
                     Add Account Details
-                  </Button>
+                  </Button> */}
                 </div>
               </form>
             </div>

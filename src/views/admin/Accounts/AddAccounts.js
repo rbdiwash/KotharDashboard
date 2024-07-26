@@ -23,19 +23,18 @@ import { FaPlusCircle } from "react-icons/fa";
 import { IoArrowBack } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import EyeDrawer from "./EyeDrawer";
+import EyeDrawer from "./EyeModal";
 import { useMemo } from "react";
 import {
   MaterialReactTable,
   useMaterialReactTable,
 } from "material-react-table";
-import EyeModal from "./EyeDrawer";
+import EyeModal from "./EyeModal";
 
 const AddAccounts = ({ color = "light" }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
-  const [installments, setInstallments] = useState([{ index: 1 }]);
+  const [accountDetails, setAccountDetails] = useState([]);
   const [studentDetails, setStudentDetails] = useState([{ index: 1 }]);
-  const [selectedType, setSelectedType] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [data, setData] = useState({
     studentCost: null,
@@ -46,10 +45,7 @@ const AddAccounts = ({ color = "light" }) => {
     reminderDate: null,
     amountPaidByStudent: null,
   });
-  const [
-    { rplList, studentList, visaList, skillList, insuranceList },
-    { refetchAccountList },
-  ] = useKothar();
+  const [{ refetchAccountList }] = useKothar();
   const [openEyeModal, setOpenEyeModal] = useState({ state: false, id: null });
   const { state } = useLocation();
   const navigate = useNavigate();
@@ -64,6 +60,18 @@ const AddAccounts = ({ color = "light" }) => {
     },
   ];
   const item = 1;
+  const handleAutoCompleteChange = (row, value) => {
+    const rowIndex = accountDetails.find((_, index) => index === row?.index);
+    const moduleName = `module${row.index}`;
+    setAccountDetails((arg) => [
+      ...arg.slice(0, row?.index),
+      { ...rowIndex, [moduleName]: value },
+      arg.slice(row?.index + 1, accountDetails?.length),
+    ]);
+    debugger;
+  };
+
+  console.log(accountDetails);
 
   const columns = useMemo(
     () => [
@@ -71,10 +79,12 @@ const AddAccounts = ({ color = "light" }) => {
         header: "Module",
         size: 150,
         accessorKey: "clientName",
-        Cell: ({ row, renderedCellValue }) => {
+        Cell: ({ row }) => {
+          // const value = row?.original?.module[row?.original?.index];
+          // console.log(value);
           return (
             <div className="flex items-center gap-2 text-left py-2 z-[999]">
-              {selectedType?.value === "Student" && (
+              {row?.original?.module0?.value === "Student" && (
                 <KeyboardArrowDown className="cursor-pointer" />
               )}
               <Visibility
@@ -84,17 +94,18 @@ const AddAccounts = ({ color = "light" }) => {
               <Autocomplete
                 size="small"
                 disablePortal
+                name={`module${row?.index}`}
                 options={options}
                 sx={{ width: 200, zIndex: 999 }}
                 onChange={(e, value) => {
-                  setSelectedType(value);
                   // setSelectedStudent(null);
+                  handleAutoCompleteChange(row, value);
                 }}
                 getOptionLabel={(option) => option.label}
                 renderInput={(params) => (
                   <TextField {...params} placeholder="Select Type" />
                 )}
-                value={selectedType}
+                // value={row?.original?.module[row?.index] || null}
                 isOptionEqualToValue={(options, value) =>
                   options?.value === value?.value
                 }
@@ -433,11 +444,20 @@ const AddAccounts = ({ color = "light" }) => {
       sx: { height: "300px", maxHeight: "800px", borderWidth: "0px" },
     },
     // enableExpandAll: true,
+    renderTopToolbarCustomActions: ({ table }) => (
+      <Button
+        variant="contained"
+        startIcon={<FaPlusCircle />}
+        onClick={addStudentDetails}
+      >
+        Add More Entries
+      </Button>
+    ),
   });
 
   const table = useMaterialReactTable({
     columns,
-    data: installments,
+    data: accountDetails,
     enablePagination: false,
     enableRowNumbers: true,
     initialState: {
@@ -446,18 +466,11 @@ const AddAccounts = ({ color = "light" }) => {
       showGlobalFilter: true,
     },
     muiTableContainerProps: {
-      sx: { minHeight: "100px", maxHeight: "800px" },
+      sx: { minHeight: "400px", maxHeight: "800px" },
     },
     renderDetailPanel: ({ row }) => (
       <>
         <MaterialReactTable table={secondTable} />
-        <Button
-          variant="contained"
-          startIcon={<FaPlusCircle />}
-          onClick={addStudentDetails}
-        >
-          Add More Entries
-        </Button>
       </>
     ),
   });
@@ -465,24 +478,18 @@ const AddAccounts = ({ color = "light" }) => {
   useEffect(() => {
     if (state) {
       setData({ ...state?.item });
-      setSelectedType(
-        options.find(
-          (item) =>
-            item?.value.toLowerCase() === state?.item?.type?.toLowerCase()
-        )
-      );
       setSelectedStudent({
         clientId: state?.item?.clientId,
         name: `${state?.item?.clientName}`,
         address: state?.item?.clientData?.address,
         number: state?.item?.clientData?.number,
       });
-      setInstallments([
-        ...state?.item?.installments.map((item) => ({
-          ...item,
-          date: item?.date?.split("T")[0],
-        })),
-      ]);
+      // setAccountDetails([
+      //   ...state?.item?.accountDetails?.map((item) => ({
+      //     ...item,
+      //     date: item?.date?.split("T")[0],
+      //   })),
+      // ]);
     }
   }, [state]);
 
@@ -501,31 +508,32 @@ const AddAccounts = ({ color = "light" }) => {
 
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
-    const row = installments.find((item, i) => i === index);
-    setInstallments((prevState) => [
+    const row = accountDetails.find((item, i) => i === index);
+    setAccountDetails((prevState) => [
       ...prevState?.slice(0, index),
       { ...row, [name]: value },
-      ...prevState?.slice(index + 1, installments.length),
+      ...prevState?.slice(index + 1, accountDetails.length),
     ]);
   };
 
   const addStudentDetails = () => {
-    setStudentDetails((prev) => [
-      ...prev,
-      { index: prev.length + 1, amount: 0 },
-    ]);
+    setStudentDetails((prev) => [...prev, { index: prev.length + 1 }]);
   };
 
   const handleDeleteStudentDetails = (index) => {
     setStudentDetails((prev) => [...prev.filter((item, i) => i !== index)]);
   };
 
-  const addInstallments = () => {
-    setInstallments((prev) => [...prev, { index: prev.length + 1, amount: 0 }]);
+  const addaccountDetails = () => {
+    const moduleName = module[accountDetails.length - 1];
+    setAccountDetails((prev) => [
+      ...prev,
+      { index: prev.length + 1, amount: 0, [moduleName]: null },
+    ]);
   };
 
   const handleDeleteInstallment = (index) => {
-    setInstallments((prev) => [...prev.filter((item, i) => i !== index)]);
+    setAccountDetails((prev) => [...prev.filter((item, i) => i !== index)]);
   };
 
   const { mutate } = useMutation(postData, {
@@ -553,13 +561,12 @@ const AddAccounts = ({ color = "light" }) => {
     e.preventDefault();
     mutate({
       ...data,
-      installments: installments.map((item) => ({
+      accountDetails: accountDetails?.map((item) => ({
         ...item,
         document: "",
       })),
       clientId: Number(selectedStudent?.clientId),
-      type: selectedType?.value,
-      amount: installments.reduce((a, b) => a + (Number(b.amount) || 0), 0),
+      amount: accountDetails.reduce((a, b) => a + (Number(b.amount) || 0), 0),
     });
   };
 
@@ -570,7 +577,7 @@ const AddAccounts = ({ color = "light" }) => {
   const totalAmountAfterDiscount = () => {
     let totalAmount = 0;
     let priceAfterDiscount = 0;
-    installments?.forEach((item) => {
+    accountDetails?.forEach((item) => {
       totalAmount = totalAmount + Number(item?.amount);
     });
     priceAfterDiscount =
@@ -598,228 +605,130 @@ const AddAccounts = ({ color = "light" }) => {
               </h1>
             </div>
           </div>
-          {selectedStudent?.clientId ? (
-            <div className="block w-full overflow-x-auto mt-2">
-              <div className="px-4">
-                <div className="container mx-auto px-2 py-1">
-                  <div className="flex flex-col space-y-5">
-                    <div className="grid grid-cols-1 md:grid-cols-2 justify-between gap-5">
-                      <div className="lg:px-2">
-                        <div className="md:col-span-2">
-                          <h2 className="text-2xl font-semibold mb-2">
-                            Client: {selectedStudent?.name}
-                          </h2>
-                          <p className="mb-2">
-                            Address: {selectedStudent?.address}
-                          </p>
-                          <p className="mb-2">
-                            Contact: {selectedStudent?.number}
-                          </p>
-                          <p className="mb-2">
-                            Case Officer: {selectedStudent?.caseOfficer}
-                          </p>
-                          <p className="mb-2">
-                            Referral: {selectedStudent?.referral}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex flex-col gap-1">
-                        <h2 className="text-xl font-semibold mb-2 underline">
-                          Payment Details
+          <div className="block w-full overflow-x-auto mt-2">
+            <div className="px-4">
+              <div className="container mx-auto px-2 py-1">
+                <div className="flex flex-col space-y-5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 justify-between gap-5">
+                    <div className="lg:px-2">
+                      <div className="md:col-span-2">
+                        <h2 className="text-2xl font-semibold mb-2">
+                          Client: {selectedStudent?.name}
                         </h2>
-                        <div className="flex gap-2 items-center ">
-                          <span className="w-[250px]">Total amount paid:</span>
-                          <OutlinedInput
-                            name="amountPaidByStudent"
-                            placeholder="Amount in AUD"
-                            type="number"
-                            size="small"
-                            endAdornment={"AUD"}
-                            value={data?.amountPaidByStudent}
-                            onChange={(e) =>
-                              setData({
-                                ...data,
-                                amountPaidByStudent: e.target.value,
-                              })
-                            }
-                            variant="standard"
-                          />
-                        </div>
-                        <div className="flex gap-2 items-center">
-                          <span className="w-[250px]">Agent Cost:</span>
-                          <OutlinedInput
-                            name="agentCost"
-                            className="col-span-2"
-                            placeholder="Amount in AUD"
-                            type="number"
-                            size="small"
-                            endAdornment={"AUD"}
-                            value={data?.agentCost}
-                            onChange={(e) =>
-                              setData({ ...data, agentCost: e.target.value })
-                            }
-                          />
-                          {/* $
-                        {installments
-                          .reduce((a, b) => a + (Number(b.amount) || 0), 0)
-                          .toFixed(2)} */}
-                        </div>
-                        <div className="flex gap-2 items-center ">
-                          <span className="w-[250px]">Due Amount:</span>
-                          <OutlinedInput
-                            name="dueAmount"
-                            placeholder="Amount in AUD"
-                            type="number"
-                            size="small"
-                            endAdornment={"AUD"}
-                            value={data?.dueAmount}
-                            onChange={(e) =>
-                              setData({
-                                ...data,
-                                dueAmount: e.target.value,
-                              })
-                            }
-                          />
-                        </div>
-                        <div className="flex gap-2 items-center ">
-                          <span className="w-[250px]">Total Profit/Loss:</span>
-                          <OutlinedInput
-                            name="profitLoss"
-                            placeholder="Amount in AUD"
-                            type="number"
-                            size="small"
-                            endAdornment={"AUD"}
-                            value={data?.profitLoss}
-                            onChange={(e) =>
-                              setData({
-                                ...data,
-                                profitLoss: e.target.value,
-                              })
-                            }
-                          />
-                        </div>
-
-                        {/* <div className="flex items-center gap-2">
-                          <span className="w-[250px]">Commission Claimed:</span>
-
-                          <Autocomplete
-                            onChange={(e, value) =>
-                              setData({ ...data, isClaimed: value?.value })
-                            }
-                            isOptionEqualToValue={(options, value) =>
-                              options?.value === value?.value
-                            }
-                            value={[
-                              {
-                                label: "Yes",
-                                value: "Yes",
-                              },
-                              { label: "No", value: "No" },
-                            ]?.find((arg) => arg?.value === data?.isClaimed)}
-                            name="claimed"
-                            size="small"
-                            required
-                            options={[
-                              {
-                                label: "Yes",
-                                value: "Yes",
-                              },
-                              { label: "No", value: "No" },
-                            ]}
-                            disablePortal
-                            renderInput={(params) => (
-                              <TextField {...params} label="Yes/No" />
-                            )}
-                            className="min-w-[100px]"
-                            ListboxProps={{
-                              style: {
-                                maxHeight: "180px",
-                              },
-                            }}
-                          />
-                          {data?.isClaimed === "Yes" && (
-                            <OutlinedInput
-                              name="commission"
-                              placeholder="Amount in AUD"
-                              type="number"
-                              size="small"
-                              endAdornment={"AUD"}
-                              value={data?.commission}
-                              onChange={(e) =>
-                                setData({
-                                  ...data,
-                                  commission: e.target.value,
-                                })
-                              }
-                            />
-                          )}
-                          {data?.isClaimed === "No" && (
-                            <OutlinedInput
-                              name="reminderDate"
-                              placeholder="Amount in AUD"
-                              type="date"
-                              size="small"
-                              value={data?.reminderDate}
-                              onChange={(e) =>
-                                setData({
-                                  ...data,
-                                  reminderDate: e.target.value,
-                                })
-                              }
-                            />
-                          )}
-                        </div> */}
-
-                        {/* <div className=" flex items-center gap-2">
-                          <span> Due Date: </span>
-                          <OutlinedInput
-                            type="date"
-                            size="small"
-                            sx={{ width: "50%" }}
-                            name="dueDate"
-                            onChange={(e) =>
-                              setData({ ...data, dueDate: e.target.value })
-                            }
-                            value={data?.dueDate}
-                          />
-                        </div> */}
+                        <p className="mb-2">
+                          Address: {selectedStudent?.address}
+                        </p>
+                        <p className="mb-2">
+                          Contact: {selectedStudent?.number}
+                        </p>
+                        <p className="mb-2">
+                          Case Officer: {selectedStudent?.caseOfficer}
+                        </p>
+                        <p className="mb-2">
+                          Referral: {selectedStudent?.referral}
+                        </p>
                       </div>
                     </div>
+                    <div className="flex flex-col gap-1">
+                      <h2 className="text-xl font-semibold mb-2 underline">
+                        Payment Details
+                      </h2>
+                      <div className="flex gap-2 items-center ">
+                        <span className="w-[250px]">Total amount paid:</span>
+                        <OutlinedInput
+                          name="amountPaidByStudent"
+                          placeholder="Amount in AUD"
+                          type="number"
+                          size="small"
+                          startAdornment={"$"}
+                          value={data?.amountPaidByStudent}
+                          onChange={(e) =>
+                            setData({
+                              ...data,
+                              amountPaidByStudent: e.target.value,
+                            })
+                          }
+                          variant="standard"
+                        />
+                      </div>
+                      <div className="flex gap-2 items-center">
+                        <span className="w-[250px]">Agent Cost:</span>
+                        <OutlinedInput
+                          name="agentCost"
+                          className="col-span-2"
+                          placeholder="Amount in AUD"
+                          type="number"
+                          size="small"
+                          startAdornment={"$"}
+                          value={data?.agentCost}
+                          onChange={(e) =>
+                            setData({ ...data, agentCost: e.target.value })
+                          }
+                        />
+                      </div>
+                      <div className="flex gap-2 items-center ">
+                        <span className="w-[250px]">Due Amount:</span>
+                        <OutlinedInput
+                          name="dueAmount"
+                          placeholder="Amount in AUD"
+                          type="number"
+                          size="small"
+                          startAdornment={"$"}
+                          value={data?.dueAmount}
+                          onChange={(e) =>
+                            setData({
+                              ...data,
+                              dueAmount: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="flex gap-2 items-center ">
+                        <span className="w-[250px]">Total Profit/Loss:</span>
+                        <OutlinedInput
+                          name="profitLoss"
+                          placeholder="Amount in AUD"
+                          type="number"
+                          size="small"
+                          startAdornment={"$"}
+                          value={data?.profitLoss}
+                          onChange={(e) =>
+                            setData({
+                              ...data,
+                              profitLoss: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+                  </div>
 
-                    <div className="overflow-x-auto min-h-[400px]">
-                      <MaterialReactTable table={table} />
+                  <div className="overflow-x-auto min-h-[400px]">
+                    <MaterialReactTable table={table} />
 
-                      <tr>
-                        <td
-                          colSpan={"20"}
-                          className="border text-left px-4 py-2"
+                    <tr>
+                      <td colSpan={"20"} className="border text-left px-4 py-2">
+                        <Button
+                          variant="contained"
+                          startIcon={<FaPlusCircle />}
+                          onClick={addaccountDetails}
                         >
-                          <Button
-                            variant="contained"
-                            startIcon={<FaPlusCircle />}
-                            onClick={addInstallments}
-                          >
-                            Add More Entries
-                          </Button>
-                        </td>
-                      </tr>
-                    </div>
-                    <div className="grid  gap-5 py-10">
-                      <div className="col-span-1 ml-auto mt-auto">
-                        <Button variant="contained" onClick={handleSubmit}>
-                          Submit
+                          Add More Entries
                         </Button>
-                      </div>
+                      </td>
+                    </tr>
+                  </div>
+                  <div className="grid  gap-5 py-10">
+                    <div className="col-span-1 ml-auto mt-auto">
+                      <Button variant="contained" onClick={handleSubmit}>
+                        Submit
+                      </Button>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          ) : (
-            <div className="flex items-center justify-center w-full h-full min-h-[70vh] ">
-              Selected Student to continue...
-            </div>
-          )}
+          </div>
         </div>
       </div>
       {openConfirmationModal.state && (
@@ -857,7 +766,7 @@ export default AddAccounts;
                           </tr>
                         </thead>
                         <tbody>
-                          {installments?.map((item, index) => (
+                          {accountDetails?.map((item, index) => (
                             <tr key={item?.index}>
                               <td className="border text-center px-4 py-2">
                                 {index + 1}
@@ -876,7 +785,6 @@ export default AddAccounts;
                                   options={options}
                                   sx={{ width: 200 }}
                                   onChange={(e, value) => {
-                                    setSelectedType(value);
                                     // setSelectedStudent(null);
                                   }}
                                   getOptionLabel={(option) => option.label}
@@ -979,7 +887,7 @@ export default AddAccounts;
                               <Button
                                 variant="contained"
                                 startIcon={<FaPlusCircle />}
-                                onClick={addInstallments}
+                                onClick={addaccountDetails}
                               >
                                 Add More Entries
                               </Button>
@@ -997,7 +905,6 @@ export default AddAccounts;
                   options={options}
                   sx={{ width: 300 }}
                   onChange={(e, value) => {
-                    setSelectedType(value);
                     setSelectedStudent(null);
                   }}
                   getOptionLabel={(option) => option.label}
@@ -1032,7 +939,7 @@ export default AddAccounts;
   /* <td
                                 className={
                                   `border text-center px-4 py-2 ` +
-                                  (installments[index]?.claimed?.value === "yes"
+                                  (accountDetails[index]?.claimed?.value === "yes"
                                     ? "min-w-[300px]"
                                     : `min-w-[150px]`)
                                 }
@@ -1040,15 +947,15 @@ export default AddAccounts;
                                 <div className="flex items-center gap-4">
                                   <Autocomplete
                                     onChange={(e, value) => {
-                                      const row = installments.find(
+                                      const row = accountDetails.find(
                                         (item, i) => i === index
                                       );
-                                      setInstallments((prevState) => [
+                                      setAccountDetails((prevState) => [
                                         ...prevState?.slice(0, index),
                                         { ...row, claimed: value },
                                         ...prevState?.slice(
                                           index + 1,
-                                          installments.length
+                                          accountDetails.length
                                         ),
                                       ]);
                                     }}
@@ -1133,4 +1040,93 @@ export default AddAccounts;
                                   className="min-w-[250px]"
                                 />
                               </td> */
+}
+
+{
+  /* <div className="flex items-center gap-2">
+                          <span className="w-[250px]">Commission Claimed:</span>
+
+                          <Autocomplete
+                            onChange={(e, value) =>
+                              setData({ ...data, isClaimed: value?.value })
+                            }
+                            isOptionEqualToValue={(options, value) =>
+                              options?.value === value?.value
+                            }
+                            value={[
+                              {
+                                label: "Yes",
+                                value: "Yes",
+                              },
+                              { label: "No", value: "No" },
+                            ]?.find((arg) => arg?.value === data?.isClaimed)}
+                            name="claimed"
+                            size="small"
+                            required
+                            options={[
+                              {
+                                label: "Yes",
+                                value: "Yes",
+                              },
+                              { label: "No", value: "No" },
+                            ]}
+                            disablePortal
+                            renderInput={(params) => (
+                              <TextField {...params} label="Yes/No" />
+                            )}
+                            className="min-w-[100px]"
+                            ListboxProps={{
+                              style: {
+                                maxHeight: "180px",
+                              },
+                            }}
+                          />
+                          {data?.isClaimed === "Yes" && (
+                            <OutlinedInput
+                              name="commission"
+                              placeholder="Amount in AUD"
+                              type="number"
+                              size="small"
+                              startAdornment={"$"}
+                              value={data?.commission}
+                              onChange={(e) =>
+                                setData({
+                                  ...data,
+                                  commission: e.target.value,
+                                })
+                              }
+                            />
+                          )}
+                          {data?.isClaimed === "No" && (
+                            <OutlinedInput
+                              name="reminderDate"
+                              placeholder="Amount in AUD"
+                              type="date"
+                              size="small"
+                              value={data?.reminderDate}
+                              onChange={(e) =>
+                                setData({
+                                  ...data,
+                                  reminderDate: e.target.value,
+                                })
+                              }
+                            />
+                          )}
+                        </div> */
+}
+
+{
+  /* <div className=" flex items-center gap-2">
+                          <span> Due Date: </span>
+                          <OutlinedInput
+                            type="date"
+                            size="small"
+                            sx={{ width: "50%" }}
+                            name="dueDate"
+                            onChange={(e) =>
+                              setData({ ...data, dueDate: e.target.value })
+                            }
+                            value={data?.dueDate}
+                          />
+                        </div> */
 }
