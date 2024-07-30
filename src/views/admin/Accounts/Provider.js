@@ -53,7 +53,7 @@ const AddAccounts = ({ color = "light" }) => {
   const navigate = useNavigate();
   const options = [
     { label: "RPL", value: "RPL" },
-    { label: "Admission", value: "Admission" },
+    { label: "Student", value: "Student" },
     { label: "Visa", value: "Visa" },
     { label: "Insurance", value: "Insurance" },
     {
@@ -71,7 +71,7 @@ const AddAccounts = ({ color = "light" }) => {
         Cell: ({ row }) => {
           return (
             <div className="flex items-center gap-2 text-left py-2 z-[999]">
-              {row?.original?.module?.value === "Admission" && (
+              {row?.original?.module?.value === "Student" && (
                 <Visibility
                   className="cursor-pointer"
                   onClick={handleOpenEyeModal}
@@ -247,63 +247,18 @@ const AddAccounts = ({ color = "light" }) => {
   const subColumns = useMemo(
     () => [
       {
-        accessorKey: "date",
-        header: "Date",
-        size: 150,
-        Cell: ({ row, renderedCellValue }) => {
-          return (
-            <InputField
-              type="date"
-              name="date"
-              placeholder="Date"
-              size="small"
-              onChange={(e) => handleInputChange(e, row?.index)}
-              value={item?.date}
-              className="min-w-[100px]"
-            />
-          );
-        },
-      },
-      {
-        accessorKey: "term",
-        header: "Term",
-        size: 50,
-        Cell: ({ row, renderedCellValue }) => {
-          return row?.index + 1;
-        },
-      },
-      {
-        accessorKey: "perSemCost", //normal accessorKey
-        header: "Per Sem Fee",
+        accessorKey: "invoiceNo", //normal accessorKey
+        header: "Invoice No",
         size: 50,
         Cell: ({ row, renderedCellValue }) => {
           return (
             <div>
               <InputField
                 type="number"
-                name="perSemFee"
-                placeholder="Per Sem Fee"
+                name="invoiceNo"
+                placeholder="Invoice Number"
                 onChange={(e) => handleInputChange(e, row?.name)}
-                value={item?.perSemFee}
-                className="min-w-[100px]"
-              />
-            </div>
-          );
-        },
-      },
-      {
-        accessorKey: "perSemCost", //normal accessorKey
-        header: "Per Sem Cost",
-        size: 50,
-        Cell: ({ row, renderedCellValue }) => {
-          return (
-            <div>
-              <InputField
-                type="number"
-                name="perSemCost"
-                placeholder="Per Sem Cost"
-                onChange={(e) => handleInputChange(e, row?.name)}
-                value={item?.perSemCost}
+                value={item?.invoiceNumber}
                 className="min-w-[100px]"
               />
             </div>
@@ -312,89 +267,126 @@ const AddAccounts = ({ color = "light" }) => {
       },
 
       {
-        accessorKey: "materialFee" || 0,
-        header: "Material Fee",
+        accessorKey: "noOfStudents" || 0,
+        header: "No of Students",
         size: 50,
         Cell: ({ row }) => {
           return (
             <InputField
               type="number"
-              name="materialFee"
-              placeholder="Material Fee"
-              onChange={(e) => handleInputChange(e, row?.materialFee)}
-              value={item?.materialFee}
+              name="noOfStudents"
+              placeholder="Number of Students"
+              onChange={(e) => handleInputChange(e, row?.noOfStudents)}
+              value={item?.noOfStudents}
               className="min-w-[100px]"
             />
           );
         },
       },
+
       {
-        accessorKey: "paid", //normal accessorKey
-        header: "Paid",
+        accessorKey: "commission", //normal accessorKey
+        header: "Commission",
         size: 150,
         Cell: ({ row }) => {
           return (
             <InputField
               type="number"
-              name="paidAmount"
-              placeholder="Paid Amount"
+              name="commission"
+              placeholder="Commission"
               size="small"
               onChange={(e) => handleInputChange(e, row?.index)}
-              value={item?.paidAmount}
+              value={item?.commission}
               className="min-w-[100px]"
             />
           );
         },
       },
       {
-        accessorKey: "due", //normal accessorKey
-        header: "Due",
+        accessorKey: "bonus", //normal accessorKey
+        header: "Bonus",
         size: 50,
         Cell: ({ row }) => {
           return (
             <InputField
               type="number"
-              name="dueAmount"
-              placeholder="Due Amount"
+              name="Bonus"
+              placeholder="Bonus"
               size="small"
               onChange={(e) => handleInputChange(e, row?.index)}
-              value={item?.dueAmount}
+              value={item?.Bonus}
               className="min-w-[100px]"
             />
           );
         },
       },
       {
-        accessorKey: "referral",
-        header: "Referral",
-        size: 100,
+        accessorKey: "totalAmount",
+        header: "Total Amount",
+        size: 50,
         Cell: ({ row, renderedCellValue }) => {
           return (
             <InputField
               type="text"
-              name="referral"
-              placeholder="Referral"
+              name="totalAmount"
+              placeholder="Total Amount"
               size="small"
               onChange={(e) => handleInputChange(e, row?.index)}
-              value={item?.referral}
+              value={item?.totalAmount}
               className="min-w-[100px]"
             />
           );
         },
       },
       {
-        accessorKey: "profitLoss",
-        header: "Profit Loss",
+        accessorKey: "claimedDate",
+        header: "Claimed Date",
         size: 150,
         Cell: ({ row, renderedCellValue }) => {
           return (
             <InputField
-              type="number"
-              name="profitLoss"
-              placeholder="Profit/Loss"
+              type="date"
+              name="claimedDate"
+              placeholder="Claimed Date"
               size="small"
               onChange={(e) => handleInputChange(e, row?.index)}
-              value={item?.profitLoss}
+              value={item?.claimedDate}
+              className="min-w-[100px]"
+            />
+          );
+        },
+      },
+      {
+        accessorKey: "receivedAmount",
+        header: "Received Amount",
+        size: 50,
+        Cell: ({ row, renderedCellValue }) => {
+          return (
+            <InputField
+              type="text"
+              name="receivedAmount"
+              placeholder="Received Amount"
+              size="small"
+              onChange={(e) => handleInputChange(e, row?.index)}
+              value={item?.receivedAmount}
+              className="min-w-[100px]"
+            />
+          );
+        },
+      },
+      {
+        accessorKey: "receivedDate",
+        header: "Received Date",
+        size: 150,
+        Cell: ({ row, renderedCellValue }) => {
+          return (
+            <InputField
+              type="date"
+              name="receivedDate"
+              placeholder="Received Date"
+              size="small"
+              onChange={(e) => handleInputChange(e, row?.index)}
+              value={item?.claimedDate}
               className="min-w-[100px]"
             />
           );
@@ -429,6 +421,7 @@ const AddAccounts = ({ color = "light" }) => {
     columns: subColumns,
     data: studentDetails,
     enablePagination: false,
+    enableRowNumbers: true,
     initialState: {
       density: "compact",
     },
@@ -463,7 +456,7 @@ const AddAccounts = ({ color = "light" }) => {
     },
     renderDetailPanel: ({ row }) => (
       <>
-        {row?.original?.module?.value === "Admission" && (
+        {row?.original?.module?.value === "Student" && (
           <MaterialReactTable table={secondTable} />
         )}
       </>
@@ -502,8 +495,10 @@ const AddAccounts = ({ color = "light" }) => {
   };
 
   const handleInputChange = (e, index) => {
+    console.log("🚀  index:", index);
     const { name, value } = e.target;
     const row = accountDetails.find((item, i) => i === index);
+    console.log("🚀  row:", row);
     setAccountDetails((prevState) => [
       ...prevState?.slice(0, index),
       { ...row, [name]: value },
@@ -520,15 +515,21 @@ const AddAccounts = ({ color = "light" }) => {
   };
 
   const handleAutoCompleteChange = (row, value) => {
+    console.log(accountDetails, row);
+
+    debugger;
     const rowIndex = accountDetails.find(
       (_, index) => Number(index) === Number(row?.index)
     );
+    console.log("🚀  rowIndex:", rowIndex);
     setAccountDetails((arg) => [
       ...arg.slice(0, row?.index),
       { ...rowIndex, module: value },
       arg.slice(row?.index + 1, accountDetails?.length - 1),
     ]);
   };
+
+  console.log(accountDetails);
 
   const addaccountDetails = () => {
     setAccountDetails((prev) => [
@@ -579,163 +580,12 @@ const AddAccounts = ({ color = "light" }) => {
     setOpenEyeModal({ state: !openEyeModal?.state, id: 1 });
   };
 
-  const totalAmountAfterDiscount = () => {
-    let totalAmount = 0;
-    let priceAfterDiscount = 0;
-    accountDetails?.forEach((item) => {
-      totalAmount = totalAmount + Number(item?.amount);
-    });
-    priceAfterDiscount =
-      totalAmount - (Number(data?.discount) / 100) * totalAmount;
-    return Number(priceAfterDiscount.toFixed(3)) || 0;
-  };
-
   return (
-    <div className="flex flex-wrap mt-4 dashBody">
-      <div className="w-full mb-12 px-4">
-        <div
-          className={
-            "relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded min-h-[70vh]  " +
-            (color === "light" ? "bg-white" : "bg-sky-900 text-white")
-          }
-        >
-          <div className="rounded-t mb-0 px-4 py-3 border-b">
-            <div className="flex items-center justify-between">
-              <IoArrowBack
-                className="text-xl cursor-pointer"
-                onClick={() => navigate(-1)}
-              />
-              <h1 className="text-2xl uppercase font-bold mb-2 flex-1 text-center">
-                Account Details
-              </h1>
-            </div>
-          </div>
-          <div className="block w-full overflow-x-auto mt-2">
-            <div className="px-4">
-              <div className="container mx-auto px-2 py-1">
-                <div className="flex flex-col space-y-5">
-                  <div className="grid grid-cols-1 md:grid-cols-2 justify-between gap-5">
-                    <div className="lg:px-2">
-                      <div className="md:col-span-2">
-                        <h2 className="text-2xl font-semibold mb-2">
-                          Client: {selectedStudent?.name}
-                        </h2>
-                        <p className="mb-2">
-                          Address: {selectedStudent?.address}
-                        </p>
-                        <p className="mb-2">
-                          Contact: {selectedStudent?.number}
-                        </p>
-                        <p className="mb-2">
-                          Case Officer: {selectedStudent?.caseOfficer}
-                        </p>
-                        <p className="mb-2">
-                          Referral: {selectedStudent?.referral}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <h2 className="text-xl font-semibold mb-2 underline">
-                        Payment Details
-                      </h2>
-                      <div className="flex gap-2 items-center ">
-                        <span className="w-[250px]">Total amount paid:</span>
-                        <OutlinedInput
-                          name="amountPaidByStudent"
-                          placeholder="Amount in AUD"
-                          type="number"
-                          size="small"
-                          startAdornment={"$"}
-                          value={data?.amountPaidByStudent}
-                          onChange={(e) =>
-                            setData({
-                              ...data,
-                              amountPaidByStudent: e.target.value,
-                            })
-                          }
-                          variant="standard"
-                        />
-                      </div>
-                      <div className="flex gap-2 items-center">
-                        <span className="w-[250px]">Agent Cost:</span>
-                        <OutlinedInput
-                          name="agentCost"
-                          className="col-span-2"
-                          placeholder="Amount in AUD"
-                          type="number"
-                          size="small"
-                          startAdornment={"$"}
-                          value={data?.agentCost}
-                          onChange={(e) =>
-                            setData({ ...data, agentCost: e.target.value })
-                          }
-                        />
-                      </div>
-                      <div className="flex gap-2 items-center ">
-                        <span className="w-[250px]">Due Amount:</span>
-                        <OutlinedInput
-                          name="dueAmount"
-                          placeholder="Amount in AUD"
-                          type="number"
-                          size="small"
-                          startAdornment={"$"}
-                          value={data?.dueAmount}
-                          onChange={(e) =>
-                            setData({
-                              ...data,
-                              dueAmount: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="flex gap-2 items-center ">
-                        <span className="w-[250px]">Total Profit/Loss:</span>
-                        <OutlinedInput
-                          name="profitLoss"
-                          placeholder="Amount in AUD"
-                          type="number"
-                          size="small"
-                          startAdornment={"$"}
-                          value={data?.profitLoss}
-                          onChange={(e) =>
-                            setData({
-                              ...data,
-                              profitLoss: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="overflow-x-auto min-h-[400px]">
-                    <MaterialReactTable table={table} />
-
-                    <tr>
-                      <td colSpan={"20"} className="border text-left px-4 py-2">
-                        <Button
-                          variant="contained"
-                          startIcon={<FaPlusCircle />}
-                          onClick={addaccountDetails}
-                        >
-                          Add More Entries
-                        </Button>
-                      </td>
-                    </tr>
-                  </div>
-                  <div className="grid  gap-5 py-10">
-                    <div className="col-span-1 ml-auto mt-auto">
-                      <Button variant="contained" onClick={handleSubmit}>
-                        Submit
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+    <>
+      <div className="overflow-x-auto min-h-[400px]">
+        <MaterialReactTable table={table} />
       </div>
+
       {openConfirmationModal.state && (
         <DeleteModal
           open={openConfirmationModal.state}
@@ -749,7 +599,7 @@ const AddAccounts = ({ color = "light" }) => {
       {openEyeModal && (
         <EyeModal {...{ open: openEyeModal, setOpen: setOpenEyeModal }} />
       )}
-    </div>
+    </>
   );
 };
 
@@ -777,7 +627,7 @@ export default AddAccounts;
                                 {index + 1}
                               </td>
                               <td className="border flex items-center gap-2 text-left px-4 py-2">
-                                {selectedType?.value === "Admission" && (
+                                {selectedType?.value === "Student" && (
                                   <KeyboardArrowDown className="cursor-pointer" />
                                 )}
                                 <Visibility

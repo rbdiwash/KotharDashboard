@@ -29,6 +29,7 @@ import AddClient from "views/admin/Clients/AddClient";
 import ArchivedClients from "views/admin/Clients/ArchivedClient";
 import ProfitLoss from "views/admin/ProfitLoss";
 import NotFound from "views/NotFound";
+import AddProvider from "views/admin/Accounts/AddProvider";
 
 // render - dashboard
 const Admin = Loadable(lazy(() => import("layouts/Admin")));
@@ -70,6 +71,7 @@ const AdminRoutes = {
       element: <ProfitLoss />,
     },
     { path: "account/add", element: <AddAccounts /> },
+    { path: "account/provider/add", element: <AddProvider /> },
     {
       path: "university",
       element: <University />,

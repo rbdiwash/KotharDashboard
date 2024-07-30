@@ -1,9 +1,13 @@
 import {
   Autocomplete,
+  Box,
   Button,
   IconButton,
+  Tab,
+  Tabs,
   TextField,
   Tooltip,
+  Typography,
 } from "@mui/material";
 
 import axios from "axios";
@@ -24,13 +28,11 @@ import { toast } from "react-toastify";
 const Accounts = ({ color = "light" }) => {
   const navigate = useNavigate();
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
-  const [selectedType, setSelectedType] = useState(null);
-  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [accountTab, setAccountTab] = useState(null);
 
-  const [
-    { insuranceList, rplList, studentList, visaList, skillList, accountsList },
-    { refetchAccountList },
-  ] = useKothar();
+  const [{ accountsList }, { refetchAccountList }] = useKothar();
+  const [value, setValue] = useState(0);
+  console.log("🚀  value:", value);
 
   const deleteData = () => {
     axios
@@ -46,38 +48,12 @@ const Accounts = ({ color = "light" }) => {
       });
   };
 
-  const options = [
-    { label: "RPL", value: "rpl" },
-    { label: "Student", value: "student" },
-    { label: "Visa", value: "visa" },
-    { label: "Insurance", value: "insurance" },
-    {
-      label: "Skill Assessment",
-      value: "skill-assessment",
-    },
-  ];
-
-  const getClientOption = () => {
-    let secondOption = [];
-
-    switch (selectedType?.value) {
-      case "rpl":
-        secondOption = rplList;
-        break;
-      case "student":
-        secondOption = studentList;
-        break;
-      case "insurance":
-        secondOption = insuranceList;
-        break;
-      case "visa":
-        secondOption = visaList;
-        break;
-      case "skill-assessment":
-        secondOption = skillList;
-        break;
-    }
-    return secondOption ?? [];
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+    const status = tabOptions.find((item, i) => {
+      return i === newValue;
+    });
+    setAccountTab(status);
   };
 
   const columns = useMemo(
@@ -157,7 +133,7 @@ const Accounts = ({ color = "light" }) => {
                   <AiFillEdit className="text-sky-600 cursor-pointer" />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="Delete Course" arrow>
+              {/* <Tooltip title="Delete Course" arrow>
                 <IconButton
                   onClick={() =>
                     setOpenConfirmationModal({
@@ -168,7 +144,7 @@ const Accounts = ({ color = "light" }) => {
                 >
                   <AiFillDelete className="text-red-600 cursor-pointer" />
                 </IconButton>
-              </Tooltip>
+              </Tooltip> */}
             </div>
           );
         },
@@ -177,10 +153,85 @@ const Accounts = ({ color = "light" }) => {
     []
   );
 
-  const table = useMaterialReactTable({
-    columns,
+  const providerColumns = useMemo(
+    () => [
+      {
+        header: "Provider Name",
+        size: 150,
+        accessorKey: "providerName",
+        Cell: ({ row, renderedCellValue }) => {
+          return <div>{row.original.providerName || "N/A"}</div>;
+        },
+      },
+      {
+        accessorKey: "agentName", //normal accessorKey
+        header: "Agent Name",
+        size: 50,
+        Cell: ({ row, renderedCellValue }) => {
+          return <div>{row.original.studentCost || 0}</div>;
+        },
+      },
+
+      {
+        accessorKey: "noOfStudents" || 0,
+        header: "No of Students",
+        size: 50,
+      },
+
+      {
+        accessorKey: "totalCommission", //normal accessorKey
+        header: "Total Commission",
+        size: 150,
+      },
+      {
+        accessorKey: "totalBonus", //normal accessorKey
+        header: "Total Bonus",
+        size: 50,
+      },
+      {
+        accessorKey: "nextReminder",
+        header: "Next Reminder",
+        size: 50,
+        Cell: ({ row, renderedCellValue }) => {
+          return (
+            <div>
+              {row.original.commission ||
+                new Date(row?.original?.reminderDate)?.toLocaleDateString()}
+            </div>
+          );
+        },
+      },
+
+      {
+        accessorKey: "Action",
+        header: "Action",
+        size: 150,
+        Cell: ({ row, renderedCellValue }) => {
+          const item = row.original;
+          return (
+            <div className="flex items-center">
+              <Tooltip title="Edit Course" arrow>
+                <IconButton
+                  onClick={() =>
+                    navigate("/admin/account/provider/add", {
+                      state: { item },
+                    })
+                  }
+                >
+                  <AiFillEdit className="text-sky-600 cursor-pointer" />
+                </IconButton>
+              </Tooltip>
+            </div>
+          );
+        },
+      },
+    ],
+    []
+  );
+  const providerTable = useMaterialReactTable({
+    columns: providerColumns,
     data: accountsList,
-    enablePagination: false,
+    enablePagination: true,
     enableRowNumbers: true,
     initialState: {
       density: "compact",
@@ -189,10 +240,32 @@ const Accounts = ({ color = "light" }) => {
     },
     enableColumnPinning: true,
   });
+  const table = useMaterialReactTable({
+    columns,
+    data: accountsList,
+    enablePagination: true,
+    enableRowNumbers: true,
+    initialState: {
+      density: "compact",
+      enableGlobalFilter: true,
+      showGlobalFilter: true,
+    },
+    enableColumnPinning: true,
+  });
+
+  const mainTable = () => {
+    console.log(value === 0 ? "table" : "providerTable");
+    return value === 0 ? table : providerTable;
+  };
+
   const [openDiscussion, setOpenDiscussion] = useState(false);
   const handleDiscussion = () => {
     setOpenDiscussion(!openDiscussion);
   };
+  const tabOptions = [
+    { label: "Client", value: "client" },
+    { label: "Provider", value: "Provider" },
+  ];
   return (
     <div className="flex flex-wrap mt-4 dashBody">
       <div className="w-full mb-12 px-4">
@@ -255,20 +328,33 @@ const Accounts = ({ color = "light" }) => {
                     className="text-blue-500 text-3xl cursor-pointer"
                     onClick={handleDiscussion}
                   />
-                  {/* <Button
-                    variant="contained"
-                    component={Link}
-                    to="/admin/account/add"
-                  >
-                    Add Account Details
-                  </Button> */}
                 </div>
               </form>
             </div>
           </div>
-          <div className="block w-full overflow-x-auto">
-            <MaterialReactTable table={table} />
-          </div>
+
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            variant="scrollable"
+            scrollButtons
+            allowScrollButtonsMobile
+            role="navigation"
+            sx={{ background: "#eee" }}
+          >
+            {tabOptions?.map((arg) => (
+              <Tab
+                label={arg?.label}
+                key={arg?.label}
+                sx={{ fontWeight: "bold", fontSize: 16 }}
+              />
+            ))}
+          </Tabs>
+          <TabPanel value={value} index={value}>
+            <div className="block w-full overflow-x-auto">
+              <MaterialReactTable table={value === 0 ? table : providerTable} />
+            </div>
+          </TabPanel>
         </div>
       </div>
       {openConfirmationModal.state && (
@@ -289,3 +375,22 @@ const Accounts = ({ color = "light" }) => {
 };
 
 export default Accounts;
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`vertical-tabpanel-${index}`}
+      aria-labelledby={`vertical-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 0 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
