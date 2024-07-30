@@ -174,12 +174,17 @@ const Visa = ({ color = "light" }) => {
             scrollButtons
             allowScrollButtonsMobile
             role="navigation"
+            sx={{ background: "#eee" }}
           >
             {visaTabs?.map((arg) => (
               <Tab
                 label={arg?.label}
                 key={arg?.label}
-                sx={{ fontWeight: "bold", fontSize: 16 }}
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: 16,
+                  borderRight: "3px solid white",
+                }}
               />
             ))}
           </Tabs>

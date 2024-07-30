@@ -179,12 +179,17 @@ const RPLCertificate = ({ color = "light" }) => {
             variant="scrollable"
             scrollButtons
             allowScrollButtonsMobile
+            sx={{ background: "#eee" }}
           >
             {tabs?.map((arg) => (
               <Tab
                 label={arg}
                 key={arg}
-                sx={{ fontWeight: "bold", fontSize: 16 }}
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: 16,
+                  borderRight: "3px solid white",
+                }}
               />
             ))}
           </Tabs>

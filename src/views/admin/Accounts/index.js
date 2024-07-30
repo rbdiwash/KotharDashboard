@@ -32,7 +32,6 @@ const Accounts = ({ color = "light" }) => {
 
   const [{ accountsList }, { refetchAccountList }] = useKothar();
   const [value, setValue] = useState(0);
-  console.log("🚀  value:", value);
 
   const deleteData = () => {
     axios
@@ -253,11 +252,6 @@ const Accounts = ({ color = "light" }) => {
     enableColumnPinning: true,
   });
 
-  const mainTable = () => {
-    console.log(value === 0 ? "table" : "providerTable");
-    return value === 0 ? table : providerTable;
-  };
-
   const [openDiscussion, setOpenDiscussion] = useState(false);
   const handleDiscussion = () => {
     setOpenDiscussion(!openDiscussion);
@@ -346,7 +340,11 @@ const Accounts = ({ color = "light" }) => {
               <Tab
                 label={arg?.label}
                 key={arg?.label}
-                sx={{ fontWeight: "bold", fontSize: 16 }}
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: 16,
+                  borderRight: "3px solid white",
+                }}
               />
             ))}
           </Tabs>

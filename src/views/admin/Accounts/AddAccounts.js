@@ -459,7 +459,7 @@ const AddAccounts = ({ color = "light" }) => {
       showGlobalFilter: true,
     },
     muiTableContainerProps: {
-      sx: { minHeight: "400px", maxHeight: "800px" },
+      sx: { minHeight: "400px", maxHeight: "800px", boxShadow: "none" },
     },
     renderDetailPanel: ({ row }) => (
       <>
@@ -519,14 +519,16 @@ const AddAccounts = ({ color = "light" }) => {
     setStudentDetails((prev) => [...prev.filter((item, i) => i !== index)]);
   };
 
+  console.log(accountDetails);
   const handleAutoCompleteChange = (row, value) => {
     const rowIndex = accountDetails.find(
       (_, index) => Number(index) === Number(row?.index)
     );
+    console.log("🚀  rowIndex:", rowIndex);
     setAccountDetails((arg) => [
       ...arg.slice(0, row?.index),
       { ...rowIndex, module: value },
-      arg.slice(row?.index + 1, accountDetails?.length - 1),
+      ...arg.slice(row?.index + 1, accountDetails?.length),
     ]);
   };
 
@@ -711,20 +713,17 @@ const AddAccounts = ({ color = "light" }) => {
                   <div className="overflow-x-auto min-h-[400px]">
                     <MaterialReactTable table={table} />
 
-                    <tr>
-                      <td colSpan={"20"} className="border text-left px-4 py-2">
-                        <Button
-                          variant="contained"
-                          startIcon={<FaPlusCircle />}
-                          onClick={addaccountDetails}
-                        >
-                          Add More Entries
-                        </Button>
-                      </td>
-                    </tr>
-                  </div>
-                  <div className="grid  gap-5 py-10">
-                    <div className="col-span-1 ml-auto mt-auto">
+                    <div
+                      colSpan={"20"}
+                      className="w-full flex justify-between border text-left px-4 py-2"
+                    >
+                      <Button
+                        variant="contained"
+                        startIcon={<FaPlusCircle />}
+                        onClick={addaccountDetails}
+                      >
+                        Add More Entries
+                      </Button>{" "}
                       <Button variant="contained" onClick={handleSubmit}>
                         Submit
                       </Button>
