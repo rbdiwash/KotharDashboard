@@ -30,7 +30,7 @@ const Accounts = ({ color = "light" }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [accountTab, setAccountTab] = useState(null);
 
-  const [{ accountsList }, { refetchAccountList }] = useKothar();
+  const [{ accountsList, uniData }, { refetchAccountList }] = useKothar();
   const [value, setValue] = useState(0);
 
   const deleteData = () => {
@@ -157,20 +157,11 @@ const Accounts = ({ color = "light" }) => {
       {
         header: "Provider Name",
         size: 150,
-        accessorKey: "providerName",
+        accessorKey: "name",
         Cell: ({ row, renderedCellValue }) => {
-          return <div>{row.original.providerName || "N/A"}</div>;
+          return <div>{row?.original?.name || "N/A"}</div>;
         },
       },
-      {
-        accessorKey: "agentName", //normal accessorKey
-        header: "Agent Name",
-        size: 50,
-        Cell: ({ row, renderedCellValue }) => {
-          return <div>{row.original.studentCost || 0}</div>;
-        },
-      },
-
       {
         accessorKey: "noOfStudents" || 0,
         header: "No of Students",
@@ -188,14 +179,21 @@ const Accounts = ({ color = "light" }) => {
         size: 50,
       },
       {
+        accessorKey: "totalGST", //normal accessorKey
+        header: "Total GST",
+        size: 50,
+      },
+
+      {
         accessorKey: "nextReminder",
         header: "Next Reminder",
         size: 50,
         Cell: ({ row, renderedCellValue }) => {
           return (
             <div>
-              {row.original.commission ||
-                new Date(row?.original?.reminderDate)?.toLocaleDateString()}
+              {new Date(
+                row?.original?.reminderDate || null
+              )?.toLocaleDateString()}
             </div>
           );
         },
@@ -229,7 +227,7 @@ const Accounts = ({ color = "light" }) => {
   );
   const providerTable = useMaterialReactTable({
     columns: providerColumns,
-    data: accountsList,
+    data: uniData,
     enablePagination: true,
     enableRowNumbers: true,
     initialState: {
@@ -237,6 +235,7 @@ const Accounts = ({ color = "light" }) => {
       enableGlobalFilter: true,
       showGlobalFilter: true,
     },
+
     enableColumnPinning: true,
   });
   const table = useMaterialReactTable({
@@ -249,6 +248,7 @@ const Accounts = ({ color = "light" }) => {
       enableGlobalFilter: true,
       showGlobalFilter: true,
     },
+
     enableColumnPinning: true,
   });
 
@@ -343,7 +343,7 @@ const Accounts = ({ color = "light" }) => {
                 sx={{
                   fontWeight: "bold",
                   fontSize: 16,
-                  borderRight: "3px solid white",
+                  // borderRight: "3px solid white",
                 }}
               />
             ))}

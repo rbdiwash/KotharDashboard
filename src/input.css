@@ -111,3 +111,6 @@ div.show-image .download {
 .MuiBox-root.css-10gei56 {
   display: none;
 }
+.autocomplete-dropdown-container {
+  z-index: 1070;
+}

@@ -183,7 +183,7 @@ const Visa = ({ color = "light" }) => {
                 sx={{
                   fontWeight: "bold",
                   fontSize: 16,
-                  borderRight: "3px solid white",
+                  // borderRight: "3px solid white",
                 }}
               />
             ))}

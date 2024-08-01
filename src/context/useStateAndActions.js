@@ -124,21 +124,18 @@ const useStateAndActions = () => {
     const res = await axios.get(`clients/?active=N`);
     return res?.data?.data;
   };
-  const { data: archivedClientList, refetch: refetchArchivedClient } = useQuery(
-    ["archivedClient"],
-    getArchivedClient,
-    {
+  const { data: archivedClientList = [], refetch: refetchArchivedClient } =
+    useQuery(["archivedClient"], getArchivedClient, {
       refetchOnWindowFocus: false,
       enabled: false,
-    }
-  );
+    });
   const getUniData = async () => {
     const res = await axios.get(`university`);
 
     return res?.data?.data;
   };
 
-  const { data: uniData, refetch: refetchUniData } = useQuery(
+  const { data: uniData = [], refetch: refetchUniData } = useQuery(
     ["university"],
     getUniData,
     {

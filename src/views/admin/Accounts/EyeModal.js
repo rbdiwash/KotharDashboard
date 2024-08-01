@@ -5,7 +5,7 @@ import InputField from "components/Input/InputField";
 import { useState } from "react";
 
 export default function PermissionDrawer({ open, setOpen }) {
-  const toggleDrawer = (event) => {
+  const toggleDrawer = () => {
     setOpen({ state: !open?.state, id: null });
   };
   const modules = [
@@ -64,24 +64,13 @@ export default function PermissionDrawer({ open, setOpen }) {
     },
   ];
 
-  const [values, setValues] = useState(modules.map((item) => item.value));
+  const [values, setValues] = useState();
 
-  const onChange = (event, value) => {
-    if (event.target.checked) {
-      setValues([value, ...values]);
-    } else {
-      setValues((item) => item?.filter((arg) => arg !== value));
-    }
-  };
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
-    const row = values.find((item, i) => i === index);
-    setValues((prevState) => [
-      ...prevState?.slice(0, index),
-      { ...row, [name]: value },
-      ...prevState?.slice(index + 1, values.length),
-    ]);
+    setValues({ ...values, [name]: value });
   };
+
   const handleSubmit = () => {
     console.log(values);
   };
@@ -94,14 +83,14 @@ export default function PermissionDrawer({ open, setOpen }) {
       <div className="flex justify-between p-4 border-b">
         <h1 className="text-xl font-semibold">Admission More Details</h1>
         <Close onClick={toggleDrawer} className="cursor-pointer" />
-      </div>{" "}
+      </div>
       <div className="mt-4 p-4">
         {modules.map((module) => (
           <div className="flex justify-between items-center mb-2">
             <span className="w-48"> {module.label} </span>
             <InputField
               type={module?.type}
-              name={module?.label}
+              name={module?.value}
               placeholder={module?.label}
               size="small"
               onChange={(e) => handleInputChange(e)}
@@ -117,7 +106,6 @@ export default function PermissionDrawer({ open, setOpen }) {
             Cancel
           </Button>
           <Button variant="contained" onClick={handleSubmit}>
-            {" "}
             Submit
           </Button>
         </div>

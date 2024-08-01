@@ -1,10 +1,17 @@
-import { KeyboardArrowDown, Visibility } from "@mui/icons-material";
+import { AddCircle, KeyboardArrowDown, Visibility } from "@mui/icons-material";
 import {
   Autocomplete,
   Box,
   Button,
+  FormControl,
+  FormControlLabel,
   IconButton,
+  InputLabel,
+  MenuItem,
   OutlinedInput,
+  Radio,
+  RadioGroup,
+  Select,
   TextField,
   Tooltip,
   Typography,
@@ -31,6 +38,7 @@ import {
 } from "material-react-table";
 import EyeModal from "./EyeModal";
 import ProviderDialog from "./ProviderDialog";
+import { monthsForFilter } from "const/constants";
 
 const AddProvider = ({ color = "light" }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
@@ -55,61 +63,77 @@ const AddProvider = ({ color = "light" }) => {
   });
   const { state } = useLocation();
   const navigate = useNavigate();
-  const options = [
-    { label: "RPL", value: "RPL" },
-    { label: "Admission", value: "Admission" },
-    { label: "Visa", value: "Visa" },
-    { label: "Insurance", value: "Insurance" },
-    {
-      label: "Skill Assessment",
-      value: "Skill Assessment",
-    },
-  ];
+
+  const yearsForFilter = Array.from(
+    { length: 10 },
+    (_, i) => new Date().getFullYear() + 3 - i
+  );
+  const handleYearChange = (selectedYear) => {};
+
+  const handleMonthChange = (selectedMonth) => {};
+
   const item = 1;
 
   const columns = useMemo(
     () => [
       {
-        header: "Provider Name",
-        size: 150,
+        header: "Provider",
+        size: 100,
         Cell: ({ row }) => {
           return (
-            <div className="flex items-center gap-2 text-left py-2 z-[999]">
-              <Visibility
-                className="cursor-pointer"
-                onClick={handleOpenEyeModal}
-              />
-
-              <Autocomplete
-                size="small"
-                disablePortal
-                options={uniData}
-                sx={{ width: 200, zIndex: 999 }}
-                onChange={(e, value) => {
-                  // setSelectedStudent(null);
-                  handleAutoCompleteChange(row, value);
-                }}
-                getOptionLabel={(option) => option.name}
-                renderInput={(params) => (
-                  <TextField {...params} placeholder="Select Provider" />
-                )}
-                value={row?.original?.provider || null}
-                isOptionEqualToValue={(options, value) =>
-                  options?.value === value?.value
-                }
-                slotProps={{
-                  popper: {
-                    sx: {
-                      zIndex: 1000,
-                    },
-                  },
-                }}
-                ListboxProps={{ style: { zIndex: 999 } }}
-              />
+            <div className="flex gap-2 font-semibold">
+              <Tooltip title="Add Commission Information" arrow>
+                {/* x  */}
+                <AddCircle
+                  className="cursor-pointer text-orange-400"
+                  onClick={handleOpenEyeModal}
+                />
+              </Tooltip>
+              {row?.original?.provider || "N/A"}
             </div>
           );
         },
       },
+      // {
+      //   header: "Provider Name",
+      //   size: 150,
+      //   Cell: ({ row }) => {
+      //     return (
+      //       <div className="flex items-center gap-2 text-left py-2 z-[999]">
+      //         <Visibility
+      //           className="cursor-pointer"
+      //           onClick={handleOpenEyeModal}
+      //         />
+
+      //         <Autocomplete
+      //           size="small"
+      //           options={uniData}
+      //           sx={{ width: 200, zIndex: 999 }}
+      //           onChange={(e, value) => {
+      //             // setSelectedStudent(null);
+      //             handleAutoCompleteChange(row, value);
+      //           }}
+      //           getOptionLabel={(option) => option.name}
+      //           renderInput={(params) => (
+      //             <TextField {...params} placeholder="Select Provider" />
+      //           )}
+      //           value={row?.original?.provider || null}
+      //           isOptionEqualToValue={(options, value) =>
+      //             options?.value === value?.value
+      //           }
+      //           slotProps={{
+      //             popper: {
+      //               sx: {
+      //                 zIndex: 1000,
+      //               },
+      //             },
+      //           }}
+      //           ListboxProps={{ style: { zIndex: 999 } }}
+      //         />
+      //       </div>
+      //     );
+      //   },
+      // },
 
       {
         // accessorKey: "agreedAmount", //normal accessorKey
@@ -150,8 +174,9 @@ const AddProvider = ({ color = "light" }) => {
       },
 
       {
+        accessorKey: "totalCommission",
         header: "Total Commission",
-        size: 150,
+        size: 80,
         Cell: ({ row }) => {
           return (
             <InputField
@@ -161,7 +186,7 @@ const AddProvider = ({ color = "light" }) => {
               size="small"
               onChange={(e) => handleInputChange(e, row?.index)}
               value={item?.totalCommission}
-              className="min-w-[100px]"
+              className="min-w-[100px] "
             />
           );
         },
@@ -185,9 +210,27 @@ const AddProvider = ({ color = "light" }) => {
         },
       },
       {
+        accessorKey: "totalGST", //normal accessorKey
+        header: "Total GST",
+        size: 50,
+        Cell: ({ row }) => {
+          return (
+            <InputField
+              type="number"
+              name="totalGST"
+              placeholder="Total GST"
+              size="small"
+              onChange={(e) => handleInputChange(e, row?.index)}
+              value={item?.totalGST}
+              className="min-w-[100px]"
+            />
+          );
+        },
+      },
+      {
         accessorKey: "nextReminder",
         header: "Next Reminder",
-        size: 100,
+        size: 80,
         Cell: ({ row, renderedCellValue }) => {
           return (
             <InputField
@@ -205,7 +248,7 @@ const AddProvider = ({ color = "light" }) => {
       {
         accessorKey: "Action",
         header: "Action",
-        size: 150,
+        size: 50,
         Cell: ({ row, renderedCellValue }) => {
           const item = row.original;
           return (
@@ -231,18 +274,44 @@ const AddProvider = ({ color = "light" }) => {
     () => [
       {
         header: "Intake",
-        size: 100,
-        Cell: ({ row, renderedCellValue }) => {
+        size: 150,
+        Cell: ({ row }) => {
           return (
-            <div>
-              <InputField
-                type="number"
-                name="invoiceNo"
-                placeholder="Invoice Number"
-                onChange={(e) => handleInputChange(e, row?.name)}
-                value={item?.invoiceNumber}
-                className="min-w-[100px]"
-              />
+            <div className="flex items-center gap-0 text-left py-2">
+              <FormControl variant="standard" sx={{ m: 1, minWidth: 80 }}>
+                <InputLabel id="demo-simple-select-standard-label">
+                  Year
+                </InputLabel>
+                <Select
+                  labelId="year-filter-label"
+                  id="year-filter"
+                  onChange={(e) => handleYearChange(e.target.value)}
+                  label="Year"
+                >
+                  {yearsForFilter?.map((value, i) => (
+                    <MenuItem value={value} key={value}>
+                      {value}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl variant="standard" sx={{ m: 1, minWidth: 80 }}>
+                <InputLabel id="demo-simple-select-standard-label">
+                  Month
+                </InputLabel>
+                <Select
+                  labelId="month-filter-label"
+                  id="month-filter"
+                  onChange={(e) => handleMonthChange(e.target.value)}
+                  label="Month"
+                >
+                  {monthsForFilter?.map(({ label, value }, i) => (
+                    <MenuItem value={value} key={label}>
+                      {label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </div>
           );
         },
@@ -259,7 +328,7 @@ const AddProvider = ({ color = "light" }) => {
                 type="number"
                 name="invoiceNo"
                 placeholder="Invoice Number"
-                onChange={(e) => handleInputChange(e, row?.name)}
+                onChange={(e) => handleSubInputChange(e, row?.name)}
                 value={item?.invoiceNumber}
                 className="min-w-[100px]"
               />
@@ -278,7 +347,7 @@ const AddProvider = ({ color = "light" }) => {
               type="number"
               name="noOfStudents"
               placeholder="Number of Students"
-              onChange={(e) => handleInputChange(e, row?.noOfStudents)}
+              onChange={(e) => handleSubInputChange(e, row?.noOfStudents)}
               value={item?.noOfStudents}
               className="min-w-[100px]"
             />
@@ -297,7 +366,7 @@ const AddProvider = ({ color = "light" }) => {
               name="commission"
               placeholder="Commission"
               size="small"
-              onChange={(e) => handleInputChange(e, row?.index)}
+              onChange={(e) => handleSubInputChange(e, row?.index)}
               value={item?.commission}
               className="min-w-[100px]"
             />
@@ -315,7 +384,7 @@ const AddProvider = ({ color = "light" }) => {
               name="Bonus"
               placeholder="Bonus"
               size="small"
-              onChange={(e) => handleInputChange(e, row?.index)}
+              onChange={(e) => handleSubInputChange(e, row?.index)}
               value={item?.Bonus}
               className="min-w-[100px]"
             />
@@ -333,10 +402,25 @@ const AddProvider = ({ color = "light" }) => {
               name="totalAmount"
               placeholder="Total Amount"
               size="small"
-              onChange={(e) => handleInputChange(e, row?.index)}
+              onChange={(e) => handleSubInputChange(e, row?.index)}
               value={item?.totalAmount}
               className="min-w-[100px]"
             />
+          );
+        },
+      },
+      {
+        accessorKey: "gst",
+        header: "GST Include",
+        size: 160,
+        Cell: ({ row, renderedCellValue }) => {
+          return (
+            <FormControl sx={{ display: "flex", width: "100%" }}>
+              <RadioGroup row name="gst" onChange={handleSubInputChange}>
+                <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+                <FormControlLabel value="no" control={<Radio />} label="No" />
+              </RadioGroup>
+            </FormControl>
           );
         },
       },
@@ -351,7 +435,7 @@ const AddProvider = ({ color = "light" }) => {
               name="claimedDate"
               placeholder="Claimed Date"
               size="small"
-              onChange={(e) => handleInputChange(e, row?.index)}
+              onChange={(e) => handleSubInputChange(e, row?.index)}
               value={item?.claimedDate}
               className="min-w-[100px]"
             />
@@ -369,7 +453,7 @@ const AddProvider = ({ color = "light" }) => {
               name="receivedAmount"
               placeholder="Received Amount"
               size="small"
-              onChange={(e) => handleInputChange(e, row?.index)}
+              onChange={(e) => handleSubInputChange(e, row?.index)}
               value={item?.receivedAmount}
               className="min-w-[100px]"
             />
@@ -387,7 +471,7 @@ const AddProvider = ({ color = "light" }) => {
               name="receivedDate"
               placeholder="Received Date"
               size="small"
-              onChange={(e) => handleInputChange(e, row?.index)}
+              onChange={(e) => handleSubInputChange(e, row?.index)}
               value={item?.claimedDate}
               className="min-w-[100px]"
             />
@@ -498,6 +582,16 @@ const AddProvider = ({ color = "light" }) => {
     const { name, value } = e.target;
     const row = accountDetails.find((item, i) => i === index);
     setAccountDetails((prevState) => [
+      ...prevState?.slice(0, index),
+      { ...row, [name]: value },
+      ...prevState?.slice(index + 1, accountDetails.length),
+    ]);
+  };
+
+  const handleSubInputChange = () => (e, index) => {
+    const { name, value } = e.target;
+    const row = accountDetails.find((item, i) => i === index);
+    setStudentDetails((prevState) => [
       ...prevState?.slice(0, index),
       { ...row, [name]: value },
       ...prevState?.slice(index + 1, accountDetails.length),

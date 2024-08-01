@@ -34,8 +34,14 @@ import EyeModal from "./EyeModal";
 const AddAccounts = ({ color = "light" }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [accountDetails, setAccountDetails] = useState([
-    { module: { label: "RPL", value: "RPL" }, agreedAmount: null, cost: null },
+    {
+      id: crypto.randomUUID(),
+      module: { label: "RPL", value: "RPL" },
+      agreedAmount: null,
+      cost: null,
+    },
   ]);
+
   const [studentDetails, setStudentDetails] = useState([{ index: 1 }]);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [data, setData] = useState({
@@ -61,6 +67,117 @@ const AddAccounts = ({ color = "light" }) => {
       value: "Skill Assessment",
     },
   ];
+
+  useEffect(() => {
+    if (state) {
+      setData({ ...state?.item });
+      setSelectedStudent({
+        clientId: state?.item?.clientId,
+        name: `${state?.item?.clientName}`,
+        address: state?.item?.clientData?.address,
+        number: state?.item?.clientData?.number,
+      });
+      // setAccountDetails([
+      //   ...state?.item?.accountDetails?.map((item) => ({
+      //     ...item,
+      //     date: item?.date?.split("T")[0],
+      //   })),
+      // ]);
+    }
+  }, [state]);
+
+  const deleteData = () => {
+    axios
+      .delete(`${API_URL}/organization/delete/${openConfirmationModal?.id}`)
+      .then((res) => {
+        toast.success(res?.data?.message || "Data Deleted Successfully");
+        setOpenConfirmationModal({ state: false, id: null });
+        refetchAccountList();
+      })
+      .catch((err) => {
+        toast.error("Error Deleting Data");
+      });
+  };
+
+  const handleInputChange = (e, row) => {
+    const { name, value } = e.target;
+    const foundRow = accountDetails.find(
+      (item, i) => item?.id === row?.original?.id
+    );
+    setAccountDetails((prevState) => [
+      ...prevState?.slice(0, row?.index),
+      { ...foundRow, [name]: value },
+      ...prevState?.slice(row?.index + 1, accountDetails.length),
+    ]);
+  };
+
+  const addStudentDetails = () => {
+    setStudentDetails((prev) => [...prev, { index: prev.length + 1 }]);
+  };
+
+  const handleDeleteStudentDetails = (index) => {
+    setStudentDetails((prev) => [...prev.filter((item, i) => i !== index)]);
+  };
+
+  const handleAutoCompleteChange = (value, row) => {
+    const rowIndex = accountDetails.find(
+      (arg) => arg?.id === row?.original?.id
+    );
+    setAccountDetails((arg) => [
+      ...arg.slice(0, row?.index),
+      { ...rowIndex, module: value },
+      ...arg.slice(row?.index + 1, accountDetails?.length),
+    ]);
+  };
+
+  const addaccountDetails = () => {
+    setAccountDetails((prev) => [
+      ...prev,
+      { id: crypto.randomUUID(), module: null, agreedAmount: null, cost: null },
+    ]);
+  };
+
+  const handleDeleteInstallment = (index) => {
+    setAccountDetails((prev) => [...prev.filter((item, i) => i !== index)]);
+  };
+
+  const { mutate } = useMutation(postData, {
+    onSuccess() {
+      toast.success(
+        data?.id ? "Data updated Successfully" : "Data added Successfully"
+      );
+      navigate("/admin/account");
+      refetchAccountList();
+    },
+    onError() {
+      toast.error(data?.id ? "Error Updating Data" : "Error Submitting Data");
+    },
+  });
+
+  async function postData(payload) {
+    if (data?.id) {
+      await axios.put(`${API_URL}/accounts/${payload?.id}`, payload);
+    } else {
+      await axios.post(`${API_URL}/accounts`, payload);
+    }
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    mutate({
+      ...data,
+      accountDetails: accountDetails?.map((item) => ({
+        ...item,
+        document: "",
+      })),
+      clientId: Number(selectedStudent?.clientId),
+      amount: accountDetails.reduce((a, b) => a + (Number(b.amount) || 0), 0),
+    });
+  };
+
+  const handleOpenEyeModal = () => {
+    setOpenEyeModal({ state: !openEyeModal?.state, id: 1 });
+  };
   const item = 1;
 
   const columns = useMemo(
@@ -80,12 +197,10 @@ const AddAccounts = ({ color = "light" }) => {
 
               <Autocomplete
                 size="small"
-                disablePortal
                 options={options}
-                sx={{ width: 200, zIndex: 999 }}
+                sx={{ width: 200 }}
                 onChange={(e, value) => {
-                  // setSelectedStudent(null);
-                  handleAutoCompleteChange(row, value);
+                  handleAutoCompleteChange(value, row);
                 }}
                 getOptionLabel={(option) => option.label}
                 renderInput={(params) => (
@@ -95,14 +210,6 @@ const AddAccounts = ({ color = "light" }) => {
                 isOptionEqualToValue={(options, value) =>
                   options?.value === value?.value
                 }
-                slotProps={{
-                  popper: {
-                    sx: {
-                      zIndex: 1000,
-                    },
-                  },
-                }}
-                ListboxProps={{ style: { zIndex: 999 } }}
               />
             </div>
           );
@@ -110,7 +217,7 @@ const AddAccounts = ({ color = "light" }) => {
       },
 
       {
-        // accessorKey: "agreedAmount", //normal accessorKey
+        accessorKey: "agreedAmount", //normal accessorKey
         header: "Agreed",
         size: 50,
         Cell: ({ row, renderedCellValue }) => {
@@ -120,7 +227,7 @@ const AddAccounts = ({ color = "light" }) => {
                 type="number"
                 name="agreedAmount"
                 placeholder="Agreed Amount"
-                onChange={(e) => handleInputChange(e, row?.index)}
+                onChange={(e) => handleInputChange(e, row)}
                 value={row?.original?.agreedAmount}
                 className="min-w-[100px]"
               />
@@ -130,7 +237,7 @@ const AddAccounts = ({ color = "light" }) => {
       },
 
       {
-        // accessorKey: "cost" || 0,
+        accessorKey: "cost" || 0,
         header: "Cost",
         size: 50,
         Cell: ({ row }) => {
@@ -139,8 +246,8 @@ const AddAccounts = ({ color = "light" }) => {
               type="number"
               name="cost"
               placeholder="Kothar Cost"
-              onChange={(e) => handleInputChange(e, row?.index)}
-              value={item?.method}
+              onChange={(e) => handleInputChange(e, row)}
+              value={row?.original?.cost}
               className="min-w-[100px]"
             />
           );
@@ -148,7 +255,7 @@ const AddAccounts = ({ color = "light" }) => {
       },
 
       {
-        accessorKey: "paid", //normal accessorKey
+        accessorKey: "paidAmount", //normal accessorKey
         header: "Paid",
         size: 150,
         Cell: ({ row }) => {
@@ -158,15 +265,15 @@ const AddAccounts = ({ color = "light" }) => {
               name="paidAmount"
               placeholder="Paid Amount"
               size="small"
-              onChange={(e) => handleInputChange(e, row?.index)}
-              value={item?.paidAmount}
+              onChange={(e) => handleInputChange(e, row)}
+              value={row?.original?.paidAmount}
               className="min-w-[100px]"
             />
           );
         },
       },
       {
-        accessorKey: "due", //normal accessorKey
+        accessorKey: "dueAmount", //normal accessorKey
         header: "Due",
         size: 50,
         Cell: ({ row }) => {
@@ -176,8 +283,8 @@ const AddAccounts = ({ color = "light" }) => {
               name="dueAmount"
               placeholder="Due Amount"
               size="small"
-              onChange={(e) => handleInputChange(e, row?.index)}
-              value={item?.dueAmount}
+              onChange={(e) => handleInputChange(e, row)}
+              value={row?.original?.dueAmount}
               className="min-w-[100px]"
             />
           );
@@ -187,15 +294,15 @@ const AddAccounts = ({ color = "light" }) => {
         accessorKey: "referral",
         header: "Referral",
         size: 100,
-        Cell: ({ row, renderedCellValue }) => {
+        Cell: ({ row }) => {
           return (
             <InputField
               type="text"
               name="referral"
               placeholder="Referral"
               size="small"
-              onChange={(e) => handleInputChange(e, row?.index)}
-              value={item?.referral}
+              onChange={(e) => handleInputChange(e, row)}
+              value={row?.original?.referral}
               className="min-w-[100px]"
             />
           );
@@ -205,26 +312,25 @@ const AddAccounts = ({ color = "light" }) => {
         accessorKey: "profitLoss",
         header: "Profit Loss",
         size: 150,
-        Cell: ({ row, renderedCellValue }) => {
+        Cell: ({ row }) => {
           return (
             <InputField
               type="number"
               name="profitLoss"
               placeholder="Profit/Loss"
               size="small"
-              onChange={(e) => handleInputChange(e, row?.index)}
-              value={item?.profitLoss}
+              onChange={(e) => handleInputChange(e, row)}
+              value={row?.original?.profitLoss}
               className="min-w-[100px]"
             />
           );
         },
       },
       {
-        accessorKey: "Action",
+        accessorKey: "action",
         header: "Action",
         size: 150,
-        Cell: ({ row, renderedCellValue }) => {
-          const item = row.original;
+        Cell: ({ row }) => {
           return (
             <>
               <div className="flex items-center">
@@ -241,7 +347,7 @@ const AddAccounts = ({ color = "light" }) => {
         },
       },
     ],
-    []
+    [accountDetails]
   );
 
   const subColumns = useMemo(
@@ -257,7 +363,7 @@ const AddAccounts = ({ color = "light" }) => {
               name="date"
               placeholder="Date"
               size="small"
-              onChange={(e) => handleInputChange(e, row?.index)}
+              onChange={(e) => handleInputChange(e, row)}
               value={item?.date}
               className="min-w-[100px]"
             />
@@ -339,7 +445,7 @@ const AddAccounts = ({ color = "light" }) => {
               name="paidAmount"
               placeholder="Paid Amount"
               size="small"
-              onChange={(e) => handleInputChange(e, row?.index)}
+              onChange={(e) => handleInputChange(e, row)}
               value={item?.paidAmount}
               className="min-w-[100px]"
             />
@@ -357,7 +463,7 @@ const AddAccounts = ({ color = "light" }) => {
               name="dueAmount"
               placeholder="Due Amount"
               size="small"
-              onChange={(e) => handleInputChange(e, row?.index)}
+              onChange={(e) => handleInputChange(e, row)}
               value={item?.dueAmount}
               className="min-w-[100px]"
             />
@@ -375,7 +481,7 @@ const AddAccounts = ({ color = "light" }) => {
               name="referral"
               placeholder="Referral"
               size="small"
-              onChange={(e) => handleInputChange(e, row?.index)}
+              onChange={(e) => handleInputChange(e, row)}
               value={item?.referral}
               className="min-w-[100px]"
             />
@@ -393,7 +499,7 @@ const AddAccounts = ({ color = "light" }) => {
               name="profitLoss"
               placeholder="Profit/Loss"
               size="small"
-              onChange={(e) => handleInputChange(e, row?.index)}
+              onChange={(e) => handleInputChange(e, row)}
               value={item?.profitLoss}
               className="min-w-[100px]"
             />
@@ -459,7 +565,7 @@ const AddAccounts = ({ color = "light" }) => {
       showGlobalFilter: true,
     },
     muiTableContainerProps: {
-      sx: { minHeight: "400px", maxHeight: "800px", boxShadow: "none" },
+      sx: { minHeight: "400px", maxHeight: "50vh" },
     },
     renderDetailPanel: ({ row }) => (
       <>
@@ -469,117 +575,6 @@ const AddAccounts = ({ color = "light" }) => {
       </>
     ),
   });
-
-  useEffect(() => {
-    if (state) {
-      setData({ ...state?.item });
-      setSelectedStudent({
-        clientId: state?.item?.clientId,
-        name: `${state?.item?.clientName}`,
-        address: state?.item?.clientData?.address,
-        number: state?.item?.clientData?.number,
-      });
-      // setAccountDetails([
-      //   ...state?.item?.accountDetails?.map((item) => ({
-      //     ...item,
-      //     date: item?.date?.split("T")[0],
-      //   })),
-      // ]);
-    }
-  }, [state]);
-
-  const deleteData = () => {
-    axios
-      .delete(`${API_URL}/organization/delete/${openConfirmationModal?.id}`)
-      .then((res) => {
-        toast.success(res?.data?.message || "Data Deleted Successfully");
-        setOpenConfirmationModal({ state: false, id: null });
-        refetchAccountList();
-      })
-      .catch((err) => {
-        toast.error("Error Deleting Data");
-      });
-  };
-
-  const handleInputChange = (e, index) => {
-    const { name, value } = e.target;
-    const row = accountDetails.find((item, i) => i === index);
-    setAccountDetails((prevState) => [
-      ...prevState?.slice(0, index),
-      { ...row, [name]: value },
-      ...prevState?.slice(index + 1, accountDetails.length),
-    ]);
-  };
-
-  const addStudentDetails = () => {
-    setStudentDetails((prev) => [...prev, { index: prev.length + 1 }]);
-  };
-
-  const handleDeleteStudentDetails = (index) => {
-    setStudentDetails((prev) => [...prev.filter((item, i) => i !== index)]);
-  };
-
-  console.log(accountDetails);
-  const handleAutoCompleteChange = (row, value) => {
-    const rowIndex = accountDetails.find(
-      (_, index) => Number(index) === Number(row?.index)
-    );
-    console.log("🚀  rowIndex:", rowIndex);
-    setAccountDetails((arg) => [
-      ...arg.slice(0, row?.index),
-      { ...rowIndex, module: value },
-      ...arg.slice(row?.index + 1, accountDetails?.length),
-    ]);
-  };
-
-  const addaccountDetails = () => {
-    setAccountDetails((prev) => [
-      ...prev,
-      { module: null, agreedAmount: null, cost: null },
-    ]);
-  };
-
-  const handleDeleteInstallment = (index) => {
-    setAccountDetails((prev) => [...prev.filter((item, i) => i !== index)]);
-  };
-
-  const { mutate } = useMutation(postData, {
-    onSuccess() {
-      toast.success(
-        data?.id ? "Data updated Successfully" : "Data added Successfully"
-      );
-      navigate("/admin/account");
-      refetchAccountList();
-    },
-    onError() {
-      toast.error(data?.id ? "Error Updating Data" : "Error Submitting Data");
-    },
-  });
-
-  async function postData(payload) {
-    if (data?.id) {
-      await axios.put(`${API_URL}/accounts/${payload?.id}`, payload);
-    } else {
-      await axios.post(`${API_URL}/accounts`, payload);
-    }
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    mutate({
-      ...data,
-      accountDetails: accountDetails?.map((item) => ({
-        ...item,
-        document: "",
-      })),
-      clientId: Number(selectedStudent?.clientId),
-      amount: accountDetails.reduce((a, b) => a + (Number(b.amount) || 0), 0),
-    });
-  };
-
-  const handleOpenEyeModal = () => {
-    setOpenEyeModal({ state: !openEyeModal?.state, id: 1 });
-  };
 
   const totalAmountAfterDiscount = () => {
     let totalAmount = 0;
