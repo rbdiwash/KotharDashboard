@@ -164,15 +164,26 @@ const AddAccounts = ({ color = "light" }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    mutate({
-      ...data,
-      accountDetails: accountDetails?.map((item) => ({
-        ...item,
-        document: "",
-      })),
-      clientId: Number(selectedStudent?.clientId),
-      amount: accountDetails.reduce((a, b) => a + (Number(b.amount) || 0), 0),
-    });
+
+    const payload = {
+      client: data?.clientId,
+      totalAmount: data?.amountPaidByStudent,
+      agentCost: data?.agentCost,
+      dueAmount: data?.dueAmount,
+      profitLoss: data?.profitLoss,
+      accountDetails,
+    };
+    console.log("🚀  payload:", payload);
+
+    // mutate({
+    //   ...data,
+    //   accountDetails: accountDetails?.map((item) => ({
+    //     ...item,
+    //     document: "",
+    //   })),
+    //   clientId: Number(selectedStudent?.clientId),
+    //   amount: accountDetails.reduce((a, b) => a + (Number(b.amount) || 0), 0),
+    // });
   };
 
   const handleOpenEyeModal = () => {
