@@ -71,16 +71,16 @@ const Accounts = ({ color = "light" }) => {
       //   accessorKey: "type",
       // },
       {
-        accessorKey: "studentCost", //normal accessorKey
+        accessorKey: "totalStudentCost", //normal accessorKey
         header: "Student Cost",
         size: 50,
         Cell: ({ row, renderedCellValue }) => {
-          return <div>{row.original.studentCost || 0}</div>;
+          return <div>{row.original.totalStudentCost || 0}</div>;
         },
       },
 
       {
-        accessorKey: "costForKothar" || 0,
+        accessorKey: "totalCost" || 0,
         header: "Cost",
         size: 50,
       },
@@ -99,17 +99,19 @@ const Accounts = ({ color = "light" }) => {
         accessorKey: "commission",
         header: "Commission/ Reminder Date",
         size: 50,
-        Cell: ({ row, renderedCellValue }) => {
+        Cell: ({ row }) => {
           return (
             <div>
               {row.original.commission ||
-                new Date(row?.original?.reminderDate)?.toLocaleDateString()}
+                new Date(
+                  row?.original?.reminderDate || null
+                )?.toLocaleDateString()}
             </div>
           );
         },
       },
       {
-        accessorKey: "amountPaidByStudent",
+        accessorKey: "totalPaidAmount",
         header: "Amount Paid",
         size: 150,
       },

@@ -272,7 +272,7 @@ const useStateAndActions = () => {
     }
   );
   const getAccountsList = async () => {
-    const res = await axios.get(`${API_URL}/accounts`, {
+    const res = await axios.get(`${API_URL}/accounts/aggregated`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return res?.data?.data;
@@ -285,6 +285,7 @@ const useStateAndActions = () => {
       enabled: false,
     }
   );
+  console.log(accountsList);
   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
   useEffect(() => {

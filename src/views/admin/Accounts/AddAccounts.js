@@ -55,6 +55,7 @@ const AddAccounts = ({ color = "light" }) => {
   });
   const [{ refetchAccountList }] = useKothar();
   const [openEyeModal, setOpenEyeModal] = useState({ state: false, id: null });
+  const [studentValues, setStudentValues] = useState();
   const { state } = useLocation();
   const navigate = useNavigate();
   const options = [
@@ -166,24 +167,22 @@ const AddAccounts = ({ color = "light" }) => {
     e.preventDefault();
 
     const payload = {
-      client: data?.clientId,
+      clientId: data?.clientId,
+      caseOfficer: "string",
+      referral: "string",
       totalAmount: data?.amountPaidByStudent,
       agentCost: data?.agentCost,
       dueAmount: data?.dueAmount,
       profitLoss: data?.profitLoss,
-      accountDetails,
+      accountDetails: accountDetails.map((item) => ({
+        ...item,
+        module: item?.module?.value,
+        values: studentValues,
+      })),
     };
     console.log("🚀  payload:", payload);
 
-    // mutate({
-    //   ...data,
-    //   accountDetails: accountDetails?.map((item) => ({
-    //     ...item,
-    //     document: "",
-    //   })),
-    //   clientId: Number(selectedStudent?.clientId),
-    //   amount: accountDetails.reduce((a, b) => a + (Number(b.amount) || 0), 0),
-    // });
+    mutate(payload);
   };
 
   const handleOpenEyeModal = () => {
@@ -752,7 +751,14 @@ const AddAccounts = ({ color = "light" }) => {
         />
       )}
       {openEyeModal && (
-        <EyeModal {...{ open: openEyeModal, setOpen: setOpenEyeModal }} />
+        <EyeModal
+          {...{
+            open: openEyeModal,
+            setOpen: setOpenEyeModal,
+            values: studentValues,
+            setValues: setStudentValues,
+          }}
+        />
       )}
     </div>
   );

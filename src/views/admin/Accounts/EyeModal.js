@@ -4,7 +4,7 @@ import Drawer from "@mui/material/Drawer";
 import InputField from "components/Input/InputField";
 import { useState } from "react";
 
-export default function PermissionDrawer({ open, setOpen }) {
+export default function PermissionDrawer({ open, setOpen, values, setValues }) {
   const toggleDrawer = () => {
     setOpen({ state: !open?.state, id: null });
   };
@@ -64,8 +64,6 @@ export default function PermissionDrawer({ open, setOpen }) {
     },
   ];
 
-  const [values, setValues] = useState();
-
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
@@ -73,6 +71,7 @@ export default function PermissionDrawer({ open, setOpen }) {
 
   const handleSubmit = () => {
     console.log(values);
+    setOpen({ state: !open?.state, id: null });
   };
   return (
     <Drawer
@@ -86,7 +85,10 @@ export default function PermissionDrawer({ open, setOpen }) {
       </div>
       <div className="mt-4 p-4">
         {modules.map((module) => (
-          <div className="flex justify-between items-center mb-2">
+          <div
+            className="flex justify-between items-center mb-2"
+            key={module.label}
+          >
             <span className="w-48"> {module.label} </span>
             <InputField
               type={module?.type}
