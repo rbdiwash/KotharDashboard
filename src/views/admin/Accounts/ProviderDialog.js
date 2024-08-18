@@ -1,7 +1,6 @@
 import { AddCircle } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Autocomplete, TextField } from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -9,70 +8,42 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
-import ClientDropdown from "components/Dropdowns/ClientDropdown";
 import InputField from "components/Input/InputField";
-import {
-  API_URL,
-  insurance_companies,
-  insurance_cover_type,
-} from "const/constants";
-import useKothar from "context/useKothar";
-import PropTypes from "prop-types";
-import * as React from "react";
-import { useEffect } from "react";
-import { useMemo, useState } from "react";
-import { toast } from "react-toastify";
 
 export default function ProviderDialog({
   color = "light",
   open,
   setOpen,
-  studentDetails,
+  bonusEntries,
+  setBonusEntries,
+  setAccountDetails,
+  accountDetails,
 }) {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
-
+  console.log(bonusEntries);
   const handleClose = () => {
-    setOpen({ state: false, id: null });
+    setOpen({ state: false, id: "", index: null });
   };
-  const [{}, { refetchInsuranceList }] = useKothar();
+  console.log(bonusEntries);
 
-  const [bonusEntries, setBonusEntries] = useState([]);
-  useEffect(() => {
-    if (open?.id) {
-    } else {
-    }
-  }, [open]);
-
-  const { mutate } = useMutation(postData, {
-    onSuccess(suc) {
-      toast.success("Data updated Successfully");
-      setOpen({ state: false, id: null });
-      refetchInsuranceList();
-    },
-    onError(err) {
-      toast.error("Error Updating Data");
-    },
-  });
-  async function postData(payload) {
-    if (bonusEntries?.id) {
-      await axios.put(`${API_URL}/insurance/${payload?.id}`, payload);
-    } else {
-      await axios.post(`${API_URL}/insurance`, payload);
-    }
-  }
   const handleSubmit = (e) => {
     e.preventDefault();
-    mutate({
-      bonusEntries,
-    });
+
+    const foundRow = accountDetails.find((item, i) => item?.id === open?.id);
+    setAccountDetails((prevState) => [
+      ...prevState?.slice(0, open?.index),
+      { ...foundRow, commissionDetails: bonusEntries },
+      ...prevState?.slice(open?.index + 1, accountDetails.length),
+    ]);
+
+    debugger;
+    setOpen({ state: false, id: null, index: null });
   };
 
   const addMoreBonuses = () => {
     setBonusEntries([
       ...bonusEntries,
-      { index: bonusEntries?.length + 1, bonus: null },
+      { index: bonusEntries?.length + 1, bonus: "" },
     ]);
   };
 
@@ -120,7 +91,7 @@ export default function ProviderDialog({
                       </tr>
                     </thead>
                     <tbody>
-                      {bonusEntries?.length ? (
+                      {bonusEntries?.length > 0 ? (
                         bonusEntries?.map((item, index) => (
                           <tr>
                             <td className="table-data p-2 text-center">

@@ -37,21 +37,29 @@ const AddAccounts = ({ color = "light" }) => {
     {
       id: crypto.randomUUID(),
       module: { label: "RPL", value: "RPL" },
-      agreedAmount: null,
-      cost: null,
+      agreedAmount: "",
+      cost: "",
+      dueAmount: "",
+      referral: "",
+      profitLoss: "",
+      paidAmount: "",
+      admissionValues: null,
+      admissionDetails: null,
     },
   ]);
 
-  const [studentDetails, setStudentDetails] = useState([{ index: 1 }]);
+  const [studentDetails, setStudentDetails] = useState([
+    { id: crypto.randomUUID() },
+  ]);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [data, setData] = useState({
-    studentCost: null,
-    costForKothar: null,
-    caseOfficer: null,
+    studentCost: "",
+    costForKothar: "",
+    caseOfficer: "",
     isClaimed: "No",
-    commission: null,
-    reminderDate: null,
-    amountPaidByStudent: null,
+    commission: "",
+    reminderDate: new Date(),
+    amountPaidByStudent: "",
   });
   const [{ refetchAccountList }] = useKothar();
   const [openEyeModal, setOpenEyeModal] = useState({ state: false, id: null });
@@ -112,8 +120,23 @@ const AddAccounts = ({ color = "light" }) => {
     ]);
   };
 
+  const handleSubInputChange = (e, row) => {
+    const { name, value } = e.target;
+    const foundRow = studentDetails.find(
+      (item, i) => item?.id === row?.original?.id
+    );
+    setStudentDetails((prevState) => [
+      ...prevState?.slice(0, row?.index),
+      { ...foundRow, [name]: value },
+      ...prevState?.slice(row?.index + 1, studentDetails.length),
+    ]);
+  };
+
   const addStudentDetails = () => {
-    setStudentDetails((prev) => [...prev, { index: prev.length + 1 }]);
+    setStudentDetails((prev) => [
+      ...prev,
+      { index: prev.length + 1, id: crypto.randomUUID() },
+    ]);
   };
 
   const handleDeleteStudentDetails = (index) => {
@@ -167,6 +190,7 @@ const AddAccounts = ({ color = "light" }) => {
     e.preventDefault();
 
     const payload = {
+      id: 1,
       clientId: data?.clientId,
       caseOfficer: "string",
       referral: "string",
@@ -174,13 +198,21 @@ const AddAccounts = ({ color = "light" }) => {
       agentCost: data?.agentCost,
       dueAmount: data?.dueAmount,
       profitLoss: data?.profitLoss,
-      accountDetails: accountDetails.map((item) => ({
-        ...item,
+      accountDetails: accountDetails.map((item, index) => ({
+        id: index + 1,
         module: item?.module?.value,
-        values: studentValues,
+        admissionValues:
+          item?.module?.value === "Admission" ? studentValues : null,
+        admissionDetails:
+          item?.module?.value === "Admission" ? studentDetails : null,
+        agreedAmount: item?.agreedAmount,
+        cost: item?.cost,
+        paidAmount: item?.paidAmount,
+        dueDate: item?.dueDate,
+        profitLoss: item?.profitLoss,
+        referral: item?.referral,
       })),
     };
-    console.log("🚀  payload:", payload);
 
     mutate(payload);
   };
@@ -188,7 +220,6 @@ const AddAccounts = ({ color = "light" }) => {
   const handleOpenEyeModal = () => {
     setOpenEyeModal({ state: !openEyeModal?.state, id: 1 });
   };
-  const item = 1;
 
   const columns = useMemo(
     () => [
@@ -363,18 +394,17 @@ const AddAccounts = ({ color = "light" }) => {
   const subColumns = useMemo(
     () => [
       {
-        accessorKey: "date",
         header: "Date",
         size: 150,
-        Cell: ({ row, renderedCellValue }) => {
+        Cell: ({ row }) => {
           return (
             <InputField
               type="date"
               name="date"
               placeholder="Date"
               size="small"
-              onChange={(e) => handleInputChange(e, row)}
-              value={item?.date}
+              onChange={(e) => handleSubInputChange(e, row)}
+              value={row?.original?.date}
               className="min-w-[100px]"
             />
           );
@@ -384,23 +414,23 @@ const AddAccounts = ({ color = "light" }) => {
         accessorKey: "term",
         header: "Term",
         size: 50,
-        Cell: ({ row, renderedCellValue }) => {
+        Cell: ({ row }) => {
           return row?.index + 1;
         },
       },
       {
-        accessorKey: "perSemCost", //normal accessorKey
+        accessorKey: "perSemFee",
         header: "Per Sem Fee",
         size: 50,
-        Cell: ({ row, renderedCellValue }) => {
+        Cell: ({ row }) => {
           return (
             <div>
               <InputField
                 type="number"
                 name="perSemFee"
                 placeholder="Per Sem Fee"
-                onChange={(e) => handleInputChange(e, row?.name)}
-                value={item?.perSemFee}
+                onChange={(e) => handleSubInputChange(e, row)}
+                value={row?.original?.perSemFee}
                 className="min-w-[100px]"
               />
             </div>
@@ -408,18 +438,18 @@ const AddAccounts = ({ color = "light" }) => {
         },
       },
       {
-        accessorKey: "perSemCost", //normal accessorKey
+        accessorKey: "perSemCost",
         header: "Per Sem Cost",
         size: 50,
-        Cell: ({ row, renderedCellValue }) => {
+        Cell: ({ row }) => {
           return (
             <div>
               <InputField
                 type="number"
                 name="perSemCost"
                 placeholder="Per Sem Cost"
-                onChange={(e) => handleInputChange(e, row?.name)}
-                value={item?.perSemCost}
+                onChange={(e) => handleSubInputChange(e, row)}
+                value={row?.original?.perSemCost}
                 className="min-w-[100px]"
               />
             </div>
@@ -428,7 +458,7 @@ const AddAccounts = ({ color = "light" }) => {
       },
 
       {
-        accessorKey: "materialFee" || 0,
+        accessorKey: "materialFee",
         header: "Material Fee",
         size: 50,
         Cell: ({ row }) => {
@@ -437,15 +467,15 @@ const AddAccounts = ({ color = "light" }) => {
               type="number"
               name="materialFee"
               placeholder="Material Fee"
-              onChange={(e) => handleInputChange(e, row?.materialFee)}
-              value={item?.materialFee}
+              onChange={(e) => handleSubInputChange(e, row)}
+              value={row?.original?.materialFee}
               className="min-w-[100px]"
             />
           );
         },
       },
       {
-        accessorKey: "paid", //normal accessorKey
+        accessorKey: "paidAmount", //normal accessorKey
         header: "Paid",
         size: 150,
         Cell: ({ row }) => {
@@ -455,15 +485,15 @@ const AddAccounts = ({ color = "light" }) => {
               name="paidAmount"
               placeholder="Paid Amount"
               size="small"
-              onChange={(e) => handleInputChange(e, row)}
-              value={item?.paidAmount}
+              onChange={(e) => handleSubInputChange(e, row)}
+              value={row?.original?.paidAmount}
               className="min-w-[100px]"
             />
           );
         },
       },
       {
-        accessorKey: "due", //normal accessorKey
+        accessorKey: "dueAmount", //normal accessorKey
         header: "Due",
         size: 50,
         Cell: ({ row }) => {
@@ -473,8 +503,8 @@ const AddAccounts = ({ color = "light" }) => {
               name="dueAmount"
               placeholder="Due Amount"
               size="small"
-              onChange={(e) => handleInputChange(e, row)}
-              value={item?.dueAmount}
+              onChange={(e) => handleSubInputChange(e, row)}
+              value={row?.original?.dueAmount}
               className="min-w-[100px]"
             />
           );
@@ -484,15 +514,15 @@ const AddAccounts = ({ color = "light" }) => {
         accessorKey: "referral",
         header: "Referral",
         size: 100,
-        Cell: ({ row, renderedCellValue }) => {
+        Cell: ({ row }) => {
           return (
             <InputField
               type="text"
               name="referral"
               placeholder="Referral"
               size="small"
-              onChange={(e) => handleInputChange(e, row)}
-              value={item?.referral}
+              onChange={(e) => handleSubInputChange(e, row)}
+              value={row?.original?.referral}
               className="min-w-[100px]"
             />
           );
@@ -502,15 +532,15 @@ const AddAccounts = ({ color = "light" }) => {
         accessorKey: "profitLoss",
         header: "Profit Loss",
         size: 150,
-        Cell: ({ row, renderedCellValue }) => {
+        Cell: ({ row }) => {
           return (
             <InputField
               type="number"
               name="profitLoss"
               placeholder="Profit/Loss"
               size="small"
-              onChange={(e) => handleInputChange(e, row)}
-              value={item?.profitLoss}
+              onChange={(e) => handleSubInputChange(e, row)}
+              value={row?.original?.profitLoss}
               className="min-w-[100px]"
             />
           );
@@ -520,8 +550,7 @@ const AddAccounts = ({ color = "light" }) => {
         accessorKey: "Action",
         header: "Action",
         size: 150,
-        Cell: ({ row, renderedCellValue }) => {
-          const item = row.original;
+        Cell: ({ row }) => {
           return (
             <>
               <div className="flex items-center">
@@ -538,7 +567,7 @@ const AddAccounts = ({ color = "light" }) => {
         },
       },
     ],
-    []
+    [studentDetails]
   );
 
   const secondTable = useMaterialReactTable({
@@ -552,7 +581,6 @@ const AddAccounts = ({ color = "light" }) => {
     muiTableContainerProps: {
       sx: { height: "300px", maxHeight: "800px", borderWidth: "0px" },
     },
-    // enableExpandAll: true,
     renderTopToolbarCustomActions: ({ table }) => (
       <Button
         variant="contained"
@@ -577,6 +605,7 @@ const AddAccounts = ({ color = "light" }) => {
     muiTableContainerProps: {
       sx: { minHeight: "400px", maxHeight: "50vh" },
     },
+
     renderDetailPanel: ({ row }) => (
       <>
         {row?.original?.module?.value === "Admission" && (
@@ -621,7 +650,7 @@ const AddAccounts = ({ color = "light" }) => {
             <div className="px-4">
               <div className="container mx-auto px-2 py-1">
                 <div className="flex flex-col space-y-5">
-                  <div className="grid grid-cols-1 md:grid-cols-2 justify-between gap-5">
+                  <div className="grid grid-cols-1 md:grid-cols-3 justify-between gap-5">
                     <div className="lg:px-2">
                       <div className="md:col-span-2">
                         <h2 className="text-2xl font-semibold mb-2">
@@ -646,7 +675,7 @@ const AddAccounts = ({ color = "light" }) => {
                         Payment Details
                       </h2>
                       <div className="flex gap-2 items-center ">
-                        <span className="w-[250px]">Total amount paid:</span>
+                        <span className="w-[200px]">Total amount paid:</span>
                         <OutlinedInput
                           name="amountPaidByStudent"
                           placeholder="Amount in AUD"
@@ -664,7 +693,7 @@ const AddAccounts = ({ color = "light" }) => {
                         />
                       </div>
                       <div className="flex gap-2 items-center">
-                        <span className="w-[250px]">Agent Cost:</span>
+                        <span className="w-[200px]">Agent Cost:</span>
                         <OutlinedInput
                           name="agentCost"
                           className="col-span-2"
@@ -678,8 +707,10 @@ const AddAccounts = ({ color = "light" }) => {
                           }
                         />
                       </div>
-                      <div className="flex gap-2 items-center ">
-                        <span className="w-[250px]">Due Amount:</span>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <div className="flex gap-1 items-center mt-10">
+                        <span className="w-[200px]">Due Amount:</span>
                         <OutlinedInput
                           name="dueAmount"
                           placeholder="Amount in AUD"
@@ -695,8 +726,8 @@ const AddAccounts = ({ color = "light" }) => {
                           }
                         />
                       </div>
-                      <div className="flex gap-2 items-center ">
-                        <span className="w-[250px]">Total Profit/Loss:</span>
+                      <div className="flex gap-1 items-center ">
+                        <span className="w-[200px]">Total Profit/Loss:</span>
                         <OutlinedInput
                           name="profitLoss"
                           placeholder="Amount in AUD"
@@ -1053,14 +1084,14 @@ export default AddAccounts;
                                   size="small"
                                   onChange={(e) => handleInputChange(e, index)}
                                   value={item?.status}
-                                  className="min-w-[250px]"
+                                  className="min-w-[200px]"
                                 />
                               </td> */
 }
 
 {
   /* <div className="flex items-center gap-2">
-                          <span className="w-[250px]">Commission Claimed:</span>
+                          <span className="w-[200px]">Commission Claimed:</span>
 
                           <Autocomplete
                             onChange={(e, value) =>

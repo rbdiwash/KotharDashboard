@@ -91,25 +91,25 @@ const Accounts = ({ color = "light" }) => {
         size: 150,
       },
       {
-        accessorKey: "isClaimed", //normal accessorKey
+        accessorKey: "totalCommissionClaimed", //normal accessorKey
         header: "Commission  Claimed",
         size: 50,
       },
-      {
-        accessorKey: "commission",
-        header: "Commission/ Reminder Date",
-        size: 50,
-        Cell: ({ row }) => {
-          return (
-            <div>
-              {row.original.commission ||
-                new Date(
-                  row?.original?.reminderDate || null
-                )?.toLocaleDateString()}
-            </div>
-          );
-        },
-      },
+      // {
+      //   accessorKey: "commission",
+      //   header: "Commission/ Reminder Date",
+      //   size: 50,
+      //   Cell: ({ row }) => {
+      //     return (
+      //       <div>
+      //         {row.original.commission ||
+      //           new Date(
+      //             row?.original?.reminderDate || null
+      //           )?.toLocaleDateString()}
+      //       </div>
+      //     );
+      //   },
+      // },
       {
         accessorKey: "totalPaidAmount",
         header: "Amount Paid",

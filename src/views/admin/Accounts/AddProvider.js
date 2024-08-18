@@ -42,35 +42,54 @@ import { monthsForFilter } from "const/constants";
 
 const AddProvider = ({ color = "light" }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
-  const [accountDetails, setAccountDetails] = useState([
-    { module: { label: "RPL", value: "RPL" }, agreedAmount: null, cost: null },
+  const [bonusEntries, setBonusEntries] = useState([
+    { commission: "", bonus: "", total: "", parentId: "" },
   ]);
-  const [studentDetails, setStudentDetails] = useState([{ index: 1 }]);
-  const [selectedStudent, setSelectedStudent] = useState(null);
-  const [data, setData] = useState({
-    studentCost: null,
-    costForKothar: null,
-    caseOfficer: null,
-    isClaimed: "No",
-    commission: null,
-    reminderDate: null,
-    amountPaidByStudent: null,
-  });
+  const [intakeDetails, setIntakeDetails] = useState([
+    {
+      index: 1,
+      id: crypto.randomUUID(),
+      month: monthsForFilter[new Date().getMonth()].value,
+      year: new Date().getFullYear(),
+      invoiceNumber: null,
+      noOfStudents: null,
+      commission: null,
+      bonus: null,
+      amount: null,
+      gstInclude: true,
+      claimedDate: new Date(),
+      receivedAmount: null,
+      receivedDate: new Date(),
+    },
+  ]);
+
+  const [accountDetails, setAccountDetails] = useState([
+    {
+      id: crypto.randomUUID(),
+      providerId: "",
+      agentName: "",
+      noOfStudents: null,
+      totalCommission: null,
+      totalBonus: null,
+      totalGST: null,
+      nextReminder: new Date(),
+      intakeDetails: intakeDetails,
+      commissionDetails: bonusEntries,
+    },
+  ]);
+
   const [{ uniData }, { refetchAccountList }] = useKothar();
   const [openProviderDialog, setOpenProviderDialog] = useState({
     state: false,
     id: null,
+    index: null,
   });
-  const { state } = useLocation();
   const navigate = useNavigate();
 
   const yearsForFilter = Array.from(
     { length: 10 },
     (_, i) => new Date().getFullYear() + 3 - i
   );
-  const handleYearChange = (selectedYear) => {};
-
-  const handleMonthChange = (selectedMonth) => {};
 
   const item = 1;
 
@@ -86,7 +105,7 @@ const AddProvider = ({ color = "light" }) => {
                 {/* x  */}
                 <AddCircle
                   className="cursor-pointer text-orange-400"
-                  onClick={handleOpenEyeModal}
+                  onClick={() => handleOpenEyeModal(row)}
                 />
               </Tooltip>
               {row?.original?.provider || "N/A"}
@@ -110,7 +129,6 @@ const AddProvider = ({ color = "light" }) => {
       //           options={uniData}
       //           sx={{ width: 200, zIndex: 999 }}
       //           onChange={(e, value) => {
-      //             // setSelectedStudent(null);
       //             handleAutoCompleteChange(row, value);
       //           }}
       //           getOptionLabel={(option) => option.name}
@@ -143,10 +161,10 @@ const AddProvider = ({ color = "light" }) => {
           return (
             <div>
               <InputField
-                type="number"
+                type="text"
                 name="agentName"
                 placeholder="Agent Name"
-                onChange={(e) => handleInputChange(e, row?.index)}
+                onChange={(e) => handleInputChange(e, row)}
                 value={row?.original?.agentName}
                 className="min-w-[100px]"
               />
@@ -165,8 +183,8 @@ const AddProvider = ({ color = "light" }) => {
               type="number"
               name="noOfStudents"
               placeholder="No of Students"
-              onChange={(e) => handleInputChange(e, row?.index)}
-              value={item?.noOfStudents}
+              onChange={(e) => handleInputChange(e, row)}
+              value={row?.original?.noOfStudents}
               className="min-w-[100px]"
             />
           );
@@ -184,7 +202,7 @@ const AddProvider = ({ color = "light" }) => {
               name="totalCommission"
               placeholder="Total Commission"
               size="small"
-              onChange={(e) => handleInputChange(e, row?.index)}
+              onChange={(e) => handleInputChange(e, row)}
               value={item?.totalCommission}
               className="min-w-[100px] "
             />
@@ -202,7 +220,7 @@ const AddProvider = ({ color = "light" }) => {
               name="totalBonus"
               placeholder="Total Bonus"
               size="small"
-              onChange={(e) => handleInputChange(e, row?.index)}
+              onChange={(e) => handleInputChange(e, row)}
               value={item?.totalBonus}
               className="min-w-[100px]"
             />
@@ -220,7 +238,7 @@ const AddProvider = ({ color = "light" }) => {
               name="totalGST"
               placeholder="Total GST"
               size="small"
-              onChange={(e) => handleInputChange(e, row?.index)}
+              onChange={(e) => handleInputChange(e, row)}
               value={item?.totalGST}
               className="min-w-[100px]"
             />
@@ -238,7 +256,7 @@ const AddProvider = ({ color = "light" }) => {
               name="nextReminder"
               placeholder="Next Reminder"
               size="small"
-              onChange={(e) => handleInputChange(e, row?.index)}
+              onChange={(e) => handleInputChange(e, row)}
               value={item?.nextReminder}
               className="min-w-[100px]"
             />
@@ -267,12 +285,13 @@ const AddProvider = ({ color = "light" }) => {
         },
       },
     ],
-    []
+    [accountDetails, openProviderDialog]
   );
 
   const subColumns = useMemo(
     () => [
       {
+        accessorKey: "intake",
         header: "Intake",
         size: 150,
         Cell: ({ row }) => {
@@ -285,8 +304,9 @@ const AddProvider = ({ color = "light" }) => {
                 <Select
                   labelId="year-filter-label"
                   id="year-filter"
-                  onChange={(e) => handleYearChange(e.target.value)}
+                  onChange={(e) => handleYearChange(e.target.value, row)}
                   label="Year"
+                  value={row?.original?.year || ""}
                 >
                   {yearsForFilter?.map((value, i) => (
                     <MenuItem value={value} key={value}>
@@ -304,6 +324,7 @@ const AddProvider = ({ color = "light" }) => {
                   id="month-filter"
                   onChange={(e) => handleMonthChange(e.target.value)}
                   label="Month"
+                  value={row?.original?.month || ""}
                 >
                   {monthsForFilter?.map(({ label, value }, i) => (
                     <MenuItem value={value} key={label}>
@@ -328,7 +349,7 @@ const AddProvider = ({ color = "light" }) => {
                 type="number"
                 name="invoiceNo"
                 placeholder="Invoice Number"
-                onChange={(e) => handleSubInputChange(e, row?.name)}
+                onChange={(e) => handleSubInputChange(e, row)}
                 value={item?.invoiceNumber}
                 className="min-w-[100px]"
               />
@@ -347,7 +368,7 @@ const AddProvider = ({ color = "light" }) => {
               type="number"
               name="noOfStudents"
               placeholder="Number of Students"
-              onChange={(e) => handleSubInputChange(e, row?.noOfStudents)}
+              onChange={(e) => handleSubInputChange(e, row)}
               value={item?.noOfStudents}
               className="min-w-[100px]"
             />
@@ -366,8 +387,8 @@ const AddProvider = ({ color = "light" }) => {
               name="commission"
               placeholder="Commission"
               size="small"
-              onChange={(e) => handleSubInputChange(e, row?.index)}
-              value={item?.commission}
+              onChange={(e) => handleSubInputChange(e, row)}
+              value={row?.original?.commission}
               className="min-w-[100px]"
             />
           );
@@ -381,11 +402,11 @@ const AddProvider = ({ color = "light" }) => {
           return (
             <InputField
               type="number"
-              name="Bonus"
+              name="bonus"
               placeholder="Bonus"
               size="small"
-              onChange={(e) => handleSubInputChange(e, row?.index)}
-              value={item?.Bonus}
+              onChange={(e) => handleSubInputChange(e, row)}
+              value={row?.original?.bonus}
               className="min-w-[100px]"
             />
           );
@@ -395,15 +416,15 @@ const AddProvider = ({ color = "light" }) => {
         accessorKey: "totalAmount",
         header: "Total Amount",
         size: 50,
-        Cell: ({ row, renderedCellValue }) => {
+        Cell: ({ row }) => {
           return (
             <InputField
               type="text"
               name="totalAmount"
               placeholder="Total Amount"
               size="small"
-              onChange={(e) => handleSubInputChange(e, row?.index)}
-              value={item?.totalAmount}
+              onChange={(e) => handleSubInputChange(e, row)}
+              value={row?.original?.totalAmount}
               className="min-w-[100px]"
             />
           );
@@ -413,7 +434,7 @@ const AddProvider = ({ color = "light" }) => {
         accessorKey: "gst",
         header: "GST Include",
         size: 160,
-        Cell: ({ row, renderedCellValue }) => {
+        Cell: ({ row }) => {
           return (
             <FormControl sx={{ display: "flex", width: "100%" }}>
               <RadioGroup row name="gst" onChange={handleSubInputChange}>
@@ -428,15 +449,15 @@ const AddProvider = ({ color = "light" }) => {
         accessorKey: "claimedDate",
         header: "Claimed Date",
         size: 150,
-        Cell: ({ row, renderedCellValue }) => {
+        Cell: ({ row }) => {
           return (
             <InputField
               type="date"
               name="claimedDate"
               placeholder="Claimed Date"
               size="small"
-              onChange={(e) => handleSubInputChange(e, row?.index)}
-              value={item?.claimedDate}
+              onChange={(e) => handleSubInputChange(e, row)}
+              value={row?.original?.claimedDate}
               className="min-w-[100px]"
             />
           );
@@ -446,15 +467,15 @@ const AddProvider = ({ color = "light" }) => {
         accessorKey: "receivedAmount",
         header: "Received Amount",
         size: 50,
-        Cell: ({ row, renderedCellValue }) => {
+        Cell: ({ row }) => {
           return (
             <InputField
               type="text"
               name="receivedAmount"
               placeholder="Received Amount"
               size="small"
-              onChange={(e) => handleSubInputChange(e, row?.index)}
-              value={item?.receivedAmount}
+              onChange={(e) => handleSubInputChange(e, row)}
+              value={row?.original?.receivedAmount}
               className="min-w-[100px]"
             />
           );
@@ -464,15 +485,15 @@ const AddProvider = ({ color = "light" }) => {
         accessorKey: "receivedDate",
         header: "Received Date",
         size: 150,
-        Cell: ({ row, renderedCellValue }) => {
+        Cell: ({ row }) => {
           return (
             <InputField
               type="date"
               name="receivedDate"
               placeholder="Received Date"
               size="small"
-              onChange={(e) => handleSubInputChange(e, row?.index)}
-              value={item?.claimedDate}
+              onChange={(e) => handleSubInputChange(e, row)}
+              value={row?.original?.receivedDate}
               className="min-w-[100px]"
             />
           );
@@ -482,15 +503,12 @@ const AddProvider = ({ color = "light" }) => {
         accessorKey: "Action",
         header: "Action",
         size: 150,
-        Cell: ({ row, renderedCellValue }) => {
-          const item = row.original;
+        Cell: ({ row }) => {
           return (
             <>
               <div className="flex items-center">
                 <Tooltip title="Delete Course" arrow>
-                  <IconButton
-                    onClick={() => handleDeleteStudentDetails(row?.index)}
-                  >
+                  <IconButton onClick={() => handleDeleteIntakeDetails(row)}>
                     <AiFillDelete className="text-red-600 cursor-pointer" />
                   </IconButton>
                 </Tooltip>
@@ -500,12 +518,12 @@ const AddProvider = ({ color = "light" }) => {
         },
       },
     ],
-    []
+    [intakeDetails]
   );
 
   const secondTable = useMaterialReactTable({
     columns: subColumns,
-    data: studentDetails,
+    data: intakeDetails,
     enablePagination: false,
     enableRowNumbers: true,
     initialState: {
@@ -515,12 +533,11 @@ const AddProvider = ({ color = "light" }) => {
     muiTableContainerProps: {
       sx: { height: "300px", maxHeight: "800px", borderWidth: "0px" },
     },
-    // enableExpandAll: true,
     renderTopToolbarCustomActions: ({ table }) => (
       <Button
         variant="contained"
         startIcon={<FaPlusCircle />}
-        onClick={addStudentDetails}
+        onClick={addIntakeDetails}
       >
         Add More Entries
       </Button>
@@ -547,23 +564,7 @@ const AddProvider = ({ color = "light" }) => {
     ),
   });
 
-  useEffect(() => {
-    if (state) {
-      setData({ ...state?.item });
-      setSelectedStudent({
-        clientId: state?.item?.clientId,
-        name: `${state?.item?.clientName}`,
-        address: state?.item?.clientData?.address,
-        number: state?.item?.clientData?.number,
-      });
-      // setAccountDetails([
-      //   ...state?.item?.accountDetails?.map((item) => ({
-      //     ...item,
-      //     date: item?.date?.split("T")[0],
-      //   })),
-      // ]);
-    }
-  }, [state]);
+  console.log(accountDetails);
 
   const deleteData = () => {
     axios
@@ -578,49 +579,72 @@ const AddProvider = ({ color = "light" }) => {
       });
   };
 
-  const handleInputChange = (e, index) => {
-    const { name, value } = e.target;
-    const row = accountDetails.find((item, i) => i === index);
-    setAccountDetails((prevState) => [
-      ...prevState?.slice(0, index),
-      { ...row, [name]: value },
-      ...prevState?.slice(index + 1, accountDetails.length),
-    ]);
-  };
-
-  const handleSubInputChange = () => (e, index) => {
-    const { name, value } = e.target;
-    const row = accountDetails.find((item, i) => i === index);
-    setStudentDetails((prevState) => [
-      ...prevState?.slice(0, index),
-      { ...row, [name]: value },
-      ...prevState?.slice(index + 1, accountDetails.length),
-    ]);
-  };
-
-  const addStudentDetails = () => {
-    setStudentDetails((prev) => [...prev, { index: prev.length + 1 }]);
-  };
-
-  const handleDeleteStudentDetails = (index) => {
-    setStudentDetails((prev) => [...prev.filter((item, i) => i !== index)]);
-  };
-
-  const handleAutoCompleteChange = (row, value) => {
-    const rowIndex = accountDetails.find(
-      (_, index) => Number(index) === Number(row?.index)
+  const handleYearChange = (e, row) => {
+    const foundRow = intakeDetails?.find(
+      (item, i) => item?.id === row?.original?.id
     );
-    setAccountDetails((arg) => [
-      ...arg.slice(0, row?.index),
-      { ...rowIndex, provider: value },
-      arg.slice(row?.index + 1, accountDetails?.length - 1),
+    setIntakeDetails((prevState) => [
+      ...prevState?.slice(0, row?.index),
+      { ...foundRow, year: e },
+      ...prevState?.slice(row?.index + 1, intakeDetails?.length),
     ]);
+  };
+
+  const handleMonthChange = (e, row) => {
+    const foundRow = intakeDetails?.find(
+      (item, i) => item?.id === row?.original?.id
+    );
+    setIntakeDetails((prevState) => [
+      ...prevState?.slice(0, row?.index),
+      { ...foundRow, month: e },
+      ...prevState?.slice(row?.index + 1, intakeDetails?.length),
+    ]);
+  };
+
+  const handleInputChange = (e, row) => {
+    const { name, value } = e.target;
+    const foundRow = accountDetails.find(
+      (item, i) => item?.id === row?.original?.id
+    );
+    setAccountDetails((prevState) => [
+      ...prevState?.slice(0, row?.index),
+      { ...foundRow, [name]: value },
+      ...prevState?.slice(row?.index + 1, accountDetails.length),
+    ]);
+  };
+
+  const handleSubInputChange = (e, row) => {
+    const { name, value } = e.target;
+    const foundRow = intakeDetails?.find(
+      (item, i) => item?.id === row?.original?.id
+    );
+
+    setIntakeDetails((prevState) => [
+      ...prevState?.slice(0, row?.index),
+      { ...foundRow, [name]: value },
+      ...prevState?.slice(row?.index + 1, intakeDetails?.length),
+    ]);
+  };
+
+  const addIntakeDetails = () => {
+    setIntakeDetails((prev) => [
+      ...prev,
+      {
+        id: crypto.randomUUID(),
+        month: monthsForFilter[new Date().getMonth()].value,
+        year: new Date().getFullYear(),
+      },
+    ]);
+  };
+
+  const handleDeleteIntakeDetails = (index) => {
+    setIntakeDetails((prev) => [...prev.filter((item, i) => i !== index)]);
   };
 
   const addaccountDetails = () => {
     setAccountDetails((prev) => [
       ...prev,
-      { module: null, agreedAmount: null, cost: null },
+      { module: null, agreedAmount: null, cost: null, id: crypto.randomUUID() },
     ]);
   };
 
@@ -631,18 +655,18 @@ const AddProvider = ({ color = "light" }) => {
   const { mutate } = useMutation(postData, {
     onSuccess() {
       toast.success(
-        data?.id ? "Data updated Successfully" : "Data added Successfully"
+        item?.id ? "Data updated Successfully" : "Data added Successfully"
       );
       navigate("/admin/account");
       refetchAccountList();
     },
     onError() {
-      toast.error(data?.id ? "Error Updating Data" : "Error Submitting Data");
+      toast.error(item?.id ? "Error Updating Data" : "Error Submitting Data");
     },
   });
 
   async function postData(payload) {
-    if (data?.id) {
+    if (item?.id) {
       await axios.put(`${API_URL}/accounts/${payload?.id}`, payload);
     } else {
       await axios.post(`${API_URL}/accounts`, payload);
@@ -651,30 +675,24 @@ const AddProvider = ({ color = "light" }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const payload = {
+      provider: 1,
+      document: "a",
+      accountDetails,
+    };
+
     mutate({
-      ...data,
-      accountDetails: accountDetails?.map((item) => ({
-        ...item,
-        document: "",
-      })),
-      clientId: Number(selectedStudent?.clientId),
-      amount: accountDetails.reduce((a, b) => a + (Number(b.amount) || 0), 0),
+      payload,
     });
   };
 
-  const handleOpenEyeModal = () => {
-    setOpenProviderDialog({ state: !openProviderDialog?.state, id: 1 });
-  };
-
-  const totalAmountAfterDiscount = () => {
-    let totalAmount = 0;
-    let priceAfterDiscount = 0;
-    accountDetails?.forEach((item) => {
-      totalAmount = totalAmount + Number(item?.amount);
+  const handleOpenEyeModal = (row) => {
+    setOpenProviderDialog({
+      state: !openProviderDialog?.state,
+      id: row?.original?.id,
+      index: row?.index,
     });
-    priceAfterDiscount =
-      totalAmount - (Number(data?.discount) / 100) * totalAmount;
-    return Number(priceAfterDiscount.toFixed(3)) || 0;
+    setBonusEntries(row?.original?.commissionDetails);
   };
 
   return (
@@ -717,13 +735,6 @@ const AddProvider = ({ color = "light" }) => {
                       </Button>
                     </div>
                   </div>
-                  {/* <div className="grid  gap-5 py-10">
-                    <div className="col-span-1 ml-auto mt-auto">
-                      <Button variant="contained" onClick={handleSubmit}>
-                        Submit
-                      </Button>
-                    </div>
-                  </div> */}
                 </div>
               </div>
             </div>
@@ -742,7 +753,14 @@ const AddProvider = ({ color = "light" }) => {
       )}
       {openProviderDialog && (
         <ProviderDialog
-          {...{ open: openProviderDialog, setOpen: setOpenProviderDialog }}
+          {...{
+            open: openProviderDialog,
+            setOpen: setOpenProviderDialog,
+            bonusEntries,
+            setBonusEntries,
+            setAccountDetails,
+            accountDetails,
+          }}
         />
       )}
     </div>

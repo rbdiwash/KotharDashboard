@@ -63,7 +63,7 @@ export default function Login() {
         : navigate("/admin/dashboard");
       res?.data?.data?.mfa
         ? toast.success("Your email is not verified, verify to login.")
-        : toast.success(res?.data?.message || "Loggeed in successfully");
+        : toast.success(res?.data?.message || "Logged in successfully");
     },
     onError(err) {
       console.log("🚀  err:", err);
