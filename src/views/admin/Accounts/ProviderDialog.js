@@ -20,7 +20,6 @@ export default function ProviderDialog({
   accountDetails,
 }) {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
-  console.log(bonusEntries);
   const handleClose = () => {
     setOpen({ state: false, id: "", index: null });
   };
@@ -36,7 +35,6 @@ export default function ProviderDialog({
       ...prevState?.slice(open?.index + 1, accountDetails.length),
     ]);
 
-    debugger;
     setOpen({ state: false, id: null, index: null });
   };
 

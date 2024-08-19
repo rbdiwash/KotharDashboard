@@ -207,6 +207,7 @@ const Accounts = ({ color = "light" }) => {
         size: 150,
         Cell: ({ row, renderedCellValue }) => {
           const item = row.original;
+          console.log(item);
           return (
             <div className="flex items-center">
               <Tooltip title="Edit Course" arrow>

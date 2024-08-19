@@ -2,9 +2,18 @@ import { Close } from "@mui/icons-material";
 import { Button, Radio, Switch } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import InputField from "components/Input/InputField";
+import { useEffect } from "react";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
-export default function PermissionDrawer({ open, setOpen, values, setValues }) {
+export default function PermissionDrawer({
+  open,
+  setOpen,
+  values,
+  setValues,
+  accountDetails,
+  setAccountDetails,
+}) {
   const toggleDrawer = () => {
     setOpen({ state: !open?.state, id: null });
   };
@@ -37,30 +46,37 @@ export default function PermissionDrawer({ open, setOpen, values, setValues }) {
     {
       label: "Total Fees",
       value: "totalFees",
+      type: "number",
     },
     {
       label: "Agreed Fees",
       value: "agreedFees",
+      type: "number",
     },
     {
       label: "Discount",
       value: "discount",
+      type: "number",
     },
     {
       label: "Material Fee",
       value: "materialFee",
+      type: "number",
     },
     {
       label: "Enrolment Fee",
       value: "enrolmentFee",
+      type: "number",
     },
     {
       label: "Number of Semester",
       value: "semester",
+      type: "number",
     },
     {
       label: "Per Sem Fee",
       value: "perSemFee",
+      type: "number",
     },
   ];
 
@@ -69,10 +85,23 @@ export default function PermissionDrawer({ open, setOpen, values, setValues }) {
     setValues({ ...values, [name]: value });
   };
 
+  useEffect(() => {
+    setValues(open?.value);
+  }, [open.id]);
+
   const handleSubmit = () => {
-    console.log(values);
+    const foundRow = accountDetails?.find((item, i) => item?.id === open?.id);
+
+    setAccountDetails((prevState) => [
+      ...prevState?.slice(0, open?.index),
+      { ...foundRow, admissionValues: values },
+      ...prevState?.slice(open?.index + 1, accountDetails.length),
+    ]);
+
     setOpen({ state: !open?.state, id: null });
+    toast.success("Values updated successfully");
   };
+
   return (
     <Drawer
       anchor={"right"}
@@ -96,7 +125,7 @@ export default function PermissionDrawer({ open, setOpen, values, setValues }) {
               placeholder={module?.label}
               size="small"
               onChange={(e) => handleInputChange(e)}
-              value={module?.module?.value}
+              value={values?.[module.value]}
               className="min-w-[50px]"
             />
           </div>

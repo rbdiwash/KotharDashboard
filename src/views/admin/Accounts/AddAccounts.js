@@ -60,10 +60,16 @@ const AddAccounts = ({ color = "light" }) => {
     commission: "",
     reminderDate: new Date(),
     amountPaidByStudent: "",
+    clientId: null,
+    dueAmount: "",
+    agentCost: "",
+    profitLoss: "",
+    amountPaidByStudent: "",
   });
-  const [{ refetchAccountList }] = useKothar();
+  const [{ accountData }, { refetchAccountList, getIndividualAccountData }] =
+    useKothar();
   const [openEyeModal, setOpenEyeModal] = useState({ state: false, id: null });
-  const [studentValues, setStudentValues] = useState();
+  const [studentValues, setStudentValues] = useState({});
   const { state } = useLocation();
   const navigate = useNavigate();
   const options = [
@@ -79,19 +85,13 @@ const AddAccounts = ({ color = "light" }) => {
 
   useEffect(() => {
     if (state) {
-      setData({ ...state?.item });
       setSelectedStudent({
         clientId: state?.item?.clientId,
         name: `${state?.item?.clientName}`,
         address: state?.item?.clientData?.address,
         number: state?.item?.clientData?.number,
       });
-      // setAccountDetails([
-      //   ...state?.item?.accountDetails?.map((item) => ({
-      //     ...item,
-      //     date: item?.date?.split("T")[0],
-      //   })),
-      // ]);
+      getIndividualAccountData(2);
     }
   }, [state]);
 
@@ -188,13 +188,12 @@ const AddAccounts = ({ color = "light" }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const payload = {
       id: 1,
-      clientId: data?.clientId,
+      clientId: 2,
       caseOfficer: "string",
       referral: "string",
-      totalAmount: data?.amountPaidByStudent,
+      totalAmount: getTotalAmountPaid,
       agentCost: data?.agentCost,
       dueAmount: data?.dueAmount,
       profitLoss: data?.profitLoss,
@@ -213,12 +212,19 @@ const AddAccounts = ({ color = "light" }) => {
         referral: item?.referral,
       })),
     };
+    console.log(payload);
 
     mutate(payload);
   };
 
-  const handleOpenEyeModal = () => {
-    setOpenEyeModal({ state: !openEyeModal?.state, id: 1 });
+  const handleOpenEyeModal = (rowData) => {
+    console.log("🚀  rowData:", rowData);
+    setOpenEyeModal({
+      state: true,
+      id: rowData?.original.id,
+      index: rowData?.index,
+      value: rowData?.original?.admissionValues,
+    });
   };
 
   const columns = useMemo(
@@ -232,7 +238,7 @@ const AddAccounts = ({ color = "light" }) => {
               {row?.original?.module?.value === "Admission" && (
                 <Visibility
                   className="cursor-pointer"
-                  onClick={handleOpenEyeModal}
+                  onClick={() => handleOpenEyeModal(row)}
                 />
               )}
 
@@ -615,16 +621,36 @@ const AddAccounts = ({ color = "light" }) => {
     ),
   });
 
-  const totalAmountAfterDiscount = () => {
-    let totalAmount = 0;
-    let priceAfterDiscount = 0;
-    accountDetails?.forEach((item) => {
-      totalAmount = totalAmount + Number(item?.amount);
-    });
-    priceAfterDiscount =
-      totalAmount - (Number(data?.discount) / 100) * totalAmount;
-    return Number(priceAfterDiscount.toFixed(3)) || 0;
-  };
+  const getTotalAmountPaid = useMemo(() => {
+    const total = accountDetails.reduce(
+      (total, amount) => Number(total) + Number(amount.paidAmount),
+      0
+    );
+    return total;
+  }, [accountDetails]);
+
+  const getTotalAgentCost = useMemo(() => {
+    const total = accountDetails.reduce(
+      (total, amount) => Number(total) + Number(amount.referral),
+      0
+    );
+    return total;
+  }, [accountDetails]);
+  const getTotalDue = useMemo(() => {
+    const total = accountDetails.reduce(
+      (total, amount) => Number(total) + Number(amount.dueAmount),
+      0
+    );
+    return total;
+  }, [accountDetails]);
+
+  const getTotalProfitLoss = useMemo(() => {
+    const total = accountDetails.reduce(
+      (total, amount) => Number(total) + Number(amount.profitLoss),
+      0
+    );
+    return total;
+  }, [accountDetails]);
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">
@@ -682,7 +708,8 @@ const AddAccounts = ({ color = "light" }) => {
                           type="number"
                           size="small"
                           startAdornment={"$"}
-                          value={data?.amountPaidByStudent}
+                          value={getTotalAmountPaid}
+                          disabled
                           onChange={(e) =>
                             setData({
                               ...data,
@@ -701,7 +728,8 @@ const AddAccounts = ({ color = "light" }) => {
                           type="number"
                           size="small"
                           startAdornment={"$"}
-                          value={data?.agentCost}
+                          value={getTotalAgentCost}
+                          disabled
                           onChange={(e) =>
                             setData({ ...data, agentCost: e.target.value })
                           }
@@ -717,7 +745,8 @@ const AddAccounts = ({ color = "light" }) => {
                           type="number"
                           size="small"
                           startAdornment={"$"}
-                          value={data?.dueAmount}
+                          value={getTotalDue}
+                          disabled
                           onChange={(e) =>
                             setData({
                               ...data,
@@ -734,7 +763,8 @@ const AddAccounts = ({ color = "light" }) => {
                           type="number"
                           size="small"
                           startAdornment={"$"}
-                          value={data?.profitLoss}
+                          value={getTotalProfitLoss}
+                          disabled
                           onChange={(e) =>
                             setData({
                               ...data,
@@ -788,6 +818,8 @@ const AddAccounts = ({ color = "light" }) => {
             setOpen: setOpenEyeModal,
             values: studentValues,
             setValues: setStudentValues,
+            accountDetails,
+            setAccountDetails,
           }}
         />
       )}
@@ -796,384 +828,3 @@ const AddAccounts = ({ color = "light" }) => {
 };
 
 export default AddAccounts;
-
-{
-  /* <table className="table-auto w-full">
-                        <thead>
-                          <tr className="bg-gray-200">
-                            <th className="border px-4 py-2">SN</th>
-                            <th className="border px-4 py-2">Module</th>
-                            <th className="border px-4 py-2">Agreed</th>
-                            <th className="border px-4 py-2">Cost</th>
-                            <th className="border px-4 py-2">Paid</th>
-                            <th className="border px-4 py-2">Due</th>
-                            <th className="border px-4 py-2">Referral</th>
-                            <th className="border px-4 py-2">Profit/Loss</th>
-                            <th className="border px-4 py-2">Action</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {accountDetails?.map((item, index) => (
-                            <tr key={item?.index}>
-                              <td className="border text-center px-4 py-2">
-                                {index + 1}
-                              </td>
-                              <td className="border flex items-center gap-2 text-left px-4 py-2">
-                                {selectedType?.value === "Admission" && (
-                                  <KeyboardArrowDown className="cursor-pointer" />
-                                )}
-                                <Visibility
-                                  className="cursor-pointer"
-                                  onClick={handleOpenEyeModal}
-                                />
-                                <Autocomplete
-                                  size="small"
-                                  disablePortal
-                                  options={options}
-                                  sx={{ width: 200 }}
-                                  onChange={(e, value) => {
-                                    // setSelectedStudent(null);
-                                  }}
-                                  getOptionLabel={(option) => option.label}
-                                  renderInput={(params) => (
-                                    <TextField
-                                      {...params}
-                                      placeholder="Select Type"
-                                    />
-                                  )}
-                                  value={selectedType}
-                                  isOptionEqualToValue={(options, value) =>
-                                    options?.value === value?.value
-                                  }
-                                />
-                              </td>
-                              <td className="border text-center px-4 py-2 min-w-[150px]">
-                                <InputField
-                                  type="number"
-                                  name="agreedAmount"
-                                  placeholder="Agreed Amount"
-                                  onChange={(e) => handleInputChange(e, index)}
-                                  value={item?.agreedAmount}
-                                  className="min-w-[100px]"
-                                />
-                              </td>
-                              <td className="border text-center  px-4 py-2 min-w-[150px]">
-                                <InputField
-                                  type="number"
-                                  name="cost"
-                                  placeholder="Kothar Cost"
-                                  onChange={(e) => handleInputChange(e, index)}
-                                  value={item?.method}
-                                  className="min-w-[100px]"
-                                />
-                              </td>
-                              <td className="border text-center px-4 py-2 min-w-[150px]">
-                                <InputField
-                                  type="number"
-                                  name="paidAmount"
-                                  placeholder="Paid Amount"
-                                  size="small"
-                                  onChange={(e) => handleInputChange(e, index)}
-                                  value={item?.paidAmount}
-                                  className="min-w-[100px]"
-                                />
-                              </td>
-                              <td className="border text-center px-4 py-2 min-w-[150px]">
-                                <InputField
-                                  type="number"
-                                  name="dueAmount"
-                                  placeholder="Due Amount"
-                                  size="small"
-                                  onChange={(e) => handleInputChange(e, index)}
-                                  value={item?.dueAmount}
-                                  className="min-w-[100px]"
-                                />
-                              </td>
-                              <td className="border text-center px-4 py-2 min-w-[150px]">
-                                <InputField
-                                  type="text"
-                                  name="referral"
-                                  placeholder="Referral"
-                                  size="small"
-                                  onChange={(e) => handleInputChange(e, index)}
-                                  value={item?.referral}
-                                  className="min-w-[100px]"
-                                />
-                              </td>
-                              <td className="border text-center px-4 py-2 min-w-[150px]">
-                                <InputField
-                                  type="number"
-                                  name="profitLoss"
-                                  placeholder="Profit/Loss"
-                                  size="small"
-                                  onChange={(e) => handleInputChange(e, index)}
-                                  value={item?.profitLoss}
-                                  className="min-w-[100px]"
-                                />
-                              </td>
-                              <td className="border text-center px-4 py-2">
-                                <div className="flex items-center">
-                                  <Tooltip title="Delete Course" arrow>
-                                    <IconButton
-                                      onClick={() =>
-                                        handleDeleteInstallment(index)
-                                      }
-                                    >
-                                      <AiFillDelete className="text-red-600 cursor-pointer" />
-                                    </IconButton>
-                                  </Tooltip>
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                          <tr>
-                            <td
-                              colSpan={"20"}
-                              className="border text-left px-4 py-2"
-                            >
-                              <Button
-                                variant="contained"
-                                startIcon={<FaPlusCircle />}
-                                onClick={addaccountDetails}
-                              >
-                                Add More Entries
-                              </Button>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table> */
-}
-
-{
-  /* <form className="flex items-center justify-center gap-2 w-full  rounded mr-3">
-                <Autocomplete
-                  size="small"
-                  disablePortal
-                  options={options}
-                  sx={{ width: 300 }}
-                  onChange={(e, value) => {
-                    setSelectedStudent(null);
-                  }}
-                  getOptionLabel={(option) => option.label}
-                  renderInput={(params) => (
-                    <TextField {...params} placeholder="Select Type" />
-                  )}
-                  value={selectedType}
-                  isOptionEqualToValue={(options, value) =>
-                    options?.value === value?.value
-                  }
-                />
-                <Autocomplete
-                  size="small"
-                  disablePortal
-                  options={getClientOption()}
-                  sx={{ width: 500 }}
-                  getOptionLabel={(option) => `${option.name}`}
-                  getOptionKey={(option) => option.clientId}
-                  renderInput={(params) => (
-                    <TextField {...params} placeholder="Search using Name" />
-                  )}
-                  onChange={(e, value) => {
-                    setSelectedStudent(value);
-                  }}
-                  value={selectedStudent}
-                />
-
-                <Button variant="contained">Search </Button>
-              </form> */
-}
-{
-  /* <td
-                                className={
-                                  `border text-center px-4 py-2 ` +
-                                  (accountDetails[index]?.claimed?.value === "yes"
-                                    ? "min-w-[300px]"
-                                    : `min-w-[150px]`)
-                                }
-                              >
-                                <div className="flex items-center gap-4">
-                                  <Autocomplete
-                                    onChange={(e, value) => {
-                                      const row = accountDetails.find(
-                                        (item, i) => i === index
-                                      );
-                                      setAccountDetails((prevState) => [
-                                        ...prevState?.slice(0, index),
-                                        { ...row, claimed: value },
-                                        ...prevState?.slice(
-                                          index + 1,
-                                          accountDetails.length
-                                        ),
-                                      ]);
-                                    }}
-                                    isOptionEqualToValue={(options, value) =>
-                                      options.value === value.value
-                                    }
-                                    value={[
-                                      {
-                                        label: "Yes",
-                                        value: "Yes",
-                                      },
-                                      { label: "No", value: "No" },
-                                    ]?.find(
-                                      (arg) => arg?.value === item?.claimed
-                                    )}
-                                    name="claimed"
-                                    size="small"
-                                    required
-                                    options={[
-                                      {
-                                        label: "Yes",
-                                        value: "Yes",
-                                      },
-                                      { label: "No", value: "No" },
-                                    ]}
-                                    disablePortal
-                                    renderInput={(params) => (
-                                      <TextField {...params} label="Yes/No" />
-                                    )}
-                                    className="min-w-[100px]"
-                                    ListboxProps={{
-                                      style: {
-                                        maxHeight: "180px",
-                                      },
-                                    }}
-                                  />
-                                  {item?.claimed?.value === "yes" && (
-                                    <InputField
-                                      type="text"
-                                      name="commission"
-                                      placeholder="Enter Commission"
-                                      onChange={(e) =>
-                                        handleInputChange(e, index)
-                                      }
-                                      value={item?.commission}
-                                    />
-                                  )}
-                                </div>
-                              </td> */
-}
-{
-  /* <td className="border text-center px-4 py-2 min-w-[150px]">
-                                <InputField
-                                  type="text"
-                                  name="caseOfficer"
-                                  placeholder="Case Officer"
-                                  size="small"
-                                  onChange={(e) => handleInputChange(e, index)}
-                                  value={item?.caseOfficer}
-                                />
-                              </td> */
-}
-{
-  /* <td className="border text-center px-4 py-2 min-w-[150px]">
-                                <InputField
-                                  type="number"
-                                  name="agentCost"
-                                  placeholder="Agent Cost"
-                                  size="small"
-                                  onChange={(e) => handleInputChange(e, index)}
-                                  value={item?.agentCost}
-                                />
-                              </td>
-                              <td className="border text-center px-4 py-2 min-w-[150px]">
-                                <InputField
-                                  type="text"
-                                  name="status"
-                                  placeholder="Status"
-                                  size="small"
-                                  onChange={(e) => handleInputChange(e, index)}
-                                  value={item?.status}
-                                  className="min-w-[200px]"
-                                />
-                              </td> */
-}
-
-{
-  /* <div className="flex items-center gap-2">
-                          <span className="w-[200px]">Commission Claimed:</span>
-
-                          <Autocomplete
-                            onChange={(e, value) =>
-                              setData({ ...data, isClaimed: value?.value })
-                            }
-                            isOptionEqualToValue={(options, value) =>
-                              options?.value === value?.value
-                            }
-                            value={[
-                              {
-                                label: "Yes",
-                                value: "Yes",
-                              },
-                              { label: "No", value: "No" },
-                            ]?.find((arg) => arg?.value === data?.isClaimed)}
-                            name="claimed"
-                            size="small"
-                            required
-                            options={[
-                              {
-                                label: "Yes",
-                                value: "Yes",
-                              },
-                              { label: "No", value: "No" },
-                            ]}
-                            disablePortal
-                            renderInput={(params) => (
-                              <TextField {...params} label="Yes/No" />
-                            )}
-                            className="min-w-[100px]"
-                            ListboxProps={{
-                              style: {
-                                maxHeight: "180px",
-                              },
-                            }}
-                          />
-                          {data?.isClaimed === "Yes" && (
-                            <OutlinedInput
-                              name="commission"
-                              placeholder="Amount in AUD"
-                              type="number"
-                              size="small"
-                              startAdornment={"$"}
-                              value={data?.commission}
-                              onChange={(e) =>
-                                setData({
-                                  ...data,
-                                  commission: e.target.value,
-                                })
-                              }
-                            />
-                          )}
-                          {data?.isClaimed === "No" && (
-                            <OutlinedInput
-                              name="reminderDate"
-                              placeholder="Amount in AUD"
-                              type="date"
-                              size="small"
-                              value={data?.reminderDate}
-                              onChange={(e) =>
-                                setData({
-                                  ...data,
-                                  reminderDate: e.target.value,
-                                })
-                              }
-                            />
-                          )}
-                        </div> */
-}
-
-{
-  /* <div className=" flex items-center gap-2">
-                          <span> Due Date: </span>
-                          <OutlinedInput
-                            type="date"
-                            size="small"
-                            sx={{ width: "50%" }}
-                            name="dueDate"
-                            onChange={(e) =>
-                              setData({ ...data, dueDate: e.target.value })
-                            }
-                            value={data?.dueDate}
-                          />
-                        </div> */
-}

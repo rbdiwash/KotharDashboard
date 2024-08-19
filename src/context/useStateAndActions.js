@@ -16,6 +16,7 @@ const useStateAndActions = () => {
   });
   const [rplList, setRPLList] = useState([]);
   const [visaList, setVisaList] = useState([]);
+  const [accountData, setAccountData] = useState();
   const [profitLossList, setProfitLossList] = useState([]);
   const [moduleWiseProfitLossList, setModuleWiseProfitLossList] = useState([]);
   const [notificationsList, setNotificationsList] = useState([]);
@@ -285,7 +286,17 @@ const useStateAndActions = () => {
       enabled: false,
     }
   );
-  console.log(accountsList);
+
+  const getIndividualAccountData = (params) => {
+    let url = `${API_URL}/accounts/${params}`;
+
+    axios
+      .get(url, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      })
+      .then((res) => setAccountData(res?.data?.data))
+      .catch((err) => console.log(err));
+  };
   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
   useEffect(() => {
@@ -330,6 +341,7 @@ const useStateAndActions = () => {
     moduleWiseProfitLossList,
     notificationsList,
     notificationClicked,
+    accountData,
   };
   const actions = {
     refetchClient,
@@ -357,6 +369,8 @@ const useStateAndActions = () => {
     getNotificationsData,
     setNotificationsList,
     setNotificationClicked,
+    setAccountData,
+    getIndividualAccountData,
   };
 
   return [state, actions];

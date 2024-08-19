@@ -16,3 +16,33 @@ Ranjit le tireko paisa
 
 
 
+
+
+ <div className="flex items-center justify-start gap-4">
+            <Input id="fullName" placeholder={"Enter Email Address"} />
+            <Button className="bg-primary-400 text-base hover:bg-primary dark:bg-primary-400 dark:text-white dark:hover:bg-primary">
+              Subscribe
+            </Button>
+          </div>
+
+           <div
+      className="marquee flex w-full shrink-0 items-center gap-0 text-xl"
+      aria-hidden={ariaHidden}
+    >
+      <Swiper
+        modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
+        spaceBetween={50}
+        slidesPerView={1}
+        loop={true}
+        pagination={{ clickable: true }}
+        className="hero-slider h-full"
+        autoplay={{ delay: 5000 }}
+      >
+        <div className="flex items-center gap-4 whitespace-nowrap">
+          <Banner />
+          <Banner />
+          <Banner />
+          <Banner />
+        </div>
+      </Swiper>
+    </div>
