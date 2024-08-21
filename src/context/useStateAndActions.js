@@ -49,13 +49,6 @@ const useStateAndActions = () => {
       .then((res) => {
         const finalData = res?.data?.data;
 
-        const total = {
-          module: "Total",
-          totalAmount: finalData?.totalAmount,
-          paidAmount: finalData?.totalPaid,
-          costAmount: finalData?.totalCost,
-          profit: finalData?.totalProfit,
-        };
         setProfitLossList([...finalData?.moduleProfit]);
       })
       .catch((err) =>
@@ -294,7 +287,9 @@ const useStateAndActions = () => {
       .get(url, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
-      .then((res) => setAccountData(res?.data?.data))
+      .then((res) => {
+        setAccountData(res?.data?.data);
+      })
       .catch((err) => console.log(err));
   };
   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -311,12 +306,12 @@ const useStateAndActions = () => {
       getVisaList();
       refetchSkillList();
       refetchInsuranceList();
-      getRPLList();
       refetchAccountList();
-      getProfitLossData();
+      // getModuleWiseProfitLoss();
+      // getRPLList();
+      // getProfitLossData();
       // refetchRPLList();
-      getModuleWiseProfitLoss();
-      getNotificationsData();
+      // getNotificationsData();
     }
   }, [token]);
 

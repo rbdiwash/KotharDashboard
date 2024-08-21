@@ -26,7 +26,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import ClientDropdown from "components/Dropdowns/ClientDropdown";
 import { rpl_status } from "const/constants";
 import UploadFile from "components/Input/UploadFile";
-import { documents_for_placement } from "const/constants";
+import { documentForPlacement } from "const/constants";
 
 const AddRPLCertificate = ({ color = "light" }) => {
   const [data, setData] = useState({
@@ -660,7 +660,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                   </FormLabel>
                   <FormGroup>
                     <div className="grid grid-cols-2 gap-8">
-                      {documents_for_placement?.map((item) => (
+                      {documentForPlacement?.map((item) => (
                         <div className="">
                           <UploadFile
                             {...{

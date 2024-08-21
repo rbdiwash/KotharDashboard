@@ -6,6 +6,8 @@
 // export const API_URL = "http://170.64.251.113:8080/api/v1";
 // export const API_URL = "http://localhost:8080/api/v1";
 
+import { format } from "date-fns";
+
 // export const API_URL = "https://kothar.samyakluitel.com/api/v1";
 export const API_URL = "https://kothar.samyakluitel.com/api/v1";
 
@@ -153,7 +155,7 @@ export const rpl_status = [
   { label: "Hardcopy sent", value: "Hardcopy sent" },
 ];
 
-export const documents_for_placement = [
+export const documentForPlacement = [
   {
     label: "Covid Vaccination Certificate (Australian Converted)",
     value: "covid",
@@ -173,3 +175,18 @@ export const documents_for_placement = [
     value: "ndis",
   },
 ];
+
+export const studentInitialValue = {
+  client: "",
+  course: "",
+  university: "",
+  startDate: format(new Date(), "yyyy-MM-dd"),
+  endDate: format(new Date(), "yyyy-MM-dd"),
+  totalFees: 0,
+  agreedFees: 0,
+  discount: 0,
+  materialFee: 0,
+  enrolmentFee: 0,
+  semester: 0,
+  perSemFee: 0,
+};

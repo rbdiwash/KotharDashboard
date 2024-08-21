@@ -36,7 +36,7 @@ import {
 import EyeModal from "./EyeModal";
 import { studentInitialValue } from "const/constants";
 
-const AddAccounts = ({ color = "light" }) => {
+const AddClient = ({ color = "light" }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [accountDetails, setAccountDetails] = useState([
     {
@@ -89,19 +89,16 @@ const AddAccounts = ({ color = "light" }) => {
   ];
 
   useEffect(() => {
-    console.log(state);
     if (state) {
-      setSelectedStudent(state?.item?.clientData);
-      state?.item?.hasAccountDetails &&
-        getIndividualAccountData(state?.item?.clientData?.id);
+      setSelectedStudent({
+        clientId: state?.item?.clientId,
+        name: `${state?.item?.clientName}`,
+        address: state?.item?.clientData?.address,
+        number: state?.item?.clientData?.number,
+      });
+      getIndividualAccountData(2);
     }
   }, [state]);
-
-  useEffect(() => {
-    if (accountData) {
-      setAccountDetails(accountData?.installments);
-    }
-  }, [accountData]);
 
   const deleteData = () => {
     axios
@@ -176,26 +173,19 @@ const AddAccounts = ({ color = "light" }) => {
   const { mutate } = useMutation(postData, {
     onSuccess() {
       toast.success(
-        state?.item?.hasAccountDetails
-          ? "Data updated Successfully"
-          : "Data added Successfully"
+        data?.id ? "Data updated Successfully" : "Data added Successfully"
       );
-      // navigate("/admin/account");
-      // refetchAccountList();
+      navigate("/admin/account");
+      refetchAccountList();
     },
     onError() {
-      toast.error(
-        state?.item?.hasAccountDetails
-          ? "Error Updating Data"
-          : "Error Submitting Data"
-      );
+      toast.error(data?.id ? "Error Updating Data" : "Error Submitting Data");
     },
   });
 
   async function postData(payload) {
-    console.log(payload);
-    if (state?.item?.hasAccountDetails) {
-      await axios.put(`${API_URL}/accounts/${payload?.clientId}`, payload);
+    if (data?.id) {
+      await axios.put(`${API_URL}/accounts/${payload?.id}`, payload);
     } else {
       await axios.post(`${API_URL}/accounts`, payload);
     }
@@ -204,7 +194,7 @@ const AddAccounts = ({ color = "light" }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const payload = {
-      id: data?.id,
+      id: 1,
       clientId: 2,
       caseOfficer: "string",
       referral: "string",
@@ -602,8 +592,8 @@ const AddAccounts = ({ color = "light" }) => {
       sx: { height: "300px", maxHeight: "800px", borderWidth: "0px" },
     },
     renderTopToolbarCustomActions: ({ table }) => (
-      <div className="flex justify-start items-center gap-12">
-        <h1 className="text-xl font-normal"> Installment Entries</h1>
+      <>
+        Installment Details
         <Button
           variant="contained"
           startIcon={<FaPlusCircle />}
@@ -611,7 +601,7 @@ const AddAccounts = ({ color = "light" }) => {
         >
           Add More Entries
         </Button>
-      </div>
+      </>
     ),
   });
 
@@ -622,8 +612,8 @@ const AddAccounts = ({ color = "light" }) => {
     enableRowNumbers: true,
     initialState: {
       density: "compact",
-      enableGlobalFilter: false,
-      showGlobalFilter: false,
+      enableGlobalFilter: true,
+      showGlobalFilter: true,
     },
     muiTableContainerProps: {
       sx: { minHeight: "400px", maxHeight: "50vh" },
@@ -668,7 +658,6 @@ const AddAccounts = ({ color = "light" }) => {
     );
     return total;
   }, [accountDetails]);
-  console.log(selectedStudent);
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">
@@ -845,4 +834,4 @@ const AddAccounts = ({ color = "light" }) => {
   );
 };
 
-export default AddAccounts;
+export default AddClient;

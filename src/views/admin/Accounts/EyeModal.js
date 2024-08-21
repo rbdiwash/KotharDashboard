@@ -17,6 +17,7 @@ export default function PermissionDrawer({
   const toggleDrawer = () => {
     setOpen({ state: !open?.state, id: null });
   };
+
   const modules = [
     {
       label: "Agent Name",

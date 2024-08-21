@@ -61,20 +61,16 @@ const Accounts = ({ color = "light" }) => {
         header: "Name",
         size: 150,
         accessorKey: "clientName",
-        Cell: ({ row, renderedCellValue }) => {
+        Cell: ({ row }) => {
           return <div>{row.original.clientName || "N/A"}</div>;
         },
       },
-      // {
-      //   header: "Type",
-      //   size: 150,
-      //   accessorKey: "type",
-      // },
+
       {
         accessorKey: "totalStudentCost", //normal accessorKey
         header: "Student Cost",
         size: 50,
-        Cell: ({ row, renderedCellValue }) => {
+        Cell: ({ row }) => {
           return <div>{row.original.totalStudentCost || 0}</div>;
         },
       },
@@ -119,7 +115,7 @@ const Accounts = ({ color = "light" }) => {
         accessorKey: "Action",
         header: "Action",
         size: 150,
-        Cell: ({ row, renderedCellValue }) => {
+        Cell: ({ row }) => {
           const item = row.original;
           return (
             <div className="flex items-center">
@@ -160,7 +156,7 @@ const Accounts = ({ color = "light" }) => {
         header: "Provider Name",
         size: 150,
         accessorKey: "name",
-        Cell: ({ row, renderedCellValue }) => {
+        Cell: ({ row }) => {
           return <div>{row?.original?.name || "N/A"}</div>;
         },
       },
@@ -190,7 +186,7 @@ const Accounts = ({ color = "light" }) => {
         accessorKey: "nextReminder",
         header: "Next Reminder",
         size: 50,
-        Cell: ({ row, renderedCellValue }) => {
+        Cell: ({ row }) => {
           return (
             <div>
               {new Date(
@@ -205,9 +201,8 @@ const Accounts = ({ color = "light" }) => {
         accessorKey: "Action",
         header: "Action",
         size: 150,
-        Cell: ({ row, renderedCellValue }) => {
+        Cell: ({ row }) => {
           const item = row.original;
-          console.log(item);
           return (
             <div className="flex items-center">
               <Tooltip title="Edit Course" arrow>
@@ -346,7 +341,6 @@ const Accounts = ({ color = "light" }) => {
                 sx={{
                   fontWeight: "bold",
                   fontSize: 16,
-                  // borderRight: "3px solid white",
                 }}
               />
             ))}
