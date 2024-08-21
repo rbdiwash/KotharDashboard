@@ -15,7 +15,7 @@ export default function PermissionDrawer({
   setAccountDetails,
 }) {
   const toggleDrawer = () => {
-    setOpen({ state: !open?.state, id: null });
+    setOpen({ state: !open?.state, uuid: null });
   };
 
   const modules = [
@@ -88,10 +88,12 @@ export default function PermissionDrawer({
 
   useEffect(() => {
     setValues(open?.value);
-  }, [open.id]);
+  }, [open.uuid]);
 
   const handleSubmit = () => {
-    const foundRow = accountDetails?.find((item, i) => item?.id === open?.id);
+    const foundRow = accountDetails?.find(
+      (item, i) => item?.uuid === open?.uuid
+    );
 
     setAccountDetails((prevState) => [
       ...prevState?.slice(0, open?.index),
@@ -99,7 +101,7 @@ export default function PermissionDrawer({
       ...prevState?.slice(open?.index + 1, accountDetails.length),
     ]);
 
-    setOpen({ state: !open?.state, id: null });
+    setOpen({ state: !open?.state, uuid: null });
     toast.success("Values updated successfully");
   };
 

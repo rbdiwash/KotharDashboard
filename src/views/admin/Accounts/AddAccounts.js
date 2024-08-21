@@ -40,7 +40,7 @@ const AddAccounts = ({ color = "light" }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [accountDetails, setAccountDetails] = useState([
     {
-      id: crypto.randomUUID(),
+      uuid: crypto.randomUUID(),
       module: { label: "RPL", value: "RPL" },
       agreedAmount: "",
       cost: "",
@@ -54,7 +54,7 @@ const AddAccounts = ({ color = "light" }) => {
   ]);
 
   const [studentDetails, setStudentDetails] = useState([
-    { id: crypto.randomUUID() },
+    { uuid: crypto.randomUUID() },
   ]);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [data, setData] = useState({
@@ -73,7 +73,10 @@ const AddAccounts = ({ color = "light" }) => {
   });
   const [{ accountData }, { refetchAccountList, getIndividualAccountData }] =
     useKothar();
-  const [openEyeModal, setOpenEyeModal] = useState({ state: false, id: null });
+  const [openEyeModal, setOpenEyeModal] = useState({
+    state: false,
+    uuid: null,
+  });
   const [studentValues, setStudentValues] = useState(studentInitialValue);
   const { state } = useLocation();
   const navigate = useNavigate();
@@ -105,10 +108,10 @@ const AddAccounts = ({ color = "light" }) => {
 
   const deleteData = () => {
     axios
-      .delete(`${API_URL}/organization/delete/${openConfirmationModal?.id}`)
+      .delete(`${API_URL}/organization/delete/${openConfirmationModal?.uuid}`)
       .then((res) => {
         toast.success(res?.data?.message || "Data Deleted Successfully");
-        setOpenConfirmationModal({ state: false, id: null });
+        setOpenConfirmationModal({ state: false, uuid: null });
         refetchAccountList();
       })
       .catch((err) => {
@@ -119,7 +122,7 @@ const AddAccounts = ({ color = "light" }) => {
   const handleInputChange = (e, row) => {
     const { name, value } = e.target;
     const foundRow = accountDetails.find(
-      (item, i) => item?.id === row?.original?.id
+      (item, i) => item?.uuid === row?.original?.uuid
     );
     setAccountDetails((prevState) => [
       ...prevState?.slice(0, row?.index),
@@ -131,7 +134,7 @@ const AddAccounts = ({ color = "light" }) => {
   const handleSubInputChange = (e, row) => {
     const { name, value } = e.target;
     const foundRow = studentDetails.find(
-      (item, i) => item?.id === row?.original?.id
+      (item, i) => item?.uuid === row?.original?.uuid
     );
     setStudentDetails((prevState) => [
       ...prevState?.slice(0, row?.index),
@@ -143,7 +146,7 @@ const AddAccounts = ({ color = "light" }) => {
   const addStudentDetails = () => {
     setStudentDetails((prev) => [
       ...prev,
-      { index: prev.length + 1, id: crypto.randomUUID() },
+      { index: prev.length + 1, uuid: crypto.randomUUID() },
     ]);
   };
 
@@ -153,7 +156,7 @@ const AddAccounts = ({ color = "light" }) => {
 
   const handleAutoCompleteChange = (value, row) => {
     const rowIndex = accountDetails.find(
-      (arg) => arg?.id === row?.original?.id
+      (arg) => arg?.uuid === row?.original?.uuid
     );
     setAccountDetails((arg) => [
       ...arg.slice(0, row?.index),
@@ -165,7 +168,12 @@ const AddAccounts = ({ color = "light" }) => {
   const addaccountDetails = () => {
     setAccountDetails((prev) => [
       ...prev,
-      { id: crypto.randomUUID(), module: null, agreedAmount: null, cost: null },
+      {
+        uuid: crypto.randomUUID(),
+        module: null,
+        agreedAmount: null,
+        cost: null,
+      },
     ]);
   };
 
@@ -205,6 +213,7 @@ const AddAccounts = ({ color = "light" }) => {
     e.preventDefault();
     const payload = {
       id: data?.id,
+      uuid: data?.uuid,
       clientId: 2,
       caseOfficer: "string",
       referral: "string",
@@ -213,7 +222,7 @@ const AddAccounts = ({ color = "light" }) => {
       dueAmount: data?.dueAmount,
       profitLoss: data?.profitLoss,
       accountDetails: accountDetails.map((item, index) => ({
-        id: index + 1,
+        uuid: index + 1,
         module: item?.module?.value,
         admissionValues:
           item?.module?.value === "Admission" ? studentValues : null,
@@ -235,7 +244,7 @@ const AddAccounts = ({ color = "light" }) => {
   const handleOpenEyeModal = (rowData) => {
     setOpenEyeModal({
       state: true,
-      id: rowData?.original.id,
+      uuid: rowData?.original.uuid,
       index: rowData?.index,
       value: rowData?.original?.admissionValues,
     });
@@ -358,9 +367,9 @@ const AddAccounts = ({ color = "light" }) => {
         Cell: ({ row }) => {
           return (
             <InputField
-              type="text"
+              type="number"
               name="referral"
-              placeholder="Referral"
+              placeholder="Referral Cost"
               size="small"
               onChange={(e) => handleInputChange(e, row)}
               value={row?.original?.referral}
@@ -824,7 +833,7 @@ const AddAccounts = ({ color = "light" }) => {
           open={openConfirmationModal.state}
           item="Course"
           handleCancel={() =>
-            setOpenConfirmationModal({ state: false, id: null })
+            setOpenConfirmationModal({ state: false, uuid: null })
           }
           handleDelete={() => deleteData()}
         />
