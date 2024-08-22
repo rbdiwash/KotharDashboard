@@ -92,7 +92,6 @@ const AddAccounts = ({ color = "light" }) => {
   ];
 
   useEffect(() => {
-    console.log(state);
     if (state) {
       setSelectedStudent(state?.item?.clientData);
       state?.item?.hasAccountDetails &&
@@ -102,9 +101,11 @@ const AddAccounts = ({ color = "light" }) => {
 
   useEffect(() => {
     if (accountData) {
-      setAccountDetails(accountData?.installments);
+      setAccountDetails(accountData?.accountDetails || accountDetails);
     }
   }, [accountData]);
+
+  console.log(accountData);
 
   const deleteData = () => {
     axios
@@ -127,7 +128,7 @@ const AddAccounts = ({ color = "light" }) => {
     setAccountDetails((prevState) => [
       ...prevState?.slice(0, row?.index),
       { ...foundRow, [name]: value },
-      ...prevState?.slice(row?.index + 1, accountDetails.length),
+      ...prevState?.slice(row?.index + 1, accountDetails?.length),
     ]);
   };
 
@@ -139,14 +140,14 @@ const AddAccounts = ({ color = "light" }) => {
     setStudentDetails((prevState) => [
       ...prevState?.slice(0, row?.index),
       { ...foundRow, [name]: value },
-      ...prevState?.slice(row?.index + 1, studentDetails.length),
+      ...prevState?.slice(row?.index + 1, studentDetails?.length),
     ]);
   };
 
   const addStudentDetails = () => {
     setStudentDetails((prev) => [
       ...prev,
-      { index: prev.length + 1, uuid: crypto.randomUUID() },
+      { index: prev?.length + 1, uuid: crypto.randomUUID() },
     ]);
   };
 
@@ -160,7 +161,7 @@ const AddAccounts = ({ color = "light" }) => {
     );
     setAccountDetails((arg) => [
       ...arg.slice(0, row?.index),
-      { ...rowIndex, module: value },
+      { ...rowIndex, module: value?.value },
       ...arg.slice(row?.index + 1, accountDetails?.length),
     ]);
   };
@@ -223,7 +224,7 @@ const AddAccounts = ({ color = "light" }) => {
       profitLoss: data?.profitLoss,
       accountDetails: accountDetails.map((item, index) => ({
         uuid: index + 1,
-        module: item?.module?.value,
+        module: item?.module,
         admissionValues:
           item?.module?.value === "Admission" ? studentValues : null,
         admissionDetails:
@@ -258,7 +259,7 @@ const AddAccounts = ({ color = "light" }) => {
         Cell: ({ row }) => {
           return (
             <div className="flex items-center gap-2 text-left py-2 z-[999]">
-              {row?.original?.module?.value === "Admission" && (
+              {row?.original?.module === "Admission" && (
                 <Visibility
                   className="cursor-pointer"
                   onClick={() => handleOpenEyeModal(row)}
@@ -276,7 +277,9 @@ const AddAccounts = ({ color = "light" }) => {
                 renderInput={(params) => (
                   <TextField {...params} placeholder="Select Type" />
                 )}
-                value={row?.original?.module || null}
+                value={options.find(
+                  (item) => item?.value === row?.original?.module
+                )}
                 isOptionEqualToValue={(options, value) =>
                   options?.value === value?.value
                 }
@@ -648,7 +651,7 @@ const AddAccounts = ({ color = "light" }) => {
   });
 
   const getTotalAmountPaid = useMemo(() => {
-    const total = accountDetails.reduce(
+    const total = accountDetails?.reduce(
       (total, amount) => Number(total) + Number(amount.paidAmount),
       0
     );
@@ -656,14 +659,14 @@ const AddAccounts = ({ color = "light" }) => {
   }, [accountDetails]);
 
   const getTotalAgentCost = useMemo(() => {
-    const total = accountDetails.reduce(
+    const total = accountDetails?.reduce(
       (total, amount) => Number(total) + Number(amount.referral),
       0
     );
     return total;
   }, [accountDetails]);
   const getTotalDue = useMemo(() => {
-    const total = accountDetails.reduce(
+    const total = accountDetails?.reduce(
       (total, amount) => Number(total) + Number(amount.dueAmount),
       0
     );
@@ -671,13 +674,12 @@ const AddAccounts = ({ color = "light" }) => {
   }, [accountDetails]);
 
   const getTotalProfitLoss = useMemo(() => {
-    const total = accountDetails.reduce(
+    const total = accountDetails?.reduce(
       (total, amount) => Number(total) + Number(amount.profitLoss),
       0
     );
     return total;
   }, [accountDetails]);
-  console.log(selectedStudent);
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">

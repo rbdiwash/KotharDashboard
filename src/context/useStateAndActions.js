@@ -16,7 +16,7 @@ const useStateAndActions = () => {
   });
   const [rplList, setRPLList] = useState([]);
   const [visaList, setVisaList] = useState([]);
-  const [accountData, setAccountData] = useState();
+  const [accountData, setAccountData] = useState([]);
   const [profitLossList, setProfitLossList] = useState([]);
   const [moduleWiseProfitLossList, setModuleWiseProfitLossList] = useState([]);
   const [notificationsList, setNotificationsList] = useState([]);
