@@ -551,8 +551,8 @@ const AddProvider = ({ color = "light" }) => {
     enableRowNumbers: true,
     initialState: {
       density: "compact",
-      enableGlobalFilter: true,
-      showGlobalFilter: true,
+      enableGlobalFilter: false,
+      showGlobalFilter: false,
     },
     muiTableContainerProps: {
       sx: { minHeight: "400px", maxHeight: "65vh" },

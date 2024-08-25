@@ -23,7 +23,6 @@ export default function ProviderDialog({
   const handleClose = () => {
     setOpen({ state: false, id: "", index: null });
   };
-  console.log(bonusEntries);
 
   const handleSubmit = (e) => {
     e.preventDefault();

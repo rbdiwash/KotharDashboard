@@ -35,6 +35,8 @@ import {
 } from "material-react-table";
 import EyeModal from "./EyeModal";
 import { studentInitialValue } from "const/constants";
+import { useReducer } from "react";
+import { useCallback } from "react";
 
 const AddAccounts = ({ color = "light" }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
@@ -56,20 +58,8 @@ const AddAccounts = ({ color = "light" }) => {
   const [studentDetails, setStudentDetails] = useState([
     { uuid: crypto.randomUUID() },
   ]);
-  const [selectedStudent, setSelectedStudent] = useState(null);
   const [data, setData] = useState({
-    studentCost: "",
-    costForKothar: "",
-    caseOfficer: "",
-    isClaimed: "No",
-    commission: "",
-    reminderDate: new Date(),
-    amountPaidByStudent: "",
-    clientId: null,
-    dueAmount: "",
-    agentCost: "",
-    profitLoss: "",
-    amountPaidByStudent: "",
+    clientData: null,
   });
   const [{ accountData }, { refetchAccountList, getIndividualAccountData }] =
     useKothar();
@@ -93,7 +83,7 @@ const AddAccounts = ({ color = "light" }) => {
 
   useEffect(() => {
     if (state) {
-      setSelectedStudent(state?.item?.clientData);
+      setData({ ...data, clientData: state?.item?.clientData });
       state?.item?.hasAccountDetails &&
         getIndividualAccountData(state?.item?.clientData?.id);
     }
@@ -104,8 +94,6 @@ const AddAccounts = ({ color = "light" }) => {
       setAccountDetails(accountData?.accountDetails || accountDetails);
     }
   }, [accountData]);
-
-  console.log(accountData);
 
   const deleteData = () => {
     axios
@@ -131,6 +119,8 @@ const AddAccounts = ({ color = "light" }) => {
       ...prevState?.slice(row?.index + 1, accountDetails?.length),
     ]);
   };
+
+  console.log(accountDetails);
 
   const handleSubInputChange = (e, row) => {
     const { name, value } = e.target;
@@ -202,9 +192,8 @@ const AddAccounts = ({ color = "light" }) => {
   });
 
   async function postData(payload) {
-    console.log(payload);
     if (state?.item?.hasAccountDetails) {
-      await axios.put(`${API_URL}/accounts/${payload?.clientId}`, payload);
+      await axios.put(`${API_URL}/accounts/${payload?.id}`, payload);
     } else {
       await axios.post(`${API_URL}/accounts`, payload);
     }
@@ -213,31 +202,29 @@ const AddAccounts = ({ color = "light" }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const payload = {
-      id: data?.id,
+      id: accountData?.id,
       uuid: data?.uuid,
-      clientId: 2,
+      clientId: data?.clientData?.id,
       caseOfficer: "string",
       referral: "string",
-      totalAmount: getTotalAmountPaid,
-      agentCost: data?.agentCost,
-      dueAmount: data?.dueAmount,
-      profitLoss: data?.profitLoss,
+      totalAmount: getTotalValue("paidAmount"),
+      agentCost: getTotalValue("referral"),
+      dueAmount: getTotalValue("dueAmount"),
+      profitLoss: getTotalValue("profitLoss"),
       accountDetails: accountDetails.map((item, index) => ({
-        uuid: index + 1,
+        uuid: item?.uuid,
         module: item?.module,
-        admissionValues:
-          item?.module?.value === "Admission" ? studentValues : null,
-        admissionDetails:
-          item?.module?.value === "Admission" ? studentDetails : null,
+        admissionValues: item?.module === "Admission" ? studentValues : null,
+        admissionDetails: item?.module === "Admission" ? studentDetails : null,
         agreedAmount: item?.agreedAmount,
         cost: item?.cost,
         paidAmount: item?.paidAmount,
+        dueAmount: item?.dueAmount,
         dueDate: item?.dueDate,
         profitLoss: item?.profitLoss,
         referral: item?.referral,
       })),
     };
-    console.log(payload);
 
     mutate(payload);
   };
@@ -277,9 +264,11 @@ const AddAccounts = ({ color = "light" }) => {
                 renderInput={(params) => (
                   <TextField {...params} placeholder="Select Type" />
                 )}
-                value={options.find(
-                  (item) => item?.value === row?.original?.module
-                )}
+                value={
+                  options.find(
+                    (item) => item?.value === row?.original?.module
+                  ) || null
+                }
                 isOptionEqualToValue={(options, value) =>
                   options?.value === value?.value
                 }
@@ -643,43 +632,23 @@ const AddAccounts = ({ color = "light" }) => {
 
     renderDetailPanel: ({ row }) => (
       <>
-        {row?.original?.module?.value === "Admission" && (
+        {row?.original?.module === "Admission" && (
           <MaterialReactTable table={secondTable} />
         )}
       </>
     ),
   });
 
-  const getTotalAmountPaid = useMemo(() => {
-    const total = accountDetails?.reduce(
-      (total, amount) => Number(total) + Number(amount.paidAmount),
-      0
-    );
-    return total;
-  }, [accountDetails]);
-
-  const getTotalAgentCost = useMemo(() => {
-    const total = accountDetails?.reduce(
-      (total, amount) => Number(total) + Number(amount.referral),
-      0
-    );
-    return total;
-  }, [accountDetails]);
-  const getTotalDue = useMemo(() => {
-    const total = accountDetails?.reduce(
-      (total, amount) => Number(total) + Number(amount.dueAmount),
-      0
-    );
-    return total;
-  }, [accountDetails]);
-
-  const getTotalProfitLoss = useMemo(() => {
-    const total = accountDetails?.reduce(
-      (total, amount) => Number(total) + Number(amount.profitLoss),
-      0
-    );
-    return total;
-  }, [accountDetails]);
+  const getTotalValue = useCallback(
+    (key) => {
+      const total = accountDetails?.reduce(
+        (total, amount) => Number(total) + Number(amount?.[key]),
+        0
+      );
+      return total;
+    },
+    [accountDetails]
+  );
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">
@@ -709,19 +678,19 @@ const AddAccounts = ({ color = "light" }) => {
                     <div className="lg:px-2">
                       <div className="md:col-span-2">
                         <h2 className="text-2xl font-semibold mb-2">
-                          Client: {selectedStudent?.name}
+                          Client: {data?.clientData?.name}
                         </h2>
                         <p className="mb-2">
-                          Address: {selectedStudent?.address}
+                          Address: {data?.clientData?.address}
                         </p>
                         <p className="mb-2">
-                          Contact: {selectedStudent?.number}
+                          Contact: {data?.clientData?.number}
                         </p>
                         <p className="mb-2">
-                          Case Officer: {selectedStudent?.caseOfficer}
+                          Case Officer: {data?.clientData?.caseOfficer}
                         </p>
                         <p className="mb-2">
-                          Referral: {selectedStudent?.referral}
+                          Referral: {data?.clientData?.referral}
                         </p>
                       </div>
                     </div>
@@ -737,14 +706,8 @@ const AddAccounts = ({ color = "light" }) => {
                           type="number"
                           size="small"
                           startAdornment={"$"}
-                          value={getTotalAmountPaid}
+                          value={getTotalValue("paidAmount")}
                           disabled
-                          onChange={(e) =>
-                            setData({
-                              ...data,
-                              amountPaidByStudent: e.target.value,
-                            })
-                          }
                           variant="standard"
                         />
                       </div>
@@ -757,11 +720,8 @@ const AddAccounts = ({ color = "light" }) => {
                           type="number"
                           size="small"
                           startAdornment={"$"}
-                          value={getTotalAgentCost}
+                          value={getTotalValue("referral")}
                           disabled
-                          onChange={(e) =>
-                            setData({ ...data, agentCost: e.target.value })
-                          }
                         />
                       </div>
                     </div>
@@ -774,14 +734,8 @@ const AddAccounts = ({ color = "light" }) => {
                           type="number"
                           size="small"
                           startAdornment={"$"}
-                          value={getTotalDue}
+                          value={getTotalValue("dueAmount")}
                           disabled
-                          onChange={(e) =>
-                            setData({
-                              ...data,
-                              dueAmount: e.target.value,
-                            })
-                          }
                         />
                       </div>
                       <div className="flex gap-1 items-center ">
@@ -792,14 +746,8 @@ const AddAccounts = ({ color = "light" }) => {
                           type="number"
                           size="small"
                           startAdornment={"$"}
-                          value={getTotalProfitLoss}
+                          value={getTotalValue("profitLoss")}
                           disabled
-                          onChange={(e) =>
-                            setData({
-                              ...data,
-                              profitLoss: e.target.value,
-                            })
-                          }
                         />
                       </div>
                     </div>
