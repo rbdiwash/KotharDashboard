@@ -280,6 +280,21 @@ const useStateAndActions = () => {
     }
   );
 
+  const getProvidersAccountsList = async () => {
+    const res = await axios.get(`${API_URL}/accounts/provider`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    return res?.data?.data;
+  };
+  const { data: providerList = [], refetch: refetchProvider } = useQuery(
+    ["accounts"],
+    getProvidersAccountsList,
+    {
+      refetchOnWindowFocus: false,
+      enabled: false,
+    }
+  );
+
   const getIndividualAccountData = (params) => {
     let url = `${API_URL}/accounts/${params}`;
 
@@ -307,6 +322,7 @@ const useStateAndActions = () => {
       refetchSkillList();
       refetchInsuranceList();
       refetchAccountList();
+      getProvidersAccountsList();
       // getModuleWiseProfitLoss();
       // getRPLList();
       // getProfitLossData();

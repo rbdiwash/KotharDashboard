@@ -85,7 +85,7 @@ const AddAccounts = ({ color = "light" }) => {
     if (state) {
       setData({ ...data, clientData: state?.item?.clientData });
       state?.item?.hasAccountDetails &&
-        getIndividualAccountData(state?.item?.clientData?.id);
+        getIndividualAccountData(state?.item?.clientAccountId);
     }
   }, [state]);
 
@@ -202,7 +202,7 @@ const AddAccounts = ({ color = "light" }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const payload = {
-      id: accountData?.id,
+      id: accountData?.id || data?.clientAccountId,
       uuid: data?.uuid,
       clientId: data?.clientData?.id,
       caseOfficer: "string",
