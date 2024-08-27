@@ -669,7 +669,7 @@ const AddProvider = ({ color = "light" }) => {
       })),
     };
     console.log(payload);
-    // mutate(payload);
+    mutate(payload);
   };
 
   const handleOpenEyeModal = (row) => {
