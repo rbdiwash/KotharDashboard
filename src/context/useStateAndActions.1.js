@@ -1,12 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-// import axios from "const/axios";
 import { API_URL } from "const/constants";
 import { useEffect } from "react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-const useStateAndActions = () => {
+export const useStateAndActions = () => {
   const [token, setToken] = useState(localStorage.getItem("token"));
 
   const [wholeLoading, setWholeLoading] = useState(false);
@@ -92,7 +91,6 @@ const useStateAndActions = () => {
     {
       refetchOnWindowFocus: false,
       enabled: false,
-
       // onError: () => {
       //   toast.error("Error Fetching Data");
       // },
@@ -108,7 +106,6 @@ const useStateAndActions = () => {
     {
       refetchOnWindowFocus: false,
       enabled: false,
-
       // onError: () => {
       //   toast.error("Error Fetching Data");
       // },
@@ -137,7 +134,6 @@ const useStateAndActions = () => {
       enabled: false,
 
       retry: false,
-
       // onError: () => {
       //   toast.error("Error Fetching Data");
       // },
@@ -156,7 +152,6 @@ const useStateAndActions = () => {
       enabled: false,
 
       retry: false,
-
       //   onError: () => {
       //     toast.error("Error Fetching Data");
       //   },
@@ -173,7 +168,6 @@ const useStateAndActions = () => {
       refetchOnWindowFocus: false,
       retry: false,
       enabled: false,
-
       //   onError: () => {
       //     toast.error("Error Fetching Data");
       //   },
@@ -190,7 +184,6 @@ const useStateAndActions = () => {
       refetchOnWindowFocus: false,
       retry: false,
       enabled: false,
-
       //   onError: () => {
       //     toast.error("Error Fetching Data");
       //   },
@@ -287,25 +280,14 @@ const useStateAndActions = () => {
     return res?.data?.data;
   };
   const { data: providerList = [], refetch: refetchProvider } = useQuery(
-    ["accountsProvider"],
+    ["accounts"],
     getProvidersAccountsList,
     {
       refetchOnWindowFocus: false,
       enabled: false,
     }
   );
-  const getIndividualProviderAccountData = (params) => {
-    let url = `${API_URL}/accounts/provider/${params}`;
 
-    axios
-      .get(url, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      })
-      .then((res) => {
-        setAccountData(res?.data?.data);
-      })
-      .catch((err) => console.log(err));
-  };
   const getIndividualAccountData = (params) => {
     let url = `${API_URL}/accounts/${params}`;
 
@@ -334,7 +316,6 @@ const useStateAndActions = () => {
       refetchInsuranceList();
       refetchAccountList();
       // getProvidersAccountsList();
-      refetchProvider();
       // getModuleWiseProfitLoss();
       // getRPLList();
       // getProfitLossData();
@@ -395,10 +376,8 @@ const useStateAndActions = () => {
     setNotificationClicked,
     setAccountData,
     getIndividualAccountData,
-    getIndividualProviderAccountData,
     refetchProvider,
   };
 
   return [state, actions];
 };
-export default useStateAndActions;

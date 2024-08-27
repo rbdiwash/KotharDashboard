@@ -43,12 +43,13 @@ import { monthsForFilter } from "const/constants";
 const AddProvider = ({ color = "light" }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [bonusEntries, setBonusEntries] = useState([
-    { commission: "", bonus: "", total: "", parentId: "" },
+    { commission: "", bonus: "", total: "" },
   ]);
+  const [data, setData] = useState({});
   const [intakeDetails, setIntakeDetails] = useState([
     {
       index: 1,
-      id: crypto.randomUUID(),
+      uuid: crypto.randomUUID(),
       month: monthsForFilter[new Date().getMonth()].value,
       year: new Date().getFullYear(),
       invoiceNumber: null,
@@ -63,9 +64,10 @@ const AddProvider = ({ color = "light" }) => {
     },
   ]);
 
-  const [accountDetails, setAccountDetails] = useState([
+  const [accountEntries, setAccountEntries] = useState([
     {
-      id: crypto.randomUUID(),
+      id: null,
+      uuid: crypto.randomUUID(),
       providerId: "",
       agentName: "",
       noOfStudents: null,
@@ -77,11 +79,13 @@ const AddProvider = ({ color = "light" }) => {
       commissionDetails: bonusEntries,
     },
   ]);
+  const { state } = useLocation();
 
-  const [{ uniData }, { refetchAccountList }] = useKothar();
+  const [{}, { refetchAccountList, getIndividualProviderAccountData }] =
+    useKothar();
   const [openProviderDialog, setOpenProviderDialog] = useState({
     state: false,
-    id: null,
+    uuid: null,
     index: null,
   });
   const navigate = useNavigate();
@@ -90,6 +94,14 @@ const AddProvider = ({ color = "light" }) => {
     { length: 10 },
     (_, i) => new Date().getFullYear() + 3 - i
   );
+
+  useEffect(() => {
+    if (state) {
+      setData({ ...data, uniData: state?.item });
+      state?.item?.hasAccountDetails &&
+        getIndividualProviderAccountData(state?.item?.clientAccountId);
+    }
+  }, [state]);
 
   const item = 1;
 
@@ -102,57 +114,16 @@ const AddProvider = ({ color = "light" }) => {
           return (
             <div className="flex gap-2 font-semibold">
               <Tooltip title="Add Commission Information" arrow>
-                {/* x  */}
                 <AddCircle
                   className="cursor-pointer text-orange-400"
                   onClick={() => handleOpenEyeModal(row)}
                 />
               </Tooltip>
-              {row?.original?.provider || "N/A"}
+              {data?.uniData?.universityName || "N/A"}
             </div>
           );
         },
       },
-      // {
-      //   header: "Provider Name",
-      //   size: 150,
-      //   Cell: ({ row }) => {
-      //     return (
-      //       <div className="flex items-center gap-2 text-left py-2 z-[999]">
-      //         <Visibility
-      //           className="cursor-pointer"
-      //           onClick={handleOpenEyeModal}
-      //         />
-
-      //         <Autocomplete
-      //           size="small"
-      //           options={uniData}
-      //           sx={{ width: 200, zIndex: 999 }}
-      //           onChange={(e, value) => {
-      //             handleAutoCompleteChange(row, value);
-      //           }}
-      //           getOptionLabel={(option) => option.name}
-      //           renderInput={(params) => (
-      //             <TextField {...params} placeholder="Select Provider" />
-      //           )}
-      //           value={row?.original?.provider || null}
-      //           isOptionEqualToValue={(options, value) =>
-      //             options?.value === value?.value
-      //           }
-      //           slotProps={{
-      //             popper: {
-      //               sx: {
-      //                 zIndex: 1000,
-      //               },
-      //             },
-      //           }}
-      //           ListboxProps={{ style: { zIndex: 999 } }}
-      //         />
-      //       </div>
-      //     );
-      //   },
-      // },
-
       {
         // accessorKey: "agreedAmount", //normal accessorKey
         header: "Agent Name",
@@ -203,7 +174,7 @@ const AddProvider = ({ color = "light" }) => {
               placeholder="Total Commission"
               size="small"
               onChange={(e) => handleInputChange(e, row)}
-              value={item?.totalCommission}
+              value={row?.original?.totalCommission}
               className="min-w-[100px] "
             />
           );
@@ -221,7 +192,7 @@ const AddProvider = ({ color = "light" }) => {
               placeholder="Total Bonus"
               size="small"
               onChange={(e) => handleInputChange(e, row)}
-              value={item?.totalBonus}
+              value={row?.original?.totalBonus}
               className="min-w-[100px]"
             />
           );
@@ -239,7 +210,7 @@ const AddProvider = ({ color = "light" }) => {
               placeholder="Total GST"
               size="small"
               onChange={(e) => handleInputChange(e, row)}
-              value={item?.totalGST}
+              value={row?.original?.totalGST}
               className="min-w-[100px]"
             />
           );
@@ -257,7 +228,7 @@ const AddProvider = ({ color = "light" }) => {
               placeholder="Next Reminder"
               size="small"
               onChange={(e) => handleInputChange(e, row)}
-              value={item?.nextReminder}
+              value={row?.original?.nextReminder}
               className="min-w-[100px]"
             />
           );
@@ -267,8 +238,7 @@ const AddProvider = ({ color = "light" }) => {
         accessorKey: "Action",
         header: "Action",
         size: 50,
-        Cell: ({ row, renderedCellValue }) => {
-          const item = row.original;
+        Cell: ({ row }) => {
           return (
             <>
               <div className="flex items-center">
@@ -285,7 +255,7 @@ const AddProvider = ({ color = "light" }) => {
         },
       },
     ],
-    [accountDetails, openProviderDialog]
+    [accountEntries, openProviderDialog, state]
   );
 
   const subColumns = useMemo(
@@ -322,7 +292,7 @@ const AddProvider = ({ color = "light" }) => {
                 <Select
                   labelId="month-filter-label"
                   id="month-filter"
-                  onChange={(e) => handleMonthChange(e.target.value)}
+                  onChange={(e) => handleMonthChange(e.target.value, row)}
                   label="Month"
                   value={row?.original?.month || ""}
                 >
@@ -437,7 +407,11 @@ const AddProvider = ({ color = "light" }) => {
         Cell: ({ row }) => {
           return (
             <FormControl sx={{ display: "flex", width: "100%" }}>
-              <RadioGroup row name="gst" onChange={handleSubInputChange}>
+              <RadioGroup
+                row
+                name="gst"
+                onChange={(e) => handleSubInputChange(e, row)}
+              >
                 <FormControlLabel value="yes" control={<Radio />} label="Yes" />
                 <FormControlLabel value="no" control={<Radio />} label="No" />
               </RadioGroup>
@@ -508,7 +482,9 @@ const AddProvider = ({ color = "light" }) => {
             <>
               <div className="flex items-center">
                 <Tooltip title="Delete Course" arrow>
-                  <IconButton onClick={() => handleDeleteIntakeDetails(row)}>
+                  <IconButton
+                    onClick={() => handleDeleteIntakeDetails(row?.index)}
+                  >
                     <AiFillDelete className="text-red-600 cursor-pointer" />
                   </IconButton>
                 </Tooltip>
@@ -537,7 +513,7 @@ const AddProvider = ({ color = "light" }) => {
       <Button
         variant="contained"
         startIcon={<FaPlusCircle />}
-        onClick={addIntakeDetails}
+        onClick={addIntakeEntries}
       >
         Add More Entries
       </Button>
@@ -546,7 +522,7 @@ const AddProvider = ({ color = "light" }) => {
 
   const table = useMaterialReactTable({
     columns,
-    data: accountDetails,
+    data: accountEntries,
     enablePagination: false,
     enableRowNumbers: true,
     initialState: {
@@ -564,8 +540,6 @@ const AddProvider = ({ color = "light" }) => {
     ),
   });
 
-  console.log(accountDetails);
-
   const deleteData = () => {
     axios
       .delete(`${API_URL}/organization/delete/${openConfirmationModal?.id}`)
@@ -581,7 +555,7 @@ const AddProvider = ({ color = "light" }) => {
 
   const handleYearChange = (e, row) => {
     const foundRow = intakeDetails?.find(
-      (item, i) => item?.id === row?.original?.id
+      (item, i) => item?.uuid === row?.original?.uuid
     );
     setIntakeDetails((prevState) => [
       ...prevState?.slice(0, row?.index),
@@ -592,7 +566,7 @@ const AddProvider = ({ color = "light" }) => {
 
   const handleMonthChange = (e, row) => {
     const foundRow = intakeDetails?.find(
-      (item, i) => item?.id === row?.original?.id
+      (item, i) => item?.uuid === row?.original?.uuid
     );
     setIntakeDetails((prevState) => [
       ...prevState?.slice(0, row?.index),
@@ -603,20 +577,20 @@ const AddProvider = ({ color = "light" }) => {
 
   const handleInputChange = (e, row) => {
     const { name, value } = e.target;
-    const foundRow = accountDetails.find(
+    const foundRow = accountEntries.find(
       (item, i) => item?.id === row?.original?.id
     );
-    setAccountDetails((prevState) => [
+    setAccountEntries((prevState) => [
       ...prevState?.slice(0, row?.index),
       { ...foundRow, [name]: value },
-      ...prevState?.slice(row?.index + 1, accountDetails.length),
+      ...prevState?.slice(row?.index + 1, accountEntries.length),
     ]);
   };
 
   const handleSubInputChange = (e, row) => {
     const { name, value } = e.target;
     const foundRow = intakeDetails?.find(
-      (item, i) => item?.id === row?.original?.id
+      (item, i) => item?.uuid === row?.original?.uuid
     );
 
     setIntakeDetails((prevState) => [
@@ -626,11 +600,11 @@ const AddProvider = ({ color = "light" }) => {
     ]);
   };
 
-  const addIntakeDetails = () => {
+  const addIntakeEntries = () => {
     setIntakeDetails((prev) => [
       ...prev,
       {
-        id: crypto.randomUUID(),
+        uuid: crypto.randomUUID(),
         month: monthsForFilter[new Date().getMonth()].value,
         year: new Date().getFullYear(),
       },
@@ -641,55 +615,67 @@ const AddProvider = ({ color = "light" }) => {
     setIntakeDetails((prev) => [...prev.filter((item, i) => i !== index)]);
   };
 
-  const addaccountDetails = () => {
-    setAccountDetails((prev) => [
+  const addAccountEntries = () => {
+    setAccountEntries((prev) => [
       ...prev,
-      { module: null, agreedAmount: null, cost: null, id: crypto.randomUUID() },
+      {
+        module: null,
+        agreedAmount: null,
+        cost: null,
+        uuid: crypto.randomUUID(),
+        commissionDetails: bonusEntries,
+      },
     ]);
   };
 
   const handleDeleteInstallment = (index) => {
-    setAccountDetails((prev) => [...prev.filter((item, i) => i !== index)]);
+    setAccountEntries((prev) => [...prev.filter((item, i) => i !== index)]);
   };
 
   const { mutate } = useMutation(postData, {
     onSuccess() {
       toast.success(
-        item?.id ? "Data updated Successfully" : "Data added Successfully"
+        state?.item?.hasAccountDetails
+          ? "Data updated Successfully"
+          : "Data added Successfully"
       );
       navigate("/admin/account");
       refetchAccountList();
     },
     onError() {
-      toast.error(item?.id ? "Error Updating Data" : "Error Submitting Data");
+      toast.error(
+        state?.item?.hasAccountDetails
+          ? "Error Updating Data"
+          : "Error Submitting Data"
+      );
     },
   });
 
   async function postData(payload) {
-    if (item?.id) {
-      await axios.put(`${API_URL}/accounts/${payload?.id}`, payload);
+    if (state?.item?.hasAccountDetails) {
+      await axios.put(`${API_URL}/accounts/provider/${payload?.id}`, payload);
     } else {
-      await axios.post(`${API_URL}/accounts`, payload);
+      await axios.post(`${API_URL}/accounts/provider  `, payload);
     }
   }
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const payload = {
-      provider: 1,
-      document: "a",
-      accountDetails,
+      providerId: state?.item?.id,
+      accountEntries: accountEntries.map((arg) => ({
+        ...arg,
+        intakeDetails: intakeDetails,
+      })),
     };
-
-    mutate({
-      payload,
-    });
+    console.log(payload);
+    // mutate(payload);
   };
 
   const handleOpenEyeModal = (row) => {
     setOpenProviderDialog({
       state: !openProviderDialog?.state,
-      id: row?.original?.id,
+      uuid: row?.original?.uuid,
       index: row?.index,
     });
     setBonusEntries(row?.original?.commissionDetails);
@@ -726,7 +712,7 @@ const AddProvider = ({ color = "light" }) => {
                       <Button
                         variant="contained"
                         startIcon={<FaPlusCircle />}
-                        onClick={addaccountDetails}
+                        onClick={addAccountEntries}
                       >
                         Add More Entries
                       </Button>
@@ -746,7 +732,7 @@ const AddProvider = ({ color = "light" }) => {
           open={openConfirmationModal.state}
           item="Course"
           handleCancel={() =>
-            setOpenConfirmationModal({ state: false, id: null })
+            setOpenConfirmationModal({ state: false, uuid: null })
           }
           handleDelete={() => deleteData()}
         />
@@ -758,8 +744,8 @@ const AddProvider = ({ color = "light" }) => {
             setOpen: setOpenProviderDialog,
             bonusEntries,
             setBonusEntries,
-            setAccountDetails,
-            accountDetails,
+            setAccountEntries,
+            accountEntries,
           }}
         />
       )}

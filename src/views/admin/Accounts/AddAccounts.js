@@ -58,6 +58,8 @@ const AddAccounts = ({ color = "light" }) => {
   const [studentDetails, setStudentDetails] = useState([
     { uuid: crypto.randomUUID() },
   ]);
+  const [studentValues, setStudentValues] = useState(studentInitialValue);
+
   const [data, setData] = useState({
     clientData: null,
   });
@@ -66,8 +68,8 @@ const AddAccounts = ({ color = "light" }) => {
   const [openEyeModal, setOpenEyeModal] = useState({
     state: false,
     uuid: null,
+    id: null,
   });
-  const [studentValues, setStudentValues] = useState(studentInitialValue);
   const { state } = useLocation();
   const navigate = useNavigate();
   const options = [
@@ -119,8 +121,6 @@ const AddAccounts = ({ color = "light" }) => {
       ...prevState?.slice(row?.index + 1, accountDetails?.length),
     ]);
   };
-
-  console.log(accountDetails);
 
   const handleSubInputChange = (e, row) => {
     const { name, value } = e.target;
@@ -180,7 +180,8 @@ const AddAccounts = ({ color = "light" }) => {
           : "Data added Successfully"
       );
       // navigate("/admin/account");
-      // refetchAccountList();
+      refetchAccountList();
+      getIndividualAccountData(state?.item?.clientAccountId);
     },
     onError() {
       toast.error(
@@ -235,7 +236,9 @@ const AddAccounts = ({ color = "light" }) => {
       uuid: rowData?.original.uuid,
       index: rowData?.index,
       value: rowData?.original?.admissionValues,
+      id: rowData?.original?.id,
     });
+    setStudentValues(rowData?.original?.admissionValues);
   };
 
   const columns = useMemo(

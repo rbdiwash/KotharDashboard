@@ -86,9 +86,11 @@ export default function PermissionDrawer({
     setValues({ ...values, [name]: value });
   };
 
-  useEffect(() => {
-    setValues(open?.value);
-  }, [open.uuid]);
+  // useEffect(() => {
+  //   setValues(open?.value);
+  // }, [open.uuid]);
+
+  console.log(values);
 
   const handleSubmit = () => {
     const foundRow = accountDetails?.find(

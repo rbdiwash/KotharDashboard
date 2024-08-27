@@ -16,25 +16,25 @@ export default function ProviderDialog({
   setOpen,
   bonusEntries,
   setBonusEntries,
-  setAccountDetails,
-  accountDetails,
+  setAccountEntries,
+  accountEntries,
 }) {
   const tableHeadClass = color === "light" ? "light-bg" : "dark-bg";
   const handleClose = () => {
-    setOpen({ state: false, id: "", index: null });
+    setOpen({ state: false, uuid: "", index: null });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const foundRow = accountDetails.find((item, i) => item?.id === open?.id);
-    setAccountDetails((prevState) => [
+    const foundRow = accountEntries.find((item, i) => item?.id === open?.id);
+    setAccountEntries((prevState) => [
       ...prevState?.slice(0, open?.index),
       { ...foundRow, commissionDetails: bonusEntries },
-      ...prevState?.slice(open?.index + 1, accountDetails.length),
+      ...prevState?.slice(open?.index + 1, accountEntries.length),
     ]);
 
-    setOpen({ state: false, id: null, index: null });
+    setOpen({ state: false, uuid: null, index: null });
   };
 
   const addMoreBonuses = () => {

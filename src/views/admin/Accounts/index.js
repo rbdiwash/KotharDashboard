@@ -30,7 +30,7 @@ const Accounts = ({ color = "light" }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
   const [accountTab, setAccountTab] = useState(null);
 
-  const [{ accountsList, uniData }, { refetchAccountList }] = useKothar();
+  const [{ accountsList, providerList }, { refetchAccountList }] = useKothar();
   const [value, setValue] = useState(0);
 
   const deleteData = () => {
@@ -155,13 +155,13 @@ const Accounts = ({ color = "light" }) => {
       {
         header: "Provider Name",
         size: 150,
-        accessorKey: "name",
+        accessorKey: "universityName",
         Cell: ({ row }) => {
           return <div>{row?.original?.name || "N/A"}</div>;
         },
       },
       {
-        accessorKey: "noOfStudents" || 0,
+        accessorKey: "totalStudents" || 0,
         header: "No of Students",
         size: 50,
       },
@@ -225,7 +225,7 @@ const Accounts = ({ color = "light" }) => {
   );
   const providerTable = useMaterialReactTable({
     columns: providerColumns,
-    data: uniData,
+    data: providerList,
     enablePagination: true,
     enableRowNumbers: true,
     initialState: {
@@ -236,6 +236,9 @@ const Accounts = ({ color = "light" }) => {
 
     enableColumnPinning: true,
   });
+
+  console.log(accountsList, providerList);
+
   const table = useMaterialReactTable({
     columns,
     data: accountsList,
@@ -280,41 +283,6 @@ const Accounts = ({ color = "light" }) => {
                     Account Details
                   </h3>
                 </div>
-                {/* <div className="relative flex mx-auto  items-center">
-                  <Autocomplete
-                    size="small"
-                    disablePortal
-                    options={options}
-                    sx={{ width: 300 }}
-                    onChange={(e, value) => {
-                      setSelectedType(value);
-                      setSelectedStudent(null);
-                    }}
-                    getOptionLabel={(option) => option.label}
-                    renderInput={(params) => (
-                      <TextField {...params} placeholder="Select Type" />
-                    )}
-                    value={selectedType}
-                    isOptionEqualToValue={(options, value) =>
-                      options.value === value.value
-                    }
-                  />
-                  <Autocomplete
-                    size="small"
-                    disablePortal
-                    options={getClientOption()}
-                    sx={{ width: 500 }}
-                    getOptionLabel={(option) => option.name}
-                    getOptionKey={(option) => option.id}
-                    renderInput={(params) => (
-                      <TextField {...params} placeholder="Search using Name" />
-                    )}
-                    onChange={(e, value) => {
-                      setSelectedStudent(value);
-                    }}
-                    value={selectedStudent}
-                  />
-                </div> */}
                 <div className="flex items-center gap-4">
                   <FaRocketchat
                     className="text-blue-500 text-3xl cursor-pointer"
@@ -347,7 +315,11 @@ const Accounts = ({ color = "light" }) => {
           </Tabs>
           <TabPanel value={value} index={value}>
             <div className="block w-full overflow-x-auto">
-              <MaterialReactTable table={value === 0 ? table : providerTable} />
+              {value === 0 ? (
+                <MaterialReactTable table={table} />
+              ) : (
+                <MaterialReactTable table={providerTable} />
+              )}
             </div>
           </TabPanel>
         </div>
