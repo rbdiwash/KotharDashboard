@@ -284,7 +284,7 @@ const useStateAndActions = () => {
     const res = await axios.get(`${API_URL}/accounts/provider`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
-    return res?.data?.data;
+    return res?.data?.data || [];
   };
   const { data: providerList = [], refetch: refetchProvider } = useQuery(
     ["accountsProvider"],
