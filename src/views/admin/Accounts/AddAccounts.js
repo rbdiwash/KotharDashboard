@@ -97,6 +97,8 @@ const AddAccounts = ({ color = "light" }) => {
     }
   }, [accountData]);
 
+  console.log(studentDetails);
+
   const deleteData = () => {
     axios
       .delete(`${API_URL}/organization/delete/${openConfirmationModal?.uuid}`)
@@ -591,7 +593,7 @@ const AddAccounts = ({ color = "light" }) => {
         },
       },
     ],
-    [studentDetails]
+    [studentDetails, accountData]
   );
 
   const secondTable = useMaterialReactTable({
@@ -640,6 +642,13 @@ const AddAccounts = ({ color = "light" }) => {
         )}
       </>
     ),
+    muiExpandButtonProps: ({ row, table }) => ({
+      onClick: () => {
+        table.setExpanded({ [row.id]: !row.getIsExpanded() });
+        console.log(row?.original?.admissionDetails);
+        setStudentDetails(row?.original?.admissionDetails);
+      }, //set only this row to be expanded
+    }),
   });
 
   const getTotalValue = useCallback(

@@ -538,6 +538,12 @@ const AddProvider = ({ color = "light" }) => {
         <MaterialReactTable table={secondTable} />
       </>
     ),
+    muiExpandButtonProps: ({ row, table }) => ({
+      onClick: () => {
+        table.setExpanded({ [row.id]: !row.getIsExpanded() });
+        setIntakeDetails(row?.original?.admissionDetails);
+      }, //set only this row to be expanded
+    }),
   });
 
   const deleteData = () => {

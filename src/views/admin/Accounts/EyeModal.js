@@ -90,8 +90,6 @@ export default function PermissionDrawer({
   //   setValues(open?.value);
   // }, [open.uuid]);
 
-  console.log(values);
-
   const handleSubmit = () => {
     const foundRow = accountDetails?.find(
       (item, i) => item?.uuid === open?.uuid
