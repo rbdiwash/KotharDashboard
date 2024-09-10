@@ -99,7 +99,7 @@ const AddProvider = ({ color = "light" }) => {
     if (state) {
       setData({ ...data, uniData: state?.item });
       state?.item?.hasAccountDetails &&
-        getIndividualProviderAccountData(state?.item?.clientAccountId);
+        getIndividualProviderAccountData(state?.item?.universityId);
     }
   }, [state]);
 
@@ -665,16 +665,17 @@ const AddProvider = ({ color = "light" }) => {
     }
   }
 
+  console.log(state);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const payload = {
-      providerId: state?.item?.id,
-      accountEntries: accountEntries.map((arg) => ({
+      providerId: state?.item?.universityId,
+      accountDetails: accountEntries.map((arg) => ({
         ...arg,
         intakeDetails: intakeDetails,
       })),
     };
-    console.log(payload);
     mutate(payload);
   };
 

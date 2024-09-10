@@ -281,7 +281,7 @@ const useStateAndActions = () => {
   );
 
   const getProvidersAccountsList = async () => {
-    const res = await axios.get(`${API_URL}/accounts/provider`, {
+    const res = await axios.get(`${API_URL}/accounts/provider/aggregated`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return res?.data?.data || [];

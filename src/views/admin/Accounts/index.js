@@ -150,6 +150,8 @@ const Accounts = ({ color = "light" }) => {
     []
   );
 
+  console.log(providerList);
+
   const providerColumns = useMemo(
     () => [
       {
@@ -157,7 +159,7 @@ const Accounts = ({ color = "light" }) => {
         size: 150,
         accessorKey: "universityName",
         Cell: ({ row }) => {
-          return <div>{row?.original?.name || "N/A"}</div>;
+          return <div>{row?.original?.universityName || "N/A"}</div>;
         },
       },
       {
@@ -236,8 +238,6 @@ const Accounts = ({ color = "light" }) => {
 
     enableColumnPinning: true,
   });
-
-  console.log(accountsList, providerList);
 
   const table = useMaterialReactTable({
     columns,
