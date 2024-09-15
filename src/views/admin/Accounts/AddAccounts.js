@@ -96,9 +96,7 @@ const AddAccounts = ({ color = "light" }) => {
       setAccountDetails(accountData?.accountDetails || accountDetails);
     }
   }, [accountData]);
-
-  console.log(studentDetails);
-
+  console.log(accountData);
   const deleteData = () => {
     axios
       .delete(`${API_URL}/organization/delete/${openConfirmationModal?.uuid}`)

@@ -81,8 +81,19 @@ const AddProvider = ({ color = "light" }) => {
   ]);
   const { state } = useLocation();
 
-  const [{}, { refetchAccountList, getIndividualProviderAccountData }] =
-    useKothar();
+  const [
+    { providerData },
+    { refetchAccountList, getIndividualProviderAccountData },
+  ] = useKothar();
+
+  console.log(providerData);
+
+  useEffect(() => {
+    if (providerData) {
+      setAccountEntries(providerData?.accountDetails || accountEntries);
+    }
+  }, [providerData]);
+
   const [openProviderDialog, setOpenProviderDialog] = useState({
     state: false,
     uuid: null,
@@ -97,8 +108,9 @@ const AddProvider = ({ color = "light" }) => {
 
   useEffect(() => {
     if (state) {
+      console.log(state, "state");
       setData({ ...data, uniData: state?.item });
-      state?.item?.hasAccountDetails &&
+      state?.item?.hasProviderAccount &&
         getIndividualProviderAccountData(state?.item?.universityId);
     }
   }, [state]);
@@ -520,6 +532,8 @@ const AddProvider = ({ color = "light" }) => {
     ),
   });
 
+  console.log(accountEntries);
+
   const table = useMaterialReactTable({
     columns,
     data: accountEntries,
@@ -540,8 +554,9 @@ const AddProvider = ({ color = "light" }) => {
     ),
     muiExpandButtonProps: ({ row, table }) => ({
       onClick: () => {
+        console.log(row?.original);
         table.setExpanded({ [row.id]: !row.getIsExpanded() });
-        setIntakeDetails(row?.original?.admissionDetails);
+        setIntakeDetails(row?.original?.intakeDetails || []);
       }, //set only this row to be expanded
     }),
   });
@@ -641,7 +656,7 @@ const AddProvider = ({ color = "light" }) => {
   const { mutate } = useMutation(postData, {
     onSuccess() {
       toast.success(
-        state?.item?.hasAccountDetails
+        state?.item?.hasProviderAccount
           ? "Data updated Successfully"
           : "Data added Successfully"
       );
@@ -650,7 +665,7 @@ const AddProvider = ({ color = "light" }) => {
     },
     onError() {
       toast.error(
-        state?.item?.hasAccountDetails
+        state?.item?.hasProviderAccount
           ? "Error Updating Data"
           : "Error Submitting Data"
       );
@@ -658,8 +673,12 @@ const AddProvider = ({ color = "light" }) => {
   });
 
   async function postData(payload) {
-    if (state?.item?.hasAccountDetails) {
-      await axios.put(`${API_URL}/accounts/provider/${payload?.id}`, payload);
+    console.log(payload);
+    if (state?.item?.hasProviderAccount) {
+      await axios.put(
+        `${API_URL}/accounts/provider/${payload?.providerId}`,
+        payload
+      );
     } else {
       await axios.post(`${API_URL}/accounts/provider  `, payload);
     }

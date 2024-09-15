@@ -24,7 +24,7 @@ const useStateAndActions = () => {
     state: false,
     id: null,
   });
-
+  const [providerData, setProviderData] = useState([]);
   const getNotificationsData = () => {
     axios
       .get("/notification")
@@ -302,7 +302,7 @@ const useStateAndActions = () => {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
       .then((res) => {
-        setAccountData(res?.data?.data);
+        setProviderData(res?.data?.data);
       })
       .catch((err) => console.log(err));
   };
@@ -366,6 +366,7 @@ const useStateAndActions = () => {
     notificationClicked,
     accountData,
     providerList,
+    providerData,
   };
   const actions = {
     refetchClient,
@@ -397,6 +398,7 @@ const useStateAndActions = () => {
     getIndividualAccountData,
     getIndividualProviderAccountData,
     refetchProvider,
+    setProviderData,
   };
 
   return [state, actions];
