@@ -52,12 +52,12 @@ const AddProvider = ({ color = "light" }) => {
       uuid: crypto.randomUUID(),
       month: monthsForFilter[new Date().getMonth()].value,
       year: new Date().getFullYear(),
-      invoiceNumber: null,
+      invoiceNo: null,
       noOfStudents: null,
       commission: null,
       bonus: null,
       amount: null,
-      gstInclude: true,
+      gst: "yes",
       claimedDate: new Date(),
       receivedAmount: null,
       receivedDate: new Date(),
@@ -332,7 +332,7 @@ const AddProvider = ({ color = "light" }) => {
                 name="invoiceNo"
                 placeholder="Invoice Number"
                 onChange={(e) => handleSubInputChange(e, row)}
-                value={item?.invoiceNumber}
+                value={row?.original?.invoiceNo}
                 className="min-w-[100px]"
               />
             </div>
@@ -351,7 +351,7 @@ const AddProvider = ({ color = "light" }) => {
               name="noOfStudents"
               placeholder="Number of Students"
               onChange={(e) => handleSubInputChange(e, row)}
-              value={item?.noOfStudents}
+              value={row?.original?.noOfStudents}
               className="min-w-[100px]"
             />
           );
@@ -401,7 +401,7 @@ const AddProvider = ({ color = "light" }) => {
         Cell: ({ row }) => {
           return (
             <InputField
-              type="text"
+              type="number"
               name="totalAmount"
               placeholder="Total Amount"
               size="small"
@@ -423,6 +423,7 @@ const AddProvider = ({ color = "light" }) => {
                 row
                 name="gst"
                 onChange={(e) => handleSubInputChange(e, row)}
+                value={row?.original?.gst}
               >
                 <FormControlLabel value="yes" control={<Radio />} label="Yes" />
                 <FormControlLabel value="no" control={<Radio />} label="No" />
@@ -456,7 +457,7 @@ const AddProvider = ({ color = "light" }) => {
         Cell: ({ row }) => {
           return (
             <InputField
-              type="text"
+              type="number"
               name="receivedAmount"
               placeholder="Received Amount"
               size="small"

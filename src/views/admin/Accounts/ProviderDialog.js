@@ -68,9 +68,9 @@ export default function ProviderDialog({
           <DialogContent dividers>
             <div className="grid grid-cols-1 md:grid-cols-1 gap-3 justify-end items-end min-w-[700px] px-4">
               <>
-                <div className="block w-full overflow-x-auto">
-                  <table className="items-center w-full bg-transparent border-collapse">
-                    <thead>
+                <div className="block w-full overflow-x-auto max-h-[400px]">
+                  <table className="items-center w-full bg-transparent border-collapse ">
+                    <thead className="sticky top-0">
                       <tr>
                         <th className={"table-head " + tableHeadClass}>Term</th>
                         <th className={"table-head " + tableHeadClass}>
