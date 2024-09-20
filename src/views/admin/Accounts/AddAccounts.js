@@ -151,7 +151,16 @@ const AddAccounts = ({ color = "light" }) => {
     );
     setAccountDetails((arg) => [
       ...arg.slice(0, row?.index),
-      { ...rowIndex, module: value?.value },
+      {
+        ...rowIndex,
+        module: value?.value,
+        agreedAmount: "",
+        cost: "",
+        dueAmount: "",
+        referral: "",
+        profitLoss: "",
+        paidAmount: "",
+      },
       ...arg.slice(row?.index + 1, accountDetails?.length),
     ]);
   };
@@ -730,7 +739,7 @@ const AddAccounts = ({ color = "light" }) => {
                           type="number"
                           size="small"
                           startAdornment={"$"}
-                          value={getTotalValue("referral")}
+                          value={getTotalValue("cost")}
                           disabled
                         />
                       </div>
