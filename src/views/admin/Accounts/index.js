@@ -1,14 +1,4 @@
-import {
-  Autocomplete,
-  Box,
-  Button,
-  IconButton,
-  Tab,
-  Tabs,
-  TextField,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { Box, IconButton, Tab, Tabs, Tooltip, Typography } from "@mui/material";
 
 import axios from "axios";
 import DeleteModal from "components/Modals/DeleteModal";
@@ -19,10 +9,10 @@ import {
   MaterialReactTable,
   useMaterialReactTable,
 } from "material-react-table";
-import { useMemo, useState } from "react";
-import { AiFillDelete, AiFillEdit } from "react-icons/ai";
+import { useEffect, useMemo, useState } from "react";
+import { AiFillEdit } from "react-icons/ai";
 import { FaRocketchat } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const Accounts = ({ color = "light" }) => {
@@ -47,13 +37,24 @@ const Accounts = ({ color = "light" }) => {
       });
   };
 
+  console.log(value);
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
     const status = tabOptions.find((item, i) => {
       return i === newValue;
     });
     setAccountTab(status);
+    localStorage.setItem("accountTab", status?.value);
   };
+
+  useEffect(() => {
+    const tab = localStorage.getItem("accountTab");
+    if (tab) {
+      const status = tabOptions.find((item) => item?.value === tab);
+      setValue(tabOptions.indexOf(status));
+    }
+  }, [value]);
 
   const columns = useMemo(
     () => [
@@ -149,8 +150,6 @@ const Accounts = ({ color = "light" }) => {
     ],
     []
   );
-
-  console.log(providerList);
 
   const providerColumns = useMemo(
     () => [
@@ -259,7 +258,7 @@ const Accounts = ({ color = "light" }) => {
   };
   const tabOptions = [
     { label: "Client", value: "client" },
-    { label: "Provider", value: "Provider" },
+    { label: "Provider", value: "provider" },
   ];
   return (
     <div className="flex flex-wrap mt-4 dashBody">

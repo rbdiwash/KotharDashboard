@@ -96,7 +96,6 @@ const AddAccounts = ({ color = "light" }) => {
       setAccountDetails(accountData?.accountDetails || accountDetails);
     }
   }, [accountData]);
-  console.log(accountData);
   const deleteData = () => {
     axios
       .delete(`${API_URL}/organization/delete/${openConfirmationModal?.uuid}`)
@@ -652,8 +651,8 @@ const AddAccounts = ({ color = "light" }) => {
     muiExpandButtonProps: ({ row, table }) => ({
       onClick: () => {
         table.setExpanded({ [row.id]: !row.getIsExpanded() });
-        console.log(row?.original?.admissionDetails);
-        setStudentDetails(row?.original?.admissionDetails);
+
+        setStudentDetails(row?.original?.admissionDetails || studentDetails);
       }, //set only this row to be expanded
     }),
   });
@@ -661,7 +660,7 @@ const AddAccounts = ({ color = "light" }) => {
   const getTotalValue = useCallback(
     (key) => {
       const total = accountDetails?.reduce(
-        (total, amount) => Number(total) + Number(amount?.[key]),
+        (total, amount) => Number(total) + Number(amount?.[key] || 0),
         0
       );
       return total;

@@ -90,7 +90,8 @@ const AddProvider = ({ color = "light" }) => {
 
   useEffect(() => {
     if (providerData) {
-      setAccountEntries(providerData?.accountDetails || accountEntries);
+      console.log("providerData", providerData);
+      setAccountEntries(providerData?.accountDetails);
     }
   }, [providerData]);
 
@@ -685,17 +686,21 @@ const AddProvider = ({ color = "light" }) => {
     }
   }
 
-  console.log(state);
-
   const handleSubmit = (e) => {
     e.preventDefault();
     const payload = {
       providerId: state?.item?.universityId,
-      accountDetails: accountEntries.map((arg) => ({
-        ...arg,
+      accountDetails: accountEntries.map((item) => ({
+        ...item,
         intakeDetails: intakeDetails,
+        commissionDetails: bonusEntries?.map((arg) => ({
+          ...arg,
+          total: arg?.commission * arg?.bonus,
+          parentId: state?.item?.universityId,
+        })),
       })),
     };
+    console.log(payload);
     mutate(payload);
   };
 
