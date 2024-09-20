@@ -86,12 +86,13 @@ const AddProvider = ({ color = "light" }) => {
     { refetchAccountList, getIndividualProviderAccountData },
   ] = useKothar();
 
-  console.log(providerData);
-
   useEffect(() => {
     if (providerData) {
-      console.log("providerData", providerData);
-      setAccountEntries(providerData?.accountDetails);
+      setAccountEntries(
+        providerData?.accountDetails?.length > 0
+          ? providerData?.accountDetails
+          : accountEntries
+      );
     }
   }, [providerData]);
 
@@ -109,14 +110,11 @@ const AddProvider = ({ color = "light" }) => {
 
   useEffect(() => {
     if (state) {
-      console.log(state, "state");
       setData({ ...data, uniData: state?.item });
       state?.item?.hasProviderAccount &&
         getIndividualProviderAccountData(state?.item?.universityId);
     }
   }, [state]);
-
-  const item = 1;
 
   const columns = useMemo(
     () => [
@@ -534,8 +532,6 @@ const AddProvider = ({ color = "light" }) => {
     ),
   });
 
-  console.log(accountEntries);
-
   const table = useMaterialReactTable({
     columns,
     data: accountEntries,
@@ -556,9 +552,8 @@ const AddProvider = ({ color = "light" }) => {
     ),
     muiExpandButtonProps: ({ row, table }) => ({
       onClick: () => {
-        console.log(row?.original);
         table.setExpanded({ [row.id]: !row.getIsExpanded() });
-        setIntakeDetails(row?.original?.intakeDetails || []);
+        setIntakeDetails(row?.original?.intakeDetails || intakeDetails);
       }, //set only this row to be expanded
     }),
   });
@@ -675,7 +670,6 @@ const AddProvider = ({ color = "light" }) => {
   });
 
   async function postData(payload) {
-    console.log(payload);
     if (state?.item?.hasProviderAccount) {
       await axios.put(
         `${API_URL}/accounts/provider/${payload?.providerId}`,
@@ -700,7 +694,6 @@ const AddProvider = ({ color = "light" }) => {
         })),
       })),
     };
-    console.log(payload);
     mutate(payload);
   };
 

@@ -27,7 +27,6 @@ const Accounts = ({ color = "light" }) => {
     axios
       .delete(`${API_URL}/accounts/${openConfirmationModal?.id}`)
       .then((res) => {
-        console.log(res);
         toast.success(res?.data?.message || "Data Deleted Successfully");
         setOpenConfirmationModal({ state: false, id: null });
         refetchAccountList();
@@ -36,8 +35,6 @@ const Accounts = ({ color = "light" }) => {
         toast.error("Error Deleting Data");
       });
   };
-
-  console.log(value);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
