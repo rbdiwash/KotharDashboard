@@ -65,14 +65,18 @@ const Accounts = ({ color = "light" }) => {
       },
 
       {
-        accessorKey: "totalStudentCost", //normal accessorKey
-        header: "Student Cost",
+        accessorKey: "caseOfficer", //normal accessorKey
+        header: "Case Officer",
+        size: 150,
+      },
+      {
+        accessorKey: "totalAgentCost", //normal accessorKey
+        header: "Agent Cost",
         size: 50,
         Cell: ({ row }) => {
-          return <div>{row.original.totalStudentCost || 0}</div>;
+          return <div>{row.original.totalAgentCost || 0}</div>;
         },
       },
-
       {
         accessorKey: "totalCost" || 0,
         header: "Cost",
@@ -80,13 +84,8 @@ const Accounts = ({ color = "light" }) => {
       },
 
       {
-        accessorKey: "caseOfficer", //normal accessorKey
-        header: "Case Officer",
-        size: 150,
-      },
-      {
-        accessorKey: "totalCommissionClaimed", //normal accessorKey
-        header: "Commission  Claimed",
+        accessorKey: "totalDueAmount", //normal accessorKey
+        header: "Due",
         size: 50,
       },
       // {
@@ -105,8 +104,8 @@ const Accounts = ({ color = "light" }) => {
       //   },
       // },
       {
-        accessorKey: "totalPaidAmount",
-        header: "Amount Paid",
+        accessorKey: "totalProfit",
+        header: "Profit/Loss",
         size: 150,
       },
       {

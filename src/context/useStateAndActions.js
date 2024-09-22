@@ -306,17 +306,27 @@ const useStateAndActions = () => {
       })
       .catch((err) => console.log(err));
   };
-  const getIndividualAccountData = (params) => {
-    let url = `${API_URL}/accounts/${params}`;
+  const getIndividualAccountData = (condition, params) => {
+    setWholeLoading(true);
 
-    axios
-      .get(url, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      })
-      .then((res) => {
-        setAccountData(res?.data?.data);
-      })
-      .catch((err) => console.log(err));
+    if (condition) {
+      let url = `${API_URL}/accounts/${params}`;
+      axios
+        .get(url, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        })
+        .then((res) => {
+          setAccountData(res?.data?.data);
+          setWholeLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setWholeLoading(false);
+        });
+    } else {
+      setAccountData([]);
+      setWholeLoading(false);
+    }
   };
   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 

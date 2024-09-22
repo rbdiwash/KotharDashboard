@@ -7,6 +7,7 @@ import {
   Autocomplete,
   Box,
   Button,
+  CircularProgress,
   IconButton,
   OutlinedInput,
   TextField,
@@ -63,8 +64,10 @@ const AddAccounts = ({ color = "light" }) => {
   const [data, setData] = useState({
     clientData: null,
   });
-  const [{ accountData }, { refetchAccountList, getIndividualAccountData }] =
-    useKothar();
+  const [
+    { accountData, wholeLoading },
+    { refetchAccountList, getIndividualAccountData },
+  ] = useKothar();
   const [openEyeModal, setOpenEyeModal] = useState({
     state: false,
     uuid: null,
@@ -86,10 +89,14 @@ const AddAccounts = ({ color = "light" }) => {
   useEffect(() => {
     if (state) {
       setData({ ...data, clientData: state?.item?.clientData });
-      state?.item?.hasAccountDetails &&
-        getIndividualAccountData(state?.item?.clientAccountId);
+      getIndividualAccountData(
+        state?.item?.hasAccountDetails,
+        state?.item?.clientAccountId
+      );
     }
   }, [state]);
+
+  console.log(accountData);
 
   useEffect(() => {
     if (accountData) {
@@ -201,6 +208,8 @@ const AddAccounts = ({ color = "light" }) => {
   });
 
   async function postData(payload) {
+    console.log(payload?.id);
+
     if (state?.item?.hasAccountDetails) {
       await axios.put(`${API_URL}/accounts/${payload?.id}`, payload);
     } else {
@@ -210,6 +219,8 @@ const AddAccounts = ({ color = "light" }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    console.log(accountData?.id, data);
     const payload = {
       id: accountData?.id || data?.clientAccountId,
       uuid: data?.uuid,
@@ -235,7 +246,7 @@ const AddAccounts = ({ color = "light" }) => {
       })),
     };
 
-    mutate(payload);
+    // mutate(payload);
   };
 
   const handleOpenEyeModal = (rowData) => {
@@ -689,110 +700,116 @@ const AddAccounts = ({ color = "light" }) => {
             </div>
           </div>
           <div className="block w-full overflow-x-auto mt-2">
-            <div className="px-4">
-              <div className="container mx-auto px-2 py-1">
-                <div className="flex flex-col space-y-5">
-                  <div className="grid grid-cols-1 md:grid-cols-3 justify-between gap-5">
-                    <div className="lg:px-2">
-                      <div className="md:col-span-2">
-                        <h2 className="text-2xl font-semibold mb-2">
-                          Client: {data?.clientData?.name}
+            {wholeLoading ? (
+              <div className="w-full flex items-center justify-center">
+                <CircularProgress sx={{ fontSize: 36 }} />
+              </div>
+            ) : (
+              <div className="px-4">
+                <div className="container mx-auto px-2 py-1">
+                  <div className="flex flex-col space-y-5">
+                    <div className="grid grid-cols-1 md:grid-cols-3 justify-between gap-5">
+                      <div className="lg:px-2">
+                        <div className="md:col-span-2">
+                          <h2 className="text-2xl font-semibold mb-2">
+                            Client: {data?.clientData?.name}
+                          </h2>
+                          <p className="mb-2">
+                            Address: {data?.clientData?.address}
+                          </p>
+                          <p className="mb-2">
+                            Contact: {data?.clientData?.number}
+                          </p>
+                          <p className="mb-2">
+                            Case Officer: {data?.clientData?.caseOfficer}
+                          </p>
+                          <p className="mb-2">
+                            Referral: {data?.clientData?.referral}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <h2 className="text-xl font-semibold mb-2 underline">
+                          Payment Details
                         </h2>
-                        <p className="mb-2">
-                          Address: {data?.clientData?.address}
-                        </p>
-                        <p className="mb-2">
-                          Contact: {data?.clientData?.number}
-                        </p>
-                        <p className="mb-2">
-                          Case Officer: {data?.clientData?.caseOfficer}
-                        </p>
-                        <p className="mb-2">
-                          Referral: {data?.clientData?.referral}
-                        </p>
+                        <div className="flex gap-2 items-center ">
+                          <span className="w-[200px]">Total amount paid:</span>
+                          <OutlinedInput
+                            name="amountPaidByStudent"
+                            placeholder="Amount in AUD"
+                            type="number"
+                            size="small"
+                            startAdornment={"$"}
+                            value={getTotalValue("paidAmount")}
+                            disabled
+                            variant="standard"
+                          />
+                        </div>
+                        <div className="flex gap-2 items-center">
+                          <span className="w-[200px]">Agent Cost:</span>
+                          <OutlinedInput
+                            name="agentCost"
+                            className="col-span-2"
+                            placeholder="Amount in AUD"
+                            type="number"
+                            size="small"
+                            startAdornment={"$"}
+                            value={getTotalValue("cost")}
+                            disabled
+                          />
+                        </div>
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <div className="flex gap-1 items-center mt-10">
+                          <span className="w-[200px]">Due Amount:</span>
+                          <OutlinedInput
+                            name="dueAmount"
+                            placeholder="Amount in AUD"
+                            type="number"
+                            size="small"
+                            startAdornment={"$"}
+                            value={getTotalValue("dueAmount")}
+                            disabled
+                          />
+                        </div>
+                        <div className="flex gap-1 items-center ">
+                          <span className="w-[200px]">Total Profit/Loss:</span>
+                          <OutlinedInput
+                            name="profitLoss"
+                            placeholder="Amount in AUD"
+                            type="number"
+                            size="small"
+                            startAdornment={"$"}
+                            value={getTotalValue("profitLoss")}
+                            disabled
+                          />
+                        </div>
                       </div>
                     </div>
-                    <div className="flex flex-col gap-1">
-                      <h2 className="text-xl font-semibold mb-2 underline">
-                        Payment Details
-                      </h2>
-                      <div className="flex gap-2 items-center ">
-                        <span className="w-[200px]">Total amount paid:</span>
-                        <OutlinedInput
-                          name="amountPaidByStudent"
-                          placeholder="Amount in AUD"
-                          type="number"
-                          size="small"
-                          startAdornment={"$"}
-                          value={getTotalValue("paidAmount")}
-                          disabled
-                          variant="standard"
-                        />
-                      </div>
-                      <div className="flex gap-2 items-center">
-                        <span className="w-[200px]">Agent Cost:</span>
-                        <OutlinedInput
-                          name="agentCost"
-                          className="col-span-2"
-                          placeholder="Amount in AUD"
-                          type="number"
-                          size="small"
-                          startAdornment={"$"}
-                          value={getTotalValue("cost")}
-                          disabled
-                        />
-                      </div>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <div className="flex gap-1 items-center mt-10">
-                        <span className="w-[200px]">Due Amount:</span>
-                        <OutlinedInput
-                          name="dueAmount"
-                          placeholder="Amount in AUD"
-                          type="number"
-                          size="small"
-                          startAdornment={"$"}
-                          value={getTotalValue("dueAmount")}
-                          disabled
-                        />
-                      </div>
-                      <div className="flex gap-1 items-center ">
-                        <span className="w-[200px]">Total Profit/Loss:</span>
-                        <OutlinedInput
-                          name="profitLoss"
-                          placeholder="Amount in AUD"
-                          type="number"
-                          size="small"
-                          startAdornment={"$"}
-                          value={getTotalValue("profitLoss")}
-                          disabled
-                        />
-                      </div>
-                    </div>
-                  </div>
 
-                  <div className="overflow-x-auto min-h-[400px]">
-                    <MaterialReactTable table={table} />
+                    <div className="overflow-x-auto min-h-[400px]">
+                      <MaterialReactTable table={table} />
 
-                    <div
-                      colSpan={"20"}
-                      className="w-full flex justify-between border text-left px-4 py-2"
-                    >
-                      <Button
-                        variant="contained"
-                        startIcon={<FaPlusCircle />}
-                        onClick={addaccountDetails}
+                      <div
+                        colSpan={"20"}
+                        className="w-full flex justify-between border text-left px-4 py-2"
                       >
-                        Add More Entries
-                      </Button>{" "}
-                      <Button variant="contained" onClick={handleSubmit}>
-                        Submit
-                      </Button>
+                        <Button
+                          variant="contained"
+                          startIcon={<FaPlusCircle />}
+                          onClick={addaccountDetails}
+                        >
+                          Add More Entries
+                        </Button>{" "}
+                        <Button variant="contained" onClick={handleSubmit}>
+                          Submit
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
