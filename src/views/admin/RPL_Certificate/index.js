@@ -92,10 +92,12 @@ const RPLCertificate = ({ color = "light" }) => {
 
   const handleChange = (event, newValue, val) => {
     setValue(newValue);
-    // const status = event.target.innerText.toLowerCase().split(" ").join("_");
     const status = event.target.innerText;
     setLoading(true);
-    getRPLList(`status=${status}`);
+    setTimeout(() => {
+      setRPLList([]);
+      getRPLList(`status=${status}`);
+    }, 1000);
   };
 
   const tabs = [

@@ -346,7 +346,7 @@ const useStateAndActions = () => {
       // getProvidersAccountsList();
       refetchProvider();
       // getModuleWiseProfitLoss();
-      // getRPLList();
+      getRPLList();
       // getProfitLossData();
       // refetchRPLList();
       // getNotificationsData();

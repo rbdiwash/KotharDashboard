@@ -242,7 +242,7 @@ const AddClient = ({ color = "light" }) => {
                       label="USI Number"
                       name="usiNumber"
                       required
-                      type="number"
+                      type="text"
                       value={data?.usiNumber}
                       onChange={handleInputChange}
                     />

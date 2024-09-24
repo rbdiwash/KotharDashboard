@@ -1,43 +1,32 @@
-import {
-  ConstructionOutlined,
-  KeyboardArrowDown,
-  Visibility,
-} from "@mui/icons-material";
+import { Visibility } from "@mui/icons-material";
+import StickyNote2Icon from "@mui/icons-material/StickyNote2";
 import {
   Autocomplete,
-  Box,
   Button,
   CircularProgress,
   IconButton,
   OutlinedInput,
   TextField,
   Tooltip,
-  Typography,
 } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import InputField from "components/Input/InputField";
-import UploadFile from "components/Input/UploadFile";
 import DeleteModal from "components/Modals/DeleteModal";
-import { API_URL } from "const/constants";
+import NotesModal from "components/Modals/NotesModal";
+import { API_URL, studentInitialValue } from "const/constants";
 import useKothar from "context/useKothar";
-import { useEffect } from "react";
-import { useState } from "react";
+import {
+  MaterialReactTable,
+  useMaterialReactTable,
+} from "material-react-table";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import { FaPlusCircle } from "react-icons/fa";
 import { IoArrowBack } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import EyeDrawer from "./EyeModal";
-import { useMemo } from "react";
-import {
-  MaterialReactTable,
-  useMaterialReactTable,
-} from "material-react-table";
 import EyeModal from "./EyeModal";
-import { studentInitialValue } from "const/constants";
-import { useReducer } from "react";
-import { useCallback } from "react";
 
 const AddAccounts = ({ color = "light" }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
@@ -55,7 +44,10 @@ const AddAccounts = ({ color = "light" }) => {
       admissionDetails: null,
     },
   ]);
-
+  const [openNotesModal, setOpenNotesModal] = useState({
+    state: false,
+    id: null,
+  });
   const [studentDetails, setStudentDetails] = useState([
     { uuid: crypto.randomUUID() },
   ]);
@@ -66,7 +58,7 @@ const AddAccounts = ({ color = "light" }) => {
   });
   const [
     { accountData, wholeLoading },
-    { refetchAccountList, getIndividualAccountData },
+    { refetchAccountList, getIndividualAccountData, setAccountData },
   ] = useKothar();
   const [openEyeModal, setOpenEyeModal] = useState({
     state: false,
@@ -85,7 +77,12 @@ const AddAccounts = ({ color = "light" }) => {
       value: "Skill Assessment",
     },
   ];
-
+  const handleClose = () => {
+    setOpenNotesModal({ state: !openNotesModal?.state, id: null });
+  };
+  const handleToggleNotes = (item) => {
+    setOpenNotesModal({ state: !openNotesModal?.state, id: item?.id });
+  };
   useEffect(() => {
     if (state) {
       setData({ ...data, clientData: state?.item?.clientData });
@@ -96,11 +93,10 @@ const AddAccounts = ({ color = "light" }) => {
     }
   }, [state]);
 
-  console.log(accountData);
-
   useEffect(() => {
     if (accountData) {
       setAccountDetails(accountData?.accountDetails || accountDetails);
+      setData({ ...data, clientData: state?.item?.clientData });
     }
   }, [accountData]);
   const deleteData = () => {
@@ -183,6 +179,8 @@ const AddAccounts = ({ color = "light" }) => {
     ]);
   };
 
+  console.log(state?.item);
+
   const handleDeleteInstallment = (index) => {
     setAccountDetails((prev) => [...prev.filter((item, i) => i !== index)]);
   };
@@ -196,7 +194,10 @@ const AddAccounts = ({ color = "light" }) => {
       );
       // navigate("/admin/account");
       refetchAccountList();
-      getIndividualAccountData(state?.item?.clientAccountId);
+      getIndividualAccountData(
+        state?.item?.hasAccountDetails,
+        state?.item?.clientAccountId
+      );
     },
     onError() {
       toast.error(
@@ -208,8 +209,6 @@ const AddAccounts = ({ color = "light" }) => {
   });
 
   async function postData(payload) {
-    console.log(payload?.id);
-
     if (state?.item?.hasAccountDetails) {
       await axios.put(`${API_URL}/accounts/${payload?.id}`, payload);
     } else {
@@ -219,14 +218,13 @@ const AddAccounts = ({ color = "light" }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    console.log(accountData?.id, data);
+    console.log(accountData);
     const payload = {
-      id: accountData?.id || data?.clientAccountId,
+      id: accountData?.id || data?.clientData?.id,
       uuid: data?.uuid,
       clientId: data?.clientData?.id,
-      caseOfficer: "string",
-      referral: "string",
+      caseOfficer: data?.caseOfficer,
+      referral: data?.referral,
       totalAmount: getTotalValue("paidAmount"),
       agentCost: getTotalValue("referral"),
       dueAmount: getTotalValue("dueAmount"),
@@ -241,12 +239,12 @@ const AddAccounts = ({ color = "light" }) => {
         paidAmount: item?.paidAmount,
         dueAmount: item?.dueAmount,
         dueDate: item?.dueDate,
-        profitLoss: item?.profitLoss,
+        profitLoss: Number(item?.agreedAmount) - Number(item?.cost),
         referral: item?.referral,
       })),
     };
 
-    // mutate(payload);
+    mutate(payload);
   };
 
   const handleOpenEyeModal = (rowData) => {
@@ -397,6 +395,9 @@ const AddAccounts = ({ color = "light" }) => {
         header: "Profit Loss",
         size: 150,
         Cell: ({ row }) => {
+          const value = Number(
+            row?.original?.agreedAmount - row?.original?.cost
+          );
           return (
             <InputField
               type="number"
@@ -404,8 +405,15 @@ const AddAccounts = ({ color = "light" }) => {
               placeholder="Profit/Loss"
               size="small"
               onChange={(e) => handleInputChange(e, row)}
-              value={row?.original?.profitLoss}
-              className="min-w-[100px]"
+              disabled
+              value={value}
+              className={
+                "min-w-[100px] " +
+                (value > 0 ? " !text-green-500 " : "!text-red-500")
+              }
+              outerClassName={
+                value > 0 ? "!border-green-500" : "!border-red-500"
+              }
             />
           );
         },
@@ -418,6 +426,11 @@ const AddAccounts = ({ color = "light" }) => {
           return (
             <>
               <div className="flex items-center">
+                <Tooltip title="View Notes" arrow>
+                  <IconButton onClick={() => handleToggleNotes(row?.original)}>
+                    <StickyNote2Icon className="text-orange-400 cursor-pointer" />
+                  </IconButton>
+                </Tooltip>
                 <Tooltip title="Delete Course" arrow>
                   <IconButton
                     onClick={() => handleDeleteInstallment(row?.index)}
@@ -679,6 +692,15 @@ const AddAccounts = ({ color = "light" }) => {
     [accountDetails]
   );
 
+  const getTotalProfitLostt = useCallback(() => {
+    const totalProfitLost = accountDetails?.reduce(
+      (total, amount) =>
+        Number(total) + (Number(amount?.agreedAmount) - Number(amount?.cost)),
+      0
+    );
+    return totalProfitLost;
+  });
+
   return (
     <div className="flex flex-wrap mt-4 dashBody">
       <div className="w-full mb-12 px-4">
@@ -721,10 +743,38 @@ const AddAccounts = ({ color = "light" }) => {
                             Contact: {data?.clientData?.number}
                           </p>
                           <p className="mb-2">
-                            Case Officer: {data?.clientData?.caseOfficer}
+                            Case Officer:{" "}
+                            <OutlinedInput
+                              name="amountPaidByStudent"
+                              placeholder="Case officer name"
+                              type="text"
+                              size="small"
+                              variant="standard"
+                              value={data?.caseOfficer}
+                              onChange={(e) =>
+                                setData((arg) => ({
+                                  ...arg,
+                                  caseOfficer: e.target.value,
+                                }))
+                              }
+                            />
                           </p>
                           <p className="mb-2">
-                            Referral: {data?.clientData?.referral}
+                            Referral:{" "}
+                            <OutlinedInput
+                              name="amountPaidByStudent"
+                              placeholder="Referral Name"
+                              type="text"
+                              size="small"
+                              variant="standard"
+                              value={data?.referral}
+                              onChange={(e) =>
+                                setData((arg) => ({
+                                  ...arg,
+                                  referral: e.target.value,
+                                }))
+                              }
+                            />
                           </p>
                         </div>
                       </div>
@@ -773,15 +823,22 @@ const AddAccounts = ({ color = "light" }) => {
                           />
                         </div>
                         <div className="flex gap-1 items-center ">
-                          <span className="w-[200px]">Total Profit/Loss:</span>
+                          <span className="w-[200px]">
+                            Total{" "}
+                            {getTotalProfitLostt() > 0 ? "Profit" : "Loss"}:
+                          </span>
                           <OutlinedInput
                             name="profitLoss"
                             placeholder="Amount in AUD"
                             type="number"
                             size="small"
                             startAdornment={"$"}
-                            value={getTotalValue("profitLoss")}
-                            disabled
+                            value={getTotalProfitLostt()}
+                            className={
+                              getTotalProfitLostt() > 0
+                                ? "text-green-500"
+                                : "text-red-500"
+                            }
                           />
                         </div>
                       </div>
@@ -833,6 +890,14 @@ const AddAccounts = ({ color = "light" }) => {
             accountDetails,
             setAccountDetails,
           }}
+        />
+      )}
+      {openNotesModal?.state && (
+        <NotesModal
+          open={openNotesModal?.state}
+          handleClose={handleClose}
+          studentId={openNotesModal?.id}
+          type="student"
         />
       )}
     </div>

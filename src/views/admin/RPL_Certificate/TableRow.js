@@ -29,15 +29,12 @@ const TableRow = ({
     onSuccess() {
       toast.success("Data updated Successfully");
       setIsStatusEditable({ id: null, state: false });
-      getRPLList();
-
-      console.log(rpl_status, data.status);
+      getRPLList(`status=${data?.status}`);
       const correctIndex = rpl_status.findIndex(
         (arg) => arg?.value === data?.status
       );
-      console.log("🚀  correctIndex:", correctIndex);
 
-      setValue(correctIndex);
+      setValue(correctIndex + 1);
     },
     onError() {
       toast.error("Error Updating Data");

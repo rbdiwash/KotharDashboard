@@ -9,6 +9,7 @@ const InputField = ({
   className,
   startIcon,
   endIcon,
+  outerClassName,
   ...props
 }) => {
   return (
@@ -21,12 +22,17 @@ const InputField = ({
           {label || "label"} {required && <sup className="text-red-500">*</sup>}
         </label>
       )}
-      <div className="flex items-center gap-1 rounded border  border-1 focus:outline-none focus:ring w-full ease-linear transition-all duration-150 disabled:text-gray-400 ">
+      <div
+        className={
+          "flex items-center gap-1  border rounded  border-1 focus:outline-none focus:ring w-full ease-linear transition-all duration-150 disabled:text-gray-400 " +
+          outerClassName
+        }
+      >
         {startIcon && <div className="pl-2">{startIcon}</div>}
         <input
           type={type || "text"}
           className={
-            "placeholder-slate-300 text-slate-600 bg-white  text-sm  focus:bg-none p-2 focus:outline-none focus:outline-0 w-full " +
+            "placeholder-slate-300 text-slate-600 bg-white  text-sm  focus:bg-none p-2 rounded focus:outline-none focus:outline-0 w-full " +
             className
           }
           placeholder={placeholder || label}

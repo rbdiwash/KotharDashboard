@@ -220,9 +220,10 @@ const AddProvider = ({ color = "light" }) => {
               name="totalGST"
               placeholder="Total GST"
               size="small"
-              onChange={(e) => handleInputChange(e, row)}
-              value={row?.original?.totalGST}
+              disabled
+              value={(row?.original?.totalCommission * (10 / 100)).toFixed(2)}
               className="min-w-[100px]"
+              startIcon={"$"}
             />
           );
         },
