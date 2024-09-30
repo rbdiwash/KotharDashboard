@@ -167,16 +167,25 @@ const Accounts = ({ color = "light" }) => {
         accessorKey: "totalCommission", //normal accessorKey
         header: "Total Commission",
         size: 150,
+        Cell: ({ row }) => {
+          return <div>{row?.original?.totalCommission.toFixed(2)}</div>;
+        },
       },
       {
         accessorKey: "totalBonus", //normal accessorKey
         header: "Total Bonus",
         size: 50,
+        Cell: ({ row }) => {
+          return <div>{row?.original?.totalBonus.toFixed(2)}</div>;
+        },
       },
       {
         accessorKey: "totalGST", //normal accessorKey
         header: "Total GST",
         size: 50,
+        Cell: ({ row }) => {
+          return <div>{row?.original?.totalGST.toFixed(2)}</div>;
+        },
       },
 
       {

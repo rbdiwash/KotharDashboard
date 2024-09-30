@@ -1,44 +1,33 @@
-import { AddCircle, KeyboardArrowDown, Visibility } from "@mui/icons-material";
+import { AddCircle } from "@mui/icons-material";
 import {
-  Autocomplete,
-  Box,
   Button,
   FormControl,
   FormControlLabel,
   IconButton,
   InputLabel,
   MenuItem,
-  OutlinedInput,
   Radio,
   RadioGroup,
   Select,
-  TextField,
   Tooltip,
-  Typography,
 } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import InputField from "components/Input/InputField";
-import UploadFile from "components/Input/UploadFile";
 import DeleteModal from "components/Modals/DeleteModal";
-import { API_URL } from "const/constants";
+import { API_URL, monthsForFilter } from "const/constants";
 import useKothar from "context/useKothar";
-import { useEffect } from "react";
-import { useState } from "react";
+import {
+  MaterialReactTable,
+  useMaterialReactTable,
+} from "material-react-table";
+import { useEffect, useMemo, useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import { FaPlusCircle } from "react-icons/fa";
 import { IoArrowBack } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import EyeDrawer from "./EyeModal";
-import { useMemo } from "react";
-import {
-  MaterialReactTable,
-  useMaterialReactTable,
-} from "material-react-table";
-import EyeModal from "./EyeModal";
 import ProviderDialog from "./ProviderDialog";
-import { monthsForFilter } from "const/constants";
 
 const AddProvider = ({ color = "light" }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
@@ -63,7 +52,6 @@ const AddProvider = ({ color = "light" }) => {
       receivedDate: new Date(),
     },
   ]);
-
   const [accountEntries, setAccountEntries] = useState([
     {
       id: null,
@@ -79,34 +67,37 @@ const AddProvider = ({ color = "light" }) => {
       commissionDetails: bonusEntries,
     },
   ]);
+  const navigate = useNavigate();
   const { state } = useLocation();
-
   const [
     { providerData },
-    { refetchAccountList, getIndividualProviderAccountData },
+    { refetchProvider, getIndividualProviderAccountData },
   ] = useKothar();
-
-  useEffect(() => {
-    if (providerData) {
-      setAccountEntries(
-        providerData?.accountDetails?.length > 0
-          ? providerData?.accountDetails
-          : accountEntries
-      );
-    }
-  }, [providerData]);
-
   const [openProviderDialog, setOpenProviderDialog] = useState({
     state: false,
     uuid: null,
     index: null,
   });
-  const navigate = useNavigate();
 
   const yearsForFilter = Array.from(
     { length: 10 },
     (_, i) => new Date().getFullYear() + 3 - i
   );
+
+  useEffect(() => {
+    if (providerData) {
+      setAccountEntries(
+        providerData?.accountDetails?.length > 0
+          ? [
+              ...providerData?.accountDetails.map((account) => ({
+                ...account,
+                uuid: crypto.randomUUID(),
+              })),
+            ]
+          : accountEntries
+      );
+    }
+  }, [providerData]);
 
   useEffect(() => {
     if (state) {
@@ -565,7 +556,7 @@ const AddProvider = ({ color = "light" }) => {
       .then((res) => {
         toast.success(res?.data?.message || "Data Deleted Successfully");
         setOpenConfirmationModal({ state: false, id: null });
-        refetchAccountList();
+        refetchProvider();
       })
       .catch((err) => {
         toast.error("Error Deleting Data");
@@ -659,7 +650,7 @@ const AddProvider = ({ color = "light" }) => {
           : "Data added Successfully"
       );
       navigate("/admin/account");
-      refetchAccountList();
+      refetchProvider();
     },
     onError() {
       toast.error(
@@ -687,12 +678,14 @@ const AddProvider = ({ color = "light" }) => {
       providerId: state?.item?.universityId,
       accountDetails: accountEntries.map((item) => ({
         ...item,
+        totalGST: item?.totalCommission * 0.1,
         intakeDetails: intakeDetails,
         commissionDetails: bonusEntries?.map((arg) => ({
           ...arg,
-          total: arg?.commission * arg?.bonus,
+          total: arg?.commission + arg?.bonus,
           parentId: state?.item?.universityId,
         })),
+        uuid: crypto.randomUUID(),
       })),
     };
     mutate(payload);

@@ -26,14 +26,15 @@ export default function ProviderDialog({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const foundRow = accountEntries.find((item, i) => item?.id === open?.id);
+    const foundRow = accountEntries.find(
+      (item, i) => item?.uuid === open?.uuid
+    );
+    console.log(accountEntries);
     setAccountEntries((prevState) => [
       ...prevState?.slice(0, open?.index),
       { ...foundRow, commissionDetails: bonusEntries },
       ...prevState?.slice(open?.index + 1, accountEntries.length),
     ]);
-
     setOpen({ state: false, uuid: null, index: null });
   };
 
@@ -126,7 +127,7 @@ export default function ProviderDialog({
                                 type="number"
                                 disabled
                                 value={
-                                  Number(item?.commission) * Number(item.bonus)
+                                  Number(item?.commission) + Number(item.bonus)
                                 }
                                 className={"w-[130px]"}
                                 startIcon={"$"}

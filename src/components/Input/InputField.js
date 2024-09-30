@@ -10,6 +10,7 @@ const InputField = ({
   startIcon,
   endIcon,
   outerClassName,
+  value,
   ...props
 }) => {
   return (
@@ -38,6 +39,7 @@ const InputField = ({
           placeholder={placeholder || label}
           name={name}
           required={required}
+          value={value ?? ""}
           {...props}
         />
         {endIcon && endIcon}

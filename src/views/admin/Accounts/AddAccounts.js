@@ -95,10 +95,12 @@ const AddAccounts = ({ color = "light" }) => {
 
   useEffect(() => {
     if (accountData) {
+      // console.log(accountData, data);
       setAccountDetails(accountData?.accountDetails || accountDetails);
-      setData({ ...data, clientData: state?.item?.clientData });
+      setData({ ...data, ...accountData, clientData: state?.item?.clientData });
     }
   }, [accountData]);
+
   const deleteData = () => {
     axios
       .delete(`${API_URL}/organization/delete/${openConfirmationModal?.uuid}`)
@@ -178,8 +180,6 @@ const AddAccounts = ({ color = "light" }) => {
       },
     ]);
   };
-
-  console.log(state?.item);
 
   const handleDeleteInstallment = (index) => {
     setAccountDetails((prev) => [...prev.filter((item, i) => i !== index)]);
