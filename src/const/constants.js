@@ -11,6 +11,8 @@ import { format } from "date-fns";
 // export const API_URL = "https://kothar.samyakluitel.com/api/v1";
 export const API_URL = "https://kothar.samyakluitel.com/api/v1";
 
+export const currency = "$";
+
 export const visaTabs = [
   { label: "All", value: "All" },
   { label: "TR Visa", value: "TR" },

@@ -27,6 +27,7 @@ import { IoArrowBack } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import EyeModal from "./EyeModal";
+import { currency } from "const/constants";
 
 const AddAccounts = ({ color = "light" }) => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState({});
@@ -48,14 +49,14 @@ const AddAccounts = ({ color = "light" }) => {
     state: false,
     id: null,
   });
-  const [studentDetails, setStudentDetails] = useState([
+  const [installmentEntries, setInstallmentEntries] = useState([
     { uuid: crypto.randomUUID() },
   ]);
   const [studentValues, setStudentValues] = useState(studentInitialValue);
-
   const [data, setData] = useState({
     clientData: null,
   });
+  const [inputTriggered, setInputTriggered] = useState(false);
   const [
     { accountData, wholeLoading },
     { refetchAccountList, getIndividualAccountData, setAccountData },
@@ -77,12 +78,7 @@ const AddAccounts = ({ color = "light" }) => {
       value: "Skill Assessment",
     },
   ];
-  const handleClose = () => {
-    setOpenNotesModal({ state: !openNotesModal?.state, id: null });
-  };
-  const handleToggleNotes = (item) => {
-    setOpenNotesModal({ state: !openNotesModal?.state, id: item?.id });
-  };
+
   useEffect(() => {
     if (state) {
       setData({ ...data, clientData: state?.item?.clientData });
@@ -95,11 +91,17 @@ const AddAccounts = ({ color = "light" }) => {
 
   useEffect(() => {
     if (accountData) {
-      // console.log(accountData, data);
       setAccountDetails(accountData?.accountDetails || accountDetails);
       setData({ ...data, ...accountData, clientData: state?.item?.clientData });
     }
   }, [accountData]);
+
+  const handleClose = () => {
+    setOpenNotesModal({ state: !openNotesModal?.state, id: null });
+  };
+  const handleToggleNotes = (item) => {
+    setOpenNotesModal({ state: !openNotesModal?.state, id: item?.id });
+  };
 
   const deleteData = () => {
     axios
@@ -127,26 +129,28 @@ const AddAccounts = ({ color = "light" }) => {
   };
 
   const handleSubInputChange = (e, row) => {
+    setInputTriggered(true);
+
     const { name, value } = e.target;
-    const foundRow = studentDetails.find(
+    const foundRow = installmentEntries.find(
       (item, i) => item?.uuid === row?.original?.uuid
     );
-    setStudentDetails((prevState) => [
+    setInstallmentEntries((prevState) => [
       ...prevState?.slice(0, row?.index),
       { ...foundRow, [name]: value },
-      ...prevState?.slice(row?.index + 1, studentDetails?.length),
+      ...prevState?.slice(row?.index + 1, installmentEntries?.length),
     ]);
   };
 
   const addStudentDetails = () => {
-    setStudentDetails((prev) => [
+    setInstallmentEntries((prev) => [
       ...prev,
       { index: prev?.length + 1, uuid: crypto.randomUUID() },
     ]);
   };
 
   const handleDeleteStudentDetails = (index) => {
-    setStudentDetails((prev) => [...prev.filter((item, i) => i !== index)]);
+    setInstallmentEntries((prev) => [...prev.filter((item, i) => i !== index)]);
   };
 
   const handleAutoCompleteChange = (value, row) => {
@@ -218,7 +222,6 @@ const AddAccounts = ({ color = "light" }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(accountData);
     const payload = {
       id: accountData?.id || data?.clientData?.id,
       uuid: data?.uuid,
@@ -233,7 +236,8 @@ const AddAccounts = ({ color = "light" }) => {
         uuid: item?.uuid,
         module: item?.module,
         admissionValues: item?.module === "Admission" ? studentValues : null,
-        admissionDetails: item?.module === "Admission" ? studentDetails : null,
+        admissionDetails:
+          item?.module === "Admission" ? installmentEntries : null,
         agreedAmount: item?.agreedAmount,
         cost: item?.cost,
         paidAmount: item?.paidAmount,
@@ -257,6 +261,19 @@ const AddAccounts = ({ color = "light" }) => {
     });
     setStudentValues(rowData?.original?.admissionValues);
   };
+
+  const getTotalCost = useCallback(
+    (key) => {
+      const total = installmentEntries?.reduce(
+        (total, amount) => Number(total) + Number(amount?.[key] || 0),
+        0
+      );
+      return total;
+    },
+    [inputTriggered]
+  );
+
+  console.log(inputTriggered);
 
   const columns = useMemo(
     () => [
@@ -329,7 +346,11 @@ const AddAccounts = ({ color = "light" }) => {
               name="cost"
               placeholder="Kothar Cost"
               onChange={(e) => handleInputChange(e, row)}
-              value={row?.original?.cost}
+              value={
+                inputTriggered
+                  ? getTotalCost("perSemCost")
+                  : row?.original?.cost
+              }
               className="min-w-[100px]"
             />
           );
@@ -444,7 +465,7 @@ const AddAccounts = ({ color = "light" }) => {
         },
       },
     ],
-    [accountDetails]
+    [accountDetails, inputTriggered]
   );
 
   const subColumns = useMemo(
@@ -623,12 +644,12 @@ const AddAccounts = ({ color = "light" }) => {
         },
       },
     ],
-    [studentDetails, accountData]
+    [installmentEntries, accountData]
   );
 
   const secondTable = useMaterialReactTable({
     columns: subColumns,
-    data: studentDetails,
+    data: installmentEntries,
     enablePagination: false,
     initialState: {
       density: "compact",
@@ -676,7 +697,9 @@ const AddAccounts = ({ color = "light" }) => {
       onClick: () => {
         table.setExpanded({ [row.id]: !row.getIsExpanded() });
 
-        setStudentDetails(row?.original?.admissionDetails || studentDetails);
+        setInstallmentEntries(
+          row?.original?.admissionDetails || installmentEntries
+        );
       }, //set only this row to be expanded
     }),
   });
@@ -789,7 +812,7 @@ const AddAccounts = ({ color = "light" }) => {
                             placeholder="Amount in AUD"
                             type="number"
                             size="small"
-                            startAdornment={"$"}
+                            startAdornment={currency}
                             value={getTotalValue("paidAmount")}
                             disabled
                             variant="standard"
@@ -803,7 +826,7 @@ const AddAccounts = ({ color = "light" }) => {
                             placeholder="Amount in AUD"
                             type="number"
                             size="small"
-                            startAdornment={"$"}
+                            startAdornment={currency}
                             value={getTotalValue("cost")}
                             disabled
                           />
@@ -817,7 +840,7 @@ const AddAccounts = ({ color = "light" }) => {
                             placeholder="Amount in AUD"
                             type="number"
                             size="small"
-                            startAdornment={"$"}
+                            startAdornment={currency}
                             value={getTotalValue("dueAmount")}
                             disabled
                           />
@@ -832,7 +855,7 @@ const AddAccounts = ({ color = "light" }) => {
                             placeholder="Amount in AUD"
                             type="number"
                             size="small"
-                            startAdornment={"$"}
+                            startAdornment={currency}
                             value={getTotalProfitLostt()}
                             className={
                               getTotalProfitLostt() > 0

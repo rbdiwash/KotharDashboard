@@ -133,12 +133,11 @@ const AddRPLCertificate = ({ color = "light" }) => {
 
   const { license, photocard, bankCard, rsa, bills, insuranceStudentCard } =
     data;
-  const error =
-    [license, photocard, bankCard, rsa, bills, insuranceStudentCard].filter(
-      (v) => v
-    ).length < 3;
-
-  console.log(data);
+  // const error =
+  //   [license, photocard, bankCard, rsa, bills, insuranceStudentCard].filter(
+  //     (v) => v
+  //   ).length < 3;
+  const error = false;
 
   return (
     <div className="flex flex-wrap mt-4 dashBody">
@@ -185,7 +184,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                       />
                     }
                     label="Complete"
-                  />{" "}
+                  />
                   <Autocomplete
                     size="small"
                     sx={{ width: 300 }}
@@ -428,7 +427,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                         />
                       </RadioGroup>
                     </FormControl>
-                  </div>{" "}
+                  </div>
                   <div className="relative w-full mb-3">
                     <InputField
                       fullWidth
@@ -453,6 +452,32 @@ const AddRPLCertificate = ({ color = "light" }) => {
                       onChange={handleInputChange}
                     />
                   </div>
+                  {data?.status === "Placement Processing" && (
+                    <>
+                      <div className="relative w-full mb-3">
+                        <InputField
+                          fullWidth
+                          label="Site Name"
+                          placeholder="Site Name"
+                          name="siteName"
+                          type="text"
+                          value={data?.siteName}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                      <div className="relative w-full mb-3">
+                        <InputField
+                          fullWidth
+                          label="Start Date of Placement"
+                          placeholder="Start Date of Placement"
+                          name="placementStartDate"
+                          type="date"
+                          value={data?.placementStartDate}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 <p className="text-xl font-semibold tracking-wider bg-orange-500 p-2 text-white">
@@ -466,7 +491,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                       label: "Valid Passport",
                       imageKey: "passport",
                     }}
-                  />{" "}
+                  />
                   <UploadFile
                     {...{
                       data,
@@ -504,7 +529,7 @@ const AddRPLCertificate = ({ color = "light" }) => {
                 <div className="grid grid-cols-2 gap-8 border-t">
                   <FormControl
                     required
-                    error={error}
+                    // error={error}
                     component="fieldset"
                     variant="standard"
                   >
@@ -514,7 +539,6 @@ const AddRPLCertificate = ({ color = "light" }) => {
                     >
                       100 Points ID (Any 3 Form of ID)
                     </FormLabel>
-                    {console.log(data?.license)}
                     <FormGroup>
                       <FormControlLabel
                         control={
@@ -643,11 +667,11 @@ const AddRPLCertificate = ({ color = "light" }) => {
                         />
                       )}
                     </FormGroup>
-                    {error && (
+                    {/* {error && (
                       <FormHelperText className="text-base bg-red-500 text-white p-1 px-3 rounded">
                         Pick at least 3 form of ID
                       </FormHelperText>
-                    )}
+                    )} */}
                   </FormControl>
                 </div>
 
